@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout name="QuestCampaign" width="103" height="114" version="0.1" uid="A97F6ED7-350B-BE5F-017D-445150F7F4F4">
+  <window>
+    <container x="0" y="0" width="103" height="114" params="16" style="0" name="campaign_container">
+      <children>
+        <background x="0" y="0" width="103" height="114" params="2192" style="0" name="bg" color="0xffff646464" background="true"/>
+        <background x="2" y="2" width="99" height="110" params="2192" style="0" name="bg_top" color="0xffffbbbbbb" background="true"/>
+        <background x="2" y="58" width="99" height="54" params="1168" style="0" name="bg_bottom" color="0xffffababab" background="true"/>
+        <text x="17" y="12" width="69" height="20" params="208" style="0" name="campaign_header_txt" caption="Decoration">
+          <variables>
+            <var key="auto_size" value="left" type="String"/>
+            <var key="font_face" value="Ubuntu Bold" type="String"/>
+            <var key="font_size" value="12" type="uint"/>
+            <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+          </variables>
+        </text>
+        <bitmap x="5" y="21" width="92" height="72" params="3280" style="0" name="campaign_pic_bitmap"/>
+        <bitmap x="31" y="84" width="41" height="20" params="1232" style="0" name="completion_bg_bitmap"/>
+        <text x="35" y="83" width="34" height="21" params="208" style="0" name="completion_txt" caption="1/10">
+          <variables>
+            <var key="auto_size" value="left" type="String"/>
+            <var key="font_face" value="Ubuntu Bold" type="String"/>
+            <var key="font_size" value="13" type="uint"/>
+            <var key="text_color" value="0xffffff" type="hex"/>
+            <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+          </variables>
+        </text>
+      </children>
+    </container>
+  </window>
+</layout>

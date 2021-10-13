@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?><layout name="context_menu_widget" width="106" height="315" version="0.1" uid="9610ACDA-BF34-AC36-D9E8-4974CCB05E19">
+  <window>
+    <container x="0" y="-1" width="106" height="315" params="1048865" style="0" color="0x00" background="true" treshold="0">
+      <filters>
+        <DropShadowFilter distance="3" alpha="0.4980392156862745" blurX="2" blurY="2"/>
+      </filters>
+      <children>
+        <border x="0" y="0" width="106" height="308" params="12585104" style="5" name="border" color="0x03d3d3d">
+          <children>
+            <text x="12" y="3" width="81" height="16" params="208" style="0" name="name" caption="my_name_here">
+              <variables>
+                <var key="antialias_type" value="advanced" type="String"/>
+                <var key="auto_size" value="left" type="String"/>
+                <var key="font_face" value="Ubuntu" type="String"/>
+                <var key="font_size" value="11" type="uint"/>
+                <var key="text_color" value="0xffffff" type="hex"/>
+                <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                <var key="kerning" value="true" type="Boolean"/>
+              </variables>
+            </text>
+            <itemlist_vertical x="2" y="28" width="102" height="260" params="8519888" style="0" name="buttons">
+              <children>
+                <container_button x="10" y="0" width="81" height="20" params="786641" style="3" name="friend" color="0x05aa600" tags="action" width_min="81" width_max="81" height_min="20" height_max="20">
+                  <children>
+                    <text x="0" y="3" width="86" height="15" params="786640" style="0" name="label" caption="%24%7Binfostand.button.friend%7D">
+                      <variables>
+                        <var key="antialias_type" value="advanced" type="String"/>
+                        <var key="auto_size" value="left" type="String"/>
+                        <var key="font_face" value="Ubuntu" type="String"/>
+                        <var key="font_size" value="10" type="uint"/>
+                        <var key="text_color" value="0xffffff" type="hex"/>
+                        <var key="text_style" value="button_bold" type="String"/>
+                        <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                      </variables>
+                    </text>
+                  </children>
+                </container_button>
+                <container_button x="10" y="24" width="81" height="20" params="786641" style="3" name="respect" tags="action" width_min="81" width_max="81" height_min="20" height_max="20">
+                  <children>
+                    <text x="0" y="2" width="123" height="15" params="786640" style="0" name="label" caption="%24%7Binfostand.button.respect%7D">
+                      <variables>
+                        <var key="antialias_type" value="advanced" type="String"/>
+                        <var key="auto_size" value="left" type="String"/>
+                        <var key="font_face" value="Ubuntu" type="String"/>
+                        <var key="font_size" value="10" type="uint"/>
+                        <var key="text_style" value="button_bold" type="String"/>
+                        <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                        <var key="bold" value="true" type="Boolean"/>
+                      </variables>
+                    </text>
+                  </children>
+                </container_button>
+                <container_button x="10" y="48" width="81" height="20" params="786641" style="3" name="give_rights" tags="action" width_min="81" width_max="81" height_min="20" height_max="20">
+                  <children>
+                    <text x="12" y="2" width="56" height="15" params="786640" style="0" name="label" caption="%24%7Binfostand.button.giverights%7D">
+                      <variables>
+                        <var key="antialias_type" value="advanced" type="String"/>
+                        <var key="auto_size" value="left" type="String"/>
+                        <var key="font_face" value="Ubuntu" type="String"/>
+                        <var key="font_size" value="10" type="uint"/>
+                        <var key="text_style" value="button_bold" type="String"/>
+                        <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                        <var key="bold" value="true" type="Boolean"/>
+                      </variables>
+                    </text>
+                  </children>
+                </container_button>
+                <container_button x="10" y="72" width="81" height="20" params="786641" style="3" name="remove_rights" tags="action" width_min="81" width_max="81" height_min="20" height_max="20">
+                  <children>
+                    <text x="4" y="2" width="72" height="15" params="786640" style="0" name="label" caption="%24%7Binfostand.button.removerights%7D">
+                      <variables>
+                        <var key="antialias_type" value="advanced" type="String"/>
+                        <var key="auto_size" value="left" type="String"/>
+                        <var key="font_face" value="Ubuntu" type="String"/>
+                        <var key="font_size" value="10" type="uint"/>
+                        <var key="text_style" value="button_bold" type="String"/>
+                        <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                        <var key="bold" value="true" type="Boolean"/>
+                      </variables>
+                    </text>
+                  </children>
+                </container_button>
+                <container_button x="10" y="96" width="81" height="20" params="786641" style="3" name="trade" tags="action" width_min="81" width_max="81" height_min="20" height_max="20">
+                  <children>
+                    <text x="24" y="2" width="32" height="15" params="786640" style="0" name="label" caption="%24%7Binfostand.button.trade%7D">
+                      <variables>
+                        <var key="antialias_type" value="advanced" type="String"/>
+                        <var key="auto_size" value="left" type="String"/>
+                        <var key="font_face" value="Ubuntu" type="String"/>
+                        <var key="font_size" value="10" type="uint"/>
+                        <var key="text_style" value="button_bold" type="String"/>
+                        <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                        <var key="bold" value="true" type="Boolean"/>
+                      </variables>
+                    </text>
+                  </children>
+                </container_button>
+                <container_button x="10" y="120" width="81" height="20" params="786641" style="3" name="whisper" tags="action" width_min="81" width_max="81" height_min="20" height_max="20">
+                  <children>
+                    <text x="19" y="2" width="43" height="15" params="786640" style="0" name="label" caption="%24%7Binfostand.button.whisper%7D">
+                      <variables>
+                        <var key="antialias_type" value="advanced" type="String"/>
+                        <var key="auto_size" value="left" type="String"/>
+                        <var key="font_face" value="Ubuntu" type="String"/>
+                        <var key="font_size" value="10" type="uint"/>
+                        <var key="text_style" value="button_bold" type="String"/>
+                        <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                        <var key="bold" value="true" type="Boolean"/>
+                      </variables>
+                    </text>
+                  </children>
+                </container_button>
+                <container_button x="10" y="144" width="81" height="20" params="786641" style="3" name="unignore" color="0x0d14a4a" tags="moderate" width_min="81" width_max="81" height_min="20" height_max="20">
+                  <children>
+                    <text x="24" y="2" width="32" height="15" params="786640" style="0" name="label" caption="%24%7Binfostand.button.unignore%7D">
+                      <variables>
+                        <var key="antialias_type" value="advanced" type="String"/>
+                        <var key="auto_size" value="left" type="String"/>
+                        <var key="font_face" value="Ubuntu" type="String"/>
+                        <var key="font_size" value="10" type="uint"/>
+                        <var key="text_color" value="0xffffff" type="hex"/>
+                        <var key="text_style" value="button_bold" type="String"/>
+                        <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                        <var key="bold" value="true" type="Boolean"/>
+                      </variables>
+                    </text>
+                  </children>
+                </container_button>
+                <container_button x="10" y="168" width="81" height="20" params="786641" style="3" name="ignore" color="0x0d14a4a" tags="moderate" width_min="81" width_max="81" height_min="20" height_max="20">
+                  <children>
+                    <text x="23" y="2" width="35" height="15" params="786640" style="0" name="label" caption="%24%7Binfostand.button.ignore%7D">
+                      <variables>
+                        <var key="antialias_type" value="advanced" type="String"/>
+                        <var key="auto_size" value="left" type="String"/>
+                        <var key="font_face" value="Ubuntu" type="String"/>
+                        <var key="font_size" value="10" type="uint"/>
+                        <var key="text_color" value="0xffffff" type="hex"/>
+                        <var key="text_style" value="button_bold" type="String"/>
+                        <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                        <var key="bold" value="true" type="Boolean"/>
+                      </variables>
+                    </text>
+                  </children>
+                </container_button>
+                <container_button x="10" y="192" width="81" height="20" params="786641" style="3" name="kick" color="0xffd14a4a" tags="moderate" width_min="81" width_max="81" height_min="20" height_max="20">
+                  <children>
+                    <text x="28" y="2" width="24" height="15" params="786640" style="0" name="label" caption="%24%7Binfostand.button.kick%7D">
+                      <variables>
+                        <var key="antialias_type" value="advanced" type="String"/>
+                        <var key="auto_size" value="left" type="String"/>
+                        <var key="font_face" value="Ubuntu" type="String"/>
+                        <var key="font_size" value="10" type="uint"/>
+                        <var key="text_color" value="0xffffff" type="hex"/>
+                        <var key="text_style" value="button_bold" type="String"/>
+                        <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                        <var key="bold" value="true" type="Boolean"/>
+                      </variables>
+                    </text>
+                  </children>
+                </container_button>
+                <container_button x="10" y="216" width="81" height="20" params="786641" style="3" name="report" color="0x0d14a4a" tags="moderate" width_min="81" width_max="81" height_min="20" height_max="20">
+                  <children>
+                    <text x="0" y="2" width="119" height="15" params="786640" style="0" name="label" caption="%24%7Binfostand.button.report%7D">
+                      <variables>
+                        <var key="antialias_type" value="advanced" type="String"/>
+                        <var key="auto_size" value="left" type="String"/>
+                        <var key="font_face" value="Ubuntu" type="String"/>
+                        <var key="font_size" value="10" type="uint"/>
+                        <var key="text_color" value="0xffffff" type="hex"/>
+                        <var key="text_style" value="button_bold" type="String"/>
+                        <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                        <var key="bold" value="true" type="Boolean"/>
+                      </variables>
+                    </text>
+                  </children>
+                </container_button>
+                <container_button x="10" y="240" width="81" height="20" params="786641" style="3" name="ban" color="0x0d14a4a" tags="moderate" width_min="81" width_max="81" height_min="20" height_max="20">
+                  <children>
+                    <text x="29" y="2" width="22" height="15" params="786640" style="0" name="label" caption="%24%7Binfostand.button.ban%7D">
+                      <variables>
+                        <var key="antialias_type" value="advanced" type="String"/>
+                        <var key="auto_size" value="left" type="String"/>
+                        <var key="font_face" value="Ubuntu" type="String"/>
+                        <var key="font_size" value="10" type="uint"/>
+                        <var key="text_color" value="0xffffff" type="hex"/>
+                        <var key="text_style" value="button_bold" type="String"/>
+                        <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                        <var key="bold" value="true" type="Boolean"/>
+                      </variables>
+                    </text>
+                  </children>
+                </container_button>
+              </children>
+              <variables>
+                <var key="spacing" value="4" type="int"/>
+                <var key="scale_to_fit_items" value="true" type="Boolean"/>
+                <var key="resize_on_item_update" value="true" type="Boolean"/>
+              </variables>
+            </itemlist_vertical>
+            <region x="21" y="290" width="64" height="15" params="918737" style="0" name="link_moderate" treshold="0">
+              <children>
+                <text x="6" y="0" width="52" height="15" params="208" style="0" name="text_moderate" caption="%21Moderate">
+                  <variables>
+                    <var key="antialias_type" value="advanced" type="String"/>
+                    <var key="auto_size" value="left" type="String"/>
+                    <var key="font_face" value="Ubuntu" type="String"/>
+                    <var key="font_size" value="10" type="uint"/>
+                    <var key="text_color" value="0xff4324" type="hex"/>
+                    <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                    <var key="underline" value="true" type="Boolean"/>
+                  </variables>
+                </text>
+              </children>
+            </region>
+            <region x="19" y="290" width="68" height="15" params="918737" style="0" name="link_show_actions" treshold="0">
+              <children>
+                <text x="2" y="0" width="64" height="15" params="208" style="0" name="text_show_actions" caption="%21Show%20actions">
+                  <variables>
+                    <var key="antialias_type" value="advanced" type="String"/>
+                    <var key="auto_size" value="left" type="String"/>
+                    <var key="font_face" value="Ubuntu" type="String"/>
+                    <var key="font_size" value="10" type="uint"/>
+                    <var key="text_color" value="0xffba00" type="hex"/>
+                    <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                    <var key="underline" value="true" type="Boolean"/>
+                  </variables>
+                </text>
+              </children>
+            </region>
+            <region x="19" y="290" width="68" height="15" params="918737" style="0" name="link_more_actions" treshold="0">
+              <children>
+                <text x="2" y="0" width="64" height="15" params="208" style="0" name="text_more_actions" caption="%21More%20actions">
+                  <variables>
+                    <var key="antialias_type" value="advanced" type="String"/>
+                    <var key="auto_size" value="left" type="String"/>
+                    <var key="font_face" value="Ubuntu" type="String"/>
+                    <var key="font_size" value="10" type="uint"/>
+                    <var key="text_color" value="0xffba00" type="hex"/>
+                    <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                    <var key="underline" value="true" type="Boolean"/>
+                  </variables>
+                </text>
+              </children>
+            </region>
+          </children>
+        </border>
+        <bitmap x="46" y="307" width="13" height="7" params="1232" style="0" name="pointer"/>
+      </children>
+    </container>
+  </window>
+</layout>

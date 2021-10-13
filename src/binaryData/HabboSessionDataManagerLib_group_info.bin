@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout name="group_info" width="20" height="20" version="0.0">
+  <window>
+    <border x="0" y="0" width="282" height="198" params="17" style="0" name="group_info">
+      <children>
+        <text x="13" y="16" width="212" height="16" params="16" style="0" name="group_name">
+          <variables>
+            <var key="font_face" value="Volter Bold" type="String"/>
+            <var key="font_size" value="9" type="uint"/>
+            <var key="text_color" value="0x0" type="hex"/>
+            <var key="embed_fonts" value="true" type="Boolean"/>
+            <var key="multiline" value="true" type="Boolean"/>
+            <var key="word_wrap" value="true" type="Boolean"/>
+            <var key="bold" value="true" type="Boolean"/>
+          </variables>
+        </text>
+        <text x="14" y="32" width="261" height="16" params="17" style="0" name="group_homepage_link" caption="%24%7Bgroup.homepage%7D">
+          <variables>
+            <var key="font_face" value="Volter" type="String"/>
+            <var key="font_size" value="9" type="uint"/>
+            <var key="text_color" value="0x0" type="hex"/>
+            <var key="embed_fonts" value="true" type="Boolean"/>
+            <var key="multiline" value="true" type="Boolean"/>
+            <var key="word_wrap" value="true" type="Boolean"/>
+          </variables>
+        </text>
+        <text x="14" y="50" width="261" height="16" params="17" style="0" name="group_room_link" caption="${group.room.link}">
+          <variables>
+            <var key="font_face" value="Volter" type="String"/>
+            <var key="font_size" value="9" type="uint"/>
+            <var key="text_color" value="0x0" type="hex"/>
+            <var key="embed_fonts" value="true" type="Boolean"/>
+            <var key="multiline" value="true" type="Boolean"/>
+            <var key="word_wrap" value="true" type="Boolean"/>
+          </variables>
+        </text>
+        <bitmap x="232" y="16" width="48" height="45" params="16" style="0" name="group_logo"/>
+        <text x="13" y="72" width="258" height="101" params="16" style="0" name="group_description">
+          <variables>
+            <var key="font_face" value="Volter" type="String"/>
+            <var key="font_size" value="9" type="uint"/>
+            <var key="text_color" value="0x0" type="hex"/>
+            <var key="embed_fonts" value="true" type="Boolean"/>
+            <var key="multiline" value="true" type="Boolean"/>
+            <var key="word_wrap" value="true" type="Boolean"/>
+          </variables>
+        </text>
+      </children>
+    </border>
+  </window>
+</layout>

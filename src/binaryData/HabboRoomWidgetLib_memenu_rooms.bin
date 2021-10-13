@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><layout name="memenu_rooms" width="20" height="20" version="0.0">
+  <window>
+    <container x="0" y="0" width="165" height="190" params="16" style="0" name="myRooms_cntnr" color="0xffffff">
+      <children>
+        <button x="0" y="168" width="60" height="22" params="131089" style="1" name="back_btn" caption="${generic.back}" color="0xffffff" width_min="60" width_max="60"/>
+        <border x="0" y="0" width="163" height="161" params="131088" style="1" name="myRooms_brdr" color="0x0">
+          <children>
+            <itemlist_vertical x="10" y="30" width="142" height="119" params="17" style="0" name="rooms_list" color="0xffffff"/>
+            <null x="5" y="22" width="153" height="1" params="16" style="0" name="line" color="0xff2f2f2f" background="true"/>
+          </children>
+        </border>
+        <button x="64" y="168" width="99" height="22" params="131089" style="1" name="openNav_btn" caption="${widget.memenu.open.navigator}" color="0xffffff" width_min="99"/>
+        <text x="52" y="5" width="60" height="13" params="786640" style="0" name="myRooms_txt" caption="${widget.memenu.my.rooms}" color="0xffffff">
+          <variables>
+            <var key="font_face" value="Volter Bold"/>
+            <var key="font_size" value="9"/>
+            <var key="text_color" value="16777215"/>
+            <var key="auto_size" value="left"/>
+            <var key="embed_fonts" value="true"/>
+            <var key="mouse_wheel_enabled" value="true"/>
+          </variables>
+        </text>
+      </children>
+    </container>
+  </window>
+</layout>

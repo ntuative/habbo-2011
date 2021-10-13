@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout name="AvatarEditor" width="20" height="20" version="0.0">
+  <window>
+    <border x="0" y="0" width="371" height="412" params="32785" style="1" name="avatarEditor" clipping="false">
+      <children>
+      </children>
+    </border>
+  </window>
+</layout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout name="chatinput_window" width="271" height="44" version="0.1" uid="F977CC4F-F108-FE73-D866-EA4CCAF70EEF">
+  <window>
+    <container x="0" y="0" width="271" height="44" params="1" style="0" name="bubblecont" tags="chat_bubble" width_min="90" height_min="44">
+      <children>
+        <bitmap x="0" y="0" width="17" height="44" params="17" style="0" name="left">
+          <variables>
+            <var key="handle_bitmap_disposing" value="false" type="Boolean"/>
+            <var key="bitmap_asset_name" value="chatinput_bubble_left" type="String"/>
+          </variables>
+        </bitmap>
+        <bitmap x="17" y="0" width="242" height="44" params="145" style="0" name="middle">
+          <variables>
+            <var key="handle_bitmap_disposing" value="false" type="Boolean"/>
+            <var key="bitmap_asset_name" value="chatinput_bubble_middle" type="String"/>
+          </variables>
+        </bitmap>
+        <bitmap x="259" y="0" width="12" height="44" params="81" style="0" name="right">
+          <variables>
+            <var key="handle_bitmap_disposing" value="false" type="Boolean"/>
+            <var key="bitmap_asset_name" value="chatinput_bubble_right" type="String"/>
+          </variables>
+        </bitmap>
+        <input x="20" y="11" width="205" height="23" params="1" style="0" name="chat_input" caption="${widgets.chatinput.default}" clipping="false" width_min="1">
+          <variables>
+            <var key="always_show_selection" value="true" type="Boolean"/>
+            <var key="auto_size" value="left" type="String"/>
+            <var key="font_size" value="18" type="uint"/>
+            <var key="text_color" value="0x6f6f6f" type="hex"/>
+            <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+            <var key="max_chars" value="100" type="int"/>
+            <var key="focus_capturer" value="true" type="Boolean"/>
+          </variables>
+        </input>
+      </children>
+    </container>
+  </window>
+</layout>

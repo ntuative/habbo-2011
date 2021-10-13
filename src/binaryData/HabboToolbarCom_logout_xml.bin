@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><layout name="logout" width="165" height="28" version="0.1" uid="7B58E49D-0AAB-B2F6-44B1-305CCB12CEFA">
+  <window>
+    <border x="0" y="0" width="165" height="28" params="262208" style="2" color="0x00">
+      <children>
+        <itemlist_horizontal x="5" y="5" width="154" height="20" params="4194320" style="0">
+          <children>
+            <region x="0" y="0" width="69" height="18" params="17" style="0" name="help_region" treshold="0">
+              <children>
+                <text x="2" y="0" width="67" height="16" params="4194320" style="0" name="help_text" caption="toolbar.help" treshold="0">
+                  <variables>
+                    <var key="antialias_type" value="advanced" type="String"/>
+                    <var key="auto_size" value="left" type="String"/>
+                    <var key="font_face" value="Ubuntu" type="String"/>
+                    <var key="font_size" value="11" type="uint"/>
+                    <var key="text_color" value="0xffffff" type="hex"/>
+                    <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                    <var key="underline" value="true" type="Boolean"/>
+                  </variables>
+                </text>
+              </children>
+            </region>
+            <region x="74" y="0" width="80" height="18" params="17" style="0" name="logout_region" treshold="0">
+              <children>
+                <text x="2" y="0" width="77" height="16" params="4194320" style="0" name="logout_text" caption="toolbar.logout" treshold="0">
+                  <variables>
+                    <var key="antialias_type" value="advanced" type="String"/>
+                    <var key="auto_size" value="left" type="String"/>
+                    <var key="font_face" value="Ubuntu" type="String"/>
+                    <var key="font_size" value="11" type="uint"/>
+                    <var key="text_color" value="0xffffff" type="hex"/>
+                    <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                    <var key="underline" value="true" type="Boolean"/>
+                  </variables>
+                </text>
+              </children>
+            </region>
+          </children>
+          <variables>
+            <var key="spacing" value="5" type="int"/>
+            <var key="scale_to_fit_items" value="true" type="Boolean"/>
+            <var key="resize_on_item_update" value="true" type="Boolean"/>
+          </variables>
+        </itemlist_horizontal>
+      </children>
+    </border>
+  </window>
+</layout>

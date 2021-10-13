@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><layout name="memenu_clothes" width="20" height="20" version="0.0">
+  <window>
+    <container x="0" y="0" width="370" height="416" params="131088" style="1" name="clothes_border"/>
+  </window>
+</layout>

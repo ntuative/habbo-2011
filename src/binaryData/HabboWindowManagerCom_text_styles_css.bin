@@ -1,0 +1,130 @@
+regular {
+	font-family: Volter;
+	font-size: 9;
+	anti-alias-type: normal;
+}
+
+italic {
+	font-family: Volter;
+	font-size: 9;
+	font-style: italic;
+	anti-alias-type: normal;
+}
+
+bold {
+	font-family: Volter Bold;
+	font-size: 9;
+	anti-alias-type: normal;
+}
+
+small {
+	font-family: Volter;
+	font-size: 9;
+	anti-alias-type: normal;
+}
+
+bold_italic {
+	font-family: Volter Bold;
+	font-size: 9;
+	font-style: italic;
+	anti-alias-type: normal;
+}
+
+button_regular {
+	font-family: Volter;
+	font-size: 9;
+	anti-alias-type: normal;
+}
+
+button_bold {
+	font-family: Volter Bold;
+	font-size: 9;
+	anti-alias-type: normal;
+}
+
+button_shiny_regular {
+	font-family: Ubuntu;
+	font-size: 12;
+	kerning: true;
+	anti-alias-type: advanced;
+    sharpness: 80;
+    thickness: -15;
+}
+
+button_shiny_bold {
+	font-family: Ubuntu;
+	font-weight: bold;
+	font-size: 12;
+	kerning: true;
+	anti-alias-type: advanced;
+    sharpness: 80;
+    thickness: -15;
+}
+
+button_tab {
+	font-family: Volter;
+	font-size: 9;
+	anti-alias-type: normal;
+}
+
+frame_title {
+	font-family: Volter Bold;
+	font-size: 9;
+    color: #ffffff;
+	anti-alias-type: normal;
+}
+
+headline_big {
+	font-family: Volter Bold;
+	font-size: 18;
+	anti-alias-type: normal;
+}
+
+headline_medium {
+	font-family: Volter Bold;
+	font-size: 9;
+	anti-alias-type: normal;
+}
+
+headline_small {
+	font-family: Volter Bold;
+	font-size: 9;
+	anti-alias-type: normal;
+}
+
+chat_name {
+	font-family: Volter Bold;
+	font-size: 9;
+	anti-alias-type: normal;
+}
+
+chat_speak {
+	font-family: Volter;
+	font-size: 9;
+	anti-alias-type: normal;
+}
+
+chat_shout {
+	font-family: Volter Bold;
+	font-size: 9;
+	anti-alias-type: normal;
+}
+
+chat_whisper {
+	font-family: Volter;
+	font-size: 9;
+	anti-alias-type: normal;
+}
+
+tool_tip {
+	font-family: Volter;
+	font-size: 9;
+    color: #ffffff;
+	anti-alias-type: normal;
+}
+
+tag {
+    font-family: Volter;
+	font-size: 9;
+	anti-alias-type: normal;
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout name="AvatarEditor" width="20" height="20" version="0.0">
+  <window>
+    <border x="0" y="0" width="371" height="412" params="163857" style="1" name="avatarEditor" clipping="false">
+      <children>
+        <text x="128" y="5" width="115" height="13" params="786448" style="0" name="avatarEditor_txt" caption="%24%7Bavatareditor.title%7D">
+          <variables>
+            <var key="font_face" value="Volter Bold" type="String"/>
+            <var key="font_size" value="9" type="uint"/>
+            <var key="text_color" value="0xffffff" type="hex"/>
+            <var key="embed_fonts" value="true" type="Boolean"/>
+            <var key="mouse_wheel_enabled" value="true" type="Boolean"/>
+            <var key="auto_size" value="left" type="String"/>
+          </variables>
+        </text>
+        <container x="10" y="22" width="350" height="1" params="16" style="0" name="line" color="0xff2f2f2f" background="true"/>
+      </children>
+    </border>
+  </window>
+</layout>

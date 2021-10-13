@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout name="controls" width="113" height="88" version="0.1" uid="495C288A-4B80-EFA6-0FC7-B3B12BC1D8AB">
+  <window>
+    <container x="0" y="0" width="113" height="88" params="144" style="0" name="controls" clipping="false">
+      <children>
+        <button x="0" y="0" width="113" height="28" params="131089" style="3" name="btn_message" caption="%24%7Bfriend.bar.message%7D" width_min="113">
+          <variables>
+            <var key="tool_tip_caption" value="${friend.bar.message.tip}" type="String"/>
+          </variables>
+        </button>
+        <button x="0" y="30" width="113" height="28" params="131089" style="3" name="btn_visit" caption="%24%7Bfriend.bar.visit%7D" width_min="113">
+          <variables>
+            <var key="tool_tip_caption" value="${friend.bar.visit.tip}" type="String"/>
+          </variables>
+        </button>
+      </children>
+    </container>
+  </window>
+</layout>

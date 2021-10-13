@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<manifest>
+
+	<component class="com.sulake.habbo.communication.demo.HabboCommunicationDemo" version="0.0" >
+
+		<assets>
+			<asset mimeType="text/xml" name="login_window" />
+			<asset mimeType="text/xml" name="air_login_window" />
+			<asset mimeType="text/xml" name="hotel_view_window" />
+            <asset mimeType="text/xml" name="login_user_list_item" />
+			<!-- <asset mimeType="image/png" name="banner_default" /> -->
+			<!-- <asset mimeType="image/png" name="hotel_view" /> -->
+		</assets>
+		
+	</component>
+	
+</manifest>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<manifest>
+    <component class="com.sulake.habbo.friendbar.HabboFriendBar" version="0.0">
+        <!-- <interface iid="com.sulake.iid.IIDHabboFriendBar" /> -->
+        <assets>
+            <asset mimeType="text/xml" name="bar_xml" />
+            <asset mimeType="text/xml" name="entity_xml" />
+            <asset mimeType="text/xml" name="addFriendsEntityTabXML" />
+            <asset mimeType="text/xml" name="toggle_xml" />
+            <asset mimeType="text/xml" name="facebook_piece_xml" />
+            <asset mimeType="text/xml" name="controls_piece_xml" />
+            <asset mimeType="image/png" name="fb_icon_small_png" />
+            <asset mimeType="image/png" name="friends_icon_png" />
+        </assets>
+    </component>
+</manifest>

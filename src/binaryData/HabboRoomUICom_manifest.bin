@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<manifest>
+
+	<component class="com.sulake.habbo.ui.RoomUI" version="0.0">
+		<interface iid="com.sulake.iid.IIDHabboRoomUI" />
+	
+		<assets>
+			<asset mimeType="text/xml" name="room_desktop_layout_xml" />
+			<asset mimeType="text/xml" name="room_view_container_xml" />
+
+            <asset mimeType="text/xml" name="spectator_mode_xml" />
+
+            <asset mimeType="image/png" name="spec_top_left_png" />
+            <asset mimeType="image/png" name="spec_top_middle_png" />
+            <asset mimeType="image/png" name="spec_top_right_png" />
+
+            <asset mimeType="image/png" name="spec_middle_left_png" />
+            <asset mimeType="image/png" name="spec_middle_right_png" />
+
+            <asset mimeType="image/png" name="spec_bottom_left_png" />
+            <asset mimeType="image/png" name="spec_bottom_middle_png" />
+            <asset mimeType="image/png" name="spec_bottom_right_png" />
+
+        </assets>
+	
+	</component>
+	
+</manifest>

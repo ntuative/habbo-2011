@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout name="avatarinfo" width="125" height="46" version="0.1" uid="A0D2AFE9-70B6-6BA7-F5C1-7162D7F239E9">
+  <window>
+    <container x="0" y="0" width="125" height="46" params="256" style="0" color="0x00" background="true" treshold="0">
+      <filters>
+		<DropShadowFilter distance="3" angle="45" color="0" alpha="0.5" blurX="2" blurY="2" />
+	  </filters>
+      <children>
+        <border x="0" y="0" width="125" height="39" params="12582928" style="5" name="border" color="0x03d3d3d">
+          <children>
+            <text x="22" y="3" width="81" height="16" params="208" style="0" name="name" caption="my_name_here">
+              <variables>
+                <var key="antialias_type" value="advanced" type="String"/>
+                <var key="auto_size" value="left" type="String"/>
+                <var key="font_face" value="Ubuntu" type="String"/>
+                <var key="font_size" value="11" type="uint"/>
+                <var key="text_color" value="0xffffff" type="hex"/>
+                <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                <var key="kerning" value="true" type="Boolean"/>
+              </variables>
+            </text>
+            <container x="1" y="19" width="123" height="18" params="209" style="0" name="change_name_container" treshold="0">
+              <children>
+                <text x="20" y="0" width="106" height="18" params="16" style="0" caption="%24%7Bwidget.avatar.change_name%7D">
+                  <variables>
+                    <var key="antialias_type" value="advanced" type="String"/>
+                    <var key="font_face" value="Ubuntu" type="String"/>
+                    <var key="font_size" value="10" type="uint"/>
+                    <var key="text_color" value="0xfac200" type="hex"/>
+                    <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                    <var key="italic" value="true" type="Boolean"/>
+                    <var key="underline" value="true" type="Boolean"/>
+                    <var key="kerning" value="true" type="Boolean"/>
+                  </variables>
+                </text>
+                <bitmap x="7" y="1" width="12" height="12" params="16" style="0" name="pen_icon"/>
+              </children>
+            </container>
+          </children>
+        </border>
+        <bitmap x="56" y="38" width="13" height="7" params="1232" style="0" name="pointer"/>
+      </children>
+    </container>
+  </window>
+</layout>

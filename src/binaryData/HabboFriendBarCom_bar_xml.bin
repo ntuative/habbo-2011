@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><layout name="bar" width="66" height="32" version="0.1" uid="3E33219B-0206-BD5A-BF58-0F9BE8E2CD79">
+  <window>
+    <border x="0" y="10" width="66" height="32" params="1" style="1" name="container" clipping="false">
+      <children>
+        <itemlist_horizontal x="34" y="-5" width="0" height="33" params="4194320" style="0" name="list" clipping="false">
+          <variables>
+            <var key="spacing" value="1" type="int"/>
+            <var key="scale_to_fit_items" value="true" type="Boolean"/>
+            <var key="resize_on_item_update" value="true" type="Boolean"/>
+          </variables>
+        </itemlist_horizontal>
+        <container_button x="9" y="5" width="20" height="20" params="17" style="0" name="button_left" color="0xff666666">
+          <children>
+            <icon x="5" y="5" width="10" height="10" params="16" style="2" color="0x0333333"/>
+          </children>
+        </container_button>
+        <container_button x="37" y="5" width="20" height="20" params="81" style="0" name="button_right" color="0xff666666">
+          <children>
+            <icon x="5" y="5" width="10" height="10" params="16" style="3" color="0x0333333"/>
+          </children>
+        </container_button>
+      </children>
+    </border>
+  </window>
+</layout>

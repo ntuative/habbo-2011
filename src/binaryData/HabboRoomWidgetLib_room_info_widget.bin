@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?><layout name="room_info_widget" width="97" height="31" version="0.1" uid="2B24838E-5E1C-2952-A24E-0C4869375C6D">
+  <window>
+    <container x="0" y="0" width="97" height="31" params="1089" style="0">
+      <children>
+        <border x="0" y="0" width="97" height="31" params="2192" style="1"/>
+        <region x="0" y="0" width="139" height="37" params="17" style="0" name="room_info" treshold="0">
+          <children>
+            <text x="23" y="6" width="76" height="25" params="16" style="0" caption="Room%20info">
+              <variables>
+                <var key="antialias_type" value="advanced" type="String"/>
+                <var key="font_face" value="Ubuntu" type="String"/>
+                <var key="font_size" value="12" type="uint"/>
+                <var key="text_color" value="0xffffff" type="hex"/>
+                <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                <var key="underline" value="true" type="Boolean"/>
+              </variables>
+            </text>
+            <icon x="9" y="9" width="19" height="16" params="16" style="1"/>
+          </children>
+        </region>
+      </children>
+    </container>
+  </window>
+</layout>

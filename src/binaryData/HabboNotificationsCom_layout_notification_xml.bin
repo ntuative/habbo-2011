@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><layout name="notification" width="20" height="20" version="0.0">
+  <window>
+    <border x="0" y="0" width="213" height="70" params="131073" style="1" tags="border">
+      <children>
+        <bitmap x="10" y="10" width="50" height="50" params="16" style="0" tags="notification_icon"/>
+        <text x="69" y="15" width="128" height="36" params="16" style="0" caption="" tags="notification_text" height_min="22">
+          <variables>
+            <var key="font_face" value="Volter Bold" type="String"/>
+            <var key="font_size" value="9" type="uint"/>
+            <var key="text_color" value="0xffffffff" type="hex"/>
+            <var key="embed_fonts" value="true" type="Boolean"/>
+            <var key="mouse_wheel_enabled" value="true" type="Boolean"/>
+            <var key="word_wrap" value="true" type="Boolean"/>
+          </variables>
+        </text>
+      </children>
+    </border>
+  </window>
+</layout>

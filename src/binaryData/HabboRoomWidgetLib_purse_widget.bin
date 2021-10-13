@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout name="purse_widget" width="194" height="34" version="0.1" uid="578B373F-3864-F500-2FC5-44DE8BDC5670">
+  <window>
+    <border x="0" y="0" width="194" height="34" params="64" style="5">
+      <filters>
+        <DropShadowFilter distance="3" angle="45" color="0" alpha="0.6" blurX="0" blurY="0" />
+      </filters>
+      <children>
+        <region x="4" y="3" width="92" height="28" params="17" style="0" name="credits_container" color="0xffffd29f26" clipping="false" background="true" treshold="0" tags="ORANGE">
+          <children>
+            <text x="9" y="3" width="53" height="21" params="262160" style="0" name="credits_shadow" caption="00000">
+              <variables>
+                <var key="antialias_type" value="advanced" type="String"/>
+                <var key="auto_size" value="left" type="String"/>
+                <var key="font_face" value="Ubuntu" type="String"/>
+                <var key="font_size" value="16" type="uint"/>
+                <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                <var key="bold" value="true" type="Boolean"/>
+                <var key="kerning" value="true" type="Boolean"/>
+              </variables>
+            </text>
+            <text x="8" y="2" width="53" height="21" params="262160" style="0" name="credits" caption="00000">
+              <variables>
+                <var key="antialias_type" value="advanced" type="String"/>
+                <var key="auto_size" value="left" type="String"/>
+                <var key="font_face" value="Ubuntu" type="String"/>
+                <var key="font_size" value="16" type="uint"/>
+                <var key="text_color" value="0xffffff" type="hex"/>
+                <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                <var key="bold" value="true" type="Boolean"/>
+                <var key="kerning" value="true" type="Boolean"/>
+              </variables>
+            </text>
+            <icon x="64" y="3" width="26" height="22" params="16" style="10" name="credit_icon"/>
+            <container x="-1" y="1" width="1" height="26" params="16" style="0" color="0xffffd29f26" background="true" tags="ORANGE"/>
+          </children>
+        </region>
+        <region x="98" y="3" width="92" height="28" params="17" style="0" name="pixels_container" color="0xffff73a0bd" clipping="false" background="true" treshold="0" tags="BLUE">
+          <children>
+            <text x="13" y="3" width="53" height="21" params="262160" style="0" name="pixels_shadow" caption="00000">
+              <variables>
+                <var key="antialias_type" value="advanced" type="String"/>
+                <var key="auto_size" value="left" type="String"/>
+                <var key="font_face" value="Ubuntu" type="String"/>
+                <var key="font_size" value="16" type="uint"/>
+                <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                <var key="bold" value="true" type="Boolean"/>
+                <var key="kerning" value="true" type="Boolean"/>
+              </variables>
+            </text>
+            <text x="12" y="2" width="53" height="21" params="262160" style="0" name="pixels" caption="00000">
+              <variables>
+                <var key="antialias_type" value="advanced" type="String"/>
+                <var key="auto_size" value="left" type="String"/>
+                <var key="font_face" value="Ubuntu" type="String"/>
+                <var key="font_size" value="16" type="uint"/>
+                <var key="text_color" value="0xffffff" type="hex"/>
+                <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+                <var key="bold" value="true" type="Boolean"/>
+                <var key="kerning" value="true" type="Boolean"/>
+              </variables>
+            </text>
+            <icon x="68" y="3" width="26" height="22" params="16" style="19" name="pixel_icon"/>
+            <container x="92" y="1" width="1" height="26" params="16" style="0" color="0xffff73a0bd" background="true" tags="BLUE"/>
+          </children>
+        </region>
+      </children>
+    </border>
+  </window>
+</layout>

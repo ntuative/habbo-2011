@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<manifest>
+
+	<component class="com.sulake.habbo.toolbar.HabboToolbar" version="0.0">
+	
+		<interface iid="com.sulake.iid.IIDHabboToolbar" />
+		
+		<assets>
+		
+			<asset mimeType="text/xml" name="toolbar_xml" />
+            <asset mimeType="text/xml" name="toolbar_hack_xml" />
+			<asset mimeType="text/xml" name="toolbar_window_xml" />
+            <asset mimeType="text/xml" name="toolbar_icon_xml" />
+            <asset mimeType="text/xml" name="logout_xml" />
+            <asset mimeType="text/xml" name="logout_confirmation_xml" />
+
+			
+			<asset mimeType="image/png" name="settings_icon" />
+			<asset mimeType="image/png" name="icon_messenger_0" />
+			<asset mimeType="image/png" name="icon_messenger_blink_1" />
+			<asset mimeType="image/png" name="icon_messenger_blink_2" />
+
+			<asset mimeType="image/png" name="icon_roominfo_0" />
+			
+			<asset mimeType="image/png" name="icon_catalogue_0" />			
+			<asset mimeType="image/png" name="icon_catalogue_over_0" />
+			<asset mimeType="image/png" name="icon_catalogue_over_1" />
+			<asset mimeType="image/png" name="icon_catalogue_over_2" />
+			<asset mimeType="image/png" name="icon_catalogue_over_3" />
+			<asset mimeType="image/png" name="icon_catalogue_over_4" />
+			<asset mimeType="image/png" name="icon_catalogue_over_5" />
+
+			<asset mimeType="image/png" name="icon_friendlist_0" />
+			<asset mimeType="image/png" name="icon_friendlist_highlight_0" />			
+			<asset mimeType="image/png" name="icon_friendlist_over_0" />
+			<asset mimeType="image/png" name="icon_friendlist_over_1" />
+			<asset mimeType="image/png" name="icon_friendlist_over_2" />
+			<asset mimeType="image/png" name="icon_friendlist_over_3" />
+			
+			<asset mimeType="image/png" name="icon_help_0" />
+			<asset mimeType="image/png" name="icon_help_over_0" />
+			<asset mimeType="image/png" name="icon_help_over_1" />
+			<asset mimeType="image/png" name="icon_help_over_2" />
+			<asset mimeType="image/png" name="icon_help_over_3" />
+			<asset mimeType="image/png" name="icon_help_over_4" />
+			
+			<asset mimeType="image/png" name="icon_inventory_0" />
+			<asset mimeType="image/png" name="icon_inventory_over_0" />
+			<asset mimeType="image/png" name="icon_inventory_over_1" />
+			<asset mimeType="image/png" name="icon_inventory_over_2" />
+			<asset mimeType="image/png" name="icon_inventory_over_3" />
+			
+			<asset mimeType="image/png" name="icon_navigator_0" />
+			<asset mimeType="image/png" name="icon_navigator_over_0" />
+			<asset mimeType="image/png" name="icon_navigator_over_1" />
+			<asset mimeType="image/png" name="icon_navigator_over_2" />
+			
+			<asset mimeType="image/png" name="icon_zoomin_0" />
+			<asset mimeType="image/png" name="icon_zoomin_over_0" />
+			<asset mimeType="image/png" name="icon_zoomin_over_1" />
+			<asset mimeType="image/png" name="icon_zoomin_over_2" />
+			<asset mimeType="image/png" name="icon_zoomout_0" />
+			<asset mimeType="image/png" name="icon_zoomout_over_0" />
+			<asset mimeType="image/png" name="icon_zoomout_over_1" />
+			<asset mimeType="image/png" name="icon_zoomout_over_2" />
+			
+			<asset mimeType="image/png" name="icon_exitroom_0" />
+			<asset mimeType="image/png" name="icon_exitroom_1" />
+			<asset mimeType="image/png" name="icon_exitroom_2" />
+			<asset mimeType="image/png" name="icon_exitroom_3" />
+			<asset mimeType="image/png" name="icon_exitroom_4" />
+			<asset mimeType="image/png" name="icon_exitroom_5" />
+			
+			<asset mimeType="image/png" name="icon_exitroom_hotel_0" />
+			<asset mimeType="image/png" name="icon_exitroom_hotel_over_0" />
+			<asset mimeType="image/png" name="icon_exitroom_nest_0" />
+			<asset mimeType="image/png" name="icon_exitroom_nest_over_0" />
+			
+            <asset mimeType="image/png" name="icon_sounds_on_0" />
+            <asset mimeType="image/png" name="icon_sounds_off_0" />
+
+            <asset mimeType="image/png" name="icon_quest_default_0"/>
+            <asset mimeType="image/png" name="icon_quest_default_over_0"/>
+
+            <asset mimeType="image/png" name="icon_quest_val11_0" />
+            <asset mimeType="image/png" name="icon_quest_val11_over_0" />
+
+			<asset mimeType="image/png" name="toolbar_bg" />
+			
+			<asset mimeType="image/png" name="highlight_blue_bg" />
+            <asset mimeType="image/png" name="memenu_default_icon" />
+			
+		</assets>
+		
+	</component>
+	
+</manifest>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><layout name="memenu" width="20" height="20" version="0.0">
+  <window>
+    <border x="0" y="0" width="170" height="260" params="16" style="1" name="memenuContainer"/>
+  </window>
+</layout>

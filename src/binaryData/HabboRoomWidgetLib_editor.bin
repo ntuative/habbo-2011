@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout name="editor" width="20" height="20" version="0.0">
+  <window>
+    <frame x="2" y="0" width="308" height="151" params="32768" style="0" caption="%24%7Bwidget.furni.clothingchange.editor.title%7D" color="0x3d3d3d">
+      <children>
+        <container x="0" y="0" width="296" height="119" params="16" style="0" name="content"/>
+      </children>
+    </frame>
+  </window>
+</layout>

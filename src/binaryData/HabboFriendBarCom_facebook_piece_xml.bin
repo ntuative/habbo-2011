@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?><layout name="facebook" width="113" height="21" version="0.1" uid="E6DEB163-7FC1-B504-C4F8-D87E2A8C37EA">
+  <window>
+    <container x="0" y="0" width="113" height="21" params="144" style="0" name="facebook" color="0xffffffffff" background="true">
+      <children>
+        <bitmap x="3" y="4" width="14" height="14" params="16" style="0" name="icon">
+          <variables>
+            <var key="handle_bitmap_disposing" value="false" type="Boolean"/>
+            <var key="bitmap_asset_name" value="fb_icon_small_png" type="String"/>
+          </variables>
+        </bitmap>
+        <text x="20" y="2" width="91" height="18" params="144" style="0" name="name" caption="Baz%20Bar%20Foo">
+          <variables>
+            <var key="antialias_type" value="advanced" type="String"/>
+            <var key="font_face" value="Ubuntu" type="String"/>
+            <var key="font_size" value="12" type="uint"/>
+            <var key="text_color" value="0x5c7aa6" type="hex"/>
+            <var key="text_style" value="headline_medium" type="String"/>
+            <var key="mouse_wheel_enabled" value="false" type="Boolean"/>
+          </variables>
+        </text>
+      </children>
+    </container>
+  </window>
+</layout>

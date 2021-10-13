@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout name="inventory" width="20" height="20" version="0.0">
+  <window>
+    <frame x="59" y="17" width="390" height="300" params="32769" style="0" name="inventoryBase" caption="%24%7Binventory.title%7D">
+      <children>
+        <tab_context x="0" y="0" width="378" height="269" params="0" style="0" name="contentArea" caption="Inventory" background="true">
+          <children>
+            <tab_button x="0" y="0" width="121" height="22" params="131089" style="0" name="furni" caption="%24%7Binventory.furni%7D"/>
+            <tab_button x="121" y="0" width="121" height="22" params="131089" style="0" name="achievements" caption="%24%7Binventory.achievements%7D"/>
+            <tab_button x="242" y="0" width="123" height="22" params="131089" style="0" name="badges" caption="%24%7Binventory.badges%7D"/>
+          </children>
+        </tab_context>
+        <container x="0" y="275" width="378" height="1" params="16" style="0" name="subContentArea" caption="%24%7Binventory.title%7D" visible="false"/>
+      </children>
+    </frame>
+  </window>
+</layout>
