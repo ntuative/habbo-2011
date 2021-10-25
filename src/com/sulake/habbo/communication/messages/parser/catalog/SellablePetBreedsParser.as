@@ -1,42 +1,47 @@
 ﻿package com.sulake.habbo.communication.messages.parser.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class SellablePetBreedsParser implements IMessageParser 
+    public class SellablePetBreedsParser implements IMessageParser
     {
 
-        private var var_2611:String = "";
-        private var var_2508:Array = [];
+        private var _productCode: String = "";
+        private var _sellableBreeds: Array = [];
 
-        public function get productCode():String
+        public function get productCode(): String
         {
-            return (this.var_2611);
+            return this._productCode;
         }
 
-        public function get sellableBreeds():Array
+        public function get sellableBreeds(): Array
         {
-            return (this.var_2508.slice());
+            return this._sellableBreeds.slice();
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_2611 = "";
-            this.var_2508 = [];
-            return (true);
+            this._productCode = "";
+            this._sellableBreeds = [];
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2611 = param1.readString();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._productCode = data.readString();
+            
+            var sellableBreedCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < sellableBreedCount)
             {
-                this.var_2508.push(new SellablePetBreedData(param1));
-                _loc3_++;
-            };
-            return (true);
+                this._sellableBreeds.push(new SellablePetBreedData(data));
+                i++;
+            }
+
+            return true;
         }
 
     }

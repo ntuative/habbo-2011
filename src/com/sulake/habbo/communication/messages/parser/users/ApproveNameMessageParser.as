@@ -1,36 +1,39 @@
 ﻿package com.sulake.habbo.communication.messages.parser.users
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ApproveNameMessageParser implements IMessageParser 
+    public class ApproveNameMessageParser implements IMessageParser
     {
 
-        private var _result:int;
-        private var var_2715:String;
+        private var _result: int;
+        private var _nameValidationInfo: String;
 
-        public function get result():int
+        public function get result(): int
         {
-            return (this._result);
+            return this._result;
         }
 
-        public function get nameValidationInfo():String
+        public function get nameValidationInfo(): String
         {
-            return (this.var_2715);
+            return this._nameValidationInfo;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._result = -1;
-            this.var_2715 = null;
-            return (true);
+            this._nameValidationInfo = null;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this._result = param1.readInteger();
-            this.var_2715 = param1.readString();
-            return (true);
+            this._result = data.readInteger();
+            this._nameValidationInfo = data.readString();
+            
+            return true;
         }
 
     }

@@ -1,34 +1,36 @@
 ﻿package com.sulake.habbo.communication.messages.parser.inventory.furni
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PostItPlacedParser implements IMessageParser 
+    public class PostItPlacedParser implements IMessageParser
     {
 
-        private var _id:int;
-        private var var_3201:int;
+        private var _id: int;
+        private var _itemsLeft: int;
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this._id = param1.readInteger();
-            this.var_3201 = param1.readInteger();
-            return (true);
+            this._id = data.readInteger();
+            this._itemsLeft = data.readInteger();
+
+            return true;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get itemsLeft():int
+        public function get itemsLeft(): int
         {
-            return (this.var_3201);
+            return this._itemsLeft;
         }
 
     }

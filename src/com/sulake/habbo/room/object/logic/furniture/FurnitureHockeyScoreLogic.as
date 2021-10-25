@@ -1,64 +1,73 @@
 ﻿package com.sulake.habbo.room.object.logic.furniture
 {
+
     import com.sulake.habbo.room.events.RoomObjectStateChangeEvent;
     import com.sulake.room.events.RoomObjectEvent;
+
     import flash.events.MouseEvent;
+
     import com.sulake.room.events.RoomSpriteMouseEvent;
     import com.sulake.room.utils.IRoomGeometry;
 
-    public class FurnitureHockeyScoreLogic extends FurnitureLogic 
+    public class FurnitureHockeyScoreLogic extends FurnitureLogic
     {
 
-        override public function getEventTypes():Array
+        override public function getEventTypes(): Array
         {
-            var _loc1_:Array = [RoomObjectStateChangeEvent.var_1180];
-            return (getAllEventTypes(super.getEventTypes(), _loc1_));
+            var _loc1_: Array = [RoomObjectStateChangeEvent.ROSCE_STATE_CHANGE];
+            return getAllEventTypes(super.getEventTypes(), _loc1_);
         }
 
-        override public function mouseEvent(param1:RoomSpriteMouseEvent, param2:IRoomGeometry):void
+        override public function mouseEvent(param1: RoomSpriteMouseEvent, param2: IRoomGeometry): void
         {
-            var _loc5_:int;
-            var _loc6_:RoomObjectEvent;
-            if (((param1 == null) || (param2 == null)))
+            var _loc5_: int;
+            var _loc6_: RoomObjectEvent;
+            if (param1 == null || param2 == null)
             {
                 return;
-            };
+            }
+
             if (object == null)
             {
                 return;
-            };
-            var _loc3_:int = object.getId();
-            var _loc4_:String = object.getType();
+            }
+
+            var _loc3_: int = object.getId();
+            var _loc4_: String = object.getType();
             switch (param1.type)
             {
                 case MouseEvent.DOUBLE_CLICK:
                     switch (param1.spriteTag)
                     {
                         case "off":
-                            _loc6_ = new RoomObjectStateChangeEvent(RoomObjectStateChangeEvent.var_1180, _loc3_, _loc4_, 3);
+                            _loc6_ = new RoomObjectStateChangeEvent(RoomObjectStateChangeEvent.ROSCE_STATE_CHANGE, _loc3_, _loc4_, 3);
                             break;
-                    };
+                    }
+
                     break;
                 case MouseEvent.CLICK:
                     switch (param1.spriteTag)
                     {
                         case "inc":
-                            _loc6_ = new RoomObjectStateChangeEvent(RoomObjectStateChangeEvent.var_1180, _loc3_, _loc4_, 2);
+                            _loc6_ = new RoomObjectStateChangeEvent(RoomObjectStateChangeEvent.ROSCE_STATE_CHANGE, _loc3_, _loc4_, 2);
                             break;
                         case "dec":
-                            _loc6_ = new RoomObjectStateChangeEvent(RoomObjectStateChangeEvent.var_1180, _loc3_, _loc4_, 1);
+                            _loc6_ = new RoomObjectStateChangeEvent(RoomObjectStateChangeEvent.ROSCE_STATE_CHANGE, _loc3_, _loc4_, 1);
                             break;
-                    };
+                    }
+
                     break;
-            };
-            if (((!(eventDispatcher == null)) && (!(_loc6_ == null))))
+            }
+
+            if (eventDispatcher != null && _loc6_ != null)
             {
                 eventDispatcher.dispatchEvent(_loc6_);
             }
             else
             {
                 super.mouseEvent(param1, param2);
-            };
+            }
+
         }
 
     }

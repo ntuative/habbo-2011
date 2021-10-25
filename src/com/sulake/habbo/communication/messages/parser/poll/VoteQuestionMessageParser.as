@@ -1,44 +1,49 @@
 ﻿package com.sulake.habbo.communication.messages.parser.poll
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class VoteQuestionMessageParser implements IMessageParser 
+    public class VoteQuestionMessageParser implements IMessageParser
     {
 
-        private var var_3275:String;
-        private var var_3276:Array;
+        private var _question: String;
+        private var _choices: Array;
 
-        public function get question():String
+        public function get question(): String
         {
-            return (this.var_3275);
+            return this._question;
         }
 
-        public function get choices():Array
+        public function get choices(): Array
         {
-            return (this.var_3276.slice());
+            return this._choices.slice();
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3275 = "";
-            this.var_3276 = [];
-            return (true);
+            this._question = "";
+            this._choices = [];
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3275 = param1.readString();
-            this.var_3276 = [];
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._question = data.readString();
+            this._choices = [];
+            
+            var choiceCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < choiceCount)
             {
-                param1.readInteger();
-                this.var_3276.push(param1.readString());
-                _loc3_++;
-            };
-            return (true);
+                data.readInteger();
+                this._choices.push(data.readString());
+                i++;
+            }
+
+            return true;
         }
 
     }

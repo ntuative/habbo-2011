@@ -1,51 +1,52 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.inventory.avatareffect
 {
-    public class AvatarEffect 
+
+    public class AvatarEffect
     {
 
-        private var _type:int;
-        private var var_2930:int;
-        private var var_2931:int;
-        private var var_2932:int;
+        private var _type: int;
+        private var _duration: int;
+        private var _inactiveEffectsInInventory: int;
+        private var _secondsLeftIfActive: int;
 
-        public function get type():int
+        public function get type(): int
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function set type(param1:int):void
+        public function set type(value: int): void
         {
-            this._type = param1;
+            this._type = value;
         }
 
-        public function get duration():int
+        public function get duration(): int
         {
-            return (this.var_2930);
+            return this._duration;
         }
 
-        public function set duration(param1:int):void
+        public function set duration(value: int): void
         {
-            this.var_2930 = param1;
+            this._duration = value;
         }
 
-        public function get inactiveEffectsInInventory():int
+        public function get inactiveEffectsInInventory(): int
         {
-            return (this.var_2931);
+            return this._inactiveEffectsInInventory;
         }
 
-        public function set inactiveEffectsInInventory(param1:int):void
+        public function set inactiveEffectsInInventory(count: int): void
         {
-            this.var_2931 = param1;
+            this._inactiveEffectsInInventory = count;
         }
 
-        public function get secondsLeftIfActive():int
+        public function get secondsLeftIfActive(): int
         {
-            return (this.var_2932);
+            return this._secondsLeftIfActive;
         }
 
-        public function set secondsLeftIfActive(param1:int):void
+        public function set secondsLeftIfActive(seconds: int): void
         {
-            this.var_2932 = param1;
+            this._secondsLeftIfActive = seconds;
         }
 
     }

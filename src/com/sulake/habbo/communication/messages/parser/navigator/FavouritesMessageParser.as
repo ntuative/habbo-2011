@@ -1,41 +1,46 @@
 ﻿package com.sulake.habbo.communication.messages.parser.navigator
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class FavouritesMessageParser implements IMessageParser 
+    public class FavouritesMessageParser implements IMessageParser
     {
 
-        private var var_3193:int;
-        private var var_3252:Array;
+        private var _limit: int;
+        private var _favouriteRoomIds: Array;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3252 = new Array();
-            return (true);
+            this._favouriteRoomIds = [];
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3193 = param1.readInteger();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._limit = data.readInteger();
+            
+            var favouritesCount: int = data.readInteger();
+            var i: int;
+
+            while (i < favouritesCount)
             {
-                this.var_3252.push(param1.readInteger());
-                _loc3_++;
-            };
-            return (true);
+                this._favouriteRoomIds.push(data.readInteger());
+                i++;
+            }
+
+            return true;
         }
 
-        public function get limit():int
+        public function get limit(): int
         {
-            return (this.var_3193);
+            return this._limit;
         }
 
-        public function get favouriteRoomIds():Array
+        public function get favouriteRoomIds(): Array
         {
-            return (this.var_3252);
+            return this._favouriteRoomIds;
         }
 
     }

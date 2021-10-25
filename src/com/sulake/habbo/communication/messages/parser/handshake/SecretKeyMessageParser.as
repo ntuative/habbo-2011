@@ -1,27 +1,29 @@
 ﻿package com.sulake.habbo.communication.messages.parser.handshake
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class SecretKeyMessageParser implements IMessageParser 
+    public class SecretKeyMessageParser implements IMessageParser
     {
 
-        protected var var_3165:String;
+        protected var _serverPublicKey: String;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3165 = param1.readString();
-            return (true);
+            this._serverPublicKey = data.readString();
+            
+            return true;
         }
 
-        public function get serverPublicKey():String
+        public function get serverPublicKey(): String
         {
-            return (this.var_3165);
+            return this._serverPublicKey;
         }
 
     }

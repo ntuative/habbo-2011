@@ -1,107 +1,109 @@
 ﻿package com.sulake.habbo.communication.messages.parser.users
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ScrSendUserInfoMessageParser implements IMessageParser 
+    public class ScrSendUserInfoMessageParser implements IMessageParser
     {
 
-        public static const var_605:int = 1;
-        public static const var_121:int = 2;
+        public static const HABBO_SUBSCRIPTION_UNKNOWN: int = 1;
+        public static const HABBO_SUBSCRIPTION_UPDATE: int = 2;
 
-        private var var_2763:String;
-        private var var_3353:int;
-        private var var_3354:int;
-        private var var_3355:int;
-        private var var_3356:int;
-        private var var_3357:Boolean;
-        private var var_2700:Boolean;
-        private var var_2701:int;
-        private var var_2702:int;
-        private var var_3358:Boolean;
-        private var var_3359:int;
-        private var var_3360:int;
+        private var _productName: String;
+        private var _daysToPeriodEnd: int;
+        private var _memberPeriods: int;
+        private var _periodsSubscribedAhead: int;
+        private var _responseType: int;
+        private var _hasEverBeenMember: Boolean;
+        private var _isVip: Boolean;
+        private var _pastClubDays: int;
+        private var _pastVipDays: int;
+        private var _isShowBasicPromo: Boolean;
+        private var _basicNormalPrice: int;
+        private var _basicPromoPrice: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2763 = param1.readString();
-            this.var_3353 = param1.readInteger();
-            this.var_3354 = param1.readInteger();
-            this.var_3355 = param1.readInteger();
-            this.var_3356 = param1.readInteger();
-            this.var_3357 = param1.readBoolean();
-            this.var_2700 = param1.readBoolean();
-            this.var_2701 = param1.readInteger();
-            this.var_2702 = param1.readInteger();
-            this.var_3358 = param1.readBoolean();
-            this.var_3359 = param1.readInteger();
-            this.var_3360 = param1.readInteger();
-            return (true);
+            this._productName = data.readString();
+            this._daysToPeriodEnd = data.readInteger();
+            this._memberPeriods = data.readInteger();
+            this._periodsSubscribedAhead = data.readInteger();
+            this._responseType = data.readInteger();
+            this._hasEverBeenMember = data.readBoolean();
+            this._isVip = data.readBoolean();
+            this._pastClubDays = data.readInteger();
+            this._pastVipDays = data.readInteger();
+            this._isShowBasicPromo = data.readBoolean();
+            this._basicNormalPrice = data.readInteger();
+            this._basicPromoPrice = data.readInteger();
+
+            return true;
         }
 
-        public function get productName():String
+        public function get productName(): String
         {
-            return (this.var_2763);
+            return this._productName;
         }
 
-        public function get daysToPeriodEnd():int
+        public function get daysToPeriodEnd(): int
         {
-            return (this.var_3353);
+            return this._daysToPeriodEnd;
         }
 
-        public function get memberPeriods():int
+        public function get memberPeriods(): int
         {
-            return (this.var_3354);
+            return this._memberPeriods;
         }
 
-        public function get periodsSubscribedAhead():int
+        public function get periodsSubscribedAhead(): int
         {
-            return (this.var_3355);
+            return this._periodsSubscribedAhead;
         }
 
-        public function get responseType():int
+        public function get responseType(): int
         {
-            return (this.var_3356);
+            return this._responseType;
         }
 
-        public function get hasEverBeenMember():Boolean
+        public function get hasEverBeenMember(): Boolean
         {
-            return (this.var_3357);
+            return this._hasEverBeenMember;
         }
 
-        public function get isVIP():Boolean
+        public function get isVIP(): Boolean
         {
-            return (this.var_2700);
+            return this._isVip;
         }
 
-        public function get pastClubDays():int
+        public function get pastClubDays(): int
         {
-            return (this.var_2701);
+            return this._pastClubDays;
         }
 
-        public function get pastVipDays():int
+        public function get pastVipDays(): int
         {
-            return (this.var_2702);
+            return this._pastVipDays;
         }
 
-        public function get isShowBasicPromo():Boolean
+        public function get isShowBasicPromo(): Boolean
         {
-            return (this.var_3358);
+            return this._isShowBasicPromo;
         }
 
-        public function get basicNormalPrice():int
+        public function get basicNormalPrice(): int
         {
-            return (this.var_3359);
+            return this._basicNormalPrice;
         }
 
-        public function get basicPromoPrice():int
+        public function get basicPromoPrice(): int
         {
-            return (this.var_3360);
+            return this._basicPromoPrice;
         }
 
     }

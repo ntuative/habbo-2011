@@ -1,150 +1,151 @@
 ﻿package com.sulake.habbo.communication.messages.outgoing.roomsettings
 {
-    public class SaveableRoomSettingsData 
+
+    public class SaveableRoomSettingsData
     {
 
-        private var _roomId:int;
-        private var _name:String;
-        private var var_2400:String;
-        private var var_2981:int;
-        private var _password:String;
-        private var var_2465:int;
-        private var var_3059:int;
-        private var var_1029:Array;
-        private var var_3061:Array;
-        private var var_2988:Boolean;
-        private var var_3063:Boolean;
-        private var var_3064:Boolean;
-        private var var_3065:Boolean;
+        private var _roomId: int;
+        private var _name: String;
+        private var _description: String;
+        private var _doorMode: int;
+        private var _password: String;
+        private var _categoryId: int;
+        private var _maximumVisitors: int;
+        private var _tags: Array;
+        private var _controllers: Array;
+        private var _allowPets: Boolean;
+        private var _allowFoodConsume: Boolean;
+        private var _allowWalkThrough: Boolean;
+        private var _hideWalls: Boolean;
 
-        public function get allowPets():Boolean
+        public function get allowPets(): Boolean
         {
-            return (this.var_2988);
+            return this._allowPets;
         }
 
-        public function set allowPets(param1:Boolean):void
+        public function set allowPets(value: Boolean): void
         {
-            this.var_2988 = param1;
+            this._allowPets = value;
         }
 
-        public function get allowFoodConsume():Boolean
+        public function get allowFoodConsume(): Boolean
         {
-            return (this.var_3063);
+            return this._allowFoodConsume;
         }
 
-        public function set allowFoodConsume(param1:Boolean):void
+        public function set allowFoodConsume(value: Boolean): void
         {
-            this.var_3063 = param1;
+            this._allowFoodConsume = value;
         }
 
-        public function get allowWalkThrough():Boolean
+        public function get allowWalkThrough(): Boolean
         {
-            return (this.var_3064);
+            return this._allowWalkThrough;
         }
 
-        public function set allowWalkThrough(param1:Boolean):void
+        public function set allowWalkThrough(value: Boolean): void
         {
-            this.var_3064 = param1;
+            this._allowWalkThrough = value;
         }
 
-        public function get hideWalls():Boolean
+        public function get hideWalls(): Boolean
         {
-            return (this.var_3065);
+            return this._hideWalls;
         }
 
-        public function set hideWalls(param1:Boolean):void
+        public function set hideWalls(value: Boolean): void
         {
-            this.var_3065 = param1;
+            this._hideWalls = value;
         }
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function set roomId(param1:int):void
+        public function set roomId(value: int): void
         {
-            this._roomId = param1;
+            this._roomId = value;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function set name(param1:String):void
+        public function set name(value: String): void
         {
-            this._name = param1;
+            this._name = value;
         }
 
-        public function get description():String
+        public function get description(): String
         {
-            return (this.var_2400);
+            return this._description;
         }
 
-        public function set description(param1:String):void
+        public function set description(value: String): void
         {
-            this.var_2400 = param1;
+            this._description = value;
         }
 
-        public function get doorMode():int
+        public function get doorMode(): int
         {
-            return (this.var_2981);
+            return this._doorMode;
         }
 
-        public function set doorMode(param1:int):void
+        public function set doorMode(value: int): void
         {
-            this.var_2981 = param1;
+            this._doorMode = value;
         }
 
-        public function get password():String
+        public function get password(): String
         {
-            return (this._password);
+            return this._password;
         }
 
-        public function set password(param1:String):void
+        public function set password(value: String): void
         {
-            this._password = param1;
+            this._password = value;
         }
 
-        public function get categoryId():int
+        public function get categoryId(): int
         {
-            return (this.var_2465);
+            return this._categoryId;
         }
 
-        public function set categoryId(param1:int):void
+        public function set categoryId(value: int): void
         {
-            this.var_2465 = param1;
+            this._categoryId = value;
         }
 
-        public function get maximumVisitors():int
+        public function get maximumVisitors(): int
         {
-            return (this.var_3059);
+            return this._maximumVisitors;
         }
 
-        public function set maximumVisitors(param1:int):void
+        public function set maximumVisitors(value: int): void
         {
-            this.var_3059 = param1;
+            this._maximumVisitors = value;
         }
 
-        public function get tags():Array
+        public function get tags(): Array
         {
-            return (this.var_1029);
+            return this._tags;
         }
 
-        public function set tags(param1:Array):void
+        public function set tags(value: Array): void
         {
-            this.var_1029 = param1;
+            this._tags = value;
         }
 
-        public function get controllers():Array
+        public function get controllers(): Array
         {
-            return (this.var_3061);
+            return this._controllers;
         }
 
-        public function set controllers(param1:Array):void
+        public function set controllers(value: Array): void
         {
-            this.var_3061 = param1;
+            this._controllers = value;
         }
 
     }

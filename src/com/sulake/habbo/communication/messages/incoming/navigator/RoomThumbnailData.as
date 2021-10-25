@@ -1,115 +1,133 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.navigator
 {
+
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class RoomThumbnailData implements IDisposable 
+    public class RoomThumbnailData implements IDisposable
     {
 
-        private var var_3016:int;
-        private var var_3017:int;
-        private var _objects:Array = new Array();
-        private var _disposed:Boolean;
+        private var _bgImgId: int;
+        private var _frontImgId: int;
+        private var _objects: Array = [];
+        private var _disposed: Boolean;
 
-        public function RoomThumbnailData(param1:IMessageDataWrapper)
+        public function RoomThumbnailData(data: IMessageDataWrapper)
         {
-            var _loc4_:RoomThumbnailObjectData;
             super();
-            if (param1 == null)
+
+            if (data == null)
             {
                 return;
-            };
-            this.var_3016 = param1.readInteger();
-            this.var_3017 = param1.readInteger();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            }
+
+            this._bgImgId = data.readInteger();
+            this._frontImgId = data.readInteger();
+            
+            var thumbnailObjectData: RoomThumbnailObjectData;
+            var thumbnailObjectCount: int = data.readInteger();
+            var i: int;
+
+            while (i < thumbnailObjectCount)
             {
-                _loc4_ = new RoomThumbnailObjectData();
-                _loc4_.pos = param1.readInteger();
-                _loc4_.imgId = param1.readInteger();
-                this._objects.push(_loc4_);
-                _loc3_++;
-            };
-            if (this.var_3016 == 0)
+                thumbnailObjectData = new RoomThumbnailObjectData();
+                thumbnailObjectData.pos = data.readInteger();
+                thumbnailObjectData.imgId = data.readInteger();
+                this._objects.push(thumbnailObjectData);
+                i++;
+            }
+
+            if (this._bgImgId == 0)
             {
                 this.setDefaults();
-            };
+            }
+
         }
 
-        private function setDefaults():void
+        private function setDefaults(): void
         {
-            this.var_3016 = 1;
-            this.var_3017 = 0;
-            var _loc1_:RoomThumbnailObjectData = new RoomThumbnailObjectData();
-            _loc1_.pos = 4;
-            _loc1_.imgId = 1;
-            this._objects.push(_loc1_);
+            this._bgImgId = 1;
+            this._frontImgId = 0;
+            
+            var thumbnailObjectData: RoomThumbnailObjectData = new RoomThumbnailObjectData();
+            
+            thumbnailObjectData.pos = 4;
+            thumbnailObjectData.imgId = 1;
+            
+            this._objects.push(thumbnailObjectData);
         }
 
-        public function getCopy():RoomThumbnailData
+        public function getCopy(): RoomThumbnailData
         {
-            var _loc2_:RoomThumbnailObjectData;
-            var _loc1_:RoomThumbnailData = new RoomThumbnailData(null);
-            _loc1_.var_3016 = this.var_3016;
-            _loc1_.var_3017 = this.var_3017;
-            for each (_loc2_ in this._objects)
+            var thumbnailData: RoomThumbnailData = new RoomThumbnailData(null);
+            
+            thumbnailData._bgImgId = this._bgImgId;
+            thumbnailData._frontImgId = this._frontImgId;
+            
+            var thumbnailObject: RoomThumbnailObjectData;
+            
+            for each (thumbnailObject in this._objects)
             {
-                _loc1_._objects.push(_loc2_.getCopy());
-            };
-            return (_loc1_);
+                thumbnailData._objects.push(thumbnailObject.getCopy());
+            }
+
+            return thumbnailData;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (this._disposed)
             {
                 return;
-            };
+            }
+
             this._disposed = true;
             this._objects = null;
         }
 
-        public function getAsString():String
+        public function getAsString(): String
         {
-            var _loc2_:RoomThumbnailObjectData;
-            var _loc1_:* = (this.var_3017 + ";");
-            _loc1_ = (_loc1_ + (this.var_3016 + ";"));
-            for each (_loc2_ in this._objects)
+            var str: * = this._frontImgId + ";";
+            str = str + (this._bgImgId + ";");
+            
+            var thumbnailObjectData: RoomThumbnailObjectData;
+            
+            for each (thumbnailObjectData in this._objects)
             {
-                _loc1_ = (_loc1_ + (((_loc2_.imgId + ",") + _loc2_.pos) + ";"));
-            };
-            return (_loc1_);
+                str = str + (thumbnailObjectData.imgId + "," + thumbnailObjectData.pos + ";");
+            }
+
+            return str;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get bgImgId():int
+        public function get bgImgId(): int
         {
-            return (this.var_3016);
+            return this._bgImgId;
         }
 
-        public function get frontImgId():int
+        public function get frontImgId(): int
         {
-            return (this.var_3017);
+            return this._frontImgId;
         }
 
-        public function get objects():Array
+        public function get objects(): Array
         {
-            return (this._objects);
+            return this._objects;
         }
 
-        public function set bgImgId(param1:int):void
+        public function set bgImgId(param1: int): void
         {
-            this.var_3016 = param1;
+            this._bgImgId = param1;
         }
 
-        public function set frontImgId(param1:int):void
+        public function set frontImgId(param1: int): void
         {
-            this.var_3017 = param1;
+            this._frontImgId = param1;
         }
 
     }

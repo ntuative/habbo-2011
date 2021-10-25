@@ -1,36 +1,39 @@
 ﻿package com.sulake.habbo.communication.messages.parser.recycler
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class RecyclerStatusMessageParser implements IMessageParser 
+    public class RecyclerStatusMessageParser implements IMessageParser
     {
 
-        private var _recyclerStatus:int = -1;
-        private var var_3285:int = 0;
+        private var _recyclerStatus: int = -1;
+        private var _recyclerTimeoutSeconds: int = 0;
 
-        public function get recyclerStatus():int
+        public function get recyclerStatus(): int
         {
-            return (this._recyclerStatus);
+            return this._recyclerStatus;
         }
 
-        public function get recyclerTimeoutSeconds():int
+        public function get recyclerTimeoutSeconds(): int
         {
-            return (this.var_3285);
+            return this._recyclerTimeoutSeconds;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._recyclerStatus = -1;
-            this.var_3285 = 0;
-            return (true);
+            this._recyclerTimeoutSeconds = 0;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this._recyclerStatus = param1.readInteger();
-            this.var_3285 = param1.readInteger();
-            return (true);
+            this._recyclerStatus = data.readInteger();
+            this._recyclerTimeoutSeconds = data.readInteger();
+            
+            return true;
         }
 
     }

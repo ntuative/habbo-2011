@@ -1,25 +1,26 @@
 ﻿package com.sulake.habbo.communication.messages.outgoing.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageComposer;
 
-    public class GetIsOfferGiftableComposer implements IMessageComposer 
+    public class GetIsOfferGiftableComposer implements IMessageComposer
     {
 
-        private var _data:Array = [];
+        private var _data: Array = [];
 
-        public function GetIsOfferGiftableComposer(param1:int)
+        public function GetIsOfferGiftableComposer(param1: int)
         {
             this._data.push(param1);
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this._data = [];
         }
 
-        public function getMessageArray():Array
+        public function getMessageArray(): Array
         {
-            return (this._data);
+            return this._data;
         }
 
     }

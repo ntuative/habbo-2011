@@ -1,27 +1,29 @@
 ﻿package com.sulake.habbo.communication.messages.parser.navigator
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class RoomRatingMessageParser implements IMessageParser 
+    public class RoomRatingMessageParser implements IMessageParser
     {
 
-        private var var_3258:int;
+        private var _rating: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3258 = param1.readInteger();
-            return (true);
+            this._rating = data.readInteger();
+            
+            return true;
         }
 
-        public function get rating():int
+        public function get rating(): int
         {
-            return (this.var_3258);
+            return this._rating;
         }
 
     }

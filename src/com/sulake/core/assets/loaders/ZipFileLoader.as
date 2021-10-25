@@ -1,5 +1,6 @@
 ﻿package com.sulake.core.assets.loaders
 {
+
     import flash.net.URLStream;
     import flash.events.Event;
     import flash.events.HTTPStatusEvent;
@@ -8,82 +9,84 @@
     import flash.events.SecurityErrorEvent;
     import flash.net.URLRequest;
 
-    public class ZipFileLoader extends AssetLoaderEventBroker implements IAssetLoader 
+    public class ZipFileLoader extends AssetLoaderEventBroker implements IAssetLoader
     {
 
-        protected var var_2104:String;
-        protected var _type:String;
-        protected var var_2106:URLStream;
+        protected var _url: String;
+        protected var _type: String;
+        protected var _content: URLStream;
 
-        public function ZipFileLoader(param1:String, param2:URLRequest=null)
+        public function ZipFileLoader(param1: String, param2: URLRequest = null)
         {
-            this.var_2104 = ((param2 == null) ? "" : param2.url);
+            this._url = param2 == null ? "" : param2.url;
             this._type = param1;
-            this.var_2106 = new URLStream();
-            this.var_2106.addEventListener(Event.COMPLETE, loadEventHandler);
-            this.var_2106.addEventListener(HTTPStatusEvent.HTTP_STATUS, loadEventHandler);
-            this.var_2106.addEventListener(IOErrorEvent.IO_ERROR, loadEventHandler);
-            this.var_2106.addEventListener(Event.OPEN, loadEventHandler);
-            this.var_2106.addEventListener(ProgressEvent.PROGRESS, loadEventHandler);
-            this.var_2106.addEventListener(SecurityErrorEvent.SECURITY_ERROR, loadEventHandler);
+            this._content = new URLStream();
+            this._content.addEventListener(Event.COMPLETE, loadEventHandler);
+            this._content.addEventListener(HTTPStatusEvent.HTTP_STATUS, loadEventHandler);
+            this._content.addEventListener(IOErrorEvent.IO_ERROR, loadEventHandler);
+            this._content.addEventListener(Event.OPEN, loadEventHandler);
+            this._content.addEventListener(ProgressEvent.PROGRESS, loadEventHandler);
+            this._content.addEventListener(SecurityErrorEvent.SECURITY_ERROR, loadEventHandler);
             if (param2 != null)
             {
                 this.load(param2);
-            };
+            }
+
         }
 
-        public function get url():String
+        public function get url(): String
         {
-            return (this.var_2104);
+            return this._url;
         }
 
-        public function get ready():Boolean
+        public function get ready(): Boolean
         {
-            return ((this.bytesTotal > 0) ? (this.bytesTotal == this.bytesLoaded) : false);
+            return this.bytesTotal > 0 ? this.bytesTotal == this.bytesLoaded : false;
         }
 
-        public function get content():Object
+        public function get content(): Object
         {
-            return (this.var_2106);
+            return this._content;
         }
 
-        public function get mimeType():String
+        public function get mimeType(): String
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get bytesLoaded():uint
+        public function get bytesLoaded(): uint
         {
-            return (this.var_2106.bytesAvailable);
+            return this._content.bytesAvailable;
         }
 
-        public function get bytesTotal():uint
+        public function get bytesTotal(): uint
         {
-            return (this.var_2106.bytesAvailable);
+            return this._content.bytesAvailable;
         }
 
-        public function load(param1:URLRequest):void
+        public function load(param1: URLRequest): void
         {
-            this.var_2104 = param1.url;
-            this.var_2106.load(param1);
+            this._url = param1.url;
+            this._content.load(param1);
         }
 
-        override public function dispose():void
+        override public function dispose(): void
         {
             if (!_disposed)
             {
                 super.dispose();
-                this.var_2106.removeEventListener(Event.COMPLETE, loadEventHandler);
-                this.var_2106.removeEventListener(HTTPStatusEvent.HTTP_STATUS, loadEventHandler);
-                this.var_2106.removeEventListener(IOErrorEvent.IO_ERROR, loadEventHandler);
-                this.var_2106.removeEventListener(Event.OPEN, loadEventHandler);
-                this.var_2106.removeEventListener(ProgressEvent.PROGRESS, loadEventHandler);
-                this.var_2106.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, loadEventHandler);
-                this.var_2106.close();
-                this.var_2106 = null;
+                this._content.removeEventListener(Event.COMPLETE, loadEventHandler);
+                this._content.removeEventListener(HTTPStatusEvent.HTTP_STATUS, loadEventHandler);
+                this._content.removeEventListener(IOErrorEvent.IO_ERROR, loadEventHandler);
+                this._content.removeEventListener(Event.OPEN, loadEventHandler);
+                this._content.removeEventListener(ProgressEvent.PROGRESS, loadEventHandler);
+                this._content.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, loadEventHandler);
+                this._content.close();
+                this._content = null;
                 this._type = null;
-                this.var_2104 = null;
-            };
+                this._url = null;
+            }
+
         }
 
     }

@@ -1,58 +1,67 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.pets
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PetCommandsMessageParser implements IMessageParser 
+    public class PetCommandsMessageParser implements IMessageParser
     {
 
-        private var var_3097:int;
-        private var var_3320:Array;
-        private var var_3321:Array;
+        private var _petId: int;
+        private var _allCommands: Array;
+        private var _enabledCommands: Array;
 
-        public function get petId():int
+        public function get petId(): int
         {
-            return (this.var_3097);
+            return this._petId;
         }
 
-        public function get allCommands():Array
+        public function get allCommands(): Array
         {
-            return (this.var_3320);
+            return this._allCommands;
         }
 
-        public function get enabledCommands():Array
+        public function get enabledCommands(): Array
         {
-            return (this.var_3321);
+            return this._enabledCommands;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3097 = -1;
-            this.var_3320 = null;
-            this.var_3321 = null;
-            return (true);
+            this._petId = -1;
+            this._allCommands = null;
+            this._enabledCommands = null;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            if (param1 == null)
+            if (data == null)
             {
-                return (false);
-            };
-            this.var_3097 = param1.readInteger();
-            var _loc2_:int = param1.readInteger();
-            this.var_3320 = new Array();
-            while (_loc2_-- > 0)
+                return false;
+            }
+
+            this._petId = data.readInteger();
+            this._allCommands = [];
+
+            var commandCount: int = data.readInteger();
+            
+            while (commandCount-- > 0)
             {
-                this.var_3320.push(param1.readInteger());
-            };
-            var _loc3_:int = param1.readInteger();
-            this.var_3321 = new Array();
-            while (_loc3_-- > 0)
+                this._allCommands.push(data.readInteger());
+            }
+
+            this._enabledCommands = [];
+
+            var enabledCommandCount: int = data.readInteger();
+            
+            while (enabledCommandCount-- > 0)
             {
-                this.var_3321.push(param1.readInteger());
-            };
-            return (true);
+                this._enabledCommands.push(data.readInteger());
+            }
+
+            return true;
         }
 
     }

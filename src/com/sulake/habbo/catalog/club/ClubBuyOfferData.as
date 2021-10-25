@@ -1,154 +1,155 @@
 ﻿package com.sulake.habbo.catalog.club
 {
+
     import com.sulake.habbo.catalog.IPurchasableOffer;
     import com.sulake.habbo.catalog.viewer.ICatalogPage;
     import com.sulake.habbo.catalog.purse.Purse;
     import com.sulake.habbo.catalog.viewer.Offer;
     import com.sulake.habbo.catalog.viewer.IProductContainer;
 
-    public class ClubBuyOfferData implements IPurchasableOffer 
+    public class ClubBuyOfferData implements IPurchasableOffer
     {
 
-        private var _offerId:int;
-        private var var_2611:String;
-        private var var_2612:int;
-        private var var_2613:Boolean;
-        private var var_2614:Boolean;
-        private var var_2615:int;
-        private var var_2616:int;
-        private var var_2610:ICatalogPage;
-        private var var_2617:int;
-        private var var_2618:int;
-        private var var_2619:int;
-        private var var_2620:String;
-        private var var_2621:Boolean = false;
+        private var _offerId: int;
+        private var _productCode: String;
+        private var _price: int;
+        private var _upgrade: Boolean;
+        private var _vip: Boolean;
+        private var _periods: int;
+        private var _daysLeftAfterPurchase: int;
+        private var _page: ICatalogPage;
+        private var _year: int;
+        private var _month: int;
+        private var _day: int;
+        private var _extraParameter: String;
+        private var _upgradeHcPeriodToVip: Boolean = false;
 
-        public function ClubBuyOfferData(param1:int, param2:String, param3:int, param4:Boolean, param5:Boolean, param6:int, param7:int, param8:int, param9:int, param10:int)
+        public function ClubBuyOfferData(offerId: int, productCode: String, price: int, upgrade: Boolean, vip: Boolean, periods: int, daysLeftAfterPurchase: int, year: int, month: int, day: int)
         {
-            this._offerId = param1;
-            this.var_2611 = param2;
-            this.var_2612 = param3;
-            this.var_2613 = param4;
-            this.var_2614 = param5;
-            this.var_2615 = param6;
-            this.var_2616 = param7;
-            this.var_2617 = param8;
-            this.var_2618 = param9;
-            this.var_2619 = param10;
+            this._offerId = offerId;
+            this._productCode = productCode;
+            this._price = price;
+            this._upgrade = upgrade;
+            this._vip = vip;
+            this._periods = periods;
+            this._daysLeftAfterPurchase = daysLeftAfterPurchase;
+            this._year = year;
+            this._month = month;
+            this._day = day;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
         }
 
-        public function get extraParameter():String
+        public function get extraParameter(): String
         {
-            return (this.var_2620);
+            return this._extraParameter;
         }
 
-        public function set extraParameter(param1:String):void
+        public function set extraParameter(value: String): void
         {
-            this.var_2620 = param1;
+            this._extraParameter = value;
         }
 
-        public function get offerId():int
+        public function get offerId(): int
         {
-            return (this._offerId);
+            return this._offerId;
         }
 
-        public function get productCode():String
+        public function get productCode(): String
         {
-            return (this.var_2611);
+            return this._productCode;
         }
 
-        public function get price():int
+        public function get price(): int
         {
-            return (this.var_2612);
+            return this._price;
         }
 
-        public function get upgrade():Boolean
+        public function get upgrade(): Boolean
         {
-            return (this.var_2613);
+            return this._upgrade;
         }
 
-        public function get vip():Boolean
+        public function get vip(): Boolean
         {
-            return (this.var_2614);
+            return this._vip;
         }
 
-        public function get periods():int
+        public function get periods(): int
         {
-            return (this.var_2615);
+            return this._periods;
         }
 
-        public function get daysLeftAfterPurchase():int
+        public function get daysLeftAfterPurchase(): int
         {
-            return (this.var_2616);
+            return this._daysLeftAfterPurchase;
         }
 
-        public function get year():int
+        public function get year(): int
         {
-            return (this.var_2617);
+            return this._year;
         }
 
-        public function get month():int
+        public function get month(): int
         {
-            return (this.var_2618);
+            return this._month;
         }
 
-        public function get day():int
+        public function get day(): int
         {
-            return (this.var_2619);
+            return this._day;
         }
 
-        public function get priceInActivityPoints():int
+        public function get priceInActivityPoints(): int
         {
-            return (0);
+            return 0;
         }
 
-        public function get activityPointType():int
+        public function get activityPointType(): int
         {
-            return (Purse.var_142);
+            return Purse.ACTIVITY_POINTS_TYPE_PIXELS;
         }
 
-        public function get priceInCredits():int
+        public function get priceInCredits(): int
         {
-            return (this.var_2612);
+            return this._price;
         }
 
-        public function get page():ICatalogPage
+        public function get page(): ICatalogPage
         {
-            return (this.var_2610);
+            return this._page;
         }
 
-        public function get priceType():String
+        public function get priceType(): String
         {
-            return (Offer.var_716);
+            return Offer.PRICE_TYPE_CREDITS;
         }
 
-        public function get productContainer():IProductContainer
+        public function get productContainer(): IProductContainer
         {
-            return (null);
+            return null;
         }
 
-        public function get localizationId():String
+        public function get localizationId(): String
         {
-            return (this.var_2611);
+            return this._productCode;
         }
 
-        public function set page(param1:ICatalogPage):void
+        public function set page(param1: ICatalogPage): void
         {
-            this.var_2610 = param1;
+            this._page = param1;
         }
 
-        public function get upgradeHcPeriodToVip():Boolean
+        public function get upgradeHcPeriodToVip(): Boolean
         {
-            return (this.var_2621);
+            return this._upgradeHcPeriodToVip;
         }
 
-        public function set upgradeHcPeriodToVip(param1:Boolean):void
+        public function set upgradeHcPeriodToVip(param1: Boolean): void
         {
-            this.var_2621 = param1;
+            this._upgradeHcPeriodToVip = param1;
         }
 
     }

@@ -1,18 +1,19 @@
 ﻿package com.sulake.habbo.room.messages
 {
-    public class RoomObjectAvatarSelectedMessage extends RoomObjectUpdateStateMessage 
+
+    public class RoomObjectAvatarSelectedMessage extends RoomObjectUpdateStateMessage
     {
 
-        private var _selected:Boolean;
+        private var _selected: Boolean;
 
-        public function RoomObjectAvatarSelectedMessage(param1:Boolean)
+        public function RoomObjectAvatarSelectedMessage(param1: Boolean)
         {
             this._selected = param1;
         }
 
-        public function get selected():Boolean
+        public function get selected(): Boolean
         {
-            return (this._selected);
+            return this._selected;
         }
 
     }

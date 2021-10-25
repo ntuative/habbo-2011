@@ -1,29 +1,31 @@
 ﻿package com.sulake.habbo.moderation
 {
-    public class IssueCategoryNames 
+
+    public class IssueCategoryNames
     {
 
-        public static function getCategoryName(param1:int):String
+        public static function getCategoryName(param1: int): String
         {
             switch (param1)
             {
                 case 0:
-                    return ("Automatic");
+                    return "Automatic";
                 case 101:
-                    return ("Sex");
+                    return "Sex";
                 case 102:
-                    return ("PII");
+                    return "PII";
                 case 103:
-                    return ("Scam");
+                    return "Scam";
                 case 104:
-                    return ("Bullying");
+                    return "Bullying";
                 case 105:
-                    return ("Disruption");
+                    return "Disruption";
                 case 106:
-                    return ("Other");
+                    return "Other";
                 default:
-                    return ("Unknown");
-            };
+                    return "Unknown";
+            }
+
         }
 
     }

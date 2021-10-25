@@ -1,77 +1,85 @@
 ﻿package com.sulake.habbo.communication.messages.parser.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class GiftWrappingConfigurationParser implements IMessageParser 
+    public class GiftWrappingConfigurationParser implements IMessageParser
     {
 
-        private var var_3132:Boolean;
-        private var var_3133:int;
-        private var var_2672:Array;
-        private var var_2673:Array;
-        private var var_2674:Array;
+        private var _isWrappingEnabled: Boolean;
+        private var _wrappingPrice: int;
+        private var _stuffTypes: Array;
+        private var _boxTypes: Array;
+        private var _ribbonTypes: Array;
 
-        public function get isWrappingEnabled():Boolean
+        public function get isWrappingEnabled(): Boolean
         {
-            return (this.var_3132);
+            return this._isWrappingEnabled;
         }
 
-        public function get wrappingPrice():int
+        public function get wrappingPrice(): int
         {
-            return (this.var_3133);
+            return this._wrappingPrice;
         }
 
-        public function get stuffTypes():Array
+        public function get stuffTypes(): Array
         {
-            return (this.var_2672);
+            return this._stuffTypes;
         }
 
-        public function get boxTypes():Array
+        public function get boxTypes(): Array
         {
-            return (this.var_2673);
+            return this._boxTypes;
         }
 
-        public function get ribbonTypes():Array
+        public function get ribbonTypes(): Array
         {
-            return (this.var_2674);
+            return this._ribbonTypes;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc2_:int;
-            this.var_2672 = [];
-            this.var_2673 = [];
-            this.var_2674 = [];
-            this.var_3132 = param1.readBoolean();
-            this.var_3133 = param1.readInteger();
-            var _loc3_:int = param1.readInteger();
-            _loc2_ = 0;
-            while (_loc2_ < _loc3_)
+            var i: int;
+            this._stuffTypes = [];
+            this._boxTypes = [];
+            this._ribbonTypes = [];
+            this._isWrappingEnabled = data.readBoolean();
+            this._wrappingPrice = data.readInteger();
+
+            var itemCount: int = data.readInteger();
+            i = 0;
+
+            while (i < itemCount)
             {
-                this.var_2672.push(param1.readInteger());
-                _loc2_++;
-            };
-            _loc3_ = param1.readInteger();
-            _loc2_ = 0;
-            while (_loc2_ < _loc3_)
+                this._stuffTypes.push(data.readInteger());
+                i++;
+            }
+
+            itemCount = data.readInteger();
+            i = 0;
+            
+            while (i < itemCount)
             {
-                this.var_2673.push(param1.readInteger());
-                _loc2_++;
-            };
-            _loc3_ = param1.readInteger();
-            _loc2_ = 0;
-            while (_loc2_ < _loc3_)
+                this._boxTypes.push(data.readInteger());
+                i++;
+            }
+
+            itemCount = data.readInteger();
+            i = 0;
+            
+            while (i < itemCount)
             {
-                this.var_2674.push(param1.readInteger());
-                _loc2_++;
-            };
-            return (true);
+                this._ribbonTypes.push(data.readInteger());
+                i++;
+            }
+
+            return true;
         }
 
     }

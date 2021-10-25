@@ -1,60 +1,63 @@
 ﻿package com.sulake.habbo.communication.messages.parser.sound
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class NowPlayingMessageParser implements IMessageParser 
+    public class NowPlayingMessageParser implements IMessageParser
     {
 
-        private var var_3339:int;
-        private var _currentPosition:int;
-        private var var_3340:int;
-        private var var_3341:int;
-        private var var_3342:int;
+        private var _currentSongId: int;
+        private var _currentPosition: int;
+        private var _nextSongId: int;
+        private var _nextPosition: int;
+        private var _syncCount: int;
 
-        public function get currentSongId():int
+        public function get currentSongId(): int
         {
-            return (this.var_3339);
+            return this._currentSongId;
         }
 
-        public function get currentPosition():int
+        public function get currentPosition(): int
         {
-            return (this._currentPosition);
+            return this._currentPosition;
         }
 
-        public function get nextSongId():int
+        public function get nextSongId(): int
         {
-            return (this.var_3340);
+            return this._nextSongId;
         }
 
-        public function get nextPosition():int
+        public function get nextPosition(): int
         {
-            return (this.var_3341);
+            return this._nextPosition;
         }
 
-        public function get syncCount():int
+        public function get syncCount(): int
         {
-            return (this.var_3342);
+            return this._syncCount;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3339 = -1;
+            this._currentSongId = -1;
             this._currentPosition = -1;
-            this.var_3340 = -1;
-            this.var_3341 = -1;
-            this.var_3342 = -1;
-            return (true);
+            this._nextSongId = -1;
+            this._nextPosition = -1;
+            this._syncCount = -1;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3339 = param1.readInteger();
-            this._currentPosition = param1.readInteger();
-            this.var_3340 = param1.readInteger();
-            this.var_3341 = param1.readInteger();
-            this.var_3342 = param1.readInteger();
-            return (true);
+            this._currentSongId = data.readInteger();
+            this._currentPosition = data.readInteger();
+            this._nextSongId = data.readInteger();
+            this._nextPosition = data.readInteger();
+            this._syncCount = data.readInteger();
+
+            return true;
         }
 
     }

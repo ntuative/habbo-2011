@@ -1,54 +1,58 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.chat
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class UserTypingMessageParser implements IMessageParser 
+    public class UserTypingMessageParser implements IMessageParser
     {
 
-        private var _roomId:int = 0;
-        private var _roomCategory:int = 0;
-        private var _userId:int = 0;
-        private var var_3296:Boolean = false;
+        private var _roomId: int = 0;
+        private var _roomCategory: int = 0;
+        private var _userId: int = 0;
+        private var _isTyping: Boolean = false;
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get roomCategory():int
+        public function get roomCategory(): int
         {
-            return (this._roomCategory);
+            return this._roomCategory;
         }
 
-        public function get userId():int
+        public function get userId(): int
         {
-            return (this._userId);
+            return this._userId;
         }
 
-        public function get var_1215():Boolean
+        public function get isTyping(): Boolean
         {
-            return (this.var_3296);
+            return this._isTyping;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._roomId = 0;
             this._roomCategory = 0;
             this._userId = 0;
-            this.var_3296 = false;
-            return (true);
+            this._isTyping = false;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            if (param1 == null)
+            if (data == null)
             {
-                return (false);
-            };
-            this._userId = param1.readInteger();
-            this.var_3296 = (param1.readInteger() == 1);
-            return (true);
+                return false;
+            }
+
+            this._userId = data.readInteger();
+            this._isTyping = data.readInteger() == 1;
+            
+            return true;
         }
 
     }

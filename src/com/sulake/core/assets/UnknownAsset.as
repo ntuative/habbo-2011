@@ -1,69 +1,71 @@
 ﻿package com.sulake.core.assets
 {
+
     import flash.utils.getQualifiedClassName;
 
-    public class UnknownAsset implements IAsset 
+    public class UnknownAsset implements IAsset
     {
 
-        private var _disposed:Boolean = false;
-        private var var_1997:Object = null;
-        private var var_2128:AssetTypeDeclaration;
-        private var var_2104:String;
+        private var _disposed: Boolean = false;
+        private var _content: Object = null;
+        private var _declaration: AssetTypeDeclaration;
+        private var _url: String;
 
-        public function UnknownAsset(param1:AssetTypeDeclaration, param2:String=null)
+        public function UnknownAsset(declaration: AssetTypeDeclaration, url: String = null)
         {
-            this.var_2128 = param1;
-            this.var_2104 = param2;
+            this._declaration = declaration;
+            this._url = url;
         }
 
-        public function get url():String
+        public function get url(): String
         {
-            return (this.var_2104);
+            return this._url;
         }
 
-        public function get content():Object
+        public function get content(): Object
         {
-            return (this.var_1997);
+            return this._content;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get declaration():AssetTypeDeclaration
+        public function get declaration(): AssetTypeDeclaration
         {
-            return (this.var_2128);
+            return this._declaration;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (!this._disposed)
             {
                 this._disposed = true;
-                this.var_1997 = null;
-                this.var_2128 = null;
-                this.var_2104 = null;
-            };
+                this._content = null;
+                this._declaration = null;
+                this._url = null;
+            }
+
         }
 
-        public function setUnknownContent(param1:Object):void
+        public function setUnknownContent(content: Object): void
         {
-            this.var_1997 = param1;
+            this._content = content;
         }
 
-        public function setFromOtherAsset(param1:IAsset):void
+        public function setFromOtherAsset(asset: IAsset): void
         {
-            this.var_1997 = (param1.content as Object);
+            this._content = asset.content as Object;
         }
 
-        public function setParamsDesc(param1:XMLList):void
+        public function setParamsDesc(_: XMLList): void
         {
         }
 
-        public function toString():String
+        public function toString(): String
         {
-            return ((getQualifiedClassName(this) + ": ") + this.var_1997);
+            return getQualifiedClassName(this) + ": " + this._content;
         }
 
     }

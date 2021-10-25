@@ -1,29 +1,30 @@
 ﻿package com.sulake.room.renderer.utils
 {
-    public class ObjectMouseData 
+
+    public class ObjectMouseData
     {
 
-        private var var_2358:String = "";
-        private var var_4983:String = "";
+        private var _objectId: String = "";
+        private var _spriteTag: String = "";
 
-        public function get objectId():String
+        public function get objectId(): String
         {
-            return (this.var_2358);
+            return this._objectId;
         }
 
-        public function set objectId(param1:String):void
+        public function set objectId(value: String): void
         {
-            this.var_2358 = param1;
+            this._objectId = value;
         }
 
-        public function get spriteTag():String
+        public function get spriteTag(): String
         {
-            return (this.var_4983);
+            return this._spriteTag;
         }
 
-        public function set spriteTag(param1:String):void
+        public function set spriteTag(value: String): void
         {
-            this.var_4983 = param1;
+            this._spriteTag = value;
         }
 
     }

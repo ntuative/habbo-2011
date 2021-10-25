@@ -1,11 +1,14 @@
 ﻿package com.sulake.habbo.navigator.domain
 {
+
     import com.sulake.habbo.navigator.HabboNavigator;
     import com.sulake.habbo.communication.messages.incoming.navigator.MsgWithRequestId;
     import com.sulake.habbo.communication.messages.incoming.navigator.RoomEventData;
     import com.sulake.habbo.communication.messages.incoming.navigator.GuestRoomData;
     import com.sulake.habbo.communication.messages.incoming.navigator.PublicRoomShortData;
+
     import flash.utils.Dictionary;
+
     import com.sulake.habbo.communication.messages.parser.room.engine.RoomEntryInfoMessageParser;
     import com.sulake.habbo.communication.messages.incoming.navigator.PopularRoomTagsData;
     import com.sulake.habbo.communication.messages.incoming.navigator.GuestRoomSearchResultData;
@@ -16,382 +19,400 @@
     import com.sulake.habbo.navigator.*;
     import com.sulake.habbo.communication.messages.parser.navigator.*;
 
-    public class NavigatorData 
+    public class NavigatorData
     {
 
-        private static const var_3719:int = 10;
+        private static const UNKNOWN_1: int = 10;
 
-        private var _navigator:HabboNavigator;
-        private var var_3720:MsgWithRequestId;
-        private var var_3721:RoomEventData;
-        private var var_3722:Boolean;
-        private var var_3723:Boolean;
-        private var _currentRoomOwner:Boolean;
-        private var var_2916:int;
-        private var var_3724:GuestRoomData;
-        private var var_3725:PublicRoomShortData;
-        private var var_3726:int;
-        private var var_3727:Boolean;
-        private var var_3728:int;
-        private var var_3729:Boolean;
-        private var var_3257:int;
-        private var var_3730:Boolean;
-        private var var_2558:Array = new Array();
-        private var var_3731:Array = new Array();
-        private var var_3732:int;
-        private var var_3733:int;
-        private var _favouriteIds:Dictionary = new Dictionary();
-        private var var_3734:Boolean;
-        private var var_3735:int;
-        private var var_3736:Boolean;
-        private var var_3737:int = 0;
+        private var _navigator: HabboNavigator;
+        private var _messageData: MsgWithRequestId;
+        private var _roomEventData: RoomEventData;
+        private var _eventMod: Boolean;
+        private var _roomPicker: Boolean;
+        private var _currentRoomOwner: Boolean;
+        private var _avatarId: int;
+        private var _enteredGuestRoom: GuestRoomData;
+        private var _enteredPublicSpace: PublicRoomShortData;
+        private var _publicSpaceNodeId: int;
+        private var _hcMember: Boolean;
+        private var _createdFlatId: int;
+        private var _hotRoomPopupOpen: Boolean;
+        private var _homeRoomId: int;
+        private var _settingsReceived: Boolean;
+        private var _allCategories: Array = [];
+        private var _visibleCategories: Array = [];
+        private var _maximumFavourites: int;
+        private var _favouritesLength: int;
+        private var _favouriteIds: Dictionary = new Dictionary();
+        private var _loading: Boolean;
+        private var _currentRoomRating: int;
+        private var _currentRoomIsStaffPick: Boolean;
+        private var _adIndex: int = 0;
 
-        public function NavigatorData(param1:HabboNavigator)
+        public function NavigatorData(navigator: HabboNavigator)
         {
-            this._navigator = param1;
+            this._navigator = navigator;
         }
 
-        public function get canAddFavourite():Boolean
+        public function get canAddFavourite(): Boolean
         {
-            return ((!(this.var_3724 == null)) && (!(this._currentRoomOwner)));
+            return this._enteredGuestRoom != null && !this._currentRoomOwner;
         }
 
-        public function get canEditRoomSettings():Boolean
+        public function get canEditRoomSettings(): Boolean
         {
-            return ((!(this.var_3724 == null)) && (this._currentRoomOwner));
+            return this._enteredGuestRoom != null && this._currentRoomOwner;
         }
 
-        public function onRoomEnter(param1:RoomEntryInfoMessageParser):void
+        public function onRoomEnter(parser: RoomEntryInfoMessageParser): void
         {
-            this.var_3725 = null;
-            this.var_3724 = null;
+            this._enteredPublicSpace = null;
+            this._enteredGuestRoom = null;
             this._currentRoomOwner = false;
-            if (param1.guestRoom)
+
+            if (parser.guestRoom)
             {
-                this._currentRoomOwner = param1.owner;
+                this._currentRoomOwner = parser.owner;
             }
             else
             {
-                this.var_3725 = param1.publicSpace;
-                this.var_3721 = null;
-            };
+                this._enteredPublicSpace = parser.publicSpace;
+                this._roomEventData = null;
+            }
+
         }
 
-        public function onRoomExit():void
+        public function onRoomExit(): void
         {
-            if (this.var_3721 != null)
+            if (this._roomEventData != null)
             {
-                this.var_3721.dispose();
-                this.var_3721 = null;
-            };
-            if (this.var_3725 != null)
+                this._roomEventData.dispose();
+                this._roomEventData = null;
+            }
+
+            if (this._enteredPublicSpace != null)
             {
-                this.var_3725.dispose();
-                this.var_3725 = null;
-            };
-            if (this.var_3724 != null)
+                this._enteredPublicSpace.dispose();
+                this._enteredPublicSpace = null;
+            }
+
+            if (this._enteredGuestRoom != null)
             {
-                this.var_3724.dispose();
-                this.var_3724 = null;
-            };
+                this._enteredGuestRoom.dispose();
+                this._enteredGuestRoom = null;
+            }
+
             this._currentRoomOwner = false;
         }
 
-        public function set enteredRoom(param1:GuestRoomData):void
+        public function set enteredRoom(data: GuestRoomData): void
         {
-            if (this.var_3724 != null)
+            if (this._enteredGuestRoom != null)
             {
-                this.var_3724.dispose();
-            };
-            this.var_3724 = param1;
+                this._enteredGuestRoom.dispose();
+            }
+
+            this._enteredGuestRoom = data;
         }
 
-        public function set roomEventData(param1:RoomEventData):void
+        public function set roomEventData(data: RoomEventData): void
         {
-            if (this.var_3721 != null)
+            if (this._roomEventData != null)
             {
-                this.var_3721.dispose();
-            };
-            this.var_3721 = param1;
+                this._roomEventData.dispose();
+            }
+
+            this._roomEventData = data;
         }
 
-        public function get popularTagsArrived():Boolean
+        public function get popularTagsArrived(): Boolean
         {
-            return ((!(this.var_3720 == null)) && (!((this.var_3720 as PopularRoomTagsData) == null)));
+            return this._messageData != null && (this._messageData as PopularRoomTagsData) != null;
         }
 
-        public function get guestRoomSearchArrived():Boolean
+        public function get guestRoomSearchArrived(): Boolean
         {
-            return ((!(this.var_3720 == null)) && (!((this.var_3720 as GuestRoomSearchResultData) == null)));
+            return this._messageData != null && (this._messageData as GuestRoomSearchResultData) != null;
         }
 
-        public function get officialRoomsArrived():Boolean
+        public function get officialRoomsArrived(): Boolean
         {
-            return ((!(this.var_3720 == null)) && (!((this.var_3720 as OfficialRoomsData) == null)));
+            return this._messageData != null && (this._messageData as OfficialRoomsData) != null;
         }
 
-        public function set guestRoomSearchResults(param1:GuestRoomSearchResultData):void
-        {
-            this.disposeCurrentMsg();
-            this.var_3720 = param1;
-            this.var_3734 = false;
-        }
-
-        public function set popularTags(param1:PopularRoomTagsData):void
+        public function set guestRoomSearchResults(data: GuestRoomSearchResultData): void
         {
             this.disposeCurrentMsg();
-            this.var_3720 = param1;
-            this.var_3734 = false;
+            this._messageData = data;
+            this._loading = false;
         }
 
-        public function set officialRooms(param1:OfficialRoomsData):void
+        public function set popularTags(data: PopularRoomTagsData): void
         {
             this.disposeCurrentMsg();
-            this.var_3720 = param1;
-            this.var_3734 = false;
+            this._messageData = data;
+            this._loading = false;
         }
 
-        private function disposeCurrentMsg():void
+        public function set officialRooms(data: OfficialRoomsData): void
         {
-            if (this.var_3720 == null)
+            this.disposeCurrentMsg();
+            this._messageData = data;
+            this._loading = false;
+        }
+
+        private function disposeCurrentMsg(): void
+        {
+            if (this._messageData == null)
             {
                 return;
-            };
-            this.var_3720.dispose();
-            this.var_3720 = null;
+            }
+
+            this._messageData.dispose();
+            this._messageData = null;
         }
 
-        public function get guestRoomSearchResults():GuestRoomSearchResultData
+        public function get guestRoomSearchResults(): GuestRoomSearchResultData
         {
-            return (this.var_3720 as GuestRoomSearchResultData);
+            return this._messageData as GuestRoomSearchResultData;
         }
 
-        public function get popularTags():PopularRoomTagsData
+        public function get popularTags(): PopularRoomTagsData
         {
-            return (this.var_3720 as PopularRoomTagsData);
+            return this._messageData as PopularRoomTagsData;
         }
 
-        public function get officialRooms():OfficialRoomsData
+        public function get officialRooms(): OfficialRoomsData
         {
-            return (this.var_3720 as OfficialRoomsData);
+            return this._messageData as OfficialRoomsData;
         }
 
-        public function get roomEventData():RoomEventData
+        public function get roomEventData(): RoomEventData
         {
-            return (this.var_3721);
+            return this._roomEventData;
         }
 
-        public function get avatarId():int
+        public function get avatarId(): int
         {
-            return (this.var_2916);
+            return this._avatarId;
         }
 
-        public function get eventMod():Boolean
+        public function get eventMod(): Boolean
         {
-            return (this.var_3722);
+            return this._eventMod;
         }
 
-        public function get roomPicker():Boolean
+        public function get roomPicker(): Boolean
         {
-            return (this.var_3723);
+            return this._roomPicker;
         }
 
-        public function get currentRoomOwner():Boolean
+        public function get currentRoomOwner(): Boolean
         {
-            return (this._currentRoomOwner);
+            return this._currentRoomOwner;
         }
 
-        public function get enteredGuestRoom():GuestRoomData
+        public function get enteredGuestRoom(): GuestRoomData
         {
-            return (this.var_3724);
+            return this._enteredGuestRoom;
         }
 
-        public function get enteredPublicSpace():PublicRoomShortData
+        public function get enteredPublicSpace(): PublicRoomShortData
         {
-            return (this.var_3725);
+            return this._enteredPublicSpace;
         }
 
-        public function get hcMember():Boolean
+        public function get hcMember(): Boolean
         {
-            return (this.var_3727);
+            return this._hcMember;
         }
 
-        public function get createdFlatId():int
+        public function get createdFlatId(): int
         {
-            return (this.var_3728);
+            return this._createdFlatId;
         }
 
-        public function get homeRoomId():int
+        public function get homeRoomId(): int
         {
-            return (this.var_3257);
+            return this._homeRoomId;
         }
 
-        public function get hotRoomPopupOpen():Boolean
+        public function get hotRoomPopupOpen(): Boolean
         {
-            return (this.var_3729);
+            return this._hotRoomPopupOpen;
         }
 
-        public function get currentRoomRating():int
+        public function get currentRoomRating(): int
         {
-            return (this.var_3735);
+            return this._currentRoomRating;
         }
 
-        public function get publicSpaceNodeId():int
+        public function get publicSpaceNodeId(): int
         {
-            return (this.var_3726);
+            return this._publicSpaceNodeId;
         }
 
-        public function get settingsReceived():Boolean
+        public function get settingsReceived(): Boolean
         {
-            return (this.var_3730);
+            return this._settingsReceived;
         }
 
-        public function get adIndex():int
+        public function get adIndex(): int
         {
-            return (this.var_3737);
+            return this._adIndex;
         }
 
-        public function get currentRoomIsStaffPick():Boolean
+        public function get currentRoomIsStaffPick(): Boolean
         {
-            return (this.var_3736);
+            return this._currentRoomIsStaffPick;
         }
 
-        public function set avatarId(param1:int):void
+        public function set avatarId(value: int): void
         {
-            this.var_2916 = param1;
+            this._avatarId = value;
         }
 
-        public function set createdFlatId(param1:int):void
+        public function set createdFlatId(value: int): void
         {
-            this.var_3728 = param1;
+            this._createdFlatId = value;
         }
 
-        public function set hcMember(param1:Boolean):void
+        public function set hcMember(value: Boolean): void
         {
-            this.var_3727 = param1;
+            this._hcMember = value;
         }
 
-        public function set eventMod(param1:Boolean):void
+        public function set eventMod(value: Boolean): void
         {
-            this.var_3722 = param1;
+            this._eventMod = value;
         }
 
-        public function set roomPicker(param1:Boolean):void
+        public function set roomPicker(value: Boolean): void
         {
-            this.var_3723 = param1;
+            this._roomPicker = value;
         }
 
-        public function set hotRoomPopupOpen(param1:Boolean):void
+        public function set hotRoomPopupOpen(value: Boolean): void
         {
-            this.var_3729 = param1;
+            this._hotRoomPopupOpen = value;
         }
 
-        public function set homeRoomId(param1:int):void
+        public function set homeRoomId(value: int): void
         {
-            this.var_3257 = param1;
+            this._homeRoomId = value;
         }
 
-        public function set currentRoomRating(param1:int):void
+        public function set currentRoomRating(value: int): void
         {
-            this.var_3735 = param1;
+            this._currentRoomRating = value;
         }
 
-        public function set publicSpaceNodeId(param1:int):void
+        public function set publicSpaceNodeId(value: int): void
         {
-            this.var_3726 = param1;
+            this._publicSpaceNodeId = value;
         }
 
-        public function set settingsReceived(param1:Boolean):void
+        public function set settingsReceived(value: Boolean): void
         {
-            this.var_3730 = param1;
+            this._settingsReceived = value;
         }
 
-        public function set adIndex(param1:int):void
+        public function set adIndex(value: int): void
         {
-            this.var_3737 = param1;
+            this._adIndex = value;
         }
 
-        public function set currentRoomIsStaffPick(param1:Boolean):void
+        public function set currentRoomIsStaffPick(value: Boolean): void
         {
-            this.var_3736 = param1;
+            this._currentRoomIsStaffPick = value;
         }
 
-        public function set categories(param1:Array):void
+        public function set categories(cats: Array): void
         {
-            var _loc2_:FlatCategory;
-            this.var_2558 = param1;
-            this.var_3731 = new Array();
-            for each (_loc2_ in this.var_2558)
+            this._allCategories = cats;
+            this._visibleCategories = [];
+            
+            var category: FlatCategory;
+            
+            for each (category in this._allCategories)
             {
-                if (_loc2_.visible)
+                if (category.visible)
                 {
-                    this.var_3731.push(_loc2_);
-                };
-            };
+                    this._visibleCategories.push(category);
+                }
+
+            }
+
         }
 
-        public function get allCategories():Array
+        public function get allCategories(): Array
         {
-            return (this.var_2558);
+            return this._allCategories;
         }
 
-        public function get visibleCategories():Array
+        public function get visibleCategories(): Array
         {
-            return (this.var_3731);
+            return this._visibleCategories;
         }
 
-        public function onFavourites(param1:FavouritesMessageParser):void
+        public function onFavourites(parser: FavouritesMessageParser): void
         {
-            var _loc2_:int;
-            this.var_3732 = param1.limit;
-            this.var_3733 = param1.favouriteRoomIds.length;
+            this._maximumFavourites = parser.limit;
+            this._favouritesLength = parser.favouriteRoomIds.length;
             this._favouriteIds = new Dictionary();
-            for each (_loc2_ in param1.favouriteRoomIds)
+            
+            var id: int;
+
+            for each (id in parser.favouriteRoomIds)
             {
-                this._favouriteIds[_loc2_] = "yes";
-            };
+                this._favouriteIds[id] = "yes";
+            }
+
         }
 
-        public function favouriteChanged(param1:int, param2:Boolean):void
+        public function favouriteChanged(id: int, favourite: Boolean): void
         {
-            this._favouriteIds[param1] = ((param2) ? "yes" : null);
-            this.var_3733 = (this.var_3733 + ((param2) ? 1 : -1));
+            this._favouriteIds[id] = favourite ? "yes" : null;
+            this._favouritesLength = this._favouritesLength + (favourite ? 1 : -1);
         }
 
-        public function isCurrentRoomFavourite():Boolean
+        public function isCurrentRoomFavourite(): Boolean
         {
-            var _loc1_:int = this.var_3724.flatId;
-            return (!(this._favouriteIds[_loc1_] == null));
+            var id: int = this._enteredGuestRoom.flatId;
+
+            return this._favouriteIds[id] != null;
         }
 
-        public function isCurrentRoomHome():Boolean
+        public function isCurrentRoomHome(): Boolean
         {
-            if (this.var_3724 == null)
+            if (this._enteredGuestRoom == null)
             {
-                return (false);
-            };
-            var _loc1_:int = this.var_3724.flatId;
-            return (this.var_3257 == _loc1_);
+                return false;
+            }
+
+            var id: int = this._enteredGuestRoom.flatId;
+
+            return this._homeRoomId == id;
         }
 
-        public function isRoomFavourite(param1:int):Boolean
+        public function isRoomFavourite(id: int): Boolean
         {
-            return (!(this._favouriteIds[param1] == null));
+            return this._favouriteIds[id] != null;
         }
 
-        public function isFavouritesFull():Boolean
+        public function isFavouritesFull(): Boolean
         {
-            return (this.var_3733 >= this.var_3732);
+            return this._favouritesLength >= this._maximumFavourites;
         }
 
-        public function startLoading():void
+        public function startLoading(): void
         {
-            this.var_3734 = true;
+            this._loading = true;
         }
 
-        public function isLoading():Boolean
+        public function isLoading(): Boolean
         {
-            return (this.var_3734);
+            return this._loading;
         }
 
     }

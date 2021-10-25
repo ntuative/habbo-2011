@@ -1,9 +1,10 @@
 ﻿package com.sulake.habbo.navigator
 {
-    public interface BinarySearchTest 
+
+    public interface BinarySearchTest
     {
 
-        function test(param1:int):Boolean;
+        function test(param1: int): Boolean;
 
     }
 }

@@ -1,10 +1,12 @@
 package com.sulake.habbo.avatar.structure
 {
-    public interface IStructureData 
+
+    public interface IStructureData
     {
 
-        function parse(param1:XML):Boolean;
-        function appendXML(param1:XML):Boolean;
+        function parse(param1: XML): Boolean;
+
+        function appendXML(param1: XML): Boolean;
 
     }
 }

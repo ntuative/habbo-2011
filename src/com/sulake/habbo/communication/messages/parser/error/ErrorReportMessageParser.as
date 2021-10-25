@@ -1,44 +1,47 @@
 ﻿package com.sulake.habbo.communication.messages.parser.error
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ErrorReportMessageParser implements IMessageParser 
+    public class ErrorReportMessageParser implements IMessageParser
     {
 
-        private var var_2102:int;
-        private var var_3139:int;
-        private var var_3140:String;
+        private var _errorCode: int;
+        private var _messageId: int;
+        private var _timestamp: String;
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3139 = param1.readInteger();
-            this.var_2102 = param1.readInteger();
-            this.var_3140 = param1.readString();
-            return (true);
+            this._messageId = data.readInteger();
+            this._errorCode = data.readInteger();
+            this._timestamp = data.readString();
+            
+            return true;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_2102 = 0;
-            this.var_3139 = 0;
-            this.var_3140 = null;
-            return (true);
+            this._errorCode = 0;
+            this._messageId = 0;
+            this._timestamp = null;
+
+            return true;
         }
 
-        public function get errorCode():int
+        public function get errorCode(): int
         {
-            return (this.var_2102);
+            return this._errorCode;
         }
 
-        public function get messageId():int
+        public function get messageId(): int
         {
-            return (this.var_3139);
+            return this._messageId;
         }
 
-        public function get timestamp():String
+        public function get timestamp(): String
         {
-            return (this.var_3140);
+            return this._timestamp;
         }
 
     }

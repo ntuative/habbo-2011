@@ -1,39 +1,40 @@
 ﻿package com.sulake.habbo.avatar.alias
 {
-    public class AssetAlias 
+
+    public class AssetAlias
     {
 
-        private var _name:String;
-        private var var_2228:String;
-        private var var_2126:Boolean;
-        private var var_2127:Boolean;
+        private var _name: String;
+        private var _link: String;
+        private var _flipH: Boolean;
+        private var _flipV: Boolean;
 
-        public function AssetAlias(param1:XML)
+        public function AssetAlias(param1: XML)
         {
             this._name = String(param1.@name);
-            this.var_2228 = String(param1.@link);
-            this.var_2126 = Boolean(parseInt(param1.@fliph));
-            this.var_2127 = Boolean(parseInt(param1.@flipv));
+            this._link = String(param1.@link);
+            this._flipH = Boolean(parseInt(param1.@fliph));
+            this._flipV = Boolean(parseInt(param1.@flipv));
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get link():String
+        public function get link(): String
         {
-            return (this.var_2228);
+            return this._link;
         }
 
-        public function get flipH():Boolean
+        public function get flipH(): Boolean
         {
-            return (this.var_2126);
+            return this._flipH;
         }
 
-        public function get flipV():Boolean
+        public function get flipV(): Boolean
         {
-            return (this.var_2127);
+            return this._flipV;
         }
 
     }

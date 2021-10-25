@@ -1,97 +1,118 @@
 ﻿package com.sulake.core.assets
 {
+
     import flash.media.Sound;
     import flash.utils.ByteArray;
 
-    public class SoundAsset implements IAsset 
+    public class SoundAsset implements IAsset
     {
 
-        private var _disposed:Boolean = false;
-        private var var_1997:Sound = null;
-        private var var_2128:AssetTypeDeclaration;
-        private var var_2104:String;
+        private var _disposed: Boolean = false;
+        private var _content: Sound = null;
+        private var _declaration: AssetTypeDeclaration;
+        private var _url: String;
 
-        public function SoundAsset(param1:AssetTypeDeclaration, param2:String=null)
+        public function SoundAsset(declaration: AssetTypeDeclaration, url: String = null)
         {
-            this.var_2128 = param1;
-            this.var_2104 = param2;
+            this._declaration = declaration;
+            this._url = url;
         }
 
-        public function get url():String
+        public function get url(): String
         {
-            return (this.var_2104);
+            return this._url;
         }
 
-        public function get content():Object
+        public function get content(): Object
         {
-            return (this.var_1997 as Object);
+            return this._content as Object;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get declaration():AssetTypeDeclaration
+        public function get declaration(): AssetTypeDeclaration
         {
-            return (this.var_2128);
+            return this._declaration;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (!this._disposed)
             {
                 this._disposed = true;
-                this.var_1997 = null;
-                this.var_2128 = null;
-                this.var_2104 = null;
-            };
+                this._content = null;
+                this._declaration = null;
+                this._url = null;
+            }
+
         }
 
-        public function setUnknownContent(param1:Object):void
+        public function setUnknownContent(content: Object): void
         {
-            if ((param1 is Sound))
+            if (content is Sound)
             {
-                if (this.var_1997)
+                if (this._content != null)
                 {
-                    this.var_1997.close();
-                };
-                this.var_1997 = (param1 as Sound);
+                    this._content.close();
+                }
+
+
+                this._content = (content as Sound);
+
                 return;
-            };
-            if ((param1 is ByteArray))
+            }
+
+
+            if (content is ByteArray)
             {
-            };
-            if ((param1 is Class))
+                // no-op
+            }
+
+
+            if (content is Class)
             {
-                if (this.var_1997)
+                if (this._content != null)
                 {
-                    this.var_1997.close();
-                };
-                this.var_1997 = (new (param1)() as Sound);
+                    this._content.close();
+                }
+
+
+                this._content = new content() as Sound;
+
                 return;
-            };
-            if ((param1 is SoundAsset))
+            }
+
+
+            if (content is SoundAsset)
             {
-                if (this.var_1997)
+                if (this._content != null)
                 {
-                    this.var_1997.close();
-                };
-                this.var_1997 = SoundAsset(param1).var_1997;
-                return;
-            };
+                    this._content.close();
+                }
+
+
+                this._content = SoundAsset(content)._content;
+
+
+            }
+
         }
 
-        public function setFromOtherAsset(param1:IAsset):void
+        public function setFromOtherAsset(asset: IAsset): void
         {
-            if ((param1 is SoundAsset))
+            if (asset is SoundAsset)
             {
-                this.var_1997 = SoundAsset(param1).var_1997;
-            };
+                this._content = SoundAsset(asset)._content;
+            }
+
         }
 
-        public function setParamsDesc(param1:XMLList):void
+        public function setParamsDesc(params: XMLList): void
         {
+            // no-op
         }
 
     }

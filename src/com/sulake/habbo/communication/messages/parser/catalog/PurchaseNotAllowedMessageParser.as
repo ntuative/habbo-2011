@@ -1,28 +1,31 @@
 ﻿package com.sulake.habbo.communication.messages.parser.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PurchaseNotAllowedMessageParser implements IMessageParser 
+    public class PurchaseNotAllowedMessageParser implements IMessageParser
     {
 
-        private var var_2102:int = 0;
+        private var _errorCode: int = 0;
 
-        public function get errorCode():int
+        public function get errorCode(): int
         {
-            return (this.var_2102);
+            return this._errorCode;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_2102 = 0;
-            return (true);
+            this._errorCode = 0;
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2102 = param1.readInteger();
-            return (true);
+            this._errorCode = data.readInteger();
+            
+            return true;
         }
 
     }

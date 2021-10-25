@@ -1,29 +1,32 @@
 ﻿package com.sulake.habbo.communication.messages.parser.userdefinedroomevents
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.userdefinedroomevents.TriggerDefinition;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class WiredFurniTriggerMessageParser implements IMessageParser 
+    public class WiredFurniTriggerMessageParser implements IMessageParser
     {
 
-        private var var_3349:TriggerDefinition;
+        private var _def: TriggerDefinition;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3349 = null;
-            return (true);
+            this._def = null;
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3349 = new TriggerDefinition(param1);
-            return (true);
+            this._def = new TriggerDefinition(data);
+
+            return true;
         }
 
-        public function get def():TriggerDefinition
+        public function get def(): TriggerDefinition
         {
-            return (this.var_3349);
+            return this._def;
         }
 
     }

@@ -1,52 +1,55 @@
 ﻿package com.sulake.habbo.ui
 {
+
     import com.sulake.habbo.widget.enums.RoomWidgetEnum;
     import com.sulake.habbo.widget.messages.RoomWidgetPollMessage;
     import com.sulake.habbo.widget.messages.RoomWidgetMessage;
     import com.sulake.habbo.widget.events.RoomWidgetUpdateEvent;
     import com.sulake.habbo.session.events.RoomSessionPollEvent;
     import com.sulake.habbo.widget.events.RoomWidgetPollUpdateEvent;
+
     import flash.events.Event;
 
-    public class PollWidgetHandler implements IRoomWidgetHandler 
+    public class PollWidgetHandler implements IRoomWidgetHandler
     {
 
-        private var _disposed:Boolean = false;
-        private var _container:IRoomWidgetHandlerContainer = null;
+        private var _disposed: Boolean = false;
+        private var _container: IRoomWidgetHandlerContainer = null;
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get type():String
+        public function get type(): String
         {
-            return (RoomWidgetEnum.var_273);
+            return RoomWidgetEnum.var_273;
         }
 
-        public function set container(param1:IRoomWidgetHandlerContainer):void
+        public function set container(param1: IRoomWidgetHandlerContainer): void
         {
             this._container = param1;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this._disposed = true;
             this._container = null;
         }
 
-        public function getWidgetMessages():Array
+        public function getWidgetMessages(): Array
         {
-            return ([RoomWidgetPollMessage.ANSWER, RoomWidgetPollMessage.var_1889, RoomWidgetPollMessage.var_1890]);
+            return [RoomWidgetPollMessage.ANSWER, RoomWidgetPollMessage.var_1889, RoomWidgetPollMessage.var_1890];
         }
 
-        public function processWidgetMessage(param1:RoomWidgetMessage):RoomWidgetUpdateEvent
+        public function processWidgetMessage(param1: RoomWidgetMessage): RoomWidgetUpdateEvent
         {
-            var _loc2_:RoomWidgetPollMessage = (param1 as RoomWidgetPollMessage);
+            var _loc2_: RoomWidgetPollMessage = param1 as RoomWidgetPollMessage;
             if (_loc2_ == null)
             {
-                return (null);
-            };
+                return null;
+            }
+
             switch (param1.type)
             {
                 case RoomWidgetPollMessage.var_1890:
@@ -58,31 +61,34 @@
                 case RoomWidgetPollMessage.ANSWER:
                     this._container.roomSession.sendPollAnswerMessage(_loc2_.id, _loc2_.questionId, _loc2_.answers);
                     break;
-            };
-            return (null);
+            }
+
+            return null;
         }
 
-        public function getProcessedEvents():Array
+        public function getProcessedEvents(): Array
         {
-            var _loc1_:Array = [];
+            var _loc1_: Array = [];
             _loc1_.push(RoomSessionPollEvent.var_397);
             _loc1_.push(RoomSessionPollEvent.var_61);
             _loc1_.push(RoomSessionPollEvent.var_396);
-            return (_loc1_);
+            return _loc1_;
         }
 
-        public function processEvent(param1:Event):void
+        public function processEvent(param1: Event): void
         {
-            var _loc3_:RoomWidgetPollUpdateEvent;
-            if (((this._container == null) || (this._container.events == null)))
+            var _loc3_: RoomWidgetPollUpdateEvent;
+            if (this._container == null || this._container.events == null)
             {
                 return;
-            };
-            var _loc2_:RoomSessionPollEvent = (param1 as RoomSessionPollEvent);
+            }
+
+            var _loc2_: RoomSessionPollEvent = param1 as RoomSessionPollEvent;
             if (_loc2_ == null)
             {
                 return;
-            };
+            }
+
             switch (param1.type)
             {
                 case RoomSessionPollEvent.var_397:
@@ -100,15 +106,17 @@
                     _loc3_.numQuestions = _loc2_.numQuestions;
                     _loc3_.questionArray = _loc2_.questionArray;
                     break;
-            };
+            }
+
             if (_loc3_ == null)
             {
                 return;
-            };
+            }
+
             this._container.events.dispatchEvent(_loc3_);
         }
 
-        public function update():void
+        public function update(): void
         {
         }
 

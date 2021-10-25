@@ -1,79 +1,85 @@
 ﻿package com.sulake.habbo.communication.messages.parser.friendlist
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.friendlist.FriendCategoryData;
     import com.sulake.habbo.communication.messages.incoming.friendlist.FriendData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class MessengerInitMessageParser implements IMessageParser 
+    public class MessengerInitMessageParser implements IMessageParser
     {
 
-        private var var_3153:int;
-        private var var_3154:int;
-        private var var_3155:int;
-        private var var_3156:int;
-        private var var_511:Array;
-        private var var_2681:Array;
+        private var _userFriendLimit: int;
+        private var _normalFriendLimit: int;
+        private var _extendedFriendLimit: int;
+        private var _evenMoreExtendedFriendLimit: int;
+        private var _categories: Array;
+        private var _friends: Array;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_511 = new Array();
-            this.var_2681 = new Array();
-            return (true);
+            this._categories = [];
+            this._friends = [];
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc4_:int;
-            this.var_3153 = param1.readInteger();
-            this.var_3154 = param1.readInteger();
-            this.var_3155 = param1.readInteger();
-            this.var_3156 = param1.readInteger();
-            var _loc2_:int = param1.readInteger();
-            _loc4_ = 0;
-            while (_loc4_ < _loc2_)
+            this._userFriendLimit = data.readInteger();
+            this._normalFriendLimit = data.readInteger();
+            this._extendedFriendLimit = data.readInteger();
+            this._evenMoreExtendedFriendLimit = data.readInteger();
+
+            var friendCategoryCount: int = data.readInteger();
+            var i: int = 0;
+
+            while (i < friendCategoryCount)
             {
-                this.var_511.push(new FriendCategoryData(param1));
-                _loc4_++;
-            };
-            var _loc3_:int = param1.readInteger();
-            _loc4_ = 0;
-            while (_loc4_ < _loc3_)
+                this._categories.push(new FriendCategoryData(data));
+                i++;
+            }
+
+            var friendCount: int = data.readInteger();
+            i = 0;
+
+            while (i < friendCount)
             {
-                this.var_2681.push(new FriendData(param1));
-                _loc4_++;
-            };
-            return (true);
+                this._friends.push(new FriendData(data));
+                i++;
+            }
+
+            return true;
         }
 
-        public function get userFriendLimit():int
+        public function get userFriendLimit(): int
         {
-            return (this.var_3153);
+            return this._userFriendLimit;
         }
 
-        public function get normalFriendLimit():int
+        public function get normalFriendLimit(): int
         {
-            return (this.var_3154);
+            return this._normalFriendLimit;
         }
 
-        public function get extendedFriendLimit():int
+        public function get extendedFriendLimit(): int
         {
-            return (this.var_3155);
+            return this._extendedFriendLimit;
         }
 
-        public function get categories():Array
+        public function get categories(): Array
         {
-            return (this.var_511);
+            return this._categories;
         }
 
-        public function get friends():Array
+        public function get friends(): Array
         {
-            return (this.var_2681);
+            return this._friends;
         }
 
-        public function get evenMoreExtendedFriendLimit():int
+        public function get evenMoreExtendedFriendLimit(): int
         {
-            return (this.var_3156);
+            return this._evenMoreExtendedFriendLimit;
         }
 
     }

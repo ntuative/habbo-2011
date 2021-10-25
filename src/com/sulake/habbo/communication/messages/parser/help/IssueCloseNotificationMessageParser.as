@@ -1,27 +1,29 @@
 ﻿package com.sulake.habbo.communication.messages.parser.help
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class IssueCloseNotificationMessageParser implements IMessageParser 
+    public class IssueCloseNotificationMessageParser implements IMessageParser
     {
 
-        private var var_3188:int;
+        private var _closeReason: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3188 = param1.readInteger();
-            return (true);
+            this._closeReason = data.readInteger();
+            
+            return true;
         }
 
-        public function get closeReason():int
+        public function get closeReason(): int
         {
-            return (this.var_3188);
+            return this._closeReason;
         }
 
     }

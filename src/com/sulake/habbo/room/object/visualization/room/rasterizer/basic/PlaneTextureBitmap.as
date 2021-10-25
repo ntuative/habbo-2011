@@ -1,20 +1,21 @@
 ﻿package com.sulake.habbo.room.object.visualization.room.rasterizer.basic
 {
+
     import flash.display.BitmapData;
 
-    public class PlaneTextureBitmap 
+    public class PlaneTextureBitmap
     {
 
-        public static const var_1873:Number = -1;
-        public static const MAX_NORMAL_COORDINATE_VALUE:Number = 1;
+        public static const var_1873: Number = -1;
+        public static const MAX_NORMAL_COORDINATE_VALUE: Number = 1;
 
-        private var _bitmap:BitmapData = null;
-        private var var_4185:Number = -1;
-        private var _normalMaxX:Number = 1;
-        private var var_4186:Number = -1;
-        private var var_4187:Number = 1;
+        private var _bitmap: BitmapData = null;
+        private var var_4185: Number = -1;
+        private var _normalMaxX: Number = 1;
+        private var var_4186: Number = -1;
+        private var var_4187: Number = 1;
 
-        public function PlaneTextureBitmap(param1:BitmapData, param2:Number=-1, param3:Number=1, param4:Number=-1, param5:Number=1)
+        public function PlaneTextureBitmap(param1: BitmapData, param2: Number = -1, param3: Number = 1, param4: Number = -1, param5: Number = 1)
         {
             this.var_4185 = param2;
             this._normalMaxX = param3;
@@ -23,32 +24,32 @@
             this._bitmap = param1;
         }
 
-        public function get bitmap():BitmapData
+        public function get bitmap(): BitmapData
         {
-            return (this._bitmap);
+            return this._bitmap;
         }
 
-        public function get normalMinX():Number
+        public function get normalMinX(): Number
         {
-            return (this.var_4185);
+            return this.var_4185;
         }
 
-        public function get normalMaxX():Number
+        public function get normalMaxX(): Number
         {
-            return (this._normalMaxX);
+            return this._normalMaxX;
         }
 
-        public function get normalMinY():Number
+        public function get normalMinY(): Number
         {
-            return (this.var_4186);
+            return this.var_4186;
         }
 
-        public function get normalMaxY():Number
+        public function get normalMaxY(): Number
         {
-            return (this.var_4187);
+            return this.var_4187;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this._bitmap = null;
         }

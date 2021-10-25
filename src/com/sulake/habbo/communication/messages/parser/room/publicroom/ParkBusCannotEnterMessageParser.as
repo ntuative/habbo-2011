@@ -1,28 +1,30 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.publicroom
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ParkBusCannotEnterMessageParser implements IMessageParser 
+    public class ParkBusCannotEnterMessageParser implements IMessageParser
     {
 
-        private var var_3161:String = "";
+        private var _reason: String = "";
 
-        public function get reason():String
+        public function get reason(): String
         {
-            return (this.var_3161);
+            return this._reason;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3161 = "";
-            return (true);
+            this._reason = "";
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3161 = param1.readString();
-            return (true);
+            this._reason = data.readString();
+            
+            return true;
         }
 
     }

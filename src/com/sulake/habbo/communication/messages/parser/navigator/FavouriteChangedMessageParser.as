@@ -1,34 +1,36 @@
 ﻿package com.sulake.habbo.communication.messages.parser.navigator
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class FavouriteChangedMessageParser implements IMessageParser 
+    public class FavouriteChangedMessageParser implements IMessageParser
     {
 
-        private var var_2972:int;
-        private var var_3251:Boolean;
+        private var _flatId: int;
+        private var _added: Boolean;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2972 = param1.readInteger();
-            this.var_3251 = param1.readBoolean();
-            return (true);
+            this._flatId = data.readInteger();
+            this._added = data.readBoolean();
+            
+            return true;
         }
 
-        public function get flatId():int
+        public function get flatId(): int
         {
-            return (this.var_2972);
+            return this._flatId;
         }
 
-        public function get added():Boolean
+        public function get added(): Boolean
         {
-            return (this.var_3251);
+            return this._added;
         }
 
     }

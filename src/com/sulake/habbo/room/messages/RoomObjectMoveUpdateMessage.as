@@ -1,38 +1,41 @@
 ﻿package com.sulake.habbo.room.messages
 {
+
     import com.sulake.room.messages.RoomObjectUpdateMessage;
     import com.sulake.room.utils.IVector3d;
 
-    public class RoomObjectMoveUpdateMessage extends RoomObjectUpdateMessage 
+    public class RoomObjectMoveUpdateMessage extends RoomObjectUpdateMessage
     {
 
-        private var var_3520:IVector3d;
-        private var var_3950:Boolean;
+        private var _realTargetLoc: IVector3d;
+        private var _isSlideUpdate: Boolean;
 
-        public function RoomObjectMoveUpdateMessage(param1:IVector3d, param2:IVector3d, param3:IVector3d, param4:Boolean=false)
+        public function RoomObjectMoveUpdateMessage(loc: IVector3d, realTargetLoc: IVector3d, dir: IVector3d, isSlideUpdate: Boolean = false)
         {
-            super(param1, param3);
-            this.var_3950 = param4;
-            this.var_3520 = param2;
+            super(loc, dir);
+            
+            this._isSlideUpdate = isSlideUpdate;
+            this._realTargetLoc = realTargetLoc;
         }
 
-        public function get targetLoc():IVector3d
+        public function get targetLoc(): IVector3d
         {
-            if (this.var_3520 == null)
+            if (this._realTargetLoc == null)
             {
-                return (loc);
-            };
-            return (this.var_3520);
+                return loc;
+            }
+
+            return this._realTargetLoc;
         }
 
-        public function get realTargetLoc():IVector3d
+        public function get realTargetLoc(): IVector3d
         {
-            return (this.var_3520);
+            return this._realTargetLoc;
         }
 
-        public function get isSlideUpdate():Boolean
+        public function get isSlideUpdate(): Boolean
         {
-            return (this.var_3950);
+            return this._isSlideUpdate;
         }
 
     }

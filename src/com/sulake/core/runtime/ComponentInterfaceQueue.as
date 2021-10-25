@@ -1,49 +1,54 @@
 ﻿package com.sulake.core.runtime
 {
+
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.core.runtime.IID;
 
-    internal class ComponentInterfaceQueue implements IDisposable 
+    internal class ComponentInterfaceQueue implements IDisposable
     {
 
-        private var var_2178:IID;
-        private var var_978:Boolean;
-        private var var_2179:Array;
+        private var _identifier: IID;
+        private var _disposed: Boolean;
+        private var _receivers: Array;
 
-        public function ComponentInterfaceQueue(param1:IID)
+        public function ComponentInterfaceQueue(param1: IID)
         {
-            this.var_2178 = param1;
-            this.var_2179 = new Array();
-            this.var_978 = false;
+            this._identifier = param1;
+            this._receivers = [];
+            this._disposed = false;
         }
 
-        public function get identifier():IID
+        public function get identifier(): IID
         {
-            return (this.var_2178);
+            return this._identifier;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this.var_978);
+            return this._disposed;
         }
 
-        public function get receivers():Array
+        public function get receivers(): Array
         {
-            return (this.var_2179);
+            return this._receivers;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            if (!this.var_978)
+            if (!this._disposed)
             {
-                this.var_978 = true;
-                this.var_2178 = null;
-                while (this.var_2179.length > 0)
+                this._disposed = true;
+                this._identifier = null;
+
+                while (this._receivers.length > 0)
                 {
-                    this.var_2179.pop();
-                };
-                this.var_2179 = null;
-            };
+                    this._receivers.pop();
+                }
+
+
+                this._receivers = null;
+            }
+
         }
 
     }

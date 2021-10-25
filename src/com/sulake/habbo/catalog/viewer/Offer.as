@@ -1,212 +1,224 @@
 ﻿package com.sulake.habbo.catalog.viewer
 {
+
     import com.sulake.habbo.catalog.IPurchasableOffer;
     import com.sulake.habbo.session.furniture.IFurnitureData;
     import com.sulake.habbo.session.product.IProductData;
 
-    public class Offer implements IPurchasableOffer 
+    public class Offer implements IPurchasableOffer
     {
 
-        public static const var_783:String = "pricing_model_unknown";
-        public static const var_784:String = "pricing_model_single";
-        public static const var_785:String = "pricing_model_multi";
-        public static const var_786:String = "pricing_model_bundle";
-        public static const PRICE_TYPE_NONE:String = "price_type_none";
-        public static const var_716:String = "price_type_credits";
-        public static const var_787:String = "price_type_activitypoints";
-        public static const var_788:String = "price_type_credits_and_activitypoints";
+        public static const PRICING_MODEL_UNKNOWN: String = "pricing_model_unknown";
+        public static const PRICING_MODEL_SINGLE: String = "pricing_model_single";
+        public static const PRICING_MODEL_MULTI: String = "pricing_model_multi";
+        public static const PRICING_MODEL_BUNDLE: String = "pricing_model_bundle";
+        public static const PRICE_TYPE_NONE: String = "price_type_none";
+        public static const PRICE_TYPE_CREDITS: String = "price_type_credits";
+        public static const PRICE_TYPE_ACTIVITYPOINTS: String = "price_type_activitypoints";
+        public static const PRICE_TYPE_CREDITS_AND_ACTIVITYPOINTS: String = "price_type_credits_and_activitypoints";
 
-        private var var_2826:String;
-        private var var_2827:String;
-        private var _offerId:int;
-        private var var_2828:String;
-        private var var_2829:int;
-        private var var_2830:int;
-        private var var_2831:int;
-        private var var_2610:ICatalogPage;
-        private var var_2832:IProductContainer;
-        private var var_2620:String = "";
-        private var var_2833:int;
+        private var _pricingModel: String;
+        private var _priceType: String;
+        private var _offerId: int;
+        private var _localizationId: String;
+        private var _priceInCredits: int;
+        private var _priceInActivityPoints: int;
+        private var _activityPointType: int;
+        private var _page: ICatalogPage;
+        private var _productContainer: IProductContainer;
+        private var _extraParameter: String = "";
+        private var _previewCallbackId: int;
 
-        public function Offer(param1:int, param2:String, param3:int, param4:int, param5:int, param6:Array, param7:ICatalogPage)
+        public function Offer(offerId: int, localizationId: String, priceInCredits: int, priceInActivityPoints: int, activityPointType: int, products: Array, page: ICatalogPage)
         {
-            this._offerId = param1;
-            this.var_2828 = param2;
-            this.var_2829 = param3;
-            this.var_2830 = param4;
-            this.var_2831 = param5;
-            this.var_2610 = param7;
-            this.analyzePricingModel(param6);
+            this._offerId = offerId;
+            this._localizationId = localizationId;
+            this._priceInCredits = priceInCredits;
+            this._priceInActivityPoints = priceInActivityPoints;
+            this._activityPointType = activityPointType;
+            this._page = page;
+            this.analyzePricingModel(products);
             this.analyzePriceType();
-            this.createProductContainer(param6);
+            this.createProductContainer(products);
         }
 
-        public function get extraParameter():String
+        public function get extraParameter(): String
         {
-            return (this.var_2620);
+            return this._extraParameter;
         }
 
-        public function set extraParameter(param1:String):void
+        public function set extraParameter(param1: String): void
         {
-            this.var_2620 = param1;
+            this._extraParameter = param1;
         }
 
-        public function get page():ICatalogPage
+        public function get page(): ICatalogPage
         {
-            return (this.var_2610);
+            return this._page;
         }
 
-        public function get offerId():int
+        public function get offerId(): int
         {
-            return (this._offerId);
+            return this._offerId;
         }
 
-        public function get localizationId():String
+        public function get localizationId(): String
         {
-            return (this.var_2828);
+            return this._localizationId;
         }
 
-        public function get priceInCredits():int
+        public function get priceInCredits(): int
         {
-            return (this.var_2829);
+            return this._priceInCredits;
         }
 
-        public function get priceInActivityPoints():int
+        public function get priceInActivityPoints(): int
         {
-            return (this.var_2830);
+            return this._priceInActivityPoints;
         }
 
-        public function get activityPointType():int
+        public function get activityPointType(): int
         {
-            return (this.var_2831);
+            return this._activityPointType;
         }
 
-        public function get productContainer():IProductContainer
+        public function get productContainer(): IProductContainer
         {
-            return (this.var_2832);
+            return this._productContainer;
         }
 
-        public function get pricingModel():String
+        public function get pricingModel(): String
         {
-            return (this.var_2826);
+            return this._pricingModel;
         }
 
-        public function get priceType():String
+        public function get priceType(): String
         {
-            return (this.var_2827);
+            return this._priceType;
         }
 
-        public function get previewCallbackId():int
+        public function get previewCallbackId(): int
         {
-            return (this.var_2833);
+            return this._previewCallbackId;
         }
 
-        public function set previewCallbackId(param1:int):void
+        public function set previewCallbackId(param1: int): void
         {
-            this.var_2833 = param1;
+            this._previewCallbackId = param1;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this._offerId = 0;
-            this.var_2828 = "";
-            this.var_2829 = 0;
-            this.var_2830 = 0;
-            this.var_2831 = 0;
-            this.var_2610 = null;
-            if (this.var_2832 != null)
+            this._localizationId = "";
+            this._priceInCredits = 0;
+            this._priceInActivityPoints = 0;
+            this._activityPointType = 0;
+            this._page = null;
+            if (this._productContainer != null)
             {
-                this.var_2832.dispose();
-                this.var_2832 = null;
-            };
+                this._productContainer.dispose();
+                this._productContainer = null;
+            }
+
         }
 
-        private function createProductContainer(param1:Array):void
+        private function createProductContainer(products: Array): void
         {
-            switch (this.var_2826)
+            switch (this._pricingModel)
             {
-                case var_784:
-                    this.var_2832 = new SingleProductContainer(this, param1);
+                case PRICING_MODEL_SINGLE:
+                    this._productContainer = new SingleProductContainer(this, products);
                     return;
-                case var_785:
-                    this.var_2832 = new MultiProductContainer(this, param1);
+                case PRICING_MODEL_MULTI:
+                    this._productContainer = new MultiProductContainer(this, products);
                     return;
-                case var_786:
-                    this.var_2832 = new BundleProductContainer(this, param1);
+                case PRICING_MODEL_BUNDLE:
+                    this._productContainer = new BundleProductContainer(this, products);
                     return;
                 default:
-                    Logger.log(("[Offer] Unknown pricing model" + this.var_2826));
-            };
+                    Logger.log("[Offer] Unknown pricing model" + this._pricingModel);
+            }
+
         }
 
-        private function analyzePricingModel(param1:Array):void
+        private function analyzePricingModel(products: Array): void
         {
-            var _loc2_:Product;
-            if (param1.length == 1)
+            var product: Product;
+
+            if (products.length == 1)
             {
-                _loc2_ = param1[0];
-                if (_loc2_.productCount == 1)
+                product = products[0];
+
+                if (product.productCount == 1)
                 {
-                    this.var_2826 = var_784;
+                    this._pricingModel = PRICING_MODEL_SINGLE;
                 }
                 else
                 {
-                    this.var_2826 = var_785;
-                };
+                    this._pricingModel = PRICING_MODEL_MULTI;
+                }
+
             }
             else
             {
-                if (param1.length > 1)
+                if (products.length > 1)
                 {
-                    this.var_2826 = var_786;
+                    this._pricingModel = PRICING_MODEL_BUNDLE;
                 }
                 else
                 {
-                    this.var_2826 = var_783;
-                };
-            };
+                    this._pricingModel = PRICING_MODEL_UNKNOWN;
+                }
+
+            }
+
         }
 
-        private function analyzePriceType():void
+        private function analyzePriceType(): void
         {
-            if (((this.var_2829 > 0) && (this.var_2830 > 0)))
+            if (this._priceInCredits > 0 && this._priceInActivityPoints > 0)
             {
-                this.var_2827 = var_788;
+                this._priceType = PRICE_TYPE_CREDITS_AND_ACTIVITYPOINTS;
             }
             else
             {
-                if (this.var_2829 > 0)
+                if (this._priceInCredits > 0)
                 {
-                    this.var_2827 = var_716;
+                    this._priceType = PRICE_TYPE_CREDITS;
                 }
                 else
                 {
-                    if (this.var_2830 > 0)
+                    if (this._priceInActivityPoints > 0)
                     {
-                        this.var_2827 = var_787;
+                        this._priceType = PRICE_TYPE_ACTIVITYPOINTS;
                     }
                     else
                     {
-                        this.var_2827 = PRICE_TYPE_NONE;
-                    };
-                };
-            };
+                        this._priceType = PRICE_TYPE_NONE;
+                    }
+
+                }
+
+            }
+
         }
 
-        public function clone():Offer
+        public function clone(): Offer
         {
-            var _loc3_:Product;
-            var _loc4_:IFurnitureData;
-            var _loc5_:Product;
-            var _loc1_:Array = new Array();
-            var _loc2_:IProductData = this.var_2610.viewer.catalog.getProductData(this.localizationId);
-            for each (_loc3_ in this.var_2832.products)
+            var _loc3_: Product;
+            var _loc4_: IFurnitureData;
+            var _loc5_: Product;
+            var _loc1_: Array = [];
+            var _loc2_: IProductData = this._page.viewer.catalog.getProductData(this.localizationId);
+            for each (_loc3_ in this._productContainer.products)
             {
-                _loc4_ = this.var_2610.viewer.catalog.getFurnitureData(_loc3_.productClassId, _loc3_.productType);
+                _loc4_ = this._page.viewer.catalog.getFurnitureData(_loc3_.productClassId, _loc3_.productType);
                 _loc5_ = new Product(_loc3_.productType, _loc3_.productClassId, _loc3_.extraParam, _loc3_.productCount, _loc3_.expiration, _loc2_, _loc4_);
                 _loc1_.push(_loc5_);
-            };
-            return (new Offer(this.offerId, this.localizationId, this.priceInCredits, this.priceInActivityPoints, this.activityPointType, _loc1_, this.page));
+            }
+
+            return new Offer(this.offerId, this.localizationId, this.priceInCredits, this.priceInActivityPoints, this.activityPointType, _loc1_, this.page);
         }
 
     }

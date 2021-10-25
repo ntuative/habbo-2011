@@ -1,130 +1,134 @@
 ﻿package com.sulake.habbo.catalog.marketplace
 {
+
     import flash.display.BitmapData;
 
-    public class MarketPlaceOfferData implements IMarketPlaceOfferData 
+    public class MarketPlaceOfferData implements IMarketPlaceOfferData
     {
 
-        private var _offerId:int;
-        private var _furniId:int;
-        private var var_2649:int;
-        private var var_2650:String;
-        private var var_2612:int;
-        private var var_2630:int;
-        private var var_2651:int;
-        private var var_2101:int;
-        private var var_2652:int = -1;
-        private var var_2653:int;
-        private var var_988:BitmapData;
+        private var _offerId: int;
+        private var _furniId: int;
+        private var _furniType: int;
+        private var _stuffData: String;
+        private var _price: int;
+        private var _averagePrice: int;
+        private var _imageCallback: int;
+        private var _status: int;
+        private var _timeLeftMinutes: int = -1;
+        private var _offerCount: int;
+        private var _image: BitmapData;
 
-        public function MarketPlaceOfferData(param1:int, param2:int, param3:int, param4:String, param5:int, param6:int, param7:int, param8:int=-1)
+        public function MarketPlaceOfferData(offerId: int, furniId: int, furniType: int, stuffData: String, price: int, status: int, averagePrice: int, offerCount: int = -1)
         {
-            this._offerId = param1;
-            this._furniId = param2;
-            this.var_2649 = param3;
-            this.var_2650 = param4;
-            this.var_2612 = param5;
-            this.var_2101 = param6;
-            this.var_2630 = param7;
-            this.var_2653 = param8;
+            this._offerId = offerId;
+            this._furniId = furniId;
+            this._furniType = furniType;
+            this._stuffData = stuffData;
+            this._price = price;
+            this._status = status;
+            this._averagePrice = averagePrice;
+            this._offerCount = offerCount;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            if (this.var_988)
+            if (this._image)
             {
-                this.var_988.dispose();
-                this.var_988 = null;
-            };
+                this._image.dispose();
+                this._image = null;
+            }
+
         }
 
-        public function get offerId():int
+        public function get offerId(): int
         {
-            return (this._offerId);
+            return this._offerId;
         }
 
-        public function get furniId():int
+        public function get furniId(): int
         {
-            return (this._furniId);
+            return this._furniId;
         }
 
-        public function get furniType():int
+        public function get furniType(): int
         {
-            return (this.var_2649);
+            return this._furniType;
         }
 
-        public function get stuffData():String
+        public function get stuffData(): String
         {
-            return (this.var_2650);
+            return this._stuffData;
         }
 
-        public function get price():int
+        public function get price(): int
         {
-            return (this.var_2612);
+            return this._price;
         }
 
-        public function get averagePrice():int
+        public function get averagePrice(): int
         {
-            return (this.var_2630);
+            return this._averagePrice;
         }
 
-        public function get image():BitmapData
+        public function get image(): BitmapData
         {
-            return (this.var_988);
+            return this._image;
         }
 
-        public function set image(param1:BitmapData):void
+        public function set image(value: BitmapData): void
         {
-            if (this.var_988 != null)
+            if (this._image != null)
             {
-                this.var_988.dispose();
-            };
-            this.var_988 = param1;
+                this._image.dispose();
+            }
+
+
+            this._image = value;
         }
 
-        public function set imageCallback(param1:int):void
+        public function set imageCallback(callback: int): void
         {
-            this.var_2651 = param1;
+            this._imageCallback = callback;
         }
 
-        public function get imageCallback():int
+        public function get imageCallback(): int
         {
-            return (this.var_2651);
+            return this._imageCallback;
         }
 
-        public function get status():int
+        public function get status(): int
         {
-            return (this.var_2101);
+            return this._status;
         }
 
-        public function get timeLeftMinutes():int
+        public function get timeLeftMinutes(): int
         {
-            return (this.var_2652);
+            return this._timeLeftMinutes;
         }
 
-        public function set timeLeftMinutes(param1:int):void
+        public function set timeLeftMinutes(minutes: int): void
         {
-            this.var_2652 = param1;
+            this._timeLeftMinutes = minutes;
         }
 
-        public function set price(param1:int):void
+        public function set price(value: int): void
         {
-            this.var_2612 = param1;
+            this._price = value;
         }
 
-        public function set offerId(param1:int):void
+        public function set offerId(value: int): void
         {
-            this._offerId = param1;
+            this._offerId = value;
         }
 
-        public function get offerCount():int
+        public function get offerCount(): int
         {
-            return (this.var_2653);
+            return this._offerCount;
         }
 
-        public function set offerCount(param1:int):void
+        public function set offerCount(count: int): void
         {
-            this.var_2653 = param1;
+            this._offerCount = count;
         }
 
     }

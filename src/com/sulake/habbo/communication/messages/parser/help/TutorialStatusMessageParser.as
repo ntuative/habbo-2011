@@ -1,44 +1,47 @@
 ﻿package com.sulake.habbo.communication.messages.parser.help
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class TutorialStatusMessageParser implements IMessageParser 
+    public class TutorialStatusMessageParser implements IMessageParser
     {
 
-        private var var_3189:Boolean;
-        private var var_3190:Boolean;
-        private var var_3191:Boolean;
+        private var _hasChangedLooks: Boolean;
+        private var _hasChangedName: Boolean;
+        private var _hasCalledGuideBot: Boolean;
 
-        public function get hasChangedLooks():Boolean
+        public function get hasChangedLooks(): Boolean
         {
-            return (this.var_3189);
+            return this._hasChangedLooks;
         }
 
-        public function get hasChangedName():Boolean
+        public function get hasChangedName(): Boolean
         {
-            return (this.var_3190);
+            return this._hasChangedName;
         }
 
-        public function get hasCalledGuideBot():Boolean
+        public function get hasCalledGuideBot(): Boolean
         {
-            return (this.var_3191);
+            return this._hasCalledGuideBot;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3189 = false;
-            this.var_3190 = false;
-            this.var_3191 = false;
-            return (true);
+            this._hasChangedLooks = false;
+            this._hasChangedName = false;
+            this._hasCalledGuideBot = false;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3189 = param1.readBoolean();
-            this.var_3190 = param1.readBoolean();
-            this.var_3191 = param1.readBoolean();
-            return (true);
+            this._hasChangedLooks = data.readBoolean();
+            this._hasChangedName = data.readBoolean();
+            this._hasCalledGuideBot = data.readBoolean();
+            
+            return true;
         }
 
     }

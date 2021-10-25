@@ -1,28 +1,30 @@
 ﻿package com.sulake.habbo.communication.messages.parser.friendlist
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.friendlist.FriendRequestData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class NewBuddyRequestMessageParser implements IMessageParser 
+    public class NewBuddyRequestMessageParser implements IMessageParser
     {
 
-        private var var_3157:FriendRequestData;
+        private var _req: FriendRequestData;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3157 = new FriendRequestData(param1);
-            return (true);
+            this._req = new FriendRequestData(data);
+            
+            return true;
         }
 
-        public function get req():FriendRequestData
+        public function get req(): FriendRequestData
         {
-            return (this.var_3157);
+            return this._req;
         }
 
     }

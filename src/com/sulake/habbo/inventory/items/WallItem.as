@@ -1,97 +1,98 @@
 ﻿package com.sulake.habbo.inventory.items
 {
-    public class WallItem implements IItem 
+
+    public class WallItem implements IItem
     {
 
-        protected var _id:int;
-        protected var _type:int;
-        protected var _ref:int;
-        protected var _category:int;
-        protected var var_2940:Number;
-        protected var var_2650:String;
-        protected var var_3565:Boolean;
-        protected var var_3566:Boolean;
-        protected var var_2949:Boolean;
-        protected var var_3137:Boolean;
-        protected var var_2173:Boolean;
+        protected var _id: int;
+        protected var _type: int;
+        protected var _ref: int;
+        protected var _category: int;
+        protected var _extra: Number;
+        protected var _stuffData: String;
+        protected var _recyclable: Boolean;
+        protected var _tradeable: Boolean;
+        protected var _groupable: Boolean;
+        protected var _sellable: Boolean;
+        protected var _locked: Boolean;
 
-        public function WallItem(param1:int, param2:int, param3:int, param4:int, param5:Boolean, param6:Boolean, param7:Boolean, param8:Boolean, param9:String, param10:Number)
+        public function WallItem(id: int, type: int, ref: int, category: int, groupable: Boolean, tradeable: Boolean, recyclable: Boolean, sellable: Boolean, stuffData: String, extra: Number)
         {
-            this._id = param1;
-            this._type = param2;
-            this._ref = param3;
-            this._category = param4;
-            this.var_2949 = param5;
-            this.var_3566 = param6;
-            this.var_3565 = param7;
-            this.var_3137 = param8;
-            this.var_2650 = param9;
-            this.var_2940 = param10;
+            this._id = id;
+            this._type = type;
+            this._ref = ref;
+            this._category = category;
+            this._groupable = groupable;
+            this._tradeable = tradeable;
+            this._recyclable = recyclable;
+            this._sellable = sellable;
+            this._stuffData = stuffData;
+            this._extra = extra;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get type():int
+        public function get type(): int
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get ref():int
+        public function get ref(): int
         {
-            return (this._ref);
+            return this._ref;
         }
 
-        public function get category():int
+        public function get category(): int
         {
-            return (this._category);
+            return this._category;
         }
 
-        public function get extra():Number
+        public function get extra(): Number
         {
-            return (this.var_2940);
+            return this._extra;
         }
 
-        public function get stuffData():String
+        public function get stuffData(): String
         {
-            return (this.var_2650);
+            return this._stuffData;
         }
 
-        public function set stuffData(param1:String):void
+        public function set stuffData(value: String): void
         {
-            this.var_2650 = param1;
+            this._stuffData = value;
         }
 
-        public function get recyclable():Boolean
+        public function get recyclable(): Boolean
         {
-            return (this.var_3565);
+            return this._recyclable;
         }
 
-        public function get tradeable():Boolean
+        public function get tradeable(): Boolean
         {
-            return (this.var_3566);
+            return this._tradeable;
         }
 
-        public function get groupable():Boolean
+        public function get groupable(): Boolean
         {
-            return (this.var_2949);
+            return this._groupable;
         }
 
-        public function get sellable():Boolean
+        public function get sellable(): Boolean
         {
-            return (this.var_3137);
+            return this._sellable;
         }
 
-        public function get locked():Boolean
+        public function get locked(): Boolean
         {
-            return (this.var_2173);
+            return this._locked;
         }
 
-        public function set locked(param1:Boolean):void
+        public function set locked(value: Boolean): void
         {
-            this.var_2173 = param1;
+            this._locked = value;
         }
 
     }

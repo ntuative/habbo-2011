@@ -1,213 +1,227 @@
 ﻿package com.sulake.room.utils
 {
-    public class Vector3d implements IVector3d 
+
+    public class Vector3d implements IVector3d
     {
 
-        private var _x:Number;
-        private var var_2497:Number;
-        private var var_2498:Number;
-        private var _length:Number = NaN;
+        private var _x: Number;
+        private var _y: Number;
+        private var _z: Number;
+        private var _length: Number = NaN;
 
-        public function Vector3d(param1:Number=0, param2:Number=0, param3:Number=0)
+        public function Vector3d(x: Number = 0, y: Number = 0, z: Number = 0)
         {
-            this._x = param1;
-            this.var_2497 = param2;
-            this.var_2498 = param3;
+            this._x = x;
+            this._y = y;
+            this._z = z;
         }
 
-        public static function sum(param1:IVector3d, param2:IVector3d):Vector3d
+        public static function sum(param1: IVector3d, param2: IVector3d): Vector3d
         {
-            if (((param1 == null) || (param2 == null)))
+            if (param1 == null || param2 == null)
             {
-                return (null);
-            };
-            return (new Vector3d((param1.x + param2.x), (param1.y + param2.y), (param1.z + param2.z)));
+                return null;
+            }
+
+            return new Vector3d(param1.x + param2.x, param1.y + param2.y, param1.z + param2.z);
         }
 
-        public static function dif(param1:IVector3d, param2:IVector3d):Vector3d
+        public static function dif(param1: IVector3d, param2: IVector3d): Vector3d
         {
-            if (((param1 == null) || (param2 == null)))
+            if (param1 == null || param2 == null)
             {
-                return (null);
-            };
-            return (new Vector3d((param1.x - param2.x), (param1.y - param2.y), (param1.z - param2.z)));
+                return null;
+            }
+
+            return new Vector3d(param1.x - param2.x, param1.y - param2.y, param1.z - param2.z);
         }
 
-        public static function product(param1:IVector3d, param2:Number):Vector3d
+        public static function product(param1: IVector3d, param2: Number): Vector3d
         {
             if (param1 == null)
             {
-                return (null);
-            };
-            return (new Vector3d((param1.x * param2), (param1.y * param2), (param1.z * param2)));
+                return null;
+            }
+
+            return new Vector3d(param1.x * param2, param1.y * param2, param1.z * param2);
         }
 
-        public static function dotProduct(param1:IVector3d, param2:IVector3d):Number
+        public static function dotProduct(param1: IVector3d, param2: IVector3d): Number
         {
-            if (((param1 == null) || (param2 == null)))
+            if (param1 == null || param2 == null)
             {
-                return (0);
-            };
-            return (((param1.x * param2.x) + (param1.y * param2.y)) + (param1.z * param2.z));
+                return 0;
+            }
+
+            return param1.x * param2.x + param1.y * param2.y + param1.z * param2.z;
         }
 
-        public static function crossProduct(param1:IVector3d, param2:IVector3d):Vector3d
+        public static function crossProduct(param1: IVector3d, param2: IVector3d): Vector3d
         {
-            if (((param1 == null) || (param2 == null)))
+            if (param1 == null || param2 == null)
             {
-                return (null);
-            };
-            return (new Vector3d(((param1.y * param2.z) - (param1.z * param2.y)), ((param1.z * param2.x) - (param1.x * param2.z)), ((param1.x * param2.y) - (param1.y * param2.x))));
+                return null;
+            }
+
+            return new Vector3d(param1.y * param2.z - param1.z * param2.y, param1.z * param2.x - param1.x * param2.z, param1.x * param2.y - param1.y * param2.x);
         }
 
-        public static function scalarProjection(param1:IVector3d, param2:IVector3d):Number
+        public static function scalarProjection(param1: IVector3d, param2: IVector3d): Number
         {
-            if (((param1 == null) || (param2 == null)))
+            if (param1 == null || param2 == null)
             {
-                return (-1);
-            };
-            var _loc3_:Number = param2.length;
+                return -1;
+            }
+
+            var _loc3_: Number = param2.length;
             if (_loc3_ > 0)
             {
-                return ((((param1.x * param2.x) + (param1.y * param2.y)) + (param1.z * param2.z)) / _loc3_);
-            };
-            return (-1);
+                return (param1.x * param2.x + param1.y * param2.y + param1.z * param2.z) / _loc3_;
+            }
+
+            return -1;
         }
 
-        public static function cosAngle(param1:IVector3d, param2:IVector3d):Number
+        public static function cosAngle(param1: IVector3d, param2: IVector3d): Number
         {
-            if (((param1 == null) || (param2 == null)))
+            if (param1 == null || param2 == null)
             {
-                return (0);
-            };
-            var _loc3_:Number = (param1.length * param2.length);
+                return 0;
+            }
+
+            var _loc3_: Number = param1.length * param2.length;
             if (_loc3_ == 0)
             {
-                return (0);
-            };
-            return (Vector3d.dotProduct(param1, param2) / _loc3_);
+                return 0;
+            }
+
+            return Vector3d.dotProduct(param1, param2) / _loc3_;
         }
 
-        public static function isEqual(param1:IVector3d, param2:IVector3d):Boolean
+        public static function isEqual(param1: IVector3d, param2: IVector3d): Boolean
         {
-            if (((param1 == null) || (param2 == null)))
+            if (param1 == null || param2 == null)
             {
-                return (false);
-            };
-            if ((((param1.x == param2.x) && (param1.y == param2.y)) && (param1.z == param2.z)))
-            {
-                return (true);
-            };
-            return (false);
+                return false;
+            }
+
+            return param1.x == param2.x && param1.y == param2.y && param1.z == param2.z;
+
+
         }
 
-        public function get x():Number
+        public function get x(): Number
         {
-            return (this._x);
+            return this._x;
         }
 
-        public function get y():Number
+        public function get y(): Number
         {
-            return (this.var_2497);
+            return this._y;
         }
 
-        public function get z():Number
+        public function get z(): Number
         {
-            return (this.var_2498);
+            return this._z;
         }
 
-        public function get length():Number
+        public function get length(): Number
         {
             if (isNaN(this._length))
             {
-                this._length = Math.sqrt((((this._x * this._x) + (this.var_2497 * this.var_2497)) + (this.var_2498 * this.var_2498)));
-            };
-            return (this._length);
+                this._length = Math.sqrt(this._x * this._x + this._y * this._y + this._z * this._z);
+            }
+
+            return this._length;
         }
 
-        public function set x(param1:Number):void
+        public function set x(param1: Number): void
         {
             this._x = param1;
             this._length = NaN;
         }
 
-        public function set y(param1:Number):void
+        public function set y(param1: Number): void
         {
-            this.var_2497 = param1;
+            this._y = param1;
             this._length = NaN;
         }
 
-        public function set z(param1:Number):void
+        public function set z(param1: Number): void
         {
-            this.var_2498 = param1;
+            this._z = param1;
             this._length = NaN;
         }
 
-        public function negate():void
+        public function negate(): void
         {
-            this._x = -(this._x);
-            this.var_2497 = -(this.var_2497);
-            this.var_2498 = -(this.var_2498);
+            this._x = -this._x;
+            this._y = -this._y;
+            this._z = -this._z;
         }
 
-        public function add(param1:IVector3d):void
+        public function add(param1: IVector3d): void
         {
             if (param1 == null)
             {
                 return;
-            };
-            this._x = (this._x + param1.x);
-            this.var_2497 = (this.var_2497 + param1.y);
-            this.var_2498 = (this.var_2498 + param1.z);
+            }
+
+            this._x = this._x + param1.x;
+            this._y = this._y + param1.y;
+            this._z = this._z + param1.z;
             this._length = NaN;
         }
 
-        public function sub(param1:IVector3d):void
+        public function sub(param1: IVector3d): void
         {
             if (param1 == null)
             {
                 return;
-            };
-            this._x = (this._x - param1.x);
-            this.var_2497 = (this.var_2497 - param1.y);
-            this.var_2498 = (this.var_2498 - param1.z);
+            }
+
+            this._x = this._x - param1.x;
+            this._y = this._y - param1.y;
+            this._z = this._z - param1.z;
             this._length = NaN;
         }
 
-        public function mul(param1:Number):void
+        public function mul(param1: Number): void
         {
-            this._x = (this._x * param1);
-            this.var_2497 = (this.var_2497 * param1);
-            this.var_2498 = (this.var_2498 * param1);
+            this._x = this._x * param1;
+            this._y = this._y * param1;
+            this._z = this._z * param1;
             this._length = NaN;
         }
 
-        public function div(param1:Number):void
+        public function div(param1: Number): void
         {
             if (param1 != 0)
             {
-                this._x = (this._x / param1);
-                this.var_2497 = (this.var_2497 / param1);
-                this.var_2498 = (this.var_2498 / param1);
+                this._x = this._x / param1;
+                this._y = this._y / param1;
+                this._z = this._z / param1;
                 this._length = NaN;
-            };
+            }
+
         }
 
-        public function assign(param1:IVector3d):void
+        public function assign(param1: IVector3d): void
         {
             if (param1 == null)
             {
                 return;
-            };
+            }
+
             this._x = param1.x;
-            this.var_2497 = param1.y;
-            this.var_2498 = param1.z;
+            this._y = param1.y;
+            this._z = param1.z;
             this._length = NaN;
         }
 
-        public function toString():String
+        public function toString(): String
         {
-            return (("(" + [this._x, this.var_2497, this.var_2498].join(",")) + ")");
+            return "(" + [this._x, this._y, this._z].join(",") + ")";
         }
 
     }

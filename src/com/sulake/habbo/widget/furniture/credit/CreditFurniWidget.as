@@ -1,65 +1,72 @@
 ﻿package com.sulake.habbo.widget.furniture.credit
 {
+
     import com.sulake.habbo.widget.RoomWidgetBase;
     import com.sulake.core.window.IWindowContainer;
     import com.sulake.habbo.window.IHabboWindowManager;
     import com.sulake.core.assets.IAssetLibrary;
     import com.sulake.habbo.localization.IHabboLocalizationManager;
     import com.sulake.habbo.widget.events.RoomWidgetCreditFurniUpdateEvent;
+
     import flash.events.IEventDispatcher;
+
     import com.sulake.core.window.IWindow;
     import com.sulake.core.assets.IAsset;
     import com.sulake.core.assets.XmlAsset;
     import com.sulake.habbo.window.enum.HabboWindowType;
     import com.sulake.habbo.window.enum.HabboWindowStyle;
     import com.sulake.habbo.window.enum.HabboWindowParam;
+
     import flash.geom.Rectangle;
+
     import com.sulake.core.window.events.WindowMouseEvent;
     import com.sulake.habbo.widget.messages.RoomWidgetCreditFurniRedeemMessage;
     import com.sulake.habbo.utils.HabboWebTools;
     import com.sulake.core.window.events.WindowEvent;
 
-    public class CreditFurniWidget extends RoomWidgetBase 
+    public class CreditFurniWidget extends RoomWidgetBase
     {
 
-        private static const var_1359:Number = 100;
-        private static const WINDOW_INITIAL_Y:Number = 100;
+        private static const var_1359: Number = 100;
+        private static const WINDOW_INITIAL_Y: Number = 100;
 
-        private var _window:IWindowContainer;
-        private var var_4738:int = -1;
-        private var var_4739:Number;
+        private var _window: IWindowContainer;
+        private var var_4738: int = -1;
+        private var var_4739: Number;
 
-        public function CreditFurniWidget(param1:IHabboWindowManager, param2:IAssetLibrary, param3:IHabboLocalizationManager)
+        public function CreditFurniWidget(param1: IHabboWindowManager, param2: IAssetLibrary, param3: IHabboLocalizationManager)
         {
             super(param1, param2, param3);
         }
 
-        override public function dispose():void
+        override public function dispose(): void
         {
             this.hideInterface();
             super.dispose();
         }
 
-        override public function registerUpdateEvents(param1:IEventDispatcher):void
+        override public function registerUpdateEvents(param1: IEventDispatcher): void
         {
             if (param1 == null)
             {
                 return;
-            };
+            }
+
             param1.addEventListener(RoomWidgetCreditFurniUpdateEvent.var_1358, this.onObjectUpdate);
             super.registerUpdateEvents(param1);
         }
 
-        override public function unregisterUpdateEvents(param1:IEventDispatcher):void
+        override public function unregisterUpdateEvents(param1: IEventDispatcher): void
         {
             if (param1 == null)
             {
                 return;
-            };
+            }
+
             param1.removeEventListener(RoomWidgetCreditFurniUpdateEvent.var_1358, this.onObjectUpdate);
         }
 
-        private function onObjectUpdate(param1:RoomWidgetCreditFurniUpdateEvent):void
+        private function onObjectUpdate(param1: RoomWidgetCreditFurniUpdateEvent): void
         {
             this.hideInterface();
             this.var_4738 = param1.objectId;
@@ -67,26 +74,29 @@
             this.showInterface();
         }
 
-        private function showInterface():void
+        private function showInterface(): void
         {
-            var _loc3_:IWindow;
+            var _loc3_: IWindow;
             if (this.var_4738 == -1)
             {
                 return;
-            };
+            }
+
             if (this._window != null)
             {
                 this._window.dispose();
                 this._window = null;
-            };
+            }
+
             windowManager.registerLocalizationParameter("widgets.furniture.credit.redeem.value", "value", String(this.var_4739));
-            var _loc1_:IAsset = assets.getAssetByName("credit_redeem");
-            var _loc2_:XmlAsset = XmlAsset(_loc1_);
+            var _loc1_: IAsset = assets.getAssetByName("credit_redeem");
+            var _loc2_: XmlAsset = XmlAsset(_loc1_);
             if (_loc2_ == null)
             {
                 return;
-            };
-            this._window = (windowManager.createWindow("creditfurniui_container", "", HabboWindowType.var_182, HabboWindowStyle.var_525, (HabboWindowParam.var_526 | HabboWindowParam.var_157), new Rectangle(var_1359, WINDOW_INITIAL_Y, 2, 2), null, 0) as IWindowContainer);
+            }
+
+            this._window = (windowManager.createWindow("creditfurniui_container", "", HabboWindowType.var_182, HabboWindowStyle.var_525, HabboWindowParam.var_526 | HabboWindowParam.var_157, new Rectangle(var_1359, WINDOW_INITIAL_Y, 2, 2), null, 0) as IWindowContainer);
             this._window.buildFromXML(XML(_loc2_.content));
             this._window.background = true;
             this._window.color = 0x1FFFFFF;
@@ -94,56 +104,63 @@
             if (_loc3_ != null)
             {
                 _loc3_.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onMouseEvent);
-            };
+            }
+
             _loc3_ = this._window.findChildByName("exchange");
             if (_loc3_ != null)
             {
                 _loc3_.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onMouseEvent);
-            };
+            }
+
             _loc3_ = this._window.findChildByName("link");
             if (_loc3_ != null)
             {
                 _loc3_.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onMouseEvent);
-            };
+            }
+
             _loc3_ = this._window.findChildByTag("close");
             if (_loc3_ != null)
             {
                 _loc3_.procedure = this.onWindowClose;
-            };
+            }
+
             this._window.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onMouseEvent);
         }
 
-        private function hideInterface():void
+        private function hideInterface(): void
         {
             if (this._window != null)
             {
                 this._window.dispose();
                 this._window = null;
-            };
+            }
+
             this.var_4738 = -1;
             this.var_4739 = 0;
         }
 
-        private function sendRedeemMessage():void
+        private function sendRedeemMessage(): void
         {
-            var _loc1_:RoomWidgetCreditFurniRedeemMessage;
+            var _loc1_: RoomWidgetCreditFurniRedeemMessage;
             if (this.var_4738 == -1)
             {
                 return;
-            };
+            }
+
             if (messageListener != null)
             {
                 _loc1_ = new RoomWidgetCreditFurniRedeemMessage(RoomWidgetCreditFurniRedeemMessage.var_1360, this.var_4738);
                 messageListener.processWidgetMessage(_loc1_);
                 this.hideInterface();
-            };
+            }
+
         }
 
-        private function onMouseEvent(param1:WindowMouseEvent):void
+        private function onMouseEvent(param1: WindowMouseEvent): void
         {
-            var _loc4_:String;
-            var _loc2_:IWindow = (param1.target as IWindow);
-            var _loc3_:String = _loc2_.name;
+            var _loc4_: String;
+            var _loc2_: IWindow = param1.target as IWindow;
+            var _loc3_: String = _loc2_.name;
             switch (_loc3_)
             {
                 case "link":
@@ -151,7 +168,8 @@
                     if (_loc4_.indexOf("http") == 0)
                     {
                         HabboWebTools.navigateToURL(_loc4_, "habboMain");
-                    };
+                    }
+
                     return;
                 case "exchange":
                     this.sendRedeemMessage();
@@ -160,15 +178,17 @@
                 case "close":
                     this.hideInterface();
                     return;
-            };
+            }
+
         }
 
-        private function onWindowClose(param1:WindowEvent, param2:IWindow):void
+        private function onWindowClose(param1: WindowEvent, param2: IWindow): void
         {
             if (param1.type != WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK)
             {
                 return;
-            };
+            }
+
             this.hideInterface();
         }
 

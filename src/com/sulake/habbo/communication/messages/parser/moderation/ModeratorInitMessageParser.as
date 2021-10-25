@@ -1,32 +1,34 @@
 ﻿package com.sulake.habbo.communication.messages.parser.moderation
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ModeratorInitMessageParser implements IMessageParser 
+    public class ModeratorInitMessageParser implements IMessageParser
     {
 
-        private var _data:ModeratorInitData;
+        private var _data: ModeratorInitData;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             if (this._data != null)
             {
                 this._data.dispose();
                 this._data = null;
-            };
-            return (true);
+            }
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(param1: IMessageDataWrapper): Boolean
         {
             this._data = new ModeratorInitData(param1);
-            return (true);
+            return true;
         }
 
-        public function get data():ModeratorInitData
+        public function get data(): ModeratorInitData
         {
-            return (this._data);
+            return this._data;
         }
 
     }

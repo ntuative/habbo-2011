@@ -1,27 +1,29 @@
 ﻿package com.sulake.habbo.communication.messages.parser.inventory.achievements
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class AchievementsScoreMessageParser implements IMessageParser 
+    public class AchievementsScoreMessageParser implements IMessageParser
     {
 
-        private var var_2985:int;
+        private var _score: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2985 = param1.readInteger();
-            return (true);
+            this._score = data.readInteger();
+            
+            return true;
         }
 
-        public function get score():int
+        public function get score(): int
         {
-            return (this.var_2985);
+            return this._score;
         }
 
     }

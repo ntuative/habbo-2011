@@ -1,49 +1,51 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.moderation
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class CfhChatlogData 
+    public class CfhChatlogData
     {
 
-        private var var_2951:int;
-        private var var_2952:int;
-        private var var_2953:int;
-        private var var_2954:int;
-        private var var_2955:RoomChatlogData;
+        private var _callId: int;
+        private var _callerUserId: int;
+        private var _reportedUserId: int;
+        private var _chatRecordId: int;
+        private var _room: RoomChatlogData;
 
-        public function CfhChatlogData(param1:IMessageDataWrapper)
+        public function CfhChatlogData(data: IMessageDataWrapper)
         {
-            this.var_2951 = param1.readInteger();
-            this.var_2952 = param1.readInteger();
-            this.var_2953 = param1.readInteger();
-            this.var_2954 = param1.readInteger();
-            this.var_2955 = new RoomChatlogData(param1);
-            Logger.log(("READ CFHCHATLOGDATA: callId: " + this.var_2951));
+            this._callId = data.readInteger();
+            this._callerUserId = data.readInteger();
+            this._reportedUserId = data.readInteger();
+            this._chatRecordId = data.readInteger();
+            this._room = new RoomChatlogData(data);
+
+            Logger.log("READ CFHCHATLOGDATA: callId: " + this._callId);
         }
 
-        public function get callId():int
+        public function get callId(): int
         {
-            return (this.var_2951);
+            return this._callId;
         }
 
-        public function get callerUserId():int
+        public function get callerUserId(): int
         {
-            return (this.var_2952);
+            return this._callerUserId;
         }
 
-        public function get reportedUserId():int
+        public function get reportedUserId(): int
         {
-            return (this.var_2953);
+            return this._reportedUserId;
         }
 
-        public function get chatRecordId():int
+        public function get chatRecordId(): int
         {
-            return (this.var_2954);
+            return this._chatRecordId;
         }
 
-        public function get room():RoomChatlogData
+        public function get room(): RoomChatlogData
         {
-            return (this.var_2955);
+            return this._room;
         }
 
     }

@@ -1,6 +1,8 @@
 ﻿package com.sulake.core.window
 {
+
     import flash.utils.Dictionary;
+
     import com.sulake.core.window.enum.WindowType;
     import com.sulake.core.window.components.ActivatorController;
     import com.sulake.core.window.components.BackgroundController;
@@ -40,12 +42,12 @@
     import com.sulake.core.window.components.ToolTipController;
     import com.sulake.core.window.components.*;
 
-    public class Classes 
+    public class Classes
     {
 
-        protected static var var_992:Dictionary;
+        protected static var var_992: Dictionary;
 
-        public static function init():void
+        public static function init(): void
         {
             if (!var_992)
             {
@@ -105,12 +107,13 @@
                 var_992[WindowType.var_213] = TextController;
                 var_992[WindowType.var_867] = TextFieldController;
                 var_992[WindowType.var_203] = ToolTipController;
-            };
+            }
+
         }
 
-        public static function getWindowClassByType(param1:uint):Class
+        public static function getWindowClassByType(param1: uint): Class
         {
-            return (var_992[param1]);
+            return var_992[param1];
         }
 
     }

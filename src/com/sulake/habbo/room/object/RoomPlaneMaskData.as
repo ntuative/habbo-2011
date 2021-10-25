@@ -1,39 +1,40 @@
 ﻿package com.sulake.habbo.room.object
 {
-    public class RoomPlaneMaskData 
+
+    public class RoomPlaneMaskData
     {
 
-        private var var_4250:Number = 0;
-        private var var_4251:Number = 0;
-        private var var_4252:Number = 0;
-        private var var_4253:Number = 0;
+        private var _leftSideLoc: Number = 0;
+        private var _rightSideLoc: Number = 0;
+        private var _leftSideLength: Number = 0;
+        private var _rightSideLength: Number = 0;
 
-        public function RoomPlaneMaskData(param1:Number, param2:Number, param3:Number, param4:Number)
+        public function RoomPlaneMaskData(leftSideLoc: Number, rightSideLoc: Number, leftSideLength: Number, rightSideLength: Number)
         {
-            this.var_4250 = param1;
-            this.var_4251 = param2;
-            this.var_4252 = param3;
-            this.var_4253 = param4;
+            this._leftSideLoc = leftSideLoc;
+            this._rightSideLoc = rightSideLoc;
+            this._leftSideLength = leftSideLength;
+            this._rightSideLength = rightSideLength;
         }
 
-        public function get leftSideLoc():Number
+        public function get leftSideLoc(): Number
         {
-            return (this.var_4250);
+            return this._leftSideLoc;
         }
 
-        public function get rightSideLoc():Number
+        public function get rightSideLoc(): Number
         {
-            return (this.var_4251);
+            return this._rightSideLoc;
         }
 
-        public function get leftSideLength():Number
+        public function get leftSideLength(): Number
         {
-            return (this.var_4252);
+            return this._leftSideLength;
         }
 
-        public function get rightSideLength():Number
+        public function get rightSideLength(): Number
         {
-            return (this.var_4253);
+            return this._rightSideLength;
         }
 
     }

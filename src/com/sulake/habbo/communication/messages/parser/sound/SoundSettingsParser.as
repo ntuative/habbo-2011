@@ -1,27 +1,29 @@
 ﻿package com.sulake.habbo.communication.messages.parser.sound
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class SoundSettingsParser implements IMessageParser 
+    public class SoundSettingsParser implements IMessageParser
     {
 
-        private var var_3346:int;
+        private var _volume: int;
 
-        public function get volume():int
+        public function get volume(): int
         {
-            return (this.var_3346);
+            return this._volume;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3346 = param1.readInteger();
-            return (true);
+            this._volume = data.readInteger();
+            
+            return true;
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.session.handler
 {
+
     import com.sulake.habbo.communication.messages.incoming.room.engine.UsersMessageEvent;
     import com.sulake.habbo.communication.messages.incoming.room.engine.UserRemoveMessageEvent;
     import com.sulake.habbo.communication.messages.incoming.users.HabboUserBadgesMessageEvent;
@@ -33,16 +34,17 @@
     import com.sulake.habbo.communication.messages.incoming.friendlist.FriendRequestData;
     import com.sulake.habbo.session.events.RoomSessionFriendRequestEvent;
 
-    public class RoomUsersHandler extends BaseHandler 
+    public class RoomUsersHandler extends BaseHandler
     {
 
-        public function RoomUsersHandler(param1:IConnection, param2:IRoomHandlerListener)
+        public function RoomUsersHandler(param1: IConnection, param2: IRoomHandlerListener)
         {
             super(param1, param2);
             if (param1 == null)
             {
                 return;
-            };
+            }
+
             param1.addMessageEvent(new UsersMessageEvent(this.onUsers));
             param1.addMessageEvent(new UserRemoveMessageEvent(this.onUserRemove));
             param1.addMessageEvent(new HabboUserBadgesMessageEvent(this.onUserBadges));
@@ -55,22 +57,24 @@
             param1.addMessageEvent(new NewBuddyRequestEvent(this.onFriendRequest));
         }
 
-        private function onUsers(param1:IMessageEvent):void
+        private function onUsers(param1: IMessageEvent): void
         {
-            var _loc6_:UserMessageData;
-            var _loc7_:UserData;
-            var _loc2_:UsersMessageEvent = (param1 as UsersMessageEvent);
+            var _loc6_: UserMessageData;
+            var _loc7_: UserData;
+            var _loc2_: UsersMessageEvent = param1 as UsersMessageEvent;
             if (_loc2_ == null)
             {
                 return;
-            };
-            var _loc3_:UsersMessageParser = _loc2_.getParser();
-            var _loc4_:IRoomSession = listener.getSession(_xxxRoomId, var_99);
+            }
+
+            var _loc3_: UsersMessageParser = _loc2_.getParser();
+            var _loc4_: IRoomSession = listener.getSession(_xxxRoomId, var_99);
             if (_loc4_ == null)
             {
                 return;
-            };
-            var _loc5_:int;
+            }
+
+            var _loc5_: int;
             while (_loc5_ < _loc3_.getUserCount())
             {
                 _loc6_ = _loc3_.getUser(_loc5_);
@@ -87,112 +91,127 @@
                 _loc7_.xp = _loc6_.xp;
                 _loc4_.userDataManager.setUserData(_loc7_);
                 _loc5_++;
-            };
+            }
+
             listener.events.dispatchEvent(new RoomSessionUserDataUpdateEvent(_loc4_));
         }
 
-        private function onUserRemove(param1:IMessageEvent):void
+        private function onUserRemove(param1: IMessageEvent): void
         {
-            var _loc2_:UserRemoveMessageEvent = (param1 as UserRemoveMessageEvent);
+            var _loc2_: UserRemoveMessageEvent = param1 as UserRemoveMessageEvent;
             if (_loc2_ == null)
             {
                 return;
-            };
-            var _loc3_:IRoomSession = listener.getSession(_xxxRoomId, var_99);
+            }
+
+            var _loc3_: IRoomSession = listener.getSession(_xxxRoomId, var_99);
             if (_loc3_ == null)
             {
                 return;
-            };
-            var _loc4_:int = (_loc2_.getParser() as UserRemoveMessageParser).id;
+            }
+
+            var _loc4_: int = (_loc2_.getParser() as UserRemoveMessageParser).id;
             _loc3_.userDataManager.removeUserDataByIndex(_loc4_);
         }
 
-        private function onUserBadges(param1:IMessageEvent):void
+        private function onUserBadges(param1: IMessageEvent): void
         {
-            var _loc2_:HabboUserBadgesMessageEvent = (param1 as HabboUserBadgesMessageEvent);
+            var _loc2_: HabboUserBadgesMessageEvent = param1 as HabboUserBadgesMessageEvent;
             if (_loc2_ == null)
             {
                 return;
-            };
-            var _loc3_:IRoomSession = listener.getSession(_xxxRoomId, var_99);
+            }
+
+            var _loc3_: IRoomSession = listener.getSession(_xxxRoomId, var_99);
             if (_loc3_ == null)
             {
                 return;
-            };
+            }
+
             _loc3_.userDataManager.setUserBadges(_loc2_.userId, _loc2_.badges);
             listener.events.dispatchEvent(new RoomSessionUserBadgesEvent(_loc3_, _loc2_.userId, _loc2_.badges));
         }
 
-        private function onDoorbell(param1:IMessageEvent):void
+        private function onDoorbell(param1: IMessageEvent): void
         {
-            var _loc2_:DoorbellMessageEvent = (param1 as DoorbellMessageEvent);
+            var _loc2_: DoorbellMessageEvent = param1 as DoorbellMessageEvent;
             if (_loc2_ == null)
             {
                 return;
-            };
+            }
+
             if (_loc2_.userName == "")
             {
                 return;
-            };
-            var _loc3_:IRoomSession = listener.getSession(_xxxRoomId, var_99);
+            }
+
+            var _loc3_: IRoomSession = listener.getSession(_xxxRoomId, var_99);
             if (_loc3_ == null)
             {
                 return;
-            };
+            }
+
             listener.events.dispatchEvent(new RoomSessionDoorbellEvent(RoomSessionDoorbellEvent.var_269, _loc3_, _loc2_.userName));
         }
 
-        private function onUserChange(param1:IMessageEvent):void
+        private function onUserChange(param1: IMessageEvent): void
         {
-            var _loc2_:UserChangeMessageEvent = (param1 as UserChangeMessageEvent);
+            var _loc2_: UserChangeMessageEvent = param1 as UserChangeMessageEvent;
             if (_loc2_ == null)
             {
                 return;
-            };
-            var _loc3_:IRoomSession = listener.getSession(_xxxRoomId, var_99);
+            }
+
+            var _loc3_: IRoomSession = listener.getSession(_xxxRoomId, var_99);
             if (_loc3_ == null)
             {
                 return;
-            };
+            }
+
             if (_loc2_.id >= 0)
             {
                 _loc3_.userDataManager.updateFigure(_loc2_.id, _loc2_.figure, _loc2_.sex);
                 _loc3_.userDataManager.updateCustom(_loc2_.id, _loc2_.customInfo);
                 _loc3_.userDataManager.updateAchievementScore(_loc2_.id, _loc2_.achievementScore);
                 listener.events.dispatchEvent(new RoomSessionUserFigureUpdateEvent(_loc3_, _loc2_.id, _loc2_.figure, _loc2_.sex, _loc2_.customInfo, _loc2_.achievementScore));
-            };
+            }
+
         }
 
-        private function onUserNameChange(param1:IMessageEvent):void
+        private function onUserNameChange(param1: IMessageEvent): void
         {
-            var _loc2_:UserNameChangedMessageEvent = (param1 as UserNameChangedMessageEvent);
+            var _loc2_: UserNameChangedMessageEvent = param1 as UserNameChangedMessageEvent;
             if (_loc2_ == null)
             {
                 return;
-            };
-            var _loc3_:UserNameChangedMessageParser = _loc2_.getParser();
-            var _loc4_:IRoomSession = listener.getSession(_xxxRoomId, var_99);
+            }
+
+            var _loc3_: UserNameChangedMessageParser = _loc2_.getParser();
+            var _loc4_: IRoomSession = listener.getSession(_xxxRoomId, var_99);
             if (_loc4_ == null)
             {
                 return;
-            };
+            }
+
             _loc4_.userDataManager.updateNameByIndex(_loc3_.id, _loc3_.newName);
         }
 
-        private function onPetInfo(param1:IMessageEvent):void
+        private function onPetInfo(param1: IMessageEvent): void
         {
-            var _loc2_:IRoomSession = listener.getSession(_xxxRoomId, var_99);
+            var _loc2_: IRoomSession = listener.getSession(_xxxRoomId, var_99);
             if (_loc2_ == null)
             {
                 return;
-            };
-            var _loc3_:PetInfoMessageEvent = (param1 as PetInfoMessageEvent);
+            }
+
+            var _loc3_: PetInfoMessageEvent = param1 as PetInfoMessageEvent;
             if (_loc3_ == null)
             {
                 return;
-            };
-            var _loc4_:PetInfoMessageParser = _loc3_.getParser();
-            var _loc5_:PetInfo = new PetInfo();
+            }
+
+            var _loc4_: PetInfoMessageParser = _loc3_.getParser();
+            var _loc5_: PetInfo = new PetInfo();
             _loc5_.petId = _loc4_.petId;
             _loc5_.level = _loc4_.level;
             _loc5_.levelMax = _loc4_.maxLevel;
@@ -209,37 +228,42 @@
             listener.events.dispatchEvent(new RoomSessionPetInfoUpdateEvent(_loc2_, _loc5_));
         }
 
-        private function onEnabledPetCommands(param1:IMessageEvent):void
+        private function onEnabledPetCommands(param1: IMessageEvent): void
         {
-            var _loc2_:IRoomSession = listener.getSession(_xxxRoomId, var_99);
+            var _loc2_: IRoomSession = listener.getSession(_xxxRoomId, var_99);
             if (_loc2_ == null)
             {
                 return;
-            };
-            var _loc3_:PetCommandsMessageEvent = (param1 as PetCommandsMessageEvent);
+            }
+
+            var _loc3_: PetCommandsMessageEvent = param1 as PetCommandsMessageEvent;
             if (_loc3_ == null)
             {
                 return;
-            };
-            var _loc4_:PetCommandsMessageParser = _loc3_.getParser();
+            }
+
+            var _loc4_: PetCommandsMessageParser = _loc3_.getParser();
             if (_loc4_ != null)
             {
                 listener.events.dispatchEvent(new RoomSessionPetCommandsUpdateEvent(_loc2_, _loc4_.petId, _loc4_.allCommands, _loc4_.enabledCommands));
-            };
+            }
+
         }
 
-        private function onPetPlacingError(param1:PetPlacingErrorEvent):void
+        private function onPetPlacingError(param1: PetPlacingErrorEvent): void
         {
-            var _loc3_:String;
-            if (((param1 == null) || (param1.getParser() == null)))
+            var _loc3_: String;
+            if (param1 == null || param1.getParser() == null)
             {
                 return;
-            };
-            var _loc2_:IRoomSession = listener.getSession(_xxxRoomId, var_99);
+            }
+
+            var _loc2_: IRoomSession = listener.getSession(_xxxRoomId, var_99);
             if (_loc2_ == null)
             {
                 return;
-            };
+            }
+
             switch (param1.getParser().errorCode)
             {
                 case 0:
@@ -257,34 +281,40 @@
                 case 4:
                     _loc3_ = RoomSessionErrorMessageEvent.var_392;
                     break;
-            };
+            }
+
             if (_loc3_ != null)
             {
                 listener.events.dispatchEvent(new RoomSessionErrorMessageEvent(_loc3_, _loc2_));
-            };
+            }
+
         }
 
-        private function onFriendRequest(param1:NewBuddyRequestEvent):void
+        private function onFriendRequest(param1: NewBuddyRequestEvent): void
         {
-            if ((((!(param1)) || (!(listener))) || (!(listener.events))))
+            if (!param1 || !listener || !listener.events)
             {
                 return;
-            };
-            var _loc2_:NewBuddyRequestMessageParser = param1.getParser();
+            }
+
+            var _loc2_: NewBuddyRequestMessageParser = param1.getParser();
             if (!_loc2_)
             {
                 return;
-            };
-            var _loc3_:IRoomSession = listener.getSession(_xxxRoomId, var_99);
+            }
+
+            var _loc3_: IRoomSession = listener.getSession(_xxxRoomId, var_99);
             if (!_loc3_)
             {
                 return;
-            };
-            var _loc4_:FriendRequestData = _loc2_.req;
+            }
+
+            var _loc4_: FriendRequestData = _loc2_.req;
             if (!_loc4_)
             {
                 return;
-            };
+            }
+
             listener.events.dispatchEvent(new RoomSessionFriendRequestEvent(_loc3_, _loc4_.requestId, _loc4_.requestId, _loc4_.requesterName));
         }
 

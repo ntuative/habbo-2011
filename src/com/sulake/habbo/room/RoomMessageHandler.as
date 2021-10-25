@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.room
 {
+
     import com.sulake.core.communication.connection.IConnection;
     import com.sulake.habbo.room.object.RoomPlaneParser;
     import com.sulake.habbo.communication.messages.incoming.handshake.UserObjectEvent;
@@ -123,25 +124,25 @@
     import com.sulake.habbo.communication.messages.parser.room.session.GamePlayerValueMessageParser;
     import com.sulake.habbo.room.messages.RoomObjectAvatarPlayerValueUpdateMessage;
 
-    public class RoomMessageHandler 
+    public class RoomMessageHandler
     {
 
-        private var _connection:IConnection = null;
-        private var var_4368:IRoomCreator = null;
-        private var _planeParser:RoomPlaneParser = null;
-        private var var_4369:int = -1;
-        private var var_4370:Boolean = true;
-        private var var_4371:int = -1000000000;
-        private var var_4372:Object = new Object();
+        private var _connection: IConnection = null;
+        private var var_4368: IRoomCreator = null;
+        private var _planeParser: RoomPlaneParser = null;
+        private var var_4369: int = -1;
+        private var var_4370: Boolean = true;
+        private var var_4371: int = -1000000000;
+        private var var_4372: Object = {};
 
-        public function RoomMessageHandler(param1:IRoomCreator)
+        public function RoomMessageHandler(param1: IRoomCreator)
         {
             this.var_4368 = param1;
             this._planeParser = new RoomPlaneParser();
             this.var_4370 = true;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this._connection = null;
             this.var_4368 = null;
@@ -149,24 +150,27 @@
             {
                 this._planeParser.dispose();
                 this._planeParser = null;
-            };
+            }
+
         }
 
-        private function isPublicRoom(param1:int, param2:int):Boolean
+        private function isPublicRoom(param1: int, param2: int): Boolean
         {
             if (this.var_4368)
             {
-                return (this.var_4368.isPublicRoom(param1, param2));
-            };
-            return (false);
+                return this.var_4368.isPublicRoom(param1, param2);
+            }
+
+            return false;
         }
 
-        public function set connection(param1:IConnection):void
+        public function set connection(param1: IConnection): void
         {
             if (this._connection != null)
             {
                 return;
-            };
+            }
+
             if (param1 != null)
             {
                 this._connection = param1;
@@ -213,40 +217,46 @@
                 param1.addMessageEvent(new PetExperienceEvent(this.onPetExperience));
                 param1.addMessageEvent(new YouArePlayingGameMessageEvent(this.onPlayingGame));
                 param1.addMessageEvent(new GamePlayerValueMessageEvent(this.onGamePlayerNumberValue));
-            };
+            }
+
         }
 
-        private function onOwnUserEvent(param1:IMessageEvent):void
+        private function onOwnUserEvent(param1: IMessageEvent): void
         {
-            var _loc2_:UserObjectEvent = (param1 as UserObjectEvent);
+            var _loc2_: UserObjectEvent = param1 as UserObjectEvent;
             if (_loc2_ == null)
             {
                 return;
-            };
-            var _loc3_:UserObjectMessageParser = _loc2_.getParser();
+            }
+
+            var _loc3_: UserObjectMessageParser = _loc2_.getParser();
             if (_loc3_ != null)
             {
                 this.var_4369 = _loc3_.id;
-            };
+            }
+
         }
 
-        private function onRoomReady(param1:IMessageEvent):void
+        private function onRoomReady(param1: IMessageEvent): void
         {
             if (this.var_4368 != null)
             {
                 this.var_4368.disposeRoom(1, 1);
-            };
-            var _loc2_:RoomReadyMessageEvent = (param1 as RoomReadyMessageEvent);
-            if ((((_loc2_ == null) || (_loc2_.getParser() == null)) || (param1.connection == null)))
+            }
+
+            var _loc2_: RoomReadyMessageEvent = param1 as RoomReadyMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null || param1.connection == null)
             {
                 return;
-            };
-            var _loc3_:RoomReadyMessageParser = _loc2_.getParser();
-            var _loc4_:String = _loc3_.roomType;
+            }
+
+            var _loc3_: RoomReadyMessageParser = _loc2_.getParser();
+            var _loc4_: String = _loc3_.roomType;
             if (this.var_4368 != null)
             {
                 this.var_4368.setWorldType(_loc3_.roomId, _loc3_.roomCategory, _loc4_);
-            };
+            }
+
             if (this.var_4370)
             {
                 param1.connection.send(new GetFurnitureAliasesMessageComposer());
@@ -255,15 +265,16 @@
             else
             {
                 param1.connection.send(new GetRoomEntryDataMessageComposer());
-            };
+            }
+
         }
 
-        private function onRoomDisconnected(param1:IMessageEvent):void
+        private function onRoomDisconnected(param1: IMessageEvent): void
         {
-            var _loc2_:CloseConnectionMessageEvent;
-            var _loc3_:CloseConnectionMessageParser;
-            var _loc4_:int;
-            var _loc5_:int;
+            var _loc2_: CloseConnectionMessageEvent;
+            var _loc3_: CloseConnectionMessageParser;
+            var _loc4_: int;
+            var _loc5_: int;
             if (this.var_4368 != null)
             {
                 _loc2_ = (param1 as CloseConnectionMessageEvent);
@@ -271,24 +282,26 @@
                 _loc4_ = _loc3_.roomId;
                 _loc5_ = _loc3_.roomCategory;
                 this.var_4368.disposeRoom(_loc4_, _loc5_);
-            };
+            }
+
         }
 
-        private function onFurnitureAliases(param1:IMessageEvent):void
+        private function onFurnitureAliases(param1: IMessageEvent): void
         {
-            var _loc2_:FurnitureAliasesMessageEvent;
-            var _loc3_:FurnitureAliasesMessageParser;
-            var _loc4_:int;
-            var _loc5_:int;
-            var _loc6_:String;
-            var _loc7_:String;
+            var _loc2_: FurnitureAliasesMessageEvent;
+            var _loc3_: FurnitureAliasesMessageParser;
+            var _loc4_: int;
+            var _loc5_: int;
+            var _loc6_: String;
+            var _loc7_: String;
             if (this.var_4368 != null)
             {
                 _loc2_ = (param1 as FurnitureAliasesMessageEvent);
-                if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+                if (_loc2_ == null || _loc2_.getParser() == null)
                 {
                     return;
-                };
+                }
+
                 _loc3_ = _loc2_.getParser();
                 if (_loc3_ != null)
                 {
@@ -300,34 +313,39 @@
                         _loc7_ = _loc3_.getAlias(_loc5_);
                         this.var_4368.setRoomObjectAlias(_loc6_, _loc7_);
                         _loc5_++;
-                    };
-                };
-            };
+                    }
+
+                }
+
+            }
+
             param1.connection.send(new GetRoomEntryDataMessageComposer());
         }
 
-        private function onHeightMap(param1:IMessageEvent):void
+        private function onHeightMap(param1: IMessageEvent): void
         {
-            var _loc10_:int;
-            var _loc11_:Number;
-            var _loc12_:Boolean;
-            var _loc13_:Boolean;
-            var _loc2_:HeightMapMessageEvent = (param1 as HeightMapMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc10_: int;
+            var _loc11_: Number;
+            var _loc12_: Boolean;
+            var _loc13_: Boolean;
+            var _loc2_: HeightMapMessageEvent = param1 as HeightMapMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:HeightMapMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:int = _loc3_.width;
-            var _loc7_:int = _loc3_.height;
-            var _loc8_:TileHeightMap = new TileHeightMap(_loc6_, _loc7_);
-            var _loc9_:int;
+            }
+
+            var _loc3_: HeightMapMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: int = _loc3_.width;
+            var _loc7_: int = _loc3_.height;
+            var _loc8_: TileHeightMap = new TileHeightMap(_loc6_, _loc7_);
+            var _loc9_: int;
             while (_loc9_ < _loc7_)
             {
                 _loc10_ = 0;
@@ -340,37 +358,42 @@
                     _loc8_.setTileBlocking(_loc10_, _loc9_, _loc12_);
                     _loc8_.setIsRoomTile(_loc10_, _loc9_, _loc13_);
                     _loc10_++;
-                };
+                }
+
                 _loc9_++;
-            };
+            }
+
             this.var_4368.setTileHeightMap(_loc4_, _loc5_, _loc8_);
         }
 
-        private function onHeightMapUpdate(param1:IMessageEvent):void
+        private function onHeightMapUpdate(param1: IMessageEvent): void
         {
-            var _loc10_:int;
-            var _loc11_:Number;
-            var _loc12_:Boolean;
-            var _loc2_:HeightMapUpdateMessageEvent = (param1 as HeightMapUpdateMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc10_: int;
+            var _loc11_: Number;
+            var _loc12_: Boolean;
+            var _loc2_: HeightMapUpdateMessageEvent = param1 as HeightMapUpdateMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:HeightMapUpdateMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:TileHeightMap = this.var_4368.getTileHeightMap(_loc4_, _loc5_);
+            }
+
+            var _loc3_: HeightMapUpdateMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: TileHeightMap = this.var_4368.getTileHeightMap(_loc4_, _loc5_);
             if (_loc6_ == null)
             {
                 return;
-            };
-            var _loc7_:int = _loc6_.mapWidth;
-            var _loc8_:int = _loc6_.mapHeight;
-            var _loc9_:int;
+            }
+
+            var _loc7_: int = _loc6_.mapWidth;
+            var _loc8_: int = _loc6_.mapHeight;
+            var _loc9_: int;
             while (_loc9_ < _loc8_)
             {
                 _loc10_ = 0;
@@ -383,83 +406,92 @@
                     _loc6_.setTileHeight(_loc10_, _loc9_, _loc11_);
                     _loc6_.setTileBlocking(_loc10_, _loc9_, _loc12_);
                     _loc10_++;
-                };
+                }
+
                 _loc9_++;
-            };
+            }
+
         }
 
-        private function onRoomVisualizationSettings(param1:IMessageEvent):void
+        private function onRoomVisualizationSettings(param1: IMessageEvent): void
         {
-            var _loc2_:RoomVisualizationSettingsEvent = (param1 as RoomVisualizationSettingsEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: RoomVisualizationSettingsEvent = param1 as RoomVisualizationSettingsEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
-            var _loc3_:RoomVisualizationSettingsParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:* = (!(_loc3_.wallsHidden));
-            var _loc7_:Boolean = true;
+            }
+
+            var _loc3_: RoomVisualizationSettingsParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: * = !_loc3_.wallsHidden;
+            var _loc7_: Boolean = true;
             if (this.var_4368 != null)
             {
                 this.var_4368.updateObjectRoomVisibilities(_loc4_, _loc5_, _loc6_, _loc7_);
-            };
+            }
+
         }
 
-        private function onRoomProperty(param1:IMessageEvent):void
+        private function onRoomProperty(param1: IMessageEvent): void
         {
-            var _loc2_:RoomPropertyMessageEvent = (param1 as RoomPropertyMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: RoomPropertyMessageEvent = param1 as RoomPropertyMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
-            var _loc3_:RoomPropertyMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:String = _loc3_.floorType;
-            var _loc7_:String = _loc3_.wallType;
-            var _loc8_:String = _loc3_.landscapeType;
+            }
+
+            var _loc3_: RoomPropertyMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: String = _loc3_.floorType;
+            var _loc7_: String = _loc3_.wallType;
+            var _loc8_: String = _loc3_.landscapeType;
             if (this.var_4368 != null)
             {
                 this.var_4368.updateObjectRoom(_loc4_, _loc5_, _loc6_, _loc7_, _loc8_);
-            };
+            }
+
         }
 
-        private function onFloorHeightMap(param1:IMessageEvent):void
+        private function onFloorHeightMap(param1: IMessageEvent): void
         {
-            var _loc20_:int;
-            var _loc21_:int;
-            var _loc22_:Boolean;
-            var _loc23_:int;
-            var _loc24_:XML;
-            var _loc2_:FloorHeightMapMessageEvent = (param1 as FloorHeightMapMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc20_: int;
+            var _loc21_: int;
+            var _loc22_: Boolean;
+            var _loc23_: int;
+            var _loc24_: XML;
+            var _loc2_: FloorHeightMapMessageEvent = param1 as FloorHeightMapMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
-            var _loc3_:FloorHeightMapMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:LegacyWallGeometry = this.var_4368.getLegacyGeometry(_loc4_, _loc5_);
-            if (((this.var_4368 == null) || (_loc6_ == null)))
+            }
+
+            var _loc3_: FloorHeightMapMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: LegacyWallGeometry = this.var_4368.getLegacyGeometry(_loc4_, _loc5_);
+            if (this.var_4368 == null || _loc6_ == null)
             {
                 return;
-            };
+            }
+
             this._planeParser.reset();
-            var _loc7_:int = _loc3_.width;
-            var _loc8_:int = _loc3_.height;
+            var _loc7_: int = _loc3_.width;
+            var _loc8_: int = _loc3_.height;
             this._planeParser.initializeTileMap(_loc7_, _loc8_);
-            var _loc9_:Number = -1;
-            var _loc10_:Number = -1;
-            var _loc11_:Number = 0;
-            var _loc12_:Number = 0;
-            var _loc13_:Boolean = this.isPublicRoom(_loc4_, _loc5_);
-            var _loc14_:TileHeightMap = this.var_4368.getTileHeightMap(_loc4_, _loc5_);
+            var _loc9_: Number = -1;
+            var _loc10_: Number = -1;
+            var _loc11_: Number = 0;
+            var _loc12_: Number = 0;
+            var _loc13_: Boolean = this.isPublicRoom(_loc4_, _loc5_);
+            var _loc14_: TileHeightMap = this.var_4368.getTileHeightMap(_loc4_, _loc5_);
             if (_loc14_ == null)
             {
                 return;
-            };
-            var _loc15_:int;
+            }
+
+            var _loc15_: int;
             while (_loc15_ < _loc8_)
             {
                 _loc20_ = 0;
@@ -468,77 +500,92 @@
                     _loc21_ = _loc3_.getTileHeight(_loc20_, _loc15_);
                     if (!_loc13_)
                     {
-                        if (((((_loc15_ > 0) && (_loc15_ < (_loc8_ - 1))) || ((_loc20_ > 0) && (_loc20_ < (_loc7_ - 1)))) && (!(_loc21_ == RoomPlaneParser.TILE_BLOCKED))))
+                        if ((_loc15_ > 0 && _loc15_ < _loc8_ - 1 || _loc20_ > 0 && _loc20_ < _loc7_ - 1) && _loc21_ != RoomPlaneParser.TILE_BLOCKED)
                         {
-                            if ((((_loc3_.getTileHeight(_loc20_, (_loc15_ - 1)) == RoomPlaneParser.TILE_BLOCKED) && (_loc3_.getTileHeight((_loc20_ - 1), _loc15_) == RoomPlaneParser.TILE_BLOCKED)) && (_loc3_.getTileHeight(_loc20_, (_loc15_ + 1)) == RoomPlaneParser.TILE_BLOCKED)))
+                            if (_loc3_.getTileHeight(_loc20_, _loc15_ - 1) == RoomPlaneParser.TILE_BLOCKED && _loc3_.getTileHeight(_loc20_ - 1, _loc15_) == RoomPlaneParser.TILE_BLOCKED && _loc3_.getTileHeight(_loc20_, _loc15_ + 1) == RoomPlaneParser.TILE_BLOCKED)
                             {
-                                _loc9_ = (_loc20_ + 0.5);
+                                _loc9_ = _loc20_ + 0.5;
                                 _loc10_ = _loc15_;
                                 _loc11_ = _loc21_;
                                 _loc12_ = 90;
-                                if (!_loc14_.isRoomTile((_loc20_ + 1), _loc15_))
+                                if (!_loc14_.isRoomTile(_loc20_ + 1, _loc15_))
                                 {
-                                    _loc9_ = (_loc9_ + 1);
-                                };
-                            };
-                            if ((((_loc3_.getTileHeight(_loc20_, (_loc15_ - 1)) == RoomPlaneParser.TILE_BLOCKED) && (_loc3_.getTileHeight((_loc20_ - 1), _loc15_) == RoomPlaneParser.TILE_BLOCKED)) && (_loc3_.getTileHeight((_loc20_ + 1), _loc15_) == RoomPlaneParser.TILE_BLOCKED)))
+                                    _loc9_ = _loc9_ + 1;
+                                }
+
+                            }
+
+                            if (_loc3_.getTileHeight(_loc20_, _loc15_ - 1) == RoomPlaneParser.TILE_BLOCKED && _loc3_.getTileHeight(_loc20_ - 1, _loc15_) == RoomPlaneParser.TILE_BLOCKED && _loc3_.getTileHeight(_loc20_ + 1, _loc15_) == RoomPlaneParser.TILE_BLOCKED)
                             {
                                 _loc9_ = _loc20_;
-                                _loc10_ = (_loc15_ + 0.5);
+                                _loc10_ = _loc15_ + 0.5;
                                 _loc11_ = _loc21_;
                                 _loc12_ = 180;
-                                if (!_loc14_.isRoomTile(_loc20_, (_loc15_ + 1)))
+                                if (!_loc14_.isRoomTile(_loc20_, _loc15_ + 1))
                                 {
-                                    _loc10_ = (_loc10_ + 1);
-                                };
-                            };
-                        };
-                    };
+                                    _loc10_ = _loc10_ + 1;
+                                }
+
+                            }
+
+                        }
+
+                    }
+
                     _loc22_ = _loc14_.isRoomTile(_loc20_, _loc15_);
                     if (!_loc22_)
                     {
                         _loc21_ = RoomPlaneParser.TILE_BLOCKED;
-                    };
+                    }
+
                     this._planeParser.setTileHeight(_loc20_, _loc15_, _loc21_);
                     _loc20_++;
-                };
+                }
+
                 _loc15_++;
-            };
+            }
+
             if (!_loc13_)
             {
                 this._planeParser.setTileHeight(Math.floor(_loc9_), Math.floor(_loc10_), _loc11_);
-            };
-            var _loc16_:* = (_loc5_ == 1);
+            }
+
+            var _loc16_: * = _loc5_ == 1;
             if (_loc13_)
             {
                 _loc16_ = true;
-            };
+            }
+
             this._planeParser.initializeFromTileData(_loc16_);
             if (!_loc13_)
             {
-                this._planeParser.setTileHeight(Math.floor(_loc9_), Math.floor(_loc10_), (_loc11_ + this._planeParser.wallHeight));
-            };
+                this._planeParser.setTileHeight(Math.floor(_loc9_), Math.floor(_loc10_), _loc11_ + this._planeParser.wallHeight);
+            }
+
             _loc6_.scale = _loc3_.scale;
             _loc6_.initialize(_loc7_, _loc8_, this._planeParser.floorHeight);
-            var _loc17_:int = (_loc3_.height - 1);
+            var _loc17_: int = _loc3_.height - 1;
             while (_loc17_ >= 0)
             {
-                _loc23_ = (_loc3_.width - 1);
+                _loc23_ = _loc3_.width - 1;
                 while (_loc23_ >= 0)
                 {
                     _loc6_.setTileHeight(_loc23_, _loc17_, this._planeParser.getTileHeight(_loc23_, _loc17_));
                     _loc23_--;
-                };
+                }
+
                 _loc17_--;
-            };
-            var _loc18_:XML = this._planeParser.getXML();
-            var _loc19_:XML = new (XML)((((((((('<dimensions minX="' + this._planeParser.minX) + '" maxX="') + this._planeParser.maxX) + '" minY="') + this._planeParser.minY) + '" maxY="') + this._planeParser.maxY) + '"/>'));
+            }
+
+            var _loc18_: XML = this._planeParser.getXML();
+            var _loc19_: XML = new XML("<dimensions minX=\"" + this._planeParser.minX + "\" maxX=\"" + this._planeParser.maxX + "\" minY=\"" + this._planeParser.minY + "\" maxY=\"" + this._planeParser.maxY + "\"/>");
             _loc18_.appendChild(_loc19_);
             if (!_loc13_)
             {
-                _loc24_ = new (XML)((("<doors>" + (((((((('<door x="' + _loc9_) + '" y="') + _loc10_) + '" z="') + _loc11_) + '" dir="') + _loc12_) + '"/>')) + "</doors>"));
+                _loc24_ = new XML("<doors>" + ("<door x=\"" + _loc9_ + "\" y=\"" + _loc10_ + "\" z=\"" + _loc11_ + "\" dir=\"" + _loc12_ + "\"/>") + "</doors>");
                 _loc18_.appendChild(_loc24_);
-            };
+            }
+
             this.var_4368.initializeRoom(_loc4_, _loc5_, _loc18_);
             if (this.var_4372.objectData)
             {
@@ -548,76 +595,83 @@
             else
             {
                 this.var_4372.floorReady = true;
-            };
+            }
+
         }
 
-        private function onObjects(param1:IMessageEvent):void
+        private function onObjects(param1: IMessageEvent): void
         {
-            var _loc8_:ObjectMessageData;
-            var _loc2_:ObjectsMessageEvent = (param1 as ObjectsMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc8_: ObjectMessageData;
+            var _loc2_: ObjectsMessageEvent = param1 as ObjectsMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
-            var _loc3_:ObjectsMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:int = _loc3_.getObjectCount();
-            var _loc7_:int;
+            }
+
+            var _loc3_: ObjectsMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: int = _loc3_.getObjectCount();
+            var _loc7_: int;
             while (_loc7_ < _loc6_)
             {
                 _loc8_ = _loc3_.getObject(_loc7_);
                 this.addActiveObject(_loc4_, _loc5_, _loc8_);
                 _loc7_++;
-            };
+            }
+
         }
 
-        private function onPublicRoomObjects(param1:IMessageEvent):void
+        private function onPublicRoomObjects(param1: IMessageEvent): void
         {
-            var _loc8_:PublicRoomObjectMessageData;
-            var _loc2_:PublicRoomObjectsMessageEvent = (param1 as PublicRoomObjectsMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc8_: PublicRoomObjectMessageData;
+            var _loc2_: PublicRoomObjectsMessageEvent = param1 as PublicRoomObjectsMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
-            var _loc3_:PublicRoomObjectsMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:int = _loc3_.getObjectCount();
-            var _loc7_:int;
+            }
+
+            var _loc3_: PublicRoomObjectsMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: int = _loc3_.getObjectCount();
+            var _loc7_: int;
             while (_loc7_ < _loc6_)
             {
                 _loc8_ = _loc3_.getObject(_loc7_);
                 this.addPassiveObject(_loc4_, _loc5_, _loc8_);
                 _loc7_++;
-            };
+            }
+
         }
 
-        private function onObjectAdd(param1:IMessageEvent):void
+        private function onObjectAdd(param1: IMessageEvent): void
         {
-            var _loc2_:ObjectAddMessageEvent = (param1 as ObjectAddMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: ObjectAddMessageEvent = param1 as ObjectAddMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
-            var _loc3_:ObjectAddMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:ObjectMessageData = _loc3_.data;
+            }
+
+            var _loc3_: ObjectAddMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: ObjectMessageData = _loc3_.data;
             this.addActiveObject(_loc4_, _loc5_, _loc6_);
         }
 
-        private function onObjectInject(param1:IMessageEvent):void
+        private function onObjectInject(param1: IMessageEvent): void
         {
-            var _loc2_:ViralTeaserActiveMessageEvent = (param1 as ViralTeaserActiveMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: ViralTeaserActiveMessageEvent = param1 as ViralTeaserActiveMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
-            var _loc3_:ViralTeaserActiveMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:ObjectMessageData = _loc3_.data;
+            }
+
+            var _loc3_: ViralTeaserActiveMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: ObjectMessageData = _loc3_.data;
             if (this.var_4372.floorReady)
             {
                 this.addActiveObject(_loc4_, _loc5_, _loc6_);
@@ -625,73 +679,81 @@
             else
             {
                 this.var_4372.objectData = _loc6_;
-            };
+            }
+
         }
 
-        private function onObjectUpdate(param1:IMessageEvent):void
+        private function onObjectUpdate(param1: IMessageEvent): void
         {
-            var _loc7_:IVector3d;
-            var _loc8_:IVector3d;
-            var _loc2_:ObjectUpdateMessageEvent = (param1 as ObjectUpdateMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc7_: IVector3d;
+            var _loc8_: IVector3d;
+            var _loc2_: ObjectUpdateMessageEvent = param1 as ObjectUpdateMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:ObjectUpdateMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:ObjectMessageData = _loc3_.data;
+            }
+
+            var _loc3_: ObjectUpdateMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: ObjectMessageData = _loc3_.data;
             if (_loc6_ != null)
             {
                 _loc7_ = new Vector3d(_loc6_.x, _loc6_.y, _loc6_.z);
                 _loc8_ = new Vector3d(_loc6_.dir);
                 this.var_4368.updateObjectFurniture(_loc4_, _loc5_, _loc6_.id, _loc7_, _loc8_, _loc6_.state, _loc6_.data, _loc6_.extra);
-            };
+            }
+
         }
 
-        private function onObjectDataUpdate(param1:IMessageEvent):void
+        private function onObjectDataUpdate(param1: IMessageEvent): void
         {
-            var _loc2_:ObjectDataUpdateMessageEvent = (param1 as ObjectDataUpdateMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: ObjectDataUpdateMessageEvent = param1 as ObjectDataUpdateMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:ObjectDataUpdateMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:int = _loc3_.id;
-            var _loc7_:int = _loc3_.state;
-            var _loc8_:String = _loc3_.data;
+            }
+
+            var _loc3_: ObjectDataUpdateMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: int = _loc3_.id;
+            var _loc7_: int = _loc3_.state;
+            var _loc8_: String = _loc3_.data;
             this.var_4368.updateObjectFurniture(_loc4_, _loc5_, _loc6_, null, null, _loc7_, _loc8_);
         }
 
-        private function onObjectsDataUpdate(param1:IMessageEvent):void
+        private function onObjectsDataUpdate(param1: IMessageEvent): void
         {
-            var _loc7_:ObjectData;
-            var _loc8_:int;
-            var _loc9_:int;
-            var _loc10_:String;
-            var _loc2_:ObjectsDataUpdateMessageEvent = (param1 as ObjectsDataUpdateMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc7_: ObjectData;
+            var _loc8_: int;
+            var _loc9_: int;
+            var _loc10_: String;
+            var _loc2_: ObjectsDataUpdateMessageEvent = param1 as ObjectsDataUpdateMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:ObjectsDataUpdateMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:int;
+            }
+
+            var _loc3_: ObjectsDataUpdateMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: int;
             while (_loc6_ < _loc3_.objectCount)
             {
                 _loc7_ = _loc3_.getObjectData(_loc6_);
@@ -701,37 +763,42 @@
                     _loc9_ = _loc7_.state;
                     _loc10_ = _loc7_.data;
                     this.var_4368.updateObjectFurniture(_loc4_, _loc5_, _loc8_, null, null, _loc9_, _loc10_);
-                };
+                }
+
                 _loc6_++;
-            };
+            }
+
         }
 
-        private function onObjectRemove(param1:IMessageEvent):void
+        private function onObjectRemove(param1: IMessageEvent): void
         {
-            var _loc2_:ObjectRemoveMessageEvent = (param1 as ObjectRemoveMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: ObjectRemoveMessageEvent = param1 as ObjectRemoveMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:ObjectRemoveMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:int = _loc3_.id;
+            }
+
+            var _loc3_: ObjectRemoveMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: int = _loc3_.id;
             this.var_4368.disposeObjectFurniture(_loc4_, _loc5_, _loc6_);
         }
 
-        private function addActiveObject(param1:int, param2:int, param3:ObjectMessageData):void
+        private function addActiveObject(param1: int, param2: int, param3: ObjectMessageData): void
         {
-            if (((param3 == null) || (this.var_4368 == null)))
+            if (param3 == null || this.var_4368 == null)
             {
                 return;
-            };
-            var _loc4_:IVector3d = new Vector3d(param3.x, param3.y, param3.z);
-            var _loc5_:IVector3d = new Vector3d(param3.dir);
+            }
+
+            var _loc4_: IVector3d = new Vector3d(param3.x, param3.y, param3.z);
+            var _loc5_: IVector3d = new Vector3d(param3.dir);
             if (param3.staticClass != null)
             {
                 this.var_4368.addObjectFurnitureByName(param1, param2, param3.id, param3.staticClass, _loc4_, _loc5_, param3.state, param3.data, param3.extra);
@@ -739,134 +806,149 @@
             else
             {
                 this.var_4368.addObjectFurniture(param1, param2, param3.id, param3.type, _loc4_, _loc5_, param3.state, param3.data, param3.extra, param3.expiryTime);
-            };
+            }
+
         }
 
-        private function addPassiveObject(param1:int, param2:int, param3:PublicRoomObjectMessageData):void
+        private function addPassiveObject(param1: int, param2: int, param3: PublicRoomObjectMessageData): void
         {
-            if (((param3 == null) || (this.var_4368 == null)))
+            if (param3 == null || this.var_4368 == null)
             {
                 return;
-            };
-            var _loc4_:IVector3d = new Vector3d(param3.x, param3.y, param3.z);
-            var _loc5_:IVector3d = new Vector3d(param3.dir);
-            var _loc6_:int = this.getNextPassiveObjectId();
+            }
+
+            var _loc4_: IVector3d = new Vector3d(param3.x, param3.y, param3.z);
+            var _loc5_: IVector3d = new Vector3d(param3.dir);
+            var _loc6_: int = this.getNextPassiveObjectId();
             this.var_4368.addObjectFurnitureByName(param1, param2, _loc6_, param3.type, _loc4_, _loc5_, 0, "");
         }
 
-        private function getNextPassiveObjectId():int
+        private function getNextPassiveObjectId(): int
         {
             if (this.var_4371 > 0)
             {
                 this.var_4371 = -1000000000;
-            };
-            return (--this.var_4371);
+            }
+
+            return --this.var_4371;
         }
 
-        private function onItems(param1:IMessageEvent):void
+        private function onItems(param1: IMessageEvent): void
         {
-            var _loc8_:ItemMessageData;
-            var _loc2_:ItemsMessageEvent = (param1 as ItemsMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc8_: ItemMessageData;
+            var _loc2_: ItemsMessageEvent = param1 as ItemsMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
-            var _loc3_:ItemsMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:int = _loc3_.getItemCount();
-            var _loc7_:int;
+            }
+
+            var _loc3_: ItemsMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: int = _loc3_.getItemCount();
+            var _loc7_: int;
             while (_loc7_ < _loc6_)
             {
                 _loc8_ = _loc3_.getItem(_loc7_);
                 this.addWallItem(_loc4_, _loc5_, _loc8_);
                 _loc7_++;
-            };
+            }
+
         }
 
-        private function onItemAdd(param1:IMessageEvent):void
+        private function onItemAdd(param1: IMessageEvent): void
         {
-            var _loc2_:ItemAddMessageEvent = (param1 as ItemAddMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: ItemAddMessageEvent = param1 as ItemAddMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
-            var _loc3_:ItemAddMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:ItemMessageData = _loc3_.data;
+            }
+
+            var _loc3_: ItemAddMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: ItemMessageData = _loc3_.data;
             if (_loc6_ != null)
             {
                 this.addWallItem(_loc4_, _loc5_, _loc6_);
-            };
+            }
+
         }
 
-        private function onItemRemove(param1:IMessageEvent):void
+        private function onItemRemove(param1: IMessageEvent): void
         {
-            var _loc2_:ItemRemoveMessageEvent = (param1 as ItemRemoveMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: ItemRemoveMessageEvent = param1 as ItemRemoveMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:ItemRemoveMessageParser = _loc2_.getParser();
+            }
+
+            var _loc3_: ItemRemoveMessageParser = _loc2_.getParser();
             this.var_4368.disposeObjectWallItem(_loc3_.roomId, _loc3_.roomCategory, _loc3_.itemId);
         }
 
-        private function onItemUpdate(param1:IMessageEvent):void
+        private function onItemUpdate(param1: IMessageEvent): void
         {
-            var _loc8_:IVector3d;
-            var _loc9_:IVector3d;
-            var _loc2_:ItemUpdateMessageEvent = (param1 as ItemUpdateMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc8_: IVector3d;
+            var _loc9_: IVector3d;
+            var _loc2_: ItemUpdateMessageEvent = param1 as ItemUpdateMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
-            var _loc3_:ItemUpdateMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:LegacyWallGeometry = this.var_4368.getLegacyGeometry(_loc4_, _loc5_);
-            if (((this.var_4368 == null) || (_loc6_ == null)))
+            }
+
+            var _loc3_: ItemUpdateMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: LegacyWallGeometry = this.var_4368.getLegacyGeometry(_loc4_, _loc5_);
+            if (this.var_4368 == null || _loc6_ == null)
             {
                 return;
-            };
-            var _loc7_:ItemMessageData = _loc3_.data;
+            }
+
+            var _loc7_: ItemMessageData = _loc3_.data;
             if (_loc7_ != null)
             {
                 _loc8_ = _loc6_.getLocation(_loc7_.wallX, _loc7_.wallY, _loc7_.localX, _loc7_.localY, _loc7_.dir);
                 _loc9_ = new Vector3d(_loc6_.getDirection(_loc7_.dir));
                 this.var_4368.updateObjectWallItem(_loc4_, _loc5_, _loc7_.id, _loc8_, _loc9_, _loc7_.state, _loc7_.data);
-            };
+            }
+
         }
 
-        private function onItemDataUpdate(param1:IMessageEvent):void
+        private function onItemDataUpdate(param1: IMessageEvent): void
         {
-            var _loc2_:ItemDataUpdateMessageEvent = (param1 as ItemDataUpdateMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: ItemDataUpdateMessageEvent = param1 as ItemDataUpdateMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
-            var _loc3_:ItemDataUpdateMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
+            }
+
+            var _loc3_: ItemDataUpdateMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
             this.var_4368.updateObjectWallItemData(_loc4_, _loc5_, _loc3_.id, _loc3_.itemData);
         }
 
-        private function addWallItem(param1:int, param2:int, param3:ItemMessageData):void
+        private function addWallItem(param1: int, param2: int, param3: ItemMessageData): void
         {
-            if (((param3 == null) || (this.var_4368 == null)))
+            if (param3 == null || this.var_4368 == null)
             {
                 return;
-            };
-            var _loc4_:LegacyWallGeometry = this.var_4368.getLegacyGeometry(param1, param2);
+            }
+
+            var _loc4_: LegacyWallGeometry = this.var_4368.getLegacyGeometry(param1, param2);
             if (_loc4_ == null)
             {
                 return;
-            };
-            var _loc5_:IVector3d;
+            }
+
+            var _loc5_: IVector3d;
             if (!param3.isOldFormat)
             {
                 _loc5_ = _loc4_.getLocation(param3.wallX, param3.wallY, param3.localX, param3.localY, param3.dir);
@@ -874,31 +956,34 @@
             else
             {
                 _loc5_ = _loc4_.getLocationOldFormat(param3.y, param3.z, param3.dir);
-            };
-            var _loc6_:IVector3d = new Vector3d(_loc4_.getDirection(param3.dir));
+            }
+
+            var _loc6_: IVector3d = new Vector3d(_loc4_.getDirection(param3.dir));
             this.var_4368.addObjectWallItem(param1, param2, param3.id, param3.type, _loc5_, _loc6_, param3.state, param3.data);
         }
 
-        private function onUsers(param1:IMessageEvent):void
+        private function onUsers(param1: IMessageEvent): void
         {
-            var _loc7_:UserMessageData;
-            var _loc8_:IVector3d;
-            var _loc9_:IVector3d;
-            var _loc10_:int;
-            var _loc11_:RoomObjectAvatarFigureUpdateMessage;
-            var _loc2_:UsersMessageEvent = (param1 as UsersMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc7_: UserMessageData;
+            var _loc8_: IVector3d;
+            var _loc9_: IVector3d;
+            var _loc10_: int;
+            var _loc11_: RoomObjectAvatarFigureUpdateMessage;
+            var _loc2_: UsersMessageEvent = param1 as UsersMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:UsersMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:int;
+            }
+
+            var _loc3_: UsersMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: int;
             while (_loc6_ < _loc3_.getUserCount())
             {
                 _loc7_ = _loc3_.getUser(_loc6_);
@@ -911,49 +996,55 @@
                     if (_loc7_.webID == this.var_4369)
                     {
                         this.var_4368.setOwnUserId(_loc4_, _loc5_, _loc7_.id);
-                    };
+                    }
+
                     _loc11_ = new RoomObjectAvatarFigureUpdateMessage(_loc7_.figure, _loc7_.sex, _loc7_.subType);
                     this.var_4368.updateObjectUserState(_loc4_, _loc5_, _loc7_.id, _loc11_);
-                };
+                }
+
                 _loc6_++;
-            };
+            }
+
         }
 
-        private function onUserUpdate(param1:IMessageEvent):void
+        private function onUserUpdate(param1: IMessageEvent): void
         {
-            var _loc9_:UserUpdateMessageData;
-            var _loc10_:Number;
-            var _loc11_:IVector3d;
-            var _loc12_:IVector3d;
-            var _loc13_:IVector3d;
-            var _loc14_:String;
-            var _loc15_:String;
-            var _loc16_:RoomObjectAvatarFlatControlUpdateMessage;
-            var _loc17_:Boolean;
-            var _loc18_:Boolean;
-            var _loc19_:AvatarActionMessageData;
-            var _loc20_:RoomObjectAvatarPostureUpdateMessage;
-            var _loc21_:RoomObjectAvatarSignUpdateMessage;
-            var _loc22_:RoomObjectAvatarPetGestureUpdateMessage;
-            var _loc2_:UserUpdateMessageEvent = (param1 as UserUpdateMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc9_: UserUpdateMessageData;
+            var _loc10_: Number;
+            var _loc11_: IVector3d;
+            var _loc12_: IVector3d;
+            var _loc13_: IVector3d;
+            var _loc14_: String;
+            var _loc15_: String;
+            var _loc16_: RoomObjectAvatarFlatControlUpdateMessage;
+            var _loc17_: Boolean;
+            var _loc18_: Boolean;
+            var _loc19_: AvatarActionMessageData;
+            var _loc20_: RoomObjectAvatarPostureUpdateMessage;
+            var _loc21_: RoomObjectAvatarSignUpdateMessage;
+            var _loc22_: RoomObjectAvatarPetGestureUpdateMessage;
+            var _loc2_: UserUpdateMessageEvent = param1 as UserUpdateMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:UserUpdateMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:IRoomInstance = this.var_4368.getRoom(_loc4_, _loc5_);
+            }
+
+            var _loc3_: UserUpdateMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: IRoomInstance = this.var_4368.getRoom(_loc4_, _loc5_);
             if (_loc6_ == null)
             {
                 return;
-            };
-            var _loc7_:Number = _loc6_.getNumber(RoomVariableEnum.var_462);
-            var _loc8_:int;
+            }
+
+            var _loc7_: Number = _loc6_.getNumber(RoomVariableEnum.var_462);
+            var _loc8_: int;
             while (_loc8_ < _loc3_.userUpdateCount)
             {
                 _loc9_ = _loc3_.getUserUpdateData(_loc8_);
@@ -962,17 +1053,19 @@
                     _loc10_ = _loc9_.localZ;
                     if (_loc7_ != 0)
                     {
-                        _loc10_ = (_loc10_ / _loc7_);
-                    };
-                    _loc11_ = new Vector3d(_loc9_.x, _loc9_.y, (_loc9_.z + _loc10_));
+                        _loc10_ = _loc10_ / _loc7_;
+                    }
+
+                    _loc11_ = new Vector3d(_loc9_.x, _loc9_.y, _loc9_.z + _loc10_);
                     _loc12_ = new Vector3d(_loc9_.dir);
                     _loc13_ = null;
                     if (_loc9_.isMoving)
                     {
                         _loc13_ = new Vector3d(_loc9_.targetX, _loc9_.targetY, _loc9_.targetZ);
-                    };
-                    this.var_4368.var_4312(_loc4_, _loc5_, _loc9_.id, _loc11_, _loc13_, _loc12_, _loc9_.dirHead);
-                    _loc14_ = RoomObjectVariableEnum.var_730;
+                    }
+
+                    this.var_4368.updateObjectUser(_loc4_, _loc5_, _loc9_.id, _loc11_, _loc13_, _loc12_, _loc9_.dirHead);
+                    _loc14_ = RoomObjectVariableEnum.STD;
                     _loc15_ = "";
                     _loc16_ = new RoomObjectAvatarFlatControlUpdateMessage(null);
                     this.var_4368.updateObjectUserState(_loc4_, _loc5_, _loc9_.id, _loc16_);
@@ -1010,158 +1103,179 @@
                             default:
                                 _loc14_ = _loc19_.actionType;
                                 _loc15_ = _loc19_.actionParameter;
-                        };
-                    };
-                    if (((!(_loc18_)) && (_loc17_)))
+                        }
+
+                    }
+
+                    if (!_loc18_ && _loc17_)
                     {
                         _loc14_ = "float";
-                    };
+                    }
+
                     _loc20_ = new RoomObjectAvatarPostureUpdateMessage(_loc14_, _loc15_);
                     this.var_4368.updateObjectUserState(_loc4_, _loc5_, _loc9_.id, _loc20_);
-                };
+                }
+
                 _loc8_++;
-            };
+            }
+
         }
 
-        private function onUserRemove(param1:IMessageEvent):void
+        private function onUserRemove(param1: IMessageEvent): void
         {
-            var _loc2_:UserRemoveMessageEvent = (param1 as UserRemoveMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: UserRemoveMessageEvent = param1 as UserRemoveMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:UserRemoveMessageParser = _loc2_.getParser();
+            }
+
+            var _loc3_: UserRemoveMessageParser = _loc2_.getParser();
             this.var_4368.disposeObjectUser(_loc3_.roomId, _loc3_.roomCategory, _loc3_.id);
         }
 
-        private function onUserChange(param1:IMessageEvent):void
+        private function onUserChange(param1: IMessageEvent): void
         {
-            var _loc2_:UserChangeMessageEvent = (param1 as UserChangeMessageEvent);
+            var _loc2_: UserChangeMessageEvent = param1 as UserChangeMessageEvent;
             if (_loc2_ == null)
             {
                 return;
-            };
-            var _loc3_:RoomObjectAvatarFigureUpdateMessage = new RoomObjectAvatarFigureUpdateMessage(_loc2_.figure, _loc2_.sex);
+            }
+
+            var _loc3_: RoomObjectAvatarFigureUpdateMessage = new RoomObjectAvatarFigureUpdateMessage(_loc2_.figure, _loc2_.sex);
             this.var_4368.updateObjectUserState(_loc2_.roomId, _loc2_.roomCategory, _loc2_.id, _loc3_);
         }
 
-        private function onWave(param1:IMessageEvent):void
+        private function onWave(param1: IMessageEvent): void
         {
-            var _loc2_:WaveMessageEvent = (param1 as WaveMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: WaveMessageEvent = param1 as WaveMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:WaveMessageParser = _loc2_.getParser();
-            var _loc4_:RoomObjectAvatarWaveUpdateMessage = new RoomObjectAvatarWaveUpdateMessage(_loc3_.isWaving);
+            }
+
+            var _loc3_: WaveMessageParser = _loc2_.getParser();
+            var _loc4_: RoomObjectAvatarWaveUpdateMessage = new RoomObjectAvatarWaveUpdateMessage(_loc3_.isWaving);
             this.var_4368.updateObjectUserState(_loc3_.roomId, _loc3_.roomCategory, _loc3_.userId, _loc4_);
         }
 
-        private function onDance(param1:IMessageEvent):void
+        private function onDance(param1: IMessageEvent): void
         {
-            var _loc2_:DanceMessageEvent = (param1 as DanceMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: DanceMessageEvent = param1 as DanceMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:DanceMessageParser = _loc2_.getParser();
-            var _loc4_:RoomObjectAvatarDanceUpdateMessage = new RoomObjectAvatarDanceUpdateMessage(_loc3_.danceStyle);
+            }
+
+            var _loc3_: DanceMessageParser = _loc2_.getParser();
+            var _loc4_: RoomObjectAvatarDanceUpdateMessage = new RoomObjectAvatarDanceUpdateMessage(_loc3_.danceStyle);
             this.var_4368.updateObjectUserState(_loc3_.roomId, _loc3_.roomCategory, _loc3_.userId, _loc4_);
         }
 
-        private function onAvatarEffect(param1:IMessageEvent):void
+        private function onAvatarEffect(param1: IMessageEvent): void
         {
-            var _loc2_:AvatarEffectMessageEvent = (param1 as AvatarEffectMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: AvatarEffectMessageEvent = param1 as AvatarEffectMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:AvatarEffectMessageParser = _loc2_.getParser();
-            var _loc4_:RoomObjectAvatarEffectUpdateMessage = new RoomObjectAvatarEffectUpdateMessage(_loc3_.effectId, _loc3_.delayMilliSeconds);
+            }
+
+            var _loc3_: AvatarEffectMessageParser = _loc2_.getParser();
+            var _loc4_: RoomObjectAvatarEffectUpdateMessage = new RoomObjectAvatarEffectUpdateMessage(_loc3_.effectId, _loc3_.delayMilliSeconds);
             this.var_4368.updateObjectUserState(_loc3_.roomId, _loc3_.roomCategory, _loc3_.userId, _loc4_);
         }
 
-        private function onAvatarSleep(param1:IMessageEvent):void
+        private function onAvatarSleep(param1: IMessageEvent): void
         {
-            var _loc2_:SleepMessageEvent = (param1 as SleepMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: SleepMessageEvent = param1 as SleepMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:SleepMessageParser = _loc2_.getParser();
-            var _loc4_:RoomObjectAvatarSleepUpdateMessage = new RoomObjectAvatarSleepUpdateMessage(_loc3_.sleeping);
+            }
+
+            var _loc3_: SleepMessageParser = _loc2_.getParser();
+            var _loc4_: RoomObjectAvatarSleepUpdateMessage = new RoomObjectAvatarSleepUpdateMessage(_loc3_.sleeping);
             this.var_4368.updateObjectUserState(_loc3_.roomId, _loc3_.roomCategory, _loc3_.userId, _loc4_);
         }
 
-        private function onCarryObject(param1:IMessageEvent):void
+        private function onCarryObject(param1: IMessageEvent): void
         {
-            var _loc2_:CarryObjectMessageParser;
-            var _loc3_:RoomObjectAvatarCarryObjectUpdateMessage;
+            var _loc2_: CarryObjectMessageParser;
+            var _loc3_: RoomObjectAvatarCarryObjectUpdateMessage;
             if (this.var_4368 == null)
             {
                 return;
-            };
-            if ((param1 is CarryObjectMessageEvent))
+            }
+
+            if (param1 is CarryObjectMessageEvent)
             {
                 _loc2_ = (param1 as CarryObjectMessageEvent).getParser();
                 _loc3_ = new RoomObjectAvatarCarryObjectUpdateMessage(_loc2_.itemType, _loc2_.itemName);
                 this.var_4368.updateObjectUserState(_loc2_.roomId, _loc2_.roomCategory, _loc2_.userId, _loc3_);
-            };
+            }
+
         }
 
-        private function onUseObject(param1:IMessageEvent):void
+        private function onUseObject(param1: IMessageEvent): void
         {
-            var _loc2_:UseObjectMessageParser;
-            var _loc3_:RoomObjectAvatarUseObjectUpdateMessage;
+            var _loc2_: UseObjectMessageParser;
+            var _loc3_: RoomObjectAvatarUseObjectUpdateMessage;
             if (this.var_4368 == null)
             {
                 return;
-            };
-            if ((param1 is UseObjectMessageEvent))
+            }
+
+            if (param1 is UseObjectMessageEvent)
             {
                 _loc2_ = (param1 as UseObjectMessageEvent).getParser();
                 _loc3_ = new RoomObjectAvatarUseObjectUpdateMessage(_loc2_.itemType);
                 this.var_4368.updateObjectUserState(_loc2_.roomId, _loc2_.roomCategory, _loc2_.userId, _loc3_);
-            };
+            }
+
         }
 
-        private function onSlideUpdate(param1:IMessageEvent):void
+        private function onSlideUpdate(param1: IMessageEvent): void
         {
-            var _loc2_:SlideObjectBundleMessageParser;
-            var _loc3_:int;
-            var _loc4_:int;
-            var _loc5_:Array;
-            var _loc6_:RoomObjectMoveUpdateMessage;
-            var _loc7_:int;
-            var _loc8_:SlideObjectMessageData;
-            var _loc9_:SlideObjectMessageData;
-            var _loc10_:String;
-            var _loc11_:RoomObjectAvatarPostureUpdateMessage;
+            var _loc2_: SlideObjectBundleMessageParser;
+            var _loc3_: int;
+            var _loc4_: int;
+            var _loc5_: Array;
+            var _loc6_: RoomObjectMoveUpdateMessage;
+            var _loc7_: int;
+            var _loc8_: SlideObjectMessageData;
+            var _loc9_: SlideObjectMessageData;
+            var _loc10_: String;
+            var _loc11_: RoomObjectAvatarPostureUpdateMessage;
             if (this.var_4368 == null)
             {
                 return;
-            };
-            if ((param1 is SlideObjectBundleMessageEvent))
+            }
+
+            if (param1 is SlideObjectBundleMessageEvent)
             {
                 _loc2_ = (param1 as SlideObjectBundleMessageEvent).getParser();
                 _loc3_ = _loc2_.roomId;
@@ -1176,180 +1290,203 @@
                     if (_loc8_ != null)
                     {
                         _loc6_ = new RoomObjectMoveUpdateMessage(_loc8_.loc, _loc8_.target, null, true);
-                        this.var_4368.updateObjectFurnitureLocation(_loc3_, _loc4_, _loc8_.id, (_loc6_ as RoomObjectUpdateMessage));
-                    };
+                        this.var_4368.updateObjectFurnitureLocation(_loc3_, _loc4_, _loc8_.id, _loc6_ as RoomObjectUpdateMessage);
+                    }
+
                     _loc7_++;
-                };
+                }
+
                 if (_loc2_.avatar != null)
                 {
                     _loc9_ = _loc2_.avatar;
-                    this.var_4368.var_4312(_loc3_, _loc4_, _loc9_.id, _loc9_.loc, _loc9_.target);
+                    this.var_4368.updateObjectUser(_loc3_, _loc4_, _loc9_.id, _loc9_.loc, _loc9_.target);
                     switch (_loc9_.moveType)
                     {
-                        case SlideObjectMessageData.var_1618:
+                        case SlideObjectMessageData.MV:
                             _loc10_ = "mv";
                             break;
-                        case SlideObjectMessageData.var_1619:
+                        case SlideObjectMessageData.SLD:
                             _loc10_ = "std";
                             break;
-                    };
+                    }
+
                     _loc11_ = new RoomObjectAvatarPostureUpdateMessage(_loc10_);
                     this.var_4368.updateObjectUserState(_loc3_, _loc4_, _loc9_.id, _loc11_);
-                };
-            };
+                }
+
+            }
+
         }
 
-        private function onChat(param1:IMessageEvent):void
+        private function onChat(param1: IMessageEvent): void
         {
-            var _loc2_:ChatMessageParser;
+            var _loc2_: ChatMessageParser;
             if (this.var_4368 == null)
             {
                 return;
-            };
-            if ((param1 is ChatMessageEvent))
+            }
+
+            if (param1 is ChatMessageEvent)
             {
                 _loc2_ = (param1 as ChatMessageEvent).getParser();
             }
             else
             {
-                if ((param1 is WhisperMessageEvent))
+                if (param1 is WhisperMessageEvent)
                 {
                     _loc2_ = (param1 as WhisperMessageEvent).getParser();
                 }
                 else
                 {
-                    if ((param1 is ShoutMessageEvent))
+                    if (param1 is ShoutMessageEvent)
                     {
                         _loc2_ = (param1 as ShoutMessageEvent).getParser();
-                    };
-                };
-            };
+                    }
+
+                }
+
+            }
+
             if (_loc2_ == null)
             {
                 return;
-            };
-            var _loc3_:RoomObjectAvatarGestureUpdateMessage = new RoomObjectAvatarGestureUpdateMessage(_loc2_.gesture);
+            }
+
+            var _loc3_: RoomObjectAvatarGestureUpdateMessage = new RoomObjectAvatarGestureUpdateMessage(_loc2_.gesture);
             this.var_4368.updateObjectUserState(_loc2_.roomId, _loc2_.roomCategory, _loc2_.userId, _loc3_);
-            var _loc4_:RoomObjectAvatarChatUpdateMessage = new RoomObjectAvatarChatUpdateMessage(Math.ceil((_loc2_.text.length / 10)));
+            var _loc4_: RoomObjectAvatarChatUpdateMessage = new RoomObjectAvatarChatUpdateMessage(Math.ceil(_loc2_.text.length / 10));
             this.var_4368.updateObjectUserState(_loc2_.roomId, _loc2_.roomCategory, _loc2_.userId, _loc4_);
         }
 
-        private function onTypingStatus(param1:IMessageEvent):void
+        private function onTypingStatus(param1: IMessageEvent): void
         {
-            var _loc2_:UserTypingMessageEvent = (param1 as UserTypingMessageEvent);
+            var _loc2_: UserTypingMessageEvent = param1 as UserTypingMessageEvent;
             if (_loc2_ == null)
             {
                 return;
-            };
-            var _loc3_:UserTypingMessageParser = _loc2_.getParser();
-            var _loc4_:RoomObjectAvatarTypingUpdateMessage = new RoomObjectAvatarTypingUpdateMessage(_loc3_.var_1215);
+            }
+
+            var _loc3_: UserTypingMessageParser = _loc2_.getParser();
+            var _loc4_: RoomObjectAvatarTypingUpdateMessage = new RoomObjectAvatarTypingUpdateMessage(_loc3_.isTyping);
             this.var_4368.updateObjectUserState(_loc3_.roomId, _loc3_.roomCategory, _loc3_.userId, _loc4_);
         }
 
-        private function onPetExperience(param1:PetExperienceEvent):void
+        private function onPetExperience(param1: PetExperienceEvent): void
         {
             if (param1 == null)
             {
                 return;
-            };
-            var _loc2_:PetExperienceParser = param1.getParser();
-            var _loc3_:RoomObjectAvatarExperienceUpdateMessage = new RoomObjectAvatarExperienceUpdateMessage(_loc2_.gainedExperience);
+            }
+
+            var _loc2_: PetExperienceParser = param1.getParser();
+            var _loc3_: RoomObjectAvatarExperienceUpdateMessage = new RoomObjectAvatarExperienceUpdateMessage(_loc2_.gainedExperience);
             this.var_4368.updateObjectUserState(_loc2_.roomId, _loc2_.roomCategory, _loc2_.petRoomIndex, _loc3_);
         }
 
-        private function onDiceValue(param1:IMessageEvent):void
+        private function onDiceValue(param1: IMessageEvent): void
         {
-            var _loc2_:DiceValueMessageEvent = (param1 as DiceValueMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: DiceValueMessageEvent = param1 as DiceValueMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:DiceValueMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:int = _loc3_.id;
-            var _loc7_:int = _loc3_.value;
-            var _loc8_:String = "";
+            }
+
+            var _loc3_: DiceValueMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: int = _loc3_.id;
+            var _loc7_: int = _loc3_.value;
+            var _loc8_: String = "";
             this.var_4368.updateObjectFurniture(_loc4_, _loc5_, _loc6_, null, null, _loc7_, _loc8_);
         }
 
-        private function onOneWayDoorStatus(param1:IMessageEvent):void
+        private function onOneWayDoorStatus(param1: IMessageEvent): void
         {
-            var _loc2_:OneWayDoorStatusMessageEvent = (param1 as OneWayDoorStatusMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: OneWayDoorStatusMessageEvent = param1 as OneWayDoorStatusMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:OneWayDoorStatusMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:int = _loc3_.id;
-            var _loc7_:int = _loc3_.status;
-            var _loc8_:String = "";
+            }
+
+            var _loc3_: OneWayDoorStatusMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: int = _loc3_.id;
+            var _loc7_: int = _loc3_.status;
+            var _loc8_: String = "";
             this.var_4368.updateObjectFurniture(_loc4_, _loc5_, _loc6_, null, null, _loc7_, _loc8_);
         }
 
-        private function onParkBusDoor(param1:IMessageEvent):void
+        private function onParkBusDoor(param1: IMessageEvent): void
         {
-            var _loc2_:ParkBusDoorMessageEvent = (param1 as ParkBusDoorMessageEvent);
-            if (((_loc2_ == null) || (_loc2_.getParser() == null)))
+            var _loc2_: ParkBusDoorMessageEvent = param1 as ParkBusDoorMessageEvent;
+            if (_loc2_ == null || _loc2_.getParser() == null)
             {
                 return;
-            };
+            }
+
             if (this.var_4368 == null)
             {
                 return;
-            };
-            var _loc3_:ParkBusDoorMessageParser = _loc2_.getParser();
-            var _loc4_:int = _loc3_.roomId;
-            var _loc5_:int = _loc3_.roomCategory;
-            var _loc6_:IRoomObject = this.var_4368.getObjectRoom(_loc4_, _loc5_);
+            }
+
+            var _loc3_: ParkBusDoorMessageParser = _loc2_.getParser();
+            var _loc4_: int = _loc3_.roomId;
+            var _loc5_: int = _loc3_.roomCategory;
+            var _loc6_: IRoomObject = this.var_4368.getObjectRoom(_loc4_, _loc5_);
             if (_loc6_ == null)
             {
                 return;
-            };
-            var _loc7_:IRoomObjectModelController = (_loc6_.getModel() as IRoomObjectModelController);
+            }
+
+            var _loc7_: IRoomObjectModelController = _loc6_.getModel() as IRoomObjectModelController;
             if (_loc7_ != null)
             {
                 _loc7_.setNumber(RoomObjectVariableEnum.var_768, _loc3_.status);
-            };
+            }
+
         }
 
-        private function onPlayingGame(param1:YouArePlayingGameMessageEvent):void
+        private function onPlayingGame(param1: YouArePlayingGameMessageEvent): void
         {
             if (param1 == null)
             {
                 return;
-            };
-            var _loc2_:YouArePlayingGameMessageParser = param1.getParser();
-            var _loc3_:int = _loc2_.roomId;
-            var _loc4_:int = _loc2_.roomCategory;
-            var _loc5_:Boolean = _loc2_.isPlaying;
+            }
+
+            var _loc2_: YouArePlayingGameMessageParser = param1.getParser();
+            var _loc3_: int = _loc2_.roomId;
+            var _loc4_: int = _loc2_.roomCategory;
+            var _loc5_: Boolean = _loc2_.isPlaying;
             this.var_4368.setIsPlayingGame(_loc3_, _loc4_, _loc5_);
         }
 
-        private function onGamePlayerNumberValue(param1:IMessageEvent):void
+        private function onGamePlayerNumberValue(param1: IMessageEvent): void
         {
-            var _loc2_:GamePlayerValueMessageParser;
-            var _loc3_:RoomObjectAvatarPlayerValueUpdateMessage;
+            var _loc2_: GamePlayerValueMessageParser;
+            var _loc3_: RoomObjectAvatarPlayerValueUpdateMessage;
             if (this.var_4368 == null)
             {
                 return;
-            };
-            if ((param1 is GamePlayerValueMessageEvent))
+            }
+
+            if (param1 is GamePlayerValueMessageEvent)
             {
                 _loc2_ = (param1 as GamePlayerValueMessageEvent).getParser();
                 _loc3_ = new RoomObjectAvatarPlayerValueUpdateMessage(_loc2_.value);
                 this.var_4368.updateObjectUserState(_loc2_.roomId, _loc2_.roomCategory, _loc2_.userId, _loc3_);
-            };
+            }
+
         }
 
     }

@@ -1,80 +1,96 @@
 ﻿package com.sulake.core.assets
 {
+
     import com.sulake.core.runtime.IUpdateReceiver;
     import com.sulake.core.Core;
 
-    public class LazyAssetProcessor implements IUpdateReceiver 
+    public class LazyAssetProcessor implements IUpdateReceiver
     {
 
-        private var var_2131:Array = new Array();
-        private var var_2132:Boolean = false;
-        private var _disposed:Boolean = false;
+        private var _assets: Array = [];
+        private var _processed: Boolean = false;
+        private var _disposed: Boolean = false;
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (!this._disposed)
             {
                 Core.instance.removeUpdateReceiver(this);
-                this.var_2131 = null;
-                this.var_2132 = false;
+
+                this._assets = null;
+                this._processed = false;
                 this._disposed = true;
-            };
+            }
+
         }
 
-        public function push(param1:ILazyAsset):void
+        public function push(asset: ILazyAsset): void
         {
-            if (param1)
+            if (asset)
             {
-                this.var_2131.push(param1);
-                if (!this.var_2132)
+                this._assets.push(asset);
+
+                if (!this._processed)
                 {
                     Core.instance.registerUpdateReceiver(this, 2);
-                    this.var_2132 = true;
-                };
-            };
+                    this._processed = true;
+                }
+
+            }
+
         }
 
-        public function flush():void
+        public function flush(): void
         {
-            var _loc1_:ILazyAsset;
-            for each (_loc1_ in this.var_2131)
+            var asset: ILazyAsset;
+
+            for each (asset in this._assets)
             {
-                if (!_loc1_.disposed)
+                if (!asset.disposed)
                 {
-                    _loc1_.prepareLazyContent();
-                };
-            };
-            this.var_2131 = new Array();
-            if (this.var_2132)
+                    asset.prepareLazyContent();
+                }
+
+            }
+
+
+            this._assets = [];
+
+            if (this._processed)
             {
                 Core.instance.removeUpdateReceiver(this);
-                this.var_2132 = false;
-            };
+                this._processed = false;
+            }
+
         }
 
-        public function update(param1:uint):void
+        public function update(_: uint): void
         {
-            var _loc2_:ILazyAsset = this.var_2131.shift();
-            if (!_loc2_)
+            var asset: ILazyAsset = this._assets.shift();
+
+            if (asset == null)
             {
-                if (this.var_2132)
+                if (this._processed)
                 {
                     Core.instance.removeUpdateReceiver(this);
-                    this.var_2132 = false;
-                };
+                    this._processed = false;
+                }
+
             }
             else
             {
-                if (!_loc2_.disposed)
+                if (!asset.disposed)
                 {
-                    _loc2_.prepareLazyContent();
-                };
-            };
+                    asset.prepareLazyContent();
+                }
+
+            }
+
         }
 
     }

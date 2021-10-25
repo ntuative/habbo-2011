@@ -1,43 +1,49 @@
 ﻿package com.sulake.habbo.communication.messages.parser.friendlist
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.friendlist.FriendRequestData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class BuddyRequestsMessageParser implements IMessageParser 
+    public class BuddyRequestsMessageParser implements IMessageParser
     {
 
-        private var var_3145:int;
-        private var var_3146:Array;
+        private var _totalReqCount: int;
+        private var _reqs: Array;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3146 = new Array();
-            return (true);
+            this._reqs = [];
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3145 = param1.readInteger();
-            var _loc2_:int = param1.readInteger();
-            Logger.log(((("Received buddy requests: " + this.var_3145) + ", ") + _loc2_));
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._totalReqCount = data.readInteger();
+            
+            var requestCount: int = data.readInteger();
+            var i: int;
+            
+            Logger.log("Received buddy requests: " + this._totalReqCount + ", " + requestCount);
+            
+            while (i < requestCount)
             {
-                this.var_3146.push(new FriendRequestData(param1));
-                _loc3_++;
-            };
-            return (true);
+                this._reqs.push(new FriendRequestData(data));
+                i++;
+            }
+
+            return true;
         }
 
-        public function get totalReqCount():int
+        public function get totalReqCount(): int
         {
-            return (this.var_3145);
+            return this._totalReqCount;
         }
 
-        public function get reqs():Array
+        public function get reqs(): Array
         {
-            return (this.var_3146);
+            return this._reqs;
         }
 
     }

@@ -1,95 +1,96 @@
 ﻿package com.sulake.habbo.catalog.marketplace
 {
-    public class MarketplaceItemStats 
+
+    public class MarketplaceItemStats
     {
 
-        private var var_2630:int;
-        private var var_2631:int;
-        private var var_2632:int;
-        private var _dayOffsets:Array;
-        private var var_2633:Array;
-        private var var_2634:Array;
-        private var var_2635:int;
-        private var var_2636:int;
+        private var _averagePrice: int;
+        private var _offerCount: int;
+        private var _historyLength: int;
+        private var _dayOffsets: Array;
+        private var _averagePrices: Array;
+        private var _soldAmounts: Array;
+        private var _furniTypeId: int;
+        private var _furniCategoryId: int;
 
-        public function get averagePrice():int
+        public function get averagePrice(): int
         {
-            return (this.var_2630);
+            return this._averagePrice;
         }
 
-        public function get offerCount():int
+        public function get offerCount(): int
         {
-            return (this.var_2631);
+            return this._offerCount;
         }
 
-        public function get historyLength():int
+        public function get historyLength(): int
         {
-            return (this.var_2632);
+            return this._historyLength;
         }
 
-        public function get dayOffsets():Array
+        public function get dayOffsets(): Array
         {
-            return (this._dayOffsets);
+            return this._dayOffsets;
         }
 
-        public function get averagePrices():Array
+        public function get averagePrices(): Array
         {
-            return (this.var_2633);
+            return this._averagePrices;
         }
 
-        public function get soldAmounts():Array
+        public function get soldAmounts(): Array
         {
-            return (this.var_2634);
+            return this._soldAmounts;
         }
 
-        public function get furniTypeId():int
+        public function get furniTypeId(): int
         {
-            return (this.var_2635);
+            return this._furniTypeId;
         }
 
-        public function get furniCategoryId():int
+        public function get furniCategoryId(): int
         {
-            return (this.var_2636);
+            return this._furniCategoryId;
         }
 
-        public function set averagePrice(param1:int):void
+        public function set averagePrice(price: int): void
         {
-            this.var_2630 = param1;
+            this._averagePrice = price;
         }
 
-        public function set offerCount(param1:int):void
+        public function set offerCount(count: int): void
         {
-            this.var_2631 = param1;
+            this._offerCount = count;
         }
 
-        public function set historyLength(param1:int):void
+        public function set historyLength(length: int): void
         {
-            this.var_2632 = param1;
+            this._historyLength = length;
         }
 
-        public function set dayOffsets(param1:Array):void
+        public function set dayOffsets(offsets: Array): void
         {
-            this._dayOffsets = param1.slice();
+            this._dayOffsets = offsets.slice();
         }
 
-        public function set averagePrices(param1:Array):void
+        public function set averagePrices(param1: Array): void
         {
-            this.var_2633 = param1.slice();
+            this._averagePrices = param1.slice();
         }
 
-        public function set soldAmounts(param1:Array):void
+        public function set soldAmounts(param1: Array): void
         {
-            this.var_2634 = param1.slice();
+            this._soldAmounts = param1.slice();
         }
 
-        public function set furniTypeId(param1:int):void
+        public function set furniTypeId(param1: int): void
         {
-            this.var_2635 = param1;
+            this._furniTypeId = param1;
         }
 
-        public function set furniCategoryId(param1:int):void
+        public function set furniCategoryId(param1: int): void
         {
-            this.var_2636 = param1;
+            this._furniCategoryId = param1;
         }
 
     }

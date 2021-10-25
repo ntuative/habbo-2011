@@ -1,23 +1,24 @@
 ﻿package com.sulake.habbo.widget.messages
 {
+
     import com.sulake.core.window.IWindowContainer;
 
-    public class RoomWidgetChatInputWidgetMessage extends RoomWidgetMessage 
+    public class RoomWidgetChatInputWidgetMessage extends RoomWidgetMessage
     {
 
-        public static const var_1357:String = "RWCIW_MESSAGE_POSITION_WINDOW";
+        public static const RWCIW_MESSAGE_POSITION_WINDOW: String = "RWCIW_MESSAGE_POSITION_WINDOW";
 
-        private var _window:IWindowContainer;
+        private var _window: IWindowContainer;
 
-        public function RoomWidgetChatInputWidgetMessage(param1:String, param2:IWindowContainer=null)
+        public function RoomWidgetChatInputWidgetMessage(message: String, window: IWindowContainer = null)
         {
-            super(param1);
-            this._window = param2;
+            super(message);
+            this._window = window;
         }
 
-        public function get window():IWindowContainer
+        public function get window(): IWindowContainer
         {
-            return (this._window);
+            return this._window;
         }
 
     }

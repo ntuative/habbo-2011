@@ -1,57 +1,58 @@
 ﻿package com.sulake.habbo.help.help.data
 {
-    public class FaqItem 
+
+    public class FaqItem
     {
 
-        private var var_3086:int;
-        private var var_3475:String;
-        private var var_3187:String;
-        private var _index:int;
-        private var _category:FaqCategory;
-        private var var_3476:Boolean = false;
+        private var _questionId: int;
+        private var _questionText: String;
+        private var _answerText: String;
+        private var _index: int;
+        private var _category: FaqCategory;
+        private var _hasAnswer: Boolean = false;
 
-        public function FaqItem(param1:int, param2:String, param3:int, param4:FaqCategory)
+        public function FaqItem(questionId: int, questionText: String, index: int, category: FaqCategory)
         {
-            this.var_3086 = param1;
-            this.var_3475 = param2;
-            this._index = param3;
-            this._category = param4;
+            this._questionId = questionId;
+            this._questionText = questionText;
+            this._index = index;
+            this._category = category;
         }
 
-        public function get questionId():int
+        public function get questionId(): int
         {
-            return (this.var_3086);
+            return this._questionId;
         }
 
-        public function get questionText():String
+        public function get questionText(): String
         {
-            return (this.var_3475);
+            return this._questionText;
         }
 
-        public function get answerText():String
+        public function get answerText(): String
         {
-            return (this.var_3187);
+            return this._answerText;
         }
 
-        public function get hasAnswer():Boolean
+        public function get hasAnswer(): Boolean
         {
-            return (this.var_3476);
+            return this._hasAnswer;
         }
 
-        public function get index():int
+        public function get index(): int
         {
-            return (this._index);
+            return this._index;
         }
 
-        public function get category():FaqCategory
+        public function get category(): FaqCategory
         {
-            return (this._category);
+            return this._category;
         }
 
-        public function set answerText(param1:String):void
+        public function set answerText(value: String): void
         {
-            this.var_3187 = param1;
-            this.var_3476 = true;
+            this._answerText = value;
+            this._hasAnswer = true;
         }
 
     }

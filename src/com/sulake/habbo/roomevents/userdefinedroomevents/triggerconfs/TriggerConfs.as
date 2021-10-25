@@ -1,14 +1,15 @@
 ﻿package com.sulake.habbo.roomevents.userdefinedroomevents.triggerconfs
 {
+
     import com.sulake.habbo.roomevents.userdefinedroomevents.ElementTypeHolder;
     import com.sulake.habbo.roomevents.userdefinedroomevents.Element;
     import com.sulake.habbo.communication.messages.incoming.userdefinedroomevents.TriggerDefinition;
     import com.sulake.habbo.communication.messages.incoming.userdefinedroomevents.Triggerable;
 
-    public class TriggerConfs implements ElementTypeHolder 
+    public class TriggerConfs implements ElementTypeHolder
     {
 
-        private var var_4393:Array = new Array();
+        private var var_4393: Array = [];
 
         public function TriggerConfs()
         {
@@ -26,37 +27,39 @@
             this.var_4393.push(new StuffCaught());
         }
 
-        public function get confs():Array
+        public function get confs(): Array
         {
-            return (this.var_4393);
+            return this.var_4393;
         }
 
-        public function getByCode(param1:int):TriggerConf
+        public function getByCode(param1: int): TriggerConf
         {
-            var _loc2_:TriggerConf;
+            var _loc2_: TriggerConf;
             for each (_loc2_ in this.var_4393)
             {
                 if (_loc2_.code == param1)
                 {
-                    return (_loc2_);
-                };
-            };
-            return (null);
+                    return _loc2_;
+                }
+
+            }
+
+            return null;
         }
 
-        public function getElementByCode(param1:int):Element
+        public function getElementByCode(param1: int): Element
         {
-            return (this.getByCode(param1));
+            return this.getByCode(param1);
         }
 
-        public function acceptTriggerable(param1:Triggerable):Boolean
+        public function acceptTriggerable(param1: Triggerable): Boolean
         {
-            return (!((param1 as TriggerDefinition) == null));
+            return (param1 as TriggerDefinition) != null;
         }
 
-        public function getKey():String
+        public function getKey(): String
         {
-            return ("trigger");
+            return "trigger";
         }
 
     }

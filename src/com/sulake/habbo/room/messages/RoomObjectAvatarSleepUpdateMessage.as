@@ -1,18 +1,19 @@
 ﻿package com.sulake.habbo.room.messages
 {
-    public class RoomObjectAvatarSleepUpdateMessage extends RoomObjectUpdateStateMessage 
+
+    public class RoomObjectAvatarSleepUpdateMessage extends RoomObjectUpdateStateMessage
     {
 
-        private var var_3949:Boolean;
+        private var _isSleeping: Boolean;
 
-        public function RoomObjectAvatarSleepUpdateMessage(param1:Boolean=false)
+        public function RoomObjectAvatarSleepUpdateMessage(isSleeping: Boolean = false)
         {
-            this.var_3949 = param1;
+            this._isSleeping = isSleeping;
         }
 
-        public function get isSleeping():Boolean
+        public function get isSleeping(): Boolean
         {
-            return (this.var_3949);
+            return this._isSleeping;
         }
 
     }

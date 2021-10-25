@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.help.hotelmerge
 {
+
     import com.sulake.habbo.help.INameChangeUI;
     import com.sulake.habbo.help.HabboHelp;
     import com.sulake.core.assets.IAssetLibrary;
@@ -16,129 +17,138 @@
     import com.sulake.core.assets.XmlAsset;
     import com.sulake.core.window.IWindow;
 
-    public class HotelMergeUI implements INameChangeUI 
+    public class HotelMergeUI implements INameChangeUI
     {
 
-        private var var_3498:HabboHelp;
-        private var _view:HotelMergeNameChangeView;
+        private var var_3498: HabboHelp;
+        private var _view: HotelMergeNameChangeView;
 
-        public function HotelMergeUI(param1:HabboHelp)
+        public function HotelMergeUI(param1: HabboHelp)
         {
             this.var_3498 = param1;
         }
 
-        public function get assets():IAssetLibrary
+        public function get assets(): IAssetLibrary
         {
-            return (this.var_3498.assets);
+            return this.var_3498.assets;
         }
 
-        public function get localization():IHabboLocalizationManager
+        public function get localization(): IHabboLocalizationManager
         {
-            return (this.var_3498.localization);
+            return this.var_3498.localization;
         }
 
-        public function get windowManager():IHabboWindowManager
+        public function get windowManager(): IHabboWindowManager
         {
-            return (this.var_3498.windowManager);
+            return this.var_3498.windowManager;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this.var_3498 = null;
             if (this._view)
             {
                 this._view.dispose();
                 this._view = null;
-            };
+            }
+
         }
 
-        public function startNameChange():void
+        public function startNameChange(): void
         {
             if (!this._view)
             {
                 this._view = new HotelMergeNameChangeView(this);
-            };
+            }
+
             this._view.showMainView();
         }
 
-        public function changeName(param1:String):void
+        public function changeName(param1: String): void
         {
             this.var_3498.sendMessage(new ChangeUserNameMessageComposer(param1));
         }
 
-        public function checkName(param1:String):void
+        public function checkName(param1: String): void
         {
             this.var_3498.sendMessage(new CheckUserNameMessageComposer(param1));
         }
 
-        public function onUserNameChanged(name:String):void
+        public function onUserNameChanged(name: String): void
         {
             if (!this.var_3498)
             {
                 return;
-            };
+            }
+
             this.var_3498.localization.registerParameter("help.tutorial.name.changed", "name", name);
-            this.var_3498.windowManager.alert("${generic.notice}", "${help.tutorial.name.changed}", 0, function (param1:IAlertDialog, param2:WindowEvent):void
+            this.var_3498.windowManager.alert("${generic.notice}", "${help.tutorial.name.changed}", 0, function (param1: IAlertDialog, param2: WindowEvent): void
             {
                 param1.dispose();
             });
         }
 
-        public function onChangeUserNameResult(param1:ChangeUserNameResultMessageEvent):void
+        public function onChangeUserNameResult(param1: ChangeUserNameResultMessageEvent): void
         {
             if (param1 == null)
             {
                 return;
-            };
-            var _loc2_:ChangeUserNameResultMessageParser = param1.getParser();
-            if (_loc2_.resultCode == ChangeUserNameResultMessageEvent.var_1425)
+            }
+
+            var _loc2_: ChangeUserNameResultMessageParser = param1.getParser();
+            if (_loc2_.resultCode == ChangeUserNameResultMessageEvent.NAME_CHANGE_SUCCESS)
             {
                 this._view.dispose();
             }
             else
             {
                 this._view.setNameNotAvailableView(_loc2_.resultCode, _loc2_.name, _loc2_.nameSuggestions);
-            };
+            }
+
         }
 
-        public function onCheckUserNameResult(param1:CheckUserNameResultMessageEvent):void
+        public function onCheckUserNameResult(param1: CheckUserNameResultMessageEvent): void
         {
             if (!param1)
             {
                 return;
-            };
-            var _loc2_:CheckUserNameResultMessageParser = param1.getParser();
-            if (_loc2_.resultCode == ChangeUserNameResultMessageEvent.var_1425)
+            }
+
+            var _loc2_: CheckUserNameResultMessageParser = param1.getParser();
+            if (_loc2_.resultCode == ChangeUserNameResultMessageEvent.NAME_CHANGE_SUCCESS)
             {
                 this._view.checkedName = _loc2_.name;
             }
             else
             {
                 this._view.setNameNotAvailableView(_loc2_.resultCode, _loc2_.name, _loc2_.nameSuggestions);
-            };
+            }
+
         }
 
-        public function get myName():String
+        public function get myName(): String
         {
-            return (this.var_3498.ownUserName);
+            return this.var_3498.ownUserName;
         }
 
-        public function showView(param1:String):void
+        public function showView(param1: String): void
         {
         }
 
-        public function buildXmlWindow(param1:String, param2:uint=1):IWindow
+        public function buildXmlWindow(param1: String, param2: uint = 1): IWindow
         {
-            if (((this.var_3498 == null) || (this.var_3498.assets == null)))
+            if (this.var_3498 == null || this.var_3498.assets == null)
             {
-                return (null);
-            };
-            var _loc3_:XmlAsset = XmlAsset(this.var_3498.assets.getAssetByName((param1 + "_xml")));
-            if (((_loc3_ == null) || (this.var_3498.windowManager == null)))
+                return null;
+            }
+
+            var _loc3_: XmlAsset = XmlAsset(this.var_3498.assets.getAssetByName(param1 + "_xml"));
+            if (_loc3_ == null || this.var_3498.windowManager == null)
             {
-                return (null);
-            };
-            return (this.var_3498.windowManager.buildFromXML(XML(_loc3_.content), param2));
+                return null;
+            }
+
+            return this.var_3498.windowManager.buildFromXML(XML(_loc3_.content), param2);
         }
 
     }

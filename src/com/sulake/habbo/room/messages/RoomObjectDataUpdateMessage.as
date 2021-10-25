@@ -1,35 +1,36 @@
 ﻿package com.sulake.habbo.room.messages
 {
+
     import com.sulake.room.messages.RoomObjectUpdateMessage;
 
-    public class RoomObjectDataUpdateMessage extends RoomObjectUpdateMessage 
+    public class RoomObjectDataUpdateMessage extends RoomObjectUpdateMessage
     {
 
-        private var _state:int;
-        private var _data:String;
-        private var var_2940:Number = NaN;
+        private var _state: int;
+        private var _data: String;
+        private var _extra: Number = NaN;
 
-        public function RoomObjectDataUpdateMessage(param1:int, param2:String, param3:Number=NaN)
+        public function RoomObjectDataUpdateMessage(state: int, data: String, extra: Number = NaN)
         {
             super(null, null);
-            this._state = param1;
-            this._data = param2;
-            this.var_2940 = param3;
+            this._state = state;
+            this._data = data;
+            this._extra = extra;
         }
 
-        public function get state():int
+        public function get state(): int
         {
-            return (this._state);
+            return this._state;
         }
 
-        public function get data():String
+        public function get data(): String
         {
-            return (this._data);
+            return this._data;
         }
 
-        public function get extra():Number
+        public function get extra(): Number
         {
-            return (this.var_2940);
+            return this._extra;
         }
 
     }

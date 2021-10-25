@@ -1,33 +1,36 @@
 ﻿package com.sulake.habbo.communication.messages.parser.sound
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.sound.PlayListEntry;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PlayListSongAddedMessageParser implements IMessageParser 
+    public class PlayListSongAddedMessageParser implements IMessageParser
     {
 
-        private var var_3345:PlayListEntry;
+        private var _entry: PlayListEntry;
 
-        public function get entry():PlayListEntry
+        public function get entry(): PlayListEntry
         {
-            return (this.var_3345);
+            return this._entry;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3345 = null;
-            return (true);
+            this._entry = null;
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int = param1.readInteger();
-            var _loc4_:String = param1.readString();
-            var _loc5_:String = param1.readString();
-            this.var_3345 = new PlayListEntry(_loc2_, _loc3_, _loc4_, _loc5_);
-            return (true);
+            var id: int = data.readInteger();
+            var length: int = data.readInteger();
+            var songName: String = data.readString();
+            var songCreator: String = data.readString();
+
+            this._entry = new PlayListEntry(id, length, songName, songCreator);
+            
+            return true;
         }
 
     }

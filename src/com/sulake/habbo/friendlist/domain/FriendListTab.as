@@ -1,97 +1,101 @@
 ﻿package com.sulake.habbo.friendlist.domain
 {
+
     import com.sulake.habbo.friendlist.ITabView;
     import com.sulake.core.window.IWindowContainer;
     import com.sulake.habbo.friendlist.HabboFriendList;
 
-    public class FriendListTab 
+    public class FriendListTab
     {
 
-        public static const var_512:int = 1;
-        public static const var_516:int = 2;
-        public static const var_515:int = 3;
+        public static const FRIEND_LIST_FRIENDS: int = 1;
+        public static const FRIEND_LIST_REQUESTS: int = 2;
+        public static const FRIEND_LIST_SEARCH: int = 3;
 
-        private var _id:int;
-        private var _name:String;
-        private var _footerName:String;
-        private var var_3418:String;
-        private var var_3417:ITabView;
-        private var var_3419:Boolean;
-        private var _selected:Boolean;
-        private var _view:IWindowContainer;
+        private var _id: int;
+        private var _name: String;
+        private var _footerName: String;
+        private var _headerPicName: String;
+        private var _tabView: ITabView;
+        private var _newMessageArrived: Boolean;
+        private var _selected: Boolean;
+        private var _view: IWindowContainer;
 
-        public function FriendListTab(param1:HabboFriendList, param2:int, param3:ITabView, param4:String, param5:String, param6:String)
+        public function FriendListTab(friendList: HabboFriendList, id: int, tabView: ITabView, name: String, footerName: String, headerPicName: String)
         {
-            this._id = param2;
-            this._name = param4;
-            this.var_3417 = param3;
-            this._footerName = param5;
-            this.var_3418 = param6;
-            this.var_3417.init(param1);
+            this._id = id;
+            this._name = name;
+            this._tabView = tabView;
+            this._footerName = footerName;
+            this._headerPicName = headerPicName;
+            
+            this._tabView.init(friendList);
         }
 
-        public function setSelected(param1:Boolean):void
+        public function setSelected(value: Boolean): void
         {
-            if (param1)
+            if (value)
             {
-                this.var_3419 = false;
-            };
-            this._selected = param1;
+                this._newMessageArrived = false;
+            }
+
+            this._selected = value;
         }
 
-        public function setNewMessageArrived(param1:Boolean):void
+        public function setNewMessageArrived(value: Boolean): void
         {
             if (this.selected)
             {
-                this.var_3419 = false;
+                this._newMessageArrived = false;
             }
             else
             {
-                this.var_3419 = param1;
-            };
+                this._newMessageArrived = value;
+            }
+
         }
 
-        public function get newMessageArrived():Boolean
+        public function get newMessageArrived(): Boolean
         {
-            return (this.var_3419);
+            return this._newMessageArrived;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get footerName():String
+        public function get footerName(): String
         {
-            return (this._footerName);
+            return this._footerName;
         }
 
-        public function get headerPicName():String
+        public function get headerPicName(): String
         {
-            return (this.var_3418);
+            return this._headerPicName;
         }
 
-        public function get selected():Boolean
+        public function get selected(): Boolean
         {
-            return (this._selected);
+            return this._selected;
         }
 
-        public function get tabView():ITabView
+        public function get tabView(): ITabView
         {
-            return (this.var_3417);
+            return this._tabView;
         }
 
-        public function get view():IWindowContainer
+        public function get view(): IWindowContainer
         {
-            return (this._view);
+            return this._view;
         }
 
-        public function set view(param1:IWindowContainer):void
+        public function set view(param1: IWindowContainer): void
         {
             this._view = param1;
         }

@@ -1,60 +1,64 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.furniture
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PresentOpenedMessageParser implements IMessageParser 
+    public class PresentOpenedMessageParser implements IMessageParser
     {
 
-        private var _roomId:int = 0;
-        private var _roomCategory:int = 0;
-        private var var_2934:String;
-        private var var_2935:int;
-        private var var_2611:String;
+        private var _roomId: int = 0;
+        private var _roomCategory: int = 0;
+        private var _itemType: String;
+        private var _classId: int;
+        private var _productCode: String;
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get roomCategory():int
+        public function get roomCategory(): int
         {
-            return (this._roomCategory);
+            return this._roomCategory;
         }
 
-        public function get itemType():String
+        public function get itemType(): String
         {
-            return (this.var_2934);
+            return this._itemType;
         }
 
-        public function get classId():int
+        public function get classId(): int
         {
-            return (this.var_2935);
+            return this._classId;
         }
 
-        public function get productCode():String
+        public function get productCode(): String
         {
-            return (this.var_2611);
+            return this._productCode;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_2934 = "";
-            this.var_2935 = 0;
-            this.var_2611 = "";
-            return (true);
+            this._itemType = "";
+            this._classId = 0;
+            this._productCode = "";
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            if (param1 == null)
+            if (data == null)
             {
-                return (false);
-            };
-            this.var_2934 = param1.readString();
-            this.var_2935 = param1.readInteger();
-            this.var_2611 = param1.readString();
-            return (true);
+                return false;
+            }
+
+            this._itemType = data.readString();
+            this._classId = data.readInteger();
+            this._productCode = data.readString();
+            
+            return true;
         }
 
     }

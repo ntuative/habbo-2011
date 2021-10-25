@@ -1,27 +1,29 @@
 ﻿package com.sulake.habbo.communication.messages.parser.handshake
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class GenericErrorParser implements IMessageParser 
+    public class GenericErrorParser implements IMessageParser
     {
 
-        private var var_2102:int;
+        private var _errorCode: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2102 = param1.readInteger();
-            return (true);
+            this._errorCode = data.readInteger();
+            
+            return true;
         }
 
-        public function get errorCode():int
+        public function get errorCode(): int
         {
-            return (this.var_2102);
+            return this._errorCode;
         }
 
     }

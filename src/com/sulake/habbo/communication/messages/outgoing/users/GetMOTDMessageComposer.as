@@ -1,16 +1,17 @@
 ﻿package com.sulake.habbo.communication.messages.outgoing.users
 {
+
     import com.sulake.core.communication.messages.IMessageComposer;
 
-    public class GetMOTDMessageComposer implements IMessageComposer 
+    public class GetMOTDMessageComposer implements IMessageComposer
     {
 
-        public function getMessageArray():Array
+        public function getMessageArray(): Array
         {
-            return ([]);
+            return [];
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
         }
 

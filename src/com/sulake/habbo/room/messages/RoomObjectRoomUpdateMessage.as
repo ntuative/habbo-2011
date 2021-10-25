@@ -1,32 +1,33 @@
 ﻿package com.sulake.habbo.room.messages
 {
+
     import com.sulake.room.messages.RoomObjectUpdateMessage;
 
-    public class RoomObjectRoomUpdateMessage extends RoomObjectUpdateMessage 
+    public class RoomObjectRoomUpdateMessage extends RoomObjectUpdateMessage
     {
 
-        public static const var_466:String = "RORUM_ROOM_WALL_UPDATE";
-        public static const var_464:String = "RORUM_ROOM_FLOOR_UPDATE";
-        public static const var_468:String = "RORUM_ROOM_LANDSCAPE_UPDATE";
+        public static const RORUM_ROOM_WALL_UPDATE: String = "RORUM_ROOM_WALL_UPDATE";
+        public static const RORUM_ROOM_FLOOR_UPDATE: String = "RORUM_ROOM_FLOOR_UPDATE";
+        public static const RORUM_ROOM_LANDSCAPE_UPDATE: String = "RORUM_ROOM_LANDSCAPE_UPDATE";
 
-        private var _type:String = "";
-        private var var_2162:String = "";
+        private var _type: String = "";
+        private var _value: String = "";
 
-        public function RoomObjectRoomUpdateMessage(param1:String, param2:String)
+        public function RoomObjectRoomUpdateMessage(type: String, value: String)
         {
             super(null, null);
-            this._type = param1;
-            this.var_2162 = param2;
+            this._type = type;
+            this._value = value;
         }
 
-        public function get type():String
+        public function get type(): String
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get value():String
+        public function get value(): String
         {
-            return (this.var_2162);
+            return this._value;
         }
 
     }

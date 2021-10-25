@@ -1,37 +1,38 @@
 ﻿package com.sulake.habbo.help.cfh.data
 {
-    public class UserRegistryItem 
+
+    public class UserRegistryItem
     {
 
-        private var _userId:int;
-        private var _userName:String = "";
-        private var var_2970:String = "";
+        private var _userId: int;
+        private var _userName: String = "";
+        private var _roomName: String = "";
 
-        public function UserRegistryItem(param1:int, param2:String, param3:String="")
+        public function UserRegistryItem(userId: int, userName: String, roomName: String = "")
         {
-            this._userId = param1;
-            this._userName = param2;
-            this.var_2970 = param3;
+            this._userId = userId;
+            this._userName = userName;
+            this._roomName = roomName;
         }
 
-        public function get userId():int
+        public function get userId(): int
         {
-            return (this._userId);
+            return this._userId;
         }
 
-        public function get userName():String
+        public function get userName(): String
         {
-            return (this._userName);
+            return this._userName;
         }
 
-        public function get roomName():String
+        public function get roomName(): String
         {
-            return (this.var_2970);
+            return this._roomName;
         }
 
-        public function set roomName(param1:String):void
+        public function set roomName(value: String): void
         {
-            this.var_2970 = param1;
+            this._roomName = value;
         }
 
     }

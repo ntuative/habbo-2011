@@ -1,20 +1,21 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.catalog
 {
+
     import com.sulake.core.communication.messages.MessageEvent;
     import com.sulake.core.communication.messages.IMessageEvent;
     import com.sulake.habbo.communication.messages.parser.catalog.HabboClubOffersMessageParser;
 
-    public class HabboClubOffersMessageEvent extends MessageEvent implements IMessageEvent 
+    public class HabboClubOffersMessageEvent extends MessageEvent implements IMessageEvent
     {
 
-        public function HabboClubOffersMessageEvent(param1:Function)
+        public function HabboClubOffersMessageEvent(param1: Function)
         {
             super(param1, HabboClubOffersMessageParser);
         }
 
-        public function getParser():HabboClubOffersMessageParser
+        public function getParser(): HabboClubOffersMessageParser
         {
-            return (this.var_361 as HabboClubOffersMessageParser);
+            return this._parser as HabboClubOffersMessageParser;
         }
 
     }

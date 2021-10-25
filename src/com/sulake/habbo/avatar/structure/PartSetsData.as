@@ -1,100 +1,121 @@
 ﻿package com.sulake.habbo.avatar.structure
 {
+
     import flash.utils.Dictionary;
+
     import com.sulake.habbo.avatar.structure.parts.PartDefinition;
     import com.sulake.habbo.avatar.structure.parts.ActivePartSet;
     import com.sulake.habbo.avatar.actions.IActionDefinition;
     import com.sulake.habbo.avatar.actions.ActionDefinition;
     import com.sulake.habbo.avatar.structure.parts.*;
 
-    public class PartSetsData implements IStructureData 
+    public class PartSetsData implements IStructureData
     {
 
-        private var _parts:Dictionary;
-        private var var_2533:Dictionary;
+        private var _parts: Dictionary;
+        private var _activePartSets: Dictionary;
 
         public function PartSetsData()
         {
             this._parts = new Dictionary();
-            this.var_2533 = new Dictionary();
+            this._activePartSets = new Dictionary();
         }
 
-        public function parse(param1:XML):Boolean
+        public function parse(data: XML): Boolean
         {
-            var _loc2_:XML;
-            var _loc3_:XML;
-            if (param1 == null)
+            var part: XML;
+            var activePartSet: XML;
+
+            if (data == null)
             {
-                return (false);
-            };
-            for each (_loc2_ in param1.partSet[0].part)
+                return false;
+            }
+
+
+            for each (part in data.partSet[0].part)
             {
-                this._parts[String(_loc2_.@["set-type"])] = new PartDefinition(_loc2_);
-            };
-            for each (_loc3_ in param1.activePartSet)
+                this._parts[String(part.@["set-type"])] = new PartDefinition(part);
+            }
+
+
+            for each (activePartSet in data.activePartSet)
             {
-                this.var_2533[String(_loc3_.@id)] = new ActivePartSet(_loc3_);
-            };
-            return (true);
+                this._activePartSets[String(activePartSet.@id)] = new ActivePartSet(activePartSet);
+            }
+
+
+            return true;
         }
 
-        public function appendXML(param1:XML):Boolean
+        public function appendXML(data: XML): Boolean
         {
-            var _loc2_:XML;
-            var _loc3_:XML;
-            if (param1 == null)
+            var part: XML;
+            var activePartSet: XML;
+
+            if (data == null)
             {
-                return (false);
-            };
-            for each (_loc2_ in param1.partSet[0].part)
+                return false;
+            }
+
+
+            for each (part in data.partSet[0].part)
             {
-                this._parts[String(_loc2_.@["set-type"])] = new PartDefinition(_loc2_);
-            };
-            for each (_loc3_ in param1.activePartSet)
+                this._parts[String(part.@["set-type"])] = new PartDefinition(part);
+            }
+
+
+            for each (activePartSet in data.activePartSet)
             {
-                this.var_2533[String(_loc3_.@id)] = new ActivePartSet(_loc3_);
-            };
-            return (false);
+                this._activePartSets[String(activePartSet.@id)] = new ActivePartSet(activePartSet);
+            }
+
+            return false;
         }
 
-        public function getActiveParts(param1:IActionDefinition):Array
+        public function getActiveParts(param1: IActionDefinition): Array
         {
-            var _loc2_:ActivePartSet = this.var_2533[param1.activePartSet];
-            if (_loc2_ != null)
+            var activePartSet: ActivePartSet = this._activePartSets[param1.activePartSet];
+
+            if (activePartSet != null)
             {
-                return (_loc2_.parts);
-            };
-            return ([]);
+                return activePartSet.parts;
+            }
+
+
+            return [];
         }
 
-        public function getPartDefinition(param1:String):PartDefinition
+        public function getPartDefinition(setType: String): PartDefinition
         {
-            return (this._parts[param1] as PartDefinition);
+            return this._parts[setType] as PartDefinition;
         }
 
-        public function addPartDefinition(param1:XML):PartDefinition
+        public function addPartDefinition(data: XML): PartDefinition
         {
-            var _loc2_:String = String(param1.@["set-type"]);
-            if (this._parts[_loc2_] == null)
+            var setType: String = String(data.@["set-type"]);
+
+            if (this._parts[setType] == null)
             {
-                this._parts[_loc2_] = new PartDefinition(param1);
-            };
-            return (this._parts[_loc2_]);
+                this._parts[setType] = new PartDefinition(data);
+            }
+
+
+            return this._parts[setType];
         }
 
-        public function get parts():Dictionary
+        public function get parts(): Dictionary
         {
-            return (this._parts);
+            return this._parts;
         }
 
-        public function get activePartSets():Dictionary
+        public function get activePartSets(): Dictionary
         {
-            return (this.var_2533);
+            return this._activePartSets;
         }
 
-        public function getActivePartSet(param1:ActionDefinition):ActivePartSet
+        public function getActivePartSet(actionDefinition: ActionDefinition): ActivePartSet
         {
-            return (this.var_2533[param1.activePartSet] as ActivePartSet);
+            return this._activePartSets[actionDefinition.activePartSet] as ActivePartSet;
         }
 
     }

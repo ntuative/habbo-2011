@@ -1,104 +1,120 @@
 ﻿package com.sulake.habbo.catalog.viewer
 {
+
     import com.sulake.habbo.catalog.IHabboCatalog;
     import com.sulake.core.window.IWindowContainer;
     import com.sulake.habbo.room.IRoomEngine;
     import com.sulake.habbo.catalog.HabboCatalog;
+
     import flash.events.Event;
 
-    public class CatalogViewer implements ICatalogViewer 
+    public class CatalogViewer implements ICatalogViewer
     {
 
-        private var _catalog:IHabboCatalog;
-        private var _container:IWindowContainer;
-        private var _roomEngine:IRoomEngine;
-        private var var_2825:HabboCatalog;
-        private var var_2610:ICatalogPage;
+        private var _catalog: IHabboCatalog;
+        private var _container: IWindowContainer;
+        private var _roomEngine: IRoomEngine;
+        private var _habboCatalog: HabboCatalog;
+        private var _page: ICatalogPage;
 
-        public function CatalogViewer(param1:IHabboCatalog, param2:IWindowContainer, param3:IRoomEngine)
+        public function CatalogViewer(catalog: IHabboCatalog, container: IWindowContainer, roomEngine: IRoomEngine)
         {
-            this._catalog = param1;
-            this._container = param2;
-            this._roomEngine = param3;
+            this._catalog = catalog;
+            this._container = container;
+            this._roomEngine = roomEngine;
         }
 
-        public function get roomEngine():IRoomEngine
+        public function get roomEngine(): IRoomEngine
         {
-            return (this._roomEngine);
+            return this._roomEngine;
         }
 
-        public function set habboCatalog(param1:HabboCatalog):void
+        public function set habboCatalog(catalog: HabboCatalog): void
         {
-            this.var_2825 = param1;
+            this._habboCatalog = catalog;
         }
 
-        public function get habboCatalog():HabboCatalog
+        public function get habboCatalog(): HabboCatalog
         {
-            return (this.var_2825);
+            return this._habboCatalog;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
         }
 
-        public function get catalog():IHabboCatalog
+        public function get catalog(): IHabboCatalog
         {
-            return (this._catalog);
+            return this._catalog;
         }
 
-        public function showCatalogPage(param1:int, param2:String, param3:IPageLocalization, param4:Array, param5:int):void
+        public function showCatalogPage(pageId: int, param2: String, param3: IPageLocalization, param4: Array, offerId: int): void
         {
-            Logger.log(("[Catalog Viewer] Show Catalog Page: " + [param1, param2, param4.length, param5]));
-            if (this.var_2610 != null)
+            Logger.log("[Catalog Viewer] Show Catalog Page: " + [pageId, param2, param4.length, offerId]);
+
+            if (this._page != null)
             {
-                if (this.var_2610.pageId == param1)
+                if (this._page.pageId == pageId)
                 {
-                    if (param5 > -1)
+                    if (offerId > -1)
                     {
-                        this.var_2610.selectOffer(param5);
-                    };
+                        this._page.selectOffer(offerId);
+                    }
+
+
                     return;
-                };
-                this._container.removeChild(this.var_2610.window);
-                this.var_2610.dispose();
-            };
-            var _loc6_:ICatalogPage = new CatalogPage(this, param1, param2, param3, param4, this.var_2825);
-            this.var_2610 = _loc6_;
-            if (_loc6_.window != null)
+                }
+
+
+                this._container.removeChild(this._page.window);
+                this._page.dispose();
+            }
+
+
+            var page: ICatalogPage = new CatalogPage(this, pageId, param2, param3, param4, this._habboCatalog);
+            this._page = page;
+
+            if (page.window != null)
             {
-                this._container.addChild(_loc6_.window);
+                this._container.addChild(page.window);
             }
             else
             {
-                Logger.log(("[CatalogViewer] No window for page: " + param2));
-            };
+                Logger.log("[CatalogViewer] No window for page: " + param2);
+            }
+
+
             this._container.visible = true;
-            if (param5 > -1)
+
+            if (offerId > -1)
             {
-                _loc6_.selectOffer(param5);
-            };
+                page.selectOffer(offerId);
+            }
+
         }
 
-        public function catalogWindowClosed():void
+        public function catalogWindowClosed(): void
         {
-            if (this.var_2610 != null)
+            if (this._page != null)
             {
-                this.var_2610.closed();
-            };
+                this._page.closed();
+            }
+
         }
 
-        public function dispatchWidgetEvent(param1:Event):Boolean
+        public function dispatchWidgetEvent(param1: Event): Boolean
         {
-            return (this.var_2610.dispatchWidgetEvent(param1));
+            return this._page.dispatchWidgetEvent(param1);
         }
 
-        public function getCurrentLayoutCode():String
+        public function getCurrentLayoutCode(): String
         {
-            if (this.var_2610 == null)
+            if (this._page == null)
             {
-                return ("");
-            };
-            return (this.var_2610.layoutCode);
+                return "";
+            }
+
+            return this._page.layoutCode;
         }
 
     }

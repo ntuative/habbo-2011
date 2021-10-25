@@ -1,95 +1,96 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.room.engine
 {
-    public class UserUpdateMessageData 
+
+    public class UserUpdateMessageData
     {
 
-        private var _id:int = 0;
-        private var _x:Number = 0;
-        private var var_2497:Number = 0;
-        private var var_2498:Number = 0;
-        private var var_3052:Number = 0;
-        private var var_3053:Number = 0;
-        private var var_3054:Number = 0;
-        private var var_3055:Number = 0;
-        private var var_3035:int = 0;
-        private var var_3056:int = 0;
-        private var var_2390:Array = [];
-        private var var_3057:Boolean = false;
+        private var _id: int = 0;
+        private var _x: Number = 0;
+        private var _y: Number = 0;
+        private var _z: Number = 0;
+        private var _localZ: Number = 0;
+        private var _targetX: Number = 0;
+        private var _targetY: Number = 0;
+        private var _targetZ: Number = 0;
+        private var _dir: int = 0;
+        private var _dirHead: int = 0;
+        private var _actions: Array = [];
+        private var _isMoving: Boolean = false;
 
-        public function UserUpdateMessageData(param1:int, param2:Number, param3:Number, param4:Number, param5:Number, param6:int, param7:int, param8:Number, param9:Number, param10:Number, param11:Boolean, param12:Array)
+        public function UserUpdateMessageData(id: int, x: Number, y: Number, z: Number, localZ: Number, dir: int, dirHead: int, targetX: Number, targetY: Number, targetZ: Number, isMoving: Boolean, actions: Array)
         {
-            this._id = param1;
-            this._x = param2;
-            this.var_2497 = param3;
-            this.var_2498 = param4;
-            this.var_3052 = param5;
-            this.var_3035 = param6;
-            this.var_3056 = param7;
-            this.var_3053 = param8;
-            this.var_3054 = param9;
-            this.var_3055 = param10;
-            this.var_3057 = param11;
-            this.var_2390 = param12;
+            this._id = id;
+            this._x = x;
+            this._y = y;
+            this._z = z;
+            this._localZ = localZ;
+            this._dir = dir;
+            this._dirHead = dirHead;
+            this._targetX = targetX;
+            this._targetY = targetY;
+            this._targetZ = targetZ;
+            this._isMoving = isMoving;
+            this._actions = actions;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get x():Number
+        public function get x(): Number
         {
-            return (this._x);
+            return this._x;
         }
 
-        public function get y():Number
+        public function get y(): Number
         {
-            return (this.var_2497);
+            return this._y;
         }
 
-        public function get z():Number
+        public function get z(): Number
         {
-            return (this.var_2498);
+            return this._z;
         }
 
-        public function get localZ():Number
+        public function get localZ(): Number
         {
-            return (this.var_3052);
+            return this._localZ;
         }
 
-        public function get targetX():Number
+        public function get targetX(): Number
         {
-            return (this.var_3053);
+            return this._targetX;
         }
 
-        public function get targetY():Number
+        public function get targetY(): Number
         {
-            return (this.var_3054);
+            return this._targetY;
         }
 
-        public function get targetZ():Number
+        public function get targetZ(): Number
         {
-            return (this.var_3055);
+            return this._targetZ;
         }
 
-        public function get dir():int
+        public function get dir(): int
         {
-            return (this.var_3035);
+            return this._dir;
         }
 
-        public function get dirHead():int
+        public function get dirHead(): int
         {
-            return (this.var_3056);
+            return this._dirHead;
         }
 
-        public function get isMoving():Boolean
+        public function get isMoving(): Boolean
         {
-            return (this.var_3057);
+            return this._isMoving;
         }
 
-        public function get actions():Array
+        public function get actions(): Array
         {
-            return (this.var_2390.slice());
+            return this._actions.slice();
         }
 
     }

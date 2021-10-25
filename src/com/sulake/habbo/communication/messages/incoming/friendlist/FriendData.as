@@ -1,83 +1,84 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.friendlist
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class FriendData 
+    public class FriendData
     {
 
-        private var _id:int;
-        private var _name:String;
-        private var var_2071:int;
-        private var var_2908:Boolean;
-        private var var_2909:Boolean;
-        private var var_2534:String;
-        private var var_2465:int;
-        private var var_2910:String;
-        private var var_2911:String;
-        private var var_2912:String;
+        private var _id: int;
+        private var _name: String;
+        private var _gender: int;
+        private var _online: Boolean;
+        private var _followingAllowed: Boolean;
+        private var _figure: String;
+        private var _categoryId: int;
+        private var _motto: String;
+        private var _lastAccess: String;
+        private var _realName: String;
 
-        public function FriendData(param1:IMessageDataWrapper)
+        public function FriendData(data: IMessageDataWrapper)
         {
-            this._id = param1.readInteger();
-            this._name = param1.readString();
-            this.var_2071 = param1.readInteger();
-            this.var_2908 = param1.readBoolean();
-            this.var_2909 = param1.readBoolean();
-            this.var_2534 = param1.readString();
-            this.var_2465 = param1.readInteger();
-            this.var_2910 = param1.readString();
-            this.var_2911 = param1.readString();
-            this.var_2912 = param1.readString();
+            this._id = data.readInteger();
+            this._name = data.readString();
+            this._gender = data.readInteger();
+            this._online = data.readBoolean();
+            this._followingAllowed = data.readBoolean();
+            this._figure = data.readString();
+            this._categoryId = data.readInteger();
+            this._motto = data.readString();
+            this._lastAccess = data.readString();
+            this._realName = data.readString();
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get gender():int
+        public function get gender(): int
         {
-            return (this.var_2071);
+            return this._gender;
         }
 
-        public function get online():Boolean
+        public function get online(): Boolean
         {
-            return (this.var_2908);
+            return this._online;
         }
 
-        public function get followingAllowed():Boolean
+        public function get followingAllowed(): Boolean
         {
-            return (this.var_2909);
+            return this._followingAllowed;
         }
 
-        public function get figure():String
+        public function get figure(): String
         {
-            return (this.var_2534);
+            return this._figure;
         }
 
-        public function get categoryId():int
+        public function get categoryId(): int
         {
-            return (this.var_2465);
+            return this._categoryId;
         }
 
-        public function get motto():String
+        public function get motto(): String
         {
-            return (this.var_2910);
+            return this._motto;
         }
 
-        public function get lastAccess():String
+        public function get lastAccess(): String
         {
-            return (this.var_2911);
+            return this._lastAccess;
         }
 
-        public function get realName():String
+        public function get realName(): String
         {
-            return (this.var_2912);
+            return this._realName;
         }
 
     }

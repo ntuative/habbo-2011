@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.ui
 {
+
     import com.sulake.habbo.toolbar.IHabboToolbar;
     import com.sulake.habbo.widget.enums.RoomWidgetEnum;
     import com.sulake.habbo.widget.messages.RoomWidgetChatInputWidgetMessage;
@@ -10,109 +11,124 @@
     import com.sulake.habbo.toolbar.HabboToolbarIconEnum;
     import com.sulake.core.window.IWindowContainer;
     import com.sulake.habbo.session.events.RoomSessionChatEvent;
+
     import flash.events.Event;
+
     import com.sulake.habbo.widget.events.RoomWidgetFloodControlEvent;
 
-    public class ChatInputWidgetHandler implements IRoomWidgetHandler 
+    public class ChatInputWidgetHandler implements IRoomWidgetHandler
     {
 
-        private var var_978:Boolean = false;
-        private var _container:IRoomWidgetHandlerContainer = null;
-        private var var_2844:IHabboToolbar;
+        private var _disposed: Boolean = false;
+        private var _container: IRoomWidgetHandlerContainer = null;
+        private var _toolbar: IHabboToolbar;
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this.var_978);
+            return this._disposed;
         }
 
-        public function get type():String
+        public function get type(): String
         {
-            return (RoomWidgetEnum.CHAT_INPUT_WIDGET);
+            return RoomWidgetEnum.CHAT_INPUT_WIDGET;
         }
 
-        public function set container(param1:IRoomWidgetHandlerContainer):void
+        public function set container(container: IRoomWidgetHandlerContainer): void
         {
-            this._container = param1;
-            this.var_2844 = this._container.toolbar;
+            this._container = container;
+            this._toolbar = this._container.toolbar;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            this.var_978 = true;
+            this._disposed = true;
             this._container = null;
-            this.var_2844 = null;
+            this._toolbar = null;
         }
 
-        public function getWidgetMessages():Array
+        public function getWidgetMessages(): Array
         {
-            var _loc1_:Array = [];
-            _loc1_.push(RoomWidgetChatInputWidgetMessage.var_1357);
-            _loc1_.push(RoomWidgetChatTypingMessage.var_1910);
-            return (_loc1_);
+            var messages: Array = [];
+            
+            messages.push(RoomWidgetChatInputWidgetMessage.RWCIW_MESSAGE_POSITION_WINDOW);
+            messages.push(RoomWidgetChatTypingMessage.RWCTM_TYPING_STATUS);
+            
+            return messages;
         }
 
-        public function processWidgetMessage(param1:RoomWidgetMessage):RoomWidgetUpdateEvent
+        public function processWidgetMessage(roomWidget: RoomWidgetMessage): RoomWidgetUpdateEvent
         {
-            var _loc2_:RoomWidgetChatInputWidgetMessage;
-            var _loc3_:RoomWidgetChatTypingMessage;
-            switch (param1.type)
+            var chatInputWidget: RoomWidgetChatInputWidgetMessage;
+            var chatTypingWidget: RoomWidgetChatTypingMessage;
+            
+            switch (roomWidget.type)
             {
-                case RoomWidgetChatInputWidgetMessage.var_1357:
-                    _loc2_ = (param1 as RoomWidgetChatInputWidgetMessage);
-                    if (_loc2_ != null)
+                case RoomWidgetChatInputWidgetMessage.RWCIW_MESSAGE_POSITION_WINDOW:
+                    chatInputWidget = (roomWidget as RoomWidgetChatInputWidgetMessage);
+
+                    if (chatInputWidget != null)
                     {
-                        this.positionWindow(_loc2_.window);
-                    };
+                        this.positionWindow(chatInputWidget.window);
+                    }
+
                     break;
-                case RoomWidgetChatTypingMessage.var_1910:
-                    _loc3_ = (param1 as RoomWidgetChatTypingMessage);
-                    if (_loc3_ != null)
+
+                case RoomWidgetChatTypingMessage.RWCTM_TYPING_STATUS:
+                    chatTypingWidget = (roomWidget as RoomWidgetChatTypingMessage);
+
+                    if (chatTypingWidget != null)
                     {
-                        this._container.roomSession.sendChatTypingMessage(_loc3_.var_1215);
-                    };
+                        this._container.roomSession.sendChatTypingMessage(chatTypingWidget.isTyping);
+                    }
+
                     break;
-            };
-            return (null);
+            }
+
+            return null;
         }
 
-        private function positionWindow(param1:IWindowContainer):void
+        private function positionWindow(param1: IWindowContainer): void
         {
-            if (this.var_2844 == null)
+            if (this._toolbar == null)
             {
                 return;
-            };
-            this.var_2844.events.dispatchEvent(new HabboToolbarShowMenuEvent(HabboToolbarShowMenuEvent.var_434, HabboToolbarIconEnum.CHATINPUT, param1));
+            }
+
+            this._toolbar.events.dispatchEvent(new HabboToolbarShowMenuEvent(HabboToolbarShowMenuEvent.HTSME_DISPLAY_WINDOW, HabboToolbarIconEnum.CHATINPUT, param1));
         }
 
-        public function getProcessedEvents():Array
+        public function getProcessedEvents(): Array
         {
-            return ([RoomSessionChatEvent.var_367]);
+            return [RoomSessionChatEvent.RSCE_FLOOD_EVENT];
         }
 
-        public function processEvent(param1:Event):void
+        public function processEvent(event: Event): void
         {
-            var _loc3_:RoomSessionChatEvent;
-            var _loc4_:int;
-            var _loc2_:Event;
-            if (((this._container == null) || (this._container.events == null)))
+            var chatEvent: RoomSessionChatEvent;
+            var _loc4_: int;
+            var outgoing: Event;
+            if (this._container == null || this._container.events == null)
             {
                 return;
-            };
-            switch (param1.type)
+            }
+
+            switch (event.type)
             {
-                case RoomSessionChatEvent.var_367:
-                    _loc3_ = (param1 as RoomSessionChatEvent);
-                    _loc4_ = parseInt(_loc3_.text);
-                    _loc2_ = new RoomWidgetFloodControlEvent(_loc4_);
+                case RoomSessionChatEvent.RSCE_FLOOD_EVENT:
+                    chatEvent = (event as RoomSessionChatEvent);
+                    _loc4_ = parseInt(chatEvent.text);
+                    outgoing = new RoomWidgetFloodControlEvent(_loc4_);
                     break;
-            };
-            if ((((!(this._container == null)) && (!(this._container.events == null))) && (!(_loc2_ == null))))
+            }
+
+            if (this._container != null && this._container.events != null && outgoing != null)
             {
-                this._container.events.dispatchEvent(_loc2_);
-            };
+                this._container.events.dispatchEvent(outgoing);
+            }
+
         }
 
-        public function update():void
+        public function update(): void
         {
         }
 

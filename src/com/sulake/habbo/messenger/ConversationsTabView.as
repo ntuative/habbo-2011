@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.messenger
 {
+
     import com.sulake.core.window.IWindowContainer;
     import com.sulake.core.window.components.IBitmapWrapperWindow;
     import com.sulake.core.window.components.IFrameWindow;
@@ -13,168 +14,200 @@
     import com.sulake.habbo.messenger.domain.*;
     import com.sulake.habbo.window.enum.*;
 
-    public class ConversationsTabView 
+    public class ConversationsTabView
     {
 
-        private var var_3447:HabboMessenger;
-        private var var_1997:IWindowContainer;
-        private var var_3432:IWindowContainer;
-        private var var_3626:int = 30;
+        private var _messenger: HabboMessenger;
+        private var _content: IWindowContainer;
+        private var _conversations: IWindowContainer;
+        private var _tabWidth: int = 30;
 
-        public function ConversationsTabView(param1:HabboMessenger, param2:IFrameWindow)
+        public function ConversationsTabView(messenger: HabboMessenger, parent: IFrameWindow)
         {
-            this.var_3447 = param1;
-            this.var_1997 = IWindowContainer(param2.findChildByName("content"));
-            this.var_3432 = IWindowContainer(param2.findChildByName("conversationstab"));
-            var _loc3_:IBitmapWrapperWindow = IBitmapWrapperWindow(this.var_1997.findChildByName("convo_bg"));
-            _loc3_.bitmap = this.var_3447.getButtonImage("convo_bg");
+            this._messenger = messenger;
+            this._content = IWindowContainer(parent.findChildByName("content"));
+            this._conversations = IWindowContainer(parent.findChildByName("conversationstab"));
+            
+            var conversationBackground: IBitmapWrapperWindow = IBitmapWrapperWindow(this._content.findChildByName("convo_bg"));
+            conversationBackground.bitmap = this._messenger.getButtonImage("convo_bg");
         }
 
-        public function getTabCount():int
+        public function getTabCount(): int
         {
-            return (Math.floor((this.var_3432.width / this.var_3626)));
+            return Math.floor(this._conversations.width / this._tabWidth);
         }
 
-        public function get content():IWindowContainer
+        public function get content(): IWindowContainer
         {
-            return (this.var_1997);
+            return this._content;
         }
 
-        public function refresh():void
+        public function refresh(): void
         {
-            var _loc3_:Boolean;
-            var _loc1_:Array = this.var_3447.conversations.openConversations;
-            var _loc2_:int;
-            while (_loc2_ < this.getTabCount())
+            var success: Boolean;
+            var openConversations: Array = this._messenger.conversations.openConversations;
+            var i: int;
+
+            while (i < this.getTabCount())
             {
-                this.refreshTabContent(_loc2_, _loc1_[(this.var_3447.conversations.startIndex + _loc2_)]);
-                _loc2_++;
-            };
+                this.refreshTabContent(i, openConversations[(this._messenger.conversations.startIndex + i)]);
+                i++;
+            }
+
             while (true)
             {
-                _loc3_ = this.refreshTabContent(_loc2_, null);
-                if (_loc3_) break;
-                _loc2_++;
-            };
+                success = this.refreshTabContent(i, null);
+
+                if (success)
+                {
+                    break;
+                }
+
+                i++;
+            }
+
             if (this.hasPrevButton())
             {
                 this.refreshAsArrow(0, false);
-            };
+            }
+
             if (this.hasNextButton())
             {
-                this.refreshAsArrow((this.getTabCount() - 1), true);
-            };
+                this.refreshAsArrow(this.getTabCount() - 1, true);
+            }
+
         }
 
-        private function refreshTabContent(param1:int, param2:Conversation):Boolean
+        private function refreshTabContent(index: int, conversation: Conversation): Boolean
         {
-            var _loc3_:IWindowContainer = (this.var_3432.getChildAt(param1) as IWindowContainer);
-            if (_loc3_ == null)
+            var container: IWindowContainer = this._conversations.getChildAt(index) as IWindowContainer;
+            
+            if (container == null)
             {
-                if (param2 == null)
+                if (conversation == null)
                 {
-                    return (true);
-                };
-                _loc3_ = IWindowContainer(this.var_3447.getXmlWindow("tab_entry"));
-                _loc3_.y = 1;
-                this.var_3432.addChild(_loc3_);
-            };
-            this.hideChildren(_loc3_);
-            if (param2 == null)
+                    return true;
+                }
+
+                container = IWindowContainer(this._messenger.getXmlWindow("tab_entry"));
+                
+                container.y = 1;
+                
+                this._conversations.addChild(container);
+            }
+
+            this.hideChildren(container);
+            
+            if (conversation == null)
             {
-                return (false);
-            };
-            var _loc4_:String = ((param2.selected) ? "tab_bg_sel" : ((param2.newMessageArrived) ? "tab_bg_hilite" : "tab_bg_unsel"));
-            this.refreshTabBg(_loc3_, param1, _loc4_);
-            this.refreshFigure(_loc3_, param2.figure);
-            _loc3_.x = (param1 * this.var_3626);
-            _loc3_.width = this.var_3626;
-            return (false);
+                return false;
+            }
+
+            var conversationBgId: String = conversation.selected ? "tab_bg_sel" : (conversation.newMessageArrived
+                    ? "tab_bg_hilite"
+                    : "tab_bg_unsel");
+
+            this.refreshTabBg(container, index, conversationBgId);
+            this.refreshFigure(container, conversation.figure);
+
+            container.x = index * this._tabWidth;
+            container.width = this._tabWidth;
+            
+            return false;
         }
 
-        private function hideChildren(param1:IWindowContainer):void
+        private function hideChildren(container: IWindowContainer): void
         {
-            var _loc2_:int;
-            while (_loc2_ < param1.numChildren)
+            var i: int;
+
+            while (i < container.numChildren)
             {
-                param1.getChildAt(_loc2_).visible = false;
-                _loc2_++;
-            };
+                container.getChildAt(i).visible = false;
+                i++;
+            }
+
         }
 
-        private function refreshAsArrow(param1:int, param2:Boolean):void
+        private function refreshAsArrow(index: int, param2: Boolean): void
         {
-            var _loc3_:IWindowContainer = (this.var_3432.getChildAt(param1) as IWindowContainer);
+            var _loc3_: IWindowContainer = this._conversations.getChildAt(index) as IWindowContainer;
             this.hideChildren(_loc3_);
-            this.refreshArrow(_loc3_, param1, param2);
-            this.refreshTabBg(_loc3_, param1, ((param2) ? "tab_bg_next" : "tab_bg_unsel"));
-            var _loc4_:int = (this.var_3432.width % this.var_3626);
-            _loc3_.width = (this.var_3626 + ((param2) ? _loc4_ : 0));
+            this.refreshArrow(_loc3_, index, param2);
+            this.refreshTabBg(_loc3_, index, param2 ? "tab_bg_next" : "tab_bg_unsel");
+            var _loc4_: int = this._conversations.width % this._tabWidth;
+            _loc3_.width = this._tabWidth + (param2 ? _loc4_ : 0);
         }
 
-        private function refreshTabBg(param1:IWindowContainer, param2:int, param3:String):void
+        private function refreshTabBg(param1: IWindowContainer, param2: int, param3: String): void
         {
-            this.var_3447.refreshButton(param1, param3, true, this.onTabClick, param2);
+            this._messenger.refreshButton(param1, param3, true, this.onTabClick, param2);
         }
 
-        private function refreshFigure(param1:IWindowContainer, param2:String):void
+        private function refreshFigure(param1: IWindowContainer, param2: String): void
         {
-            var _loc3_:IBitmapWrapperWindow = (param1.getChildByName(HabboMessenger.var_304) as IBitmapWrapperWindow);
-            if (((param2 == null) || (param2 == "")))
+            var _loc3_: IBitmapWrapperWindow = param1.getChildByName(HabboMessenger.var_304) as IBitmapWrapperWindow;
+            if (param2 == null || param2 == "")
             {
                 _loc3_.visible = false;
             }
             else
             {
-                _loc3_.bitmap = this.var_3447.getAvatarFaceBitmap(param2);
+                _loc3_.bitmap = this._messenger.getAvatarFaceBitmap(param2);
                 _loc3_.visible = true;
-            };
+            }
+
         }
 
-        private function refreshArrow(param1:IWindowContainer, param2:int, param3:Boolean):void
+        private function refreshArrow(param1: IWindowContainer, param2: int, param3: Boolean): void
         {
-            this.var_3447.refreshButton(param1, ((param3) ? "next" : "prev"), true, null, 0);
+            this._messenger.refreshButton(param1, param3 ? "next" : "prev", true, null, 0);
         }
 
-        private function hasPrevButton():Boolean
+        private function hasPrevButton(): Boolean
         {
-            return (this.var_3447.conversations.startIndex > 0);
+            return this._messenger.conversations.startIndex > 0;
         }
 
-        private function hasNextButton():Boolean
+        private function hasNextButton(): Boolean
         {
-            return ((this.var_3447.conversations.openConversations.length - this.var_3447.conversations.startIndex) > this.getTabCount());
+            return this._messenger.conversations.openConversations.length - this._messenger.conversations.startIndex > this.getTabCount();
         }
 
-        private function onTabClick(param1:WindowEvent, param2:IWindow):void
+        private function onTabClick(param1: WindowEvent, param2: IWindow): void
         {
-            var _loc4_:Conversation;
+            var _loc4_: Conversation;
             if (param1.type != WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK)
             {
                 return;
-            };
-            var _loc3_:int = param2.id;
-            if (((_loc3_ == 0) && (this.hasPrevButton())))
+            }
+
+            var _loc3_: int = param2.id;
+            if (_loc3_ == 0 && this.hasPrevButton())
             {
-                this.var_3447.conversations.changeStartIndex(-1);
+                this._messenger.conversations.changeStartIndex(-1);
             }
             else
             {
-                if (((_loc3_ == (this.getTabCount() - 1)) && (this.hasNextButton())))
+                if (_loc3_ == this.getTabCount() - 1 && this.hasNextButton())
                 {
-                    this.var_3447.conversations.changeStartIndex(1);
+                    this._messenger.conversations.changeStartIndex(1);
                 }
                 else
                 {
-                    _loc4_ = ((param2.name == HabboMessenger.var_304) ? this.var_3447.conversations.findConversation(param2.id) : this.var_3447.conversations.openConversations[(_loc3_ + this.var_3447.conversations.startIndex)]);
+                    _loc4_ = param2.name == HabboMessenger.var_304
+                            ? this._messenger.conversations.findConversation(param2.id)
+                            : this._messenger.conversations.openConversations[(_loc3_ + this._messenger.conversations.startIndex)];
                     if (_loc4_ == null)
                     {
                         return;
-                    };
-                    this.var_3447.conversations.setSelected(_loc4_);
-                };
-            };
-            this.var_3447.messengerView.refresh();
+                    }
+
+                    this._messenger.conversations.setSelected(_loc4_);
+                }
+
+            }
+
+            this._messenger.messengerView.refresh();
         }
 
     }

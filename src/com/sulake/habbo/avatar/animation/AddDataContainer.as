@@ -1,59 +1,65 @@
 ﻿package com.sulake.habbo.avatar.animation
 {
-    public class AddDataContainer 
+
+    public class AddDataContainer
     {
 
-        private var _id:String;
-        private var _align:String;
-        private var _base:String;
-        private var var_2394:String;
-        private var var_1033:Number = 1;
+        private var _id: String;
+        private var _align: String;
+        private var _base: String;
+        private var _ink: String;
+        private var _blend: Number = 1;
 
-        public function AddDataContainer(param1:XML)
+        public function AddDataContainer(data: XML)
         {
-            this._id = String(param1.@id);
-            this._align = String(param1.@align);
-            this._base = String(param1.@base);
-            this.var_2394 = String(param1.@ink);
-            var _loc2_:String = String(param1.@blend);
-            if (_loc2_.length > 0)
+            this._id = String(data.@id);
+            this._align = String(data.@align);
+            this._base = String(data.@base);
+            this._ink = String(data.@ink);
+
+            var blend: String = String(data.@blend);
+
+            if (blend.length > 0)
             {
-                this.var_1033 = Number(_loc2_);
-                if (this.var_1033 > 1)
+                this._blend = Number(blend);
+
+                if (this._blend > 1)
                 {
-                    this.var_1033 = (this.var_1033 / 100);
-                };
-            };
+                    this._blend = this._blend / 100;
+                }
+
+            }
+
         }
 
-        public function get id():String
+        public function get id(): String
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get align():String
+        public function get align(): String
         {
-            return (this._align);
+            return this._align;
         }
 
-        public function get base():String
+        public function get base(): String
         {
-            return (this._base);
+            return this._base;
         }
 
-        public function get ink():String
+        public function get ink(): String
         {
-            return (this.var_2394);
+            return this._ink;
         }
 
-        public function get blend():Number
+        public function get blend(): Number
         {
-            return (this.var_1033);
+            return this._blend;
         }
 
-        public function get isBlended():Boolean
+        public function get isBlended(): Boolean
         {
-            return (!(this.var_1033 == 1));
+            return this._blend != 1;
         }
 
     }

@@ -1,43 +1,48 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.navigator
 {
+
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PopularRoomTagsData implements IDisposable, MsgWithRequestId 
+    public class PopularRoomTagsData implements IDisposable, MsgWithRequestId
     {
 
-        private var var_1029:Array = new Array();
-        private var _disposed:Boolean;
+        private var _tags: Array = [];
+        private var _disposed: Boolean;
 
-        public function PopularRoomTagsData(param1:IMessageDataWrapper)
+        public function PopularRoomTagsData(param1: IMessageDataWrapper)
         {
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            var tagCount: int = param1.readInteger();
+            var i: int;
+
+            while (i < tagCount)
             {
-                this.var_1029.push(new PopularTagData(param1));
-                _loc3_++;
-            };
+                this._tags.push(new PopularTagData(param1));
+                i++;
+            }
+
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (this._disposed)
             {
                 return;
-            };
+            }
+
+
             this._disposed = true;
-            this.var_1029 = null;
+            this._tags = null;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get tags():Array
+        public function get tags(): Array
         {
-            return (this.var_1029);
+            return this._tags;
         }
 
     }

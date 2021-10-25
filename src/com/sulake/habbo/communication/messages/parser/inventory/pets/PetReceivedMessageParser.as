@@ -1,35 +1,38 @@
 ﻿package com.sulake.habbo.communication.messages.parser.inventory.pets
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PetReceivedMessageParser implements IMessageParser 
+    public class PetReceivedMessageParser implements IMessageParser
     {
 
-        private var var_3205:Boolean;
-        private var var_3202:PetData;
+        private var _boughtAsGift: Boolean;
+        private var _pet: PetData;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3205 = param1.readBoolean();
-            this.var_3202 = new PetData(param1);
-            Logger.log(((((((((((("Got PetReceived: " + this.var_3205) + ", ") + this.var_3202.id) + ", ") + this.var_3202.name) + ", ") + this.var_3202.type) + ", ") + this.var_3202.breed) + ", ") + this.pet.color));
-            return (true);
+            this._boughtAsGift = data.readBoolean();
+            this._pet = new PetData(data);
+
+            Logger.log("Got PetReceived: " + this._boughtAsGift + ", " + this._pet.id + ", " + this._pet.name + ", " + this._pet.type + ", " + this._pet.breed + ", " + this.pet.color);
+
+            return true;
         }
 
-        public function get boughtAsGift():Boolean
+        public function get boughtAsGift(): Boolean
         {
-            return (this.var_3205);
+            return this._boughtAsGift;
         }
 
-        public function get pet():PetData
+        public function get pet(): PetData
         {
-            return (this.var_3202);
+            return this._pet;
         }
 
     }

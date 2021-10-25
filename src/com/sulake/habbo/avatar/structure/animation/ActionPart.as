@@ -1,29 +1,31 @@
 ﻿package com.sulake.habbo.avatar.structure.animation
 {
-    public class ActionPart 
+
+    public class ActionPart
     {
 
-        private var _frames:Array;
+        private var _frames: Array;
 
-        public function ActionPart(param1:XML)
+        public function ActionPart(param1: XML)
         {
-            var _loc2_:XML;
+            var _loc2_: XML;
             super();
-            this._frames = new Array();
+            this._frames = [];
             for each (_loc2_ in param1.frame)
             {
                 this._frames.push(parseInt(_loc2_.@number));
-            };
+            }
+
         }
 
-        public function hasFrame(param1:int):Boolean
+        public function hasFrame(param1: int): Boolean
         {
-            return (this._frames.indexOf(param1) > -1);
+            return this._frames.indexOf(param1) > -1;
         }
 
-        public function get frames():Array
+        public function get frames(): Array
         {
-            return (this._frames);
+            return this._frames;
         }
 
     }

@@ -1,65 +1,66 @@
 ﻿package com.sulake.habbo.avatar.structure.parts
 {
-    public class PartDefinition 
+
+    public class PartDefinition
     {
 
-        private var var_2524:String;
-        private var var_2525:String;
-        private var var_2526:String;
-        private var var_2527:Boolean;
-        private var var_2528:int = -1;
+        private var _setType: String;
+        private var _flippedSetType: String;
+        private var _removeSetType: String;
+        private var _appendToFigure: Boolean;
+        private var _staticId: int = -1;
 
-        public function PartDefinition(param1:XML)
+        public function PartDefinition(data: XML)
         {
-            this.var_2524 = String(param1.@["set-type"]);
-            this.var_2525 = String(param1.@["flipped-set-type"]);
-            this.var_2526 = String(param1.@["remove-set-type"]);
-            this.var_2527 = false;
+            this._setType = String(data.@["set-type"]);
+            this._flippedSetType = String(data.@["flipped-set-type"]);
+            this._removeSetType = String(data.@["remove-set-type"]);
+            this._appendToFigure = false;
         }
 
-        public function hasStaticId():Boolean
+        public function hasStaticId(): Boolean
         {
-            return (this.var_2528 >= 0);
+            return this._staticId >= 0;
         }
 
-        public function get staticId():int
+        public function get staticId(): int
         {
-            return (this.var_2528);
+            return this._staticId;
         }
 
-        public function set staticId(param1:int):void
+        public function set staticId(id: int): void
         {
-            this.var_2528 = param1;
+            this._staticId = id;
         }
 
-        public function get setType():String
+        public function get setType(): String
         {
-            return (this.var_2524);
+            return this._setType;
         }
 
-        public function get flippedSetType():String
+        public function get flippedSetType(): String
         {
-            return (this.var_2525);
+            return this._flippedSetType;
         }
 
-        public function get removeSetType():String
+        public function get removeSetType(): String
         {
-            return (this.var_2526);
+            return this._removeSetType;
         }
 
-        public function get appendToFigure():Boolean
+        public function get appendToFigure(): Boolean
         {
-            return (this.var_2527);
+            return this._appendToFigure;
         }
 
-        public function set appendToFigure(param1:Boolean):void
+        public function set appendToFigure(value: Boolean): void
         {
-            this.var_2527 = param1;
+            this._appendToFigure = value;
         }
 
-        public function set flippedSetType(param1:String):void
+        public function set flippedSetType(value: String): void
         {
-            this.var_2525 = param1;
+            this._flippedSetType = value;
         }
 
     }

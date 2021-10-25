@@ -1,139 +1,159 @@
 ﻿package com.sulake.habbo.friendlist.domain
 {
+
     import com.sulake.habbo.friendlist.FriendsView;
     import com.sulake.habbo.friendlist.FriendRequestsView;
     import com.sulake.habbo.friendlist.SearchView;
     import com.sulake.habbo.friendlist.*;
 
-    public class FriendListTabs 
+    public class FriendListTabs
     {
 
-        private var var_3412:IFriendListTabsDeps;
-        private var var_2809:Array = new Array();
-        private var var_3420:FriendListTab;
-        private var var_3421:int = 200;
-        private var var_3422:int = 200;
-        private var var_3423:int = 200;
+        private var _deps: IFriendListTabsDeps;
+        private var _tabs: Array = [];
+        private var _tab: FriendListTab;
+        private var _tabContentHeight: int = 200;
+        private var _tabContentCollapsedHeight: int = 200;
+        private var _windowWidth: int = 200;
 
-        public function FriendListTabs(param1:IFriendListTabsDeps)
+        public function FriendListTabs(deps: IFriendListTabsDeps)
         {
-            this.var_3412 = param1;
-            this.var_2809.push(new FriendListTab(this.var_3412.getFriendList(), FriendListTab.var_512, new FriendsView(), "${friendlist.friends}", "friends_footer", "hdr_friends"));
-            this.var_2809.push(new FriendListTab(this.var_3412.getFriendList(), FriendListTab.var_516, new FriendRequestsView(), "${friendlist.tab.friendrequests}", "friend_requests_footer", "hdr_friend_requests"));
-            this.var_2809.push(new FriendListTab(this.var_3412.getFriendList(), FriendListTab.var_515, new SearchView(), "${generic.search}", "search_footer", "hdr_search"));
+            this._deps = deps;
+
+            this._tabs.push(new FriendListTab(this._deps.getFriendList(), FriendListTab.FRIEND_LIST_FRIENDS, new FriendsView(), "${friendlist.friends}", "friends_footer", "hdr_friends"));
+            this._tabs.push(new FriendListTab(this._deps.getFriendList(), FriendListTab.FRIEND_LIST_REQUESTS, new FriendRequestsView(), "${friendlist.tab.friendrequests}", "friend_requests_footer", "hdr_friend_requests"));
+            this._tabs.push(new FriendListTab(this._deps.getFriendList(), FriendListTab.FRIEND_LIST_SEARCH, new SearchView(), "${generic.search}", "search_footer", "hdr_search"));
+            
             this.toggleSelected(null);
         }
 
-        public function getTabs():Array
+        public function getTabs(): Array
         {
-            return (this.var_2809);
+            return this._tabs;
         }
 
-        public function findTab(param1:int):FriendListTab
+        public function findTab(id: int): FriendListTab
         {
-            var _loc2_:FriendListTab;
-            for each (_loc2_ in this.var_2809)
+            var tab: FriendListTab;
+
+            for each (tab in this._tabs)
             {
-                if (_loc2_.id == param1)
+                if (tab.id == id)
                 {
-                    return (_loc2_);
-                };
-            };
-            return (null);
+                    return tab;
+                }
+
+            }
+
+            return null;
         }
 
-        public function clearSelections():void
+        public function clearSelections(): void
         {
-            var _loc1_:FriendListTab;
-            for each (_loc1_ in this.var_2809)
+            var tab: FriendListTab;
+
+            for each (tab in this._tabs)
             {
-                _loc1_.setSelected(false);
-            };
+                tab.setSelected(false);
+            }
+
         }
 
-        public function findSelectedTab():FriendListTab
+        public function findSelectedTab(): FriendListTab
         {
-            var _loc1_:FriendListTab;
-            for each (_loc1_ in this.var_2809)
+            var tab: FriendListTab;
+
+            for each (tab in this._tabs)
             {
-                if (_loc1_.selected)
+                if (tab.selected)
                 {
-                    return (_loc1_);
-                };
-            };
-            return (null);
+                    return tab;
+                }
+
+            }
+
+            return null;
         }
 
-        public function toggleSelected(param1:FriendListTab):void
+        public function toggleSelected(tab: FriendListTab): void
         {
-            var _loc2_:FriendListTab = this.findSelectedTab();
-            if (_loc2_ == null)
+            var t: FriendListTab = this.findSelectedTab();
+
+            if (t == null)
             {
-                this.var_3421 = this.var_3422;
-                this.setSelected(this.determineDisplayedTab(param1), true);
+                this._tabContentHeight = this._tabContentCollapsedHeight;
+                this.setSelected(this.determineDisplayedTab(tab), true);
             }
             else
             {
-                if (((_loc2_ == param1) || (param1 == null)))
+                if (t == tab || tab == null)
                 {
-                    this.var_3422 = this.var_3421;
-                    this.var_3421 = 0;
+                    this._tabContentCollapsedHeight = this._tabContentHeight;
+                    this._tabContentHeight = 0;
+                    
                     this.clearSelections();
                 }
                 else
                 {
-                    this.setSelected(this.determineDisplayedTab(param1), true);
-                };
-            };
+                    this.setSelected(this.determineDisplayedTab(tab), true);
+                }
+
+            }
+
         }
 
-        private function setSelected(param1:FriendListTab, param2:Boolean):void
+        private function setSelected(tab: FriendListTab, selected: Boolean): void
         {
-            var _loc3_:FriendListTab = this.findSelectedTab();
+            var t: FriendListTab = this.findSelectedTab();
             this.clearSelections();
-            param1.setSelected(param2);
-            if (param2)
+            
+            tab.setSelected(selected);
+            
+            if (selected)
             {
-                this.var_3420 = param1;
-            };
+                this._tab = tab;
+            }
+
         }
 
-        private function determineDisplayedTab(param1:FriendListTab):FriendListTab
+        private function determineDisplayedTab(tab: FriendListTab): FriendListTab
         {
-            if (param1 != null)
+            if (tab != null)
             {
-                return (param1);
-            };
-            if (this.var_3420 != null)
+                return tab;
+            }
+
+            if (this._tab != null)
             {
-                return (this.var_3420);
-            };
-            return (this.var_2809[0]);
+                return this._tab;
+            }
+
+            return this._tabs[0];
         }
 
-        public function get tabContentHeight():int
+        public function get tabContentHeight(): int
         {
-            return (this.var_3421);
+            return this._tabContentHeight;
         }
 
-        public function get windowWidth():int
+        public function get windowWidth(): int
         {
-            return (this.var_3423);
+            return this._windowWidth;
         }
 
-        public function get tabContentWidth():int
+        public function get tabContentWidth(): int
         {
-            return (this.var_3423 - 2);
+            return this._windowWidth - 2;
         }
 
-        public function set tabContentHeight(param1:int):void
+        public function set tabContentHeight(value: int): void
         {
-            this.var_3421 = param1;
+            this._tabContentHeight = value;
         }
 
-        public function set windowWidth(param1:int):void
+        public function set windowWidth(value: int): void
         {
-            this.var_3423 = param1;
+            this._windowWidth = value;
         }
 
     }

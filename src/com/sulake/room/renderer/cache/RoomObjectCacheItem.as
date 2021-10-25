@@ -1,39 +1,42 @@
 ﻿package com.sulake.room.renderer.cache
 {
-    public class RoomObjectCacheItem 
+
+    public class RoomObjectCacheItem
     {
 
-        private var var_2494:RoomObjectLocationCacheItem = null;
-        private var var_2570:RoomObjectSortableSpriteCacheItem = null;
+        private var _location: RoomObjectLocationCacheItem = null;
+        private var _sprites: RoomObjectSortableSpriteCacheItem = null;
 
-        public function RoomObjectCacheItem(param1:String)
+        public function RoomObjectCacheItem(param1: String)
         {
-            this.var_2494 = new RoomObjectLocationCacheItem(param1);
-            this.var_2570 = new RoomObjectSortableSpriteCacheItem();
+            this._location = new RoomObjectLocationCacheItem(param1);
+            this._sprites = new RoomObjectSortableSpriteCacheItem();
         }
 
-        public function get location():RoomObjectLocationCacheItem
+        public function get location(): RoomObjectLocationCacheItem
         {
-            return (this.var_2494);
+            return this._location;
         }
 
-        public function get sprites():RoomObjectSortableSpriteCacheItem
+        public function get sprites(): RoomObjectSortableSpriteCacheItem
         {
-            return (this.var_2570);
+            return this._sprites;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            if (this.var_2494 != null)
+            if (this._location != null)
             {
-                this.var_2494.dispose();
-                this.var_2494 = null;
-            };
-            if (this.var_2570 != null)
+                this._location.dispose();
+                this._location = null;
+            }
+
+            if (this._sprites != null)
             {
-                this.var_2570.dispose();
-                this.var_2570 = null;
-            };
+                this._sprites.dispose();
+                this._sprites = null;
+            }
+
         }
 
     }

@@ -1,174 +1,185 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.room.engine
 {
-    public class ItemMessageData 
+
+    public class ItemMessageData
     {
 
-        private var _id:int = 0;
-        private var var_3030:Boolean = false;
-        private var var_3031:int = 0;
-        private var var_3032:int = 0;
-        private var var_3033:int = 0;
-        private var var_3034:int = 0;
-        private var var_2497:Number = 0;
-        private var var_2498:Number = 0;
-        private var var_3035:String = "";
-        private var _type:int = 0;
-        private var var_3036:String = "";
-        private var var_2940:int = 0;
-        private var _state:int = 0;
-        private var _data:String = "";
-        private var var_3037:Boolean = false;
+        private var _id: int = 0;
+        private var _isOldFormat: Boolean = false;
+        private var _wallX: int = 0;
+        private var _wallY: int = 0;
+        private var _localX: int = 0;
+        private var _localY: int = 0;
+        private var _y: Number = 0;
+        private var _z: Number = 0;
+        private var _dir: String = "";
+        private var _type: int = 0;
+        private var _unknown1: String = "";
+        private var _unknown2: int = 0;
+        private var _state: int = 0;
+        private var _data: String = "";
+        private var _readonly: Boolean = false;
 
-        public function ItemMessageData(param1:int, param2:int, param3:Boolean)
+        public function ItemMessageData(id: int, type: int, isOldFormat: Boolean)
         {
-            this._id = param1;
-            this._type = param2;
-            this.var_3030 = param3;
+            this._id = id;
+            this._type = type;
+            this._isOldFormat = isOldFormat;
         }
 
-        public function setReadOnly():void
+        public function setReadOnly(): void
         {
-            this.var_3037 = true;
+            this._readonly = true;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get isOldFormat():Boolean
+        public function get isOldFormat(): Boolean
         {
-            return (this.var_3030);
+            return this._isOldFormat;
         }
 
-        public function get wallX():Number
+        public function get wallX(): Number
         {
-            return (this.var_3031);
+            return this._wallX;
         }
 
-        public function set wallX(param1:Number):void
+        public function set wallX(param1: Number): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
-                this.var_3031 = param1;
-            };
+                this._wallX = param1;
+            }
+
         }
 
-        public function get wallY():Number
+        public function get wallY(): Number
         {
-            return (this.var_3032);
+            return this._wallY;
         }
 
-        public function set wallY(param1:Number):void
+        public function set wallY(param1: Number): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
-                this.var_3032 = param1;
-            };
+                this._wallY = param1;
+            }
+
         }
 
-        public function get localX():Number
+        public function get localX(): Number
         {
-            return (this.var_3033);
+            return this._localX;
         }
 
-        public function set localX(param1:Number):void
+        public function set localX(param1: Number): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
-                this.var_3033 = param1;
-            };
+                this._localX = param1;
+            }
+
         }
 
-        public function get localY():Number
+        public function get localY(): Number
         {
-            return (this.var_3034);
+            return this._localY;
         }
 
-        public function set localY(param1:Number):void
+        public function set localY(param1: Number): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
-                this.var_3034 = param1;
-            };
+                this._localY = param1;
+            }
+
         }
 
-        public function get y():Number
+        public function get y(): Number
         {
-            return (this.var_2497);
+            return this._y;
         }
 
-        public function set y(param1:Number):void
+        public function set y(param1: Number): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
-                this.var_2497 = param1;
-            };
+                this._y = param1;
+            }
+
         }
 
-        public function get z():Number
+        public function get z(): Number
         {
-            return (this.var_2498);
+            return this._z;
         }
 
-        public function set z(param1:Number):void
+        public function set z(param1: Number): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
-                this.var_2498 = param1;
-            };
+                this._z = param1;
+            }
+
         }
 
-        public function get dir():String
+        public function get dir(): String
         {
-            return (this.var_3035);
+            return this._dir;
         }
 
-        public function set dir(param1:String):void
+        public function set dir(param1: String): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
-                this.var_3035 = param1;
-            };
+                this._dir = param1;
+            }
+
         }
 
-        public function get type():int
+        public function get type(): int
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function set type(param1:int):void
+        public function set type(param1: int): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
                 this._type = param1;
-            };
+            }
+
         }
 
-        public function get state():int
+        public function get state(): int
         {
-            return (this._state);
+            return this._state;
         }
 
-        public function set state(param1:int):void
+        public function set state(param1: int): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
                 this._state = param1;
-            };
+            }
+
         }
 
-        public function get data():String
+        public function get data(): String
         {
-            return (this._data);
+            return this._data;
         }
 
-        public function set data(param1:String):void
+        public function set data(param1: String): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
                 this._data = param1;
-            };
+            }
+
         }
 
     }

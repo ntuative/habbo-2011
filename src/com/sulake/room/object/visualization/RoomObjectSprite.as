@@ -1,245 +1,247 @@
 ﻿package com.sulake.room.object.visualization
 {
+
     import flash.display.BitmapData;
     import flash.geom.Point;
 
-    public final class RoomObjectSprite implements IRoomObjectSprite 
+    public final class RoomObjectSprite implements IRoomObjectSprite
     {
 
-        private static var var_1454:int = 0;
+        private static var var_1454: int = 0;
 
-        private var var_2242:BitmapData = null;
-        private var var_2120:String = "";
-        private var var_1023:Boolean = true;
-        private var var_2997:String = "";
-        private var var_4054:int = 0xFF;
-        private var _color:int = 0xFFFFFF;
-        private var var_2238:String = "normal";
-        private var var_2126:Boolean = false;
-        private var var_2127:Boolean = false;
-        private var _offset:Point = new Point(0, 0);
-        private var var_2237:int = 0;
-        private var _height:int = 0;
-        private var var_2529:Number = 0;
-        private var var_4992:Boolean = false;
-        private var var_4993:Boolean = true;
-        private var var_4137:Boolean = false;
-        private var _updateID:int = 0;
-        private var _instanceId:int = 0;
-        private var var_4994:Array = null;
+        private var _asset: BitmapData = null;
+        private var _assetName: String = "";
+        private var _visible: Boolean = true;
+        private var _tag: String = "";
+        private var _alpha: int = 0xFF;
+        private var _color: int = 0xFFFFFF;
+        private var _blendMode: String = "normal";
+        private var _flipH: Boolean = false;
+        private var _flipV: Boolean = false;
+        private var _offset: Point = new Point(0, 0);
+        private var _width: int = 0;
+        private var _height: int = 0;
+        private var _relativeDepth: Number = 0;
+        private var _varyingDepth: Boolean = false;
+        private var _capturesMouse: Boolean = true;
+        private var _clickHandling: Boolean = false;
+        private var _updateID: int = 0;
+        private var _instanceId: int = 0;
+        private var _filters: Array = null;
 
         public function RoomObjectSprite()
         {
             this._instanceId = var_1454++;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            this.var_2242 = null;
-            this.var_2237 = 0;
+            this._asset = null;
+            this._width = 0;
             this._height = 0;
         }
 
-        public function get asset():BitmapData
+        public function get asset(): BitmapData
         {
-            return (this.var_2242);
+            return this._asset;
         }
 
-        public function get assetName():String
+        public function get assetName(): String
         {
-            return (this.var_2120);
+            return this._assetName;
         }
 
-        public function get visible():Boolean
+        public function get visible(): Boolean
         {
-            return (this.var_1023);
+            return this._visible;
         }
 
-        public function get tag():String
+        public function get tag(): String
         {
-            return (this.var_2997);
+            return this._tag;
         }
 
-        public function get alpha():int
+        public function get alpha(): int
         {
-            return (this.var_4054);
+            return this._alpha;
         }
 
-        public function get color():int
+        public function get color(): int
         {
-            return (this._color);
+            return this._color;
         }
 
-        public function get blendMode():String
+        public function get blendMode(): String
         {
-            return (this.var_2238);
+            return this._blendMode;
         }
 
-        public function get flipV():Boolean
+        public function get flipV(): Boolean
         {
-            return (this.var_2127);
+            return this._flipV;
         }
 
-        public function get flipH():Boolean
+        public function get flipH(): Boolean
         {
-            return (this.var_2126);
+            return this._flipH;
         }
 
-        public function get offsetX():int
+        public function get offsetX(): int
         {
-            return (this._offset.x);
+            return this._offset.x;
         }
 
-        public function get offsetY():int
+        public function get offsetY(): int
         {
-            return (this._offset.y);
+            return this._offset.y;
         }
 
-        public function get width():int
+        public function get width(): int
         {
-            return (this.var_2237);
+            return this._width;
         }
 
-        public function get height():int
+        public function get height(): int
         {
-            return (this._height);
+            return this._height;
         }
 
-        public function get relativeDepth():Number
+        public function get relativeDepth(): Number
         {
-            return (this.var_2529);
+            return this._relativeDepth;
         }
 
-        public function get varyingDepth():Boolean
+        public function get varyingDepth(): Boolean
         {
-            return (this.var_4992);
+            return this._varyingDepth;
         }
 
-        public function get capturesMouse():Boolean
+        public function get capturesMouse(): Boolean
         {
-            return (this.var_4993);
+            return this._capturesMouse;
         }
 
-        public function get clickHandling():Boolean
+        public function get clickHandling(): Boolean
         {
-            return (this.var_4137);
+            return this._clickHandling;
         }
 
-        public function get instanceId():int
+        public function get instanceId(): int
         {
-            return (this._instanceId);
+            return this._instanceId;
         }
 
-        public function get updateId():int
+        public function get updateId(): int
         {
-            return (this._updateID);
+            return this._updateID;
         }
 
-        public function get filters():Array
+        public function get filters(): Array
         {
-            return (this.var_4994);
+            return this._filters;
         }
 
-        public function set asset(param1:BitmapData):void
+        public function set asset(param1: BitmapData): void
         {
             if (param1 != null)
             {
-                this.var_2237 = param1.width;
+                this._width = param1.width;
                 this._height = param1.height;
-            };
-            this.var_2242 = param1;
+            }
+
+            this._asset = param1;
             this._updateID++;
         }
 
-        public function set assetName(param1:String):void
+        public function set assetName(param1: String): void
         {
-            this.var_2120 = param1;
+            this._assetName = param1;
             this._updateID++;
         }
 
-        public function set visible(param1:Boolean):void
+        public function set visible(param1: Boolean): void
         {
-            this.var_1023 = param1;
+            this._visible = param1;
             this._updateID++;
         }
 
-        public function set tag(param1:String):void
+        public function set tag(param1: String): void
         {
-            this.var_2997 = param1;
+            this._tag = param1;
             this._updateID++;
         }
 
-        public function set alpha(param1:int):void
+        public function set alpha(param1: int): void
         {
-            param1 = (param1 & 0xFF);
-            this.var_4054 = param1;
+            param1 = param1 & 0xFF;
+            this._alpha = param1;
             this._updateID++;
         }
 
-        public function set color(param1:int):void
+        public function set color(param1: int): void
         {
-            param1 = (param1 & 0xFFFFFF);
+            param1 = param1 & 0xFFFFFF;
             this._color = param1;
             this._updateID++;
         }
 
-        public function set blendMode(param1:String):void
+        public function set blendMode(param1: String): void
         {
-            this.var_2238 = param1;
+            this._blendMode = param1;
             this._updateID++;
         }
 
-        public function set filters(param1:Array):void
+        public function set filters(param1: Array): void
         {
-            this.var_4994 = param1;
+            this._filters = param1;
             this._updateID++;
         }
 
-        public function set flipH(param1:Boolean):void
+        public function set flipH(param1: Boolean): void
         {
-            this.var_2126 = param1;
+            this._flipH = param1;
             this._updateID++;
         }
 
-        public function set flipV(param1:Boolean):void
+        public function set flipV(param1: Boolean): void
         {
-            this.var_2127 = param1;
+            this._flipV = param1;
             this._updateID++;
         }
 
-        public function set offsetX(param1:int):void
+        public function set offsetX(param1: int): void
         {
             this._offset.x = param1;
             this._updateID++;
         }
 
-        public function set offsetY(param1:int):void
+        public function set offsetY(param1: int): void
         {
             this._offset.y = param1;
             this._updateID++;
         }
 
-        public function set relativeDepth(param1:Number):void
+        public function set relativeDepth(param1: Number): void
         {
-            this.var_2529 = param1;
+            this._relativeDepth = param1;
             this._updateID++;
         }
 
-        public function set varyingDepth(param1:Boolean):void
+        public function set varyingDepth(param1: Boolean): void
         {
-            this.var_4992 = param1;
+            this._varyingDepth = param1;
             this._updateID++;
         }
 
-        public function set capturesMouse(param1:Boolean):void
+        public function set capturesMouse(param1: Boolean): void
         {
-            this.var_4993 = param1;
+            this._capturesMouse = param1;
             this._updateID++;
         }
 
-        public function set clickHandling(param1:Boolean):void
+        public function set clickHandling(param1: Boolean): void
         {
-            this.var_4137 = param1;
+            this._clickHandling = param1;
             this._updateID++;
         }
 

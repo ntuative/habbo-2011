@@ -1,36 +1,39 @@
 ﻿package com.sulake.habbo.communication.messages.parser.moderation
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ModMessageParser implements IMessageParser 
+    public class ModMessageParser implements IMessageParser
     {
 
-        private var _message:String;
-        private var var_2104:String;
+        private var _message: String;
+        private var _url: String;
 
-        public function get message():String
+        public function get message(): String
         {
-            return (this._message);
+            return this._message;
         }
 
-        public function get url():String
+        public function get url(): String
         {
-            return (this.var_2104);
+            return this._url;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._message = "";
-            this.var_2104 = "";
-            return (true);
+            this._url = "";
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this._message = param1.readString();
-            this.var_2104 = param1.readString();
-            return (true);
+            this._message = data.readString();
+            this._url = data.readString();
+            
+            return true;
         }
 
     }

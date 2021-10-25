@@ -1,24 +1,26 @@
 ﻿package com.sulake.habbo.room.events
 {
+
     import com.sulake.room.events.RoomObjectEvent;
 
-    public class RoomObjectStateChangeEvent extends RoomObjectEvent 
+    public class RoomObjectStateChangeEvent extends RoomObjectEvent
     {
 
-        public static const var_1180:String = "ROSCE_STATE_CHANGE";
-        public static const var_1195:String = "ROSCE_STATE_RANDOM";
+        public static const ROSCE_STATE_CHANGE: String = "ROSCE_STATE_CHANGE";
+        public static const ROSCE_STATE_RANDOM: String = "ROSCE_STATE_RANDOM";
 
-        private var var_1013:int = 0;
+        private var _param: int = 0;
 
-        public function RoomObjectStateChangeEvent(param1:String, param2:int, param3:String, param4:int=0, param5:Boolean=false, param6:Boolean=false)
+        public function RoomObjectStateChangeEvent(type: String, roomId: int, roomCategory: String, param4: int = 0, bubbles: Boolean = false, cancelable: Boolean = false)
         {
-            super(param1, param2, param3, param5, param6);
-            this.var_1013 = param4;
+            super(type, roomId, roomCategory, bubbles, cancelable);
+            
+            this._param = param;
         }
 
-        public function get param():int
+        public function get param(): int
         {
-            return (this.var_1013);
+            return this._param;
         }
 
     }

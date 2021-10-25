@@ -1,113 +1,126 @@
 ﻿package com.sulake.habbo.catalog.purchase
 {
+
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.habbo.session.product.IProductData;
     import com.sulake.habbo.session.furniture.IFurnitureData;
     import com.sulake.habbo.catalog.IPurchasableOffer;
 
-    public class PlacedObjectPurchaseData implements IDisposable 
+    public class PlacedObjectPurchaseData implements IDisposable
     {
 
-        private var var_978:Boolean = false;
-        private var var_2358:int;
-        private var _category:int;
-        private var _roomId:int;
-        private var _roomCategory:int;
-        private var var_2675:String = "";
-        private var _x:int = 0;
-        private var var_2497:int = 0;
-        private var _direction:int = 0;
-        private var _offerId:int;
-        private var var_2676:int;
-        private var var_2677:IProductData;
-        private var var_2678:IFurnitureData;
+        private var _disposed: Boolean = false;
+        private var _objectId: int;
+        private var _category: int;
+        private var _roomId: int;
+        private var _roomCategory: int;
+        private var _wallLocation: String = "";
+        private var _x: int = 0;
+        private var _y: int = 0;
+        private var _direction: int = 0;
+        private var _offerId: int;
+        private var _productClassId: int;
+        private var _productData: IProductData;
+        private var _furnitureData: IFurnitureData;
 
-        public function PlacedObjectPurchaseData(param1:int, param2:int, param3:int, param4:int, param5:String, param6:int, param7:int, param8:int, param9:IPurchasableOffer)
+        public function PlacedObjectPurchaseData(roomId: int, roomCategory: int, objectId: int, category: int, wallLocation: String, x: int, y: int, direction: int, offer: IPurchasableOffer)
         {
-            this._roomId = param1;
-            this._roomCategory = param2;
-            this.var_2358 = param3;
-            this._category = param4;
-            this.var_2675 = param5;
-            this._x = param6;
-            this.var_2497 = param7;
-            this._direction = param8;
-            this.setOfferData(param9);
+            this._roomId = roomId;
+            this._roomCategory = roomCategory;
+            this._objectId = objectId;
+            this._category = category;
+            this._wallLocation = wallLocation;
+            this._x = x;
+            this._y = y;
+            this._direction = direction;
+
+            this.setOfferData(offer);
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            this.var_978 = true;
-            this.var_2677 = null;
-            this.var_2678 = null;
+            this._disposed = true;
+            this._productData = null;
+            this._furnitureData = null;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this.var_978);
+            return this._disposed;
         }
 
-        private function setOfferData(param1:IPurchasableOffer):void
+        private function setOfferData(offer: IPurchasableOffer): void
         {
-            this._offerId = param1.offerId;
-            this.var_2676 = param1.productContainer.firstProduct.productClassId;
-            this.var_2677 = param1.productContainer.firstProduct.productData;
-            this.var_2678 = param1.productContainer.firstProduct.furnitureData;
+            this._offerId = offer.offerId;
+            this._productClassId = offer.productContainer.firstProduct.productClassId;
+            this._productData = offer.productContainer.firstProduct.productData;
+            this._furnitureData = offer.productContainer.firstProduct.furnitureData;
         }
 
-        public function toString():String
+        public function toString(): String
         {
-            return ([this._roomCategory, this._roomId, this.var_2358, this._category, this.var_2675, this._x, this.var_2497, this._direction, this._offerId, this.var_2676].toString());
+            return [
+                this._roomCategory,
+                this._roomId,
+                this._objectId,
+                this._category,
+                this._wallLocation,
+                this._x,
+                this._y,
+                this._direction,
+                this._offerId,
+                this._productClassId
+            ].toString();
         }
 
-        public function get objectId():int
+        public function get objectId(): int
         {
-            return (this.var_2358);
+            return this._objectId;
         }
 
-        public function get category():int
+        public function get category(): int
         {
-            return (this._category);
+            return this._category;
         }
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get roomCategory():int
+        public function get roomCategory(): int
         {
-            return (this._roomCategory);
+            return this._roomCategory;
         }
 
-        public function get wallLocation():String
+        public function get wallLocation(): String
         {
-            return (this.var_2675);
+            return this._wallLocation;
         }
 
-        public function get x():int
+        public function get x(): int
         {
-            return (this._x);
+            return this._x;
         }
 
-        public function get y():int
+        public function get y(): int
         {
-            return (this.var_2497);
+            return this._y;
         }
 
-        public function get direction():int
+        public function get direction(): int
         {
-            return (this._direction);
+            return this._direction;
         }
 
-        public function get offerId():int
+        public function get offerId(): int
         {
-            return (this._offerId);
+            return this._offerId;
         }
 
-        public function get productClassId():int
+        public function get productClassId(): int
         {
-            return (this.var_2676);
+            return this._productClassId;
         }
 
     }

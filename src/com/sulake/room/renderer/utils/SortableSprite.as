@@ -1,22 +1,23 @@
 ﻿package com.sulake.room.renderer.utils
 {
+
     import com.sulake.room.object.visualization.IRoomObjectSprite;
 
-    public class SortableSprite 
+    public class SortableSprite
     {
 
-        public static const var_1975:Number = 100000000;
+        public static const var_1975: Number = 100000000;
 
-        public var x:int = 0;
-        public var y:int = 0;
-        public var z:Number = 0;
-        public var name:String = "";
-        public var sprite:IRoomObjectSprite = null;
+        public var x: int = 0;
+        public var y: int = 0;
+        public var z: Number = 0;
+        public var name: String = "";
+        public var sprite: IRoomObjectSprite = null;
 
-        public function dispose():void
+        public function dispose(): void
         {
             this.sprite = null;
-            this.z = -(var_1975);
+            this.z = -var_1975;
         }
 
     }

@@ -1,23 +1,25 @@
 ﻿package com.sulake.habbo.friendbar.events
 {
+
     import flash.events.Event;
 
-    public class FindFriendsNotificationEvent extends Event 
+    public class FindFriendsNotificationEvent extends Event
     {
 
-        public static const TYPE:String = "FIND_FRIENDS_RESULT";
+        public static const TYPE: String = "FIND_FRIENDS_RESULT";
 
-        private var var_3147:Boolean;
+        private var _success: Boolean;
 
-        public function FindFriendsNotificationEvent(param1:Boolean)
+        public function FindFriendsNotificationEvent(success: Boolean)
         {
-            this.var_3147 = param1;
+            this._success = success;
+            
             super(TYPE);
         }
 
-        public function get success():Boolean
+        public function get success(): Boolean
         {
-            return (this.var_3147);
+            return this._success;
         }
 
     }

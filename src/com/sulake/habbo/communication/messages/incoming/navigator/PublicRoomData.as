@@ -1,71 +1,73 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.navigator
 {
+
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PublicRoomData implements IDisposable 
+    public class PublicRoomData implements IDisposable
     {
 
-        private var var_3002:String;
-        private var var_3003:int;
-        private var var_3004:int;
-        private var var_3005:String;
-        private var var_3006:int;
-        private var var_2979:int;
-        private var _disposed:Boolean;
+        private var _unitPropertySet: String;
+        private var _unitPort: int;
+        private var _worldId: int;
+        private var _castLibs: String;
+        private var _maxUsers: int;
+        private var _nodeId: int;
+        private var _disposed: Boolean;
 
-        public function PublicRoomData(param1:IMessageDataWrapper)
+        public function PublicRoomData(data: IMessageDataWrapper)
         {
-            this.var_3002 = param1.readString();
-            this.var_3003 = param1.readInteger();
-            this.var_3004 = param1.readInteger();
-            this.var_3005 = param1.readString();
-            this.var_3006 = param1.readInteger();
-            this.var_2979 = param1.readInteger();
+            this._unitPropertySet = data.readString();
+            this._unitPort = data.readInteger();
+            this._worldId = data.readInteger();
+            this._castLibs = data.readString();
+            this._maxUsers = data.readInteger();
+            this._nodeId = data.readInteger();
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (this._disposed)
             {
                 return;
-            };
+            }
+
             this._disposed = true;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get unitPropertySet():String
+        public function get unitPropertySet(): String
         {
-            return (this.var_3002);
+            return this._unitPropertySet;
         }
 
-        public function get unitPort():int
+        public function get unitPort(): int
         {
-            return (this.var_3003);
+            return this._unitPort;
         }
 
-        public function get worldId():int
+        public function get worldId(): int
         {
-            return (this.var_3004);
+            return this._worldId;
         }
 
-        public function get castLibs():String
+        public function get castLibs(): String
         {
-            return (this.var_3005);
+            return this._castLibs;
         }
 
-        public function get maxUsers():int
+        public function get maxUsers(): int
         {
-            return (this.var_3006);
+            return this._maxUsers;
         }
 
-        public function get nodeId():int
+        public function get nodeId(): int
         {
-            return (this.var_2979);
+            return this._nodeId;
         }
 
     }

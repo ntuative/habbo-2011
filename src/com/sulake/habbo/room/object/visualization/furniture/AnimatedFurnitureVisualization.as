@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.room.object.visualization.furniture
 {
+
     import com.sulake.habbo.room.object.visualization.data.AnimationStateData;
     import com.sulake.room.object.visualization.IRoomObjectVisualizationData;
     import com.sulake.room.object.IRoomObject;
@@ -8,37 +9,38 @@
     import com.sulake.habbo.room.object.visualization.data.AnimationData;
     import com.sulake.habbo.room.object.visualization.data.AnimationFrame;
 
-    public class AnimatedFurnitureVisualization extends FurnitureVisualization 
+    public class AnimatedFurnitureVisualization extends FurnitureVisualization
     {
 
-        private var _animationData:AnimatedFurnitureVisualizationData = null;
-        private var _state:int = -1;
-        private var var_4063:AnimationStateData;
-        private var var_4064:int = 0;
-        private var var_4065:Number = 0;
-        private var var_4053:int = 0;
-        private var var_4066:Boolean = false;
+        private var _animationData: AnimatedFurnitureVisualizationData = null;
+        private var _state: int = -1;
+        private var var_4063: AnimationStateData;
+        private var var_4064: int = 0;
+        private var var_4065: Number = 0;
+        private var var_4053: int = 0;
+        private var var_4066: Boolean = false;
 
         public function AnimatedFurnitureVisualization()
         {
             this.var_4063 = new AnimationStateData();
         }
 
-        protected function get layerCount():int
+        protected function get layerCount(): int
         {
-            return (this.var_4053);
+            return this.var_4053;
         }
 
-        override protected function set direction(param1:int):void
+        override protected function set direction(param1: int): void
         {
             if (this.direction != param1)
             {
                 super.direction = param1;
                 this.var_4066 = true;
-            };
+            }
+
         }
 
-        override public function dispose():void
+        override public function dispose(): void
         {
             super.dispose();
             this._animationData = null;
@@ -46,42 +48,45 @@
             {
                 this.var_4063.dispose();
                 this.var_4063 = null;
-            };
+            }
+
         }
 
-        public function get animationId():int
+        public function get animationId(): int
         {
-            return (this.var_4063.animationId);
+            return this.var_4063.animationId;
         }
 
-        protected function getAnimationId(param1:AnimationStateData):int
+        protected function getAnimationId(param1: AnimationStateData): int
         {
-            return (this.animationId);
+            return this.animationId;
         }
 
-        override public function initialize(param1:IRoomObjectVisualizationData):Boolean
+        override public function initialize(param1: IRoomObjectVisualizationData): Boolean
         {
             if (!(param1 is AnimatedFurnitureVisualizationData))
             {
-                return (false);
-            };
+                return false;
+            }
+
             this._animationData = (param1 as AnimatedFurnitureVisualizationData);
-            return (super.initialize(param1));
+            return super.initialize(param1);
         }
 
-        override protected function updateObject(param1:Number, param2:Number):Boolean
+        override protected function updateObject(param1: Number, param2: Number): Boolean
         {
-            var _loc3_:IRoomObject;
-            var _loc4_:int;
-            var _loc5_:IRoomObjectModel;
-            var _loc6_:int;
+            var _loc3_: IRoomObject;
+            var _loc4_: int;
+            var _loc5_: IRoomObjectModel;
+            var _loc6_: int;
             if (super.updateObject(param1, param2))
             {
                 _loc3_ = object;
                 if (_loc3_ == null)
                 {
-                    return (false);
-                };
+                    return false;
+                }
+
                 _loc4_ = _loc3_.getState(0);
                 if (_loc4_ != this._state)
                 {
@@ -92,18 +97,21 @@
                     {
                         _loc6_ = _loc5_.getNumber(RoomObjectVariableEnum.var_746);
                         this.var_4064 = _loc6_;
-                    };
-                };
-                return (true);
-            };
-            return (false);
+                    }
+
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
-        override protected function updateModel(param1:Number):Boolean
+        override protected function updateModel(param1: Number): Boolean
         {
-            var _loc2_:IRoomObject;
-            var _loc3_:IRoomObjectModel;
-            var _loc4_:int;
+            var _loc2_: IRoomObject;
+            var _loc3_: IRoomObjectModel;
+            var _loc4_: int;
             if (super.updateModel(param1))
             {
                 _loc2_ = object;
@@ -119,60 +127,71 @@
                             {
                                 this.var_4064 = _loc4_;
                                 this.setAnimation(this._state);
-                            };
-                        };
-                    };
-                };
-                return (true);
-            };
-            return (false);
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
-        private function isPlayingTransition(param1:AnimationStateData, param2:int):Boolean
+        private function isPlayingTransition(param1: AnimationStateData, param2: int): Boolean
         {
-            var _loc3_:int = param1.animationId;
-            if (((AnimationData.isTransitionFromAnimation(_loc3_)) || (AnimationData.isTransitionToAnimation(_loc3_))))
+            var _loc3_: int = param1.animationId;
+            if (AnimationData.isTransitionFromAnimation(_loc3_) || AnimationData.isTransitionToAnimation(_loc3_))
             {
                 if (param2 == param1.animationAfterTransitionId)
                 {
                     if (!param1.animationOver)
                     {
-                        return (true);
-                    };
-                };
-            };
-            return (false);
+                        return true;
+                    }
+
+                }
+
+            }
+
+            return false;
         }
 
-        private function getCurrentState(param1:AnimationStateData):int
+        private function getCurrentState(param1: AnimationStateData): int
         {
-            var _loc2_:int = param1.animationId;
-            if (((AnimationData.isTransitionFromAnimation(_loc2_)) || (AnimationData.isTransitionToAnimation(_loc2_))))
+            var _loc2_: int = param1.animationId;
+            if (AnimationData.isTransitionFromAnimation(_loc2_) || AnimationData.isTransitionToAnimation(_loc2_))
             {
-                return (param1.animationAfterTransitionId);
-            };
-            return (_loc2_);
+                return param1.animationAfterTransitionId;
+            }
+
+            return _loc2_;
         }
 
-        protected function setAnimation(param1:int):void
+        protected function setAnimation(param1: int): void
         {
             if (this._animationData != null)
             {
-                this.setSubAnimation(this.var_4063, param1, (this._state >= 0));
-            };
+                this.setSubAnimation(this.var_4063, param1, this._state >= 0);
+            }
+
         }
 
-        protected function setSubAnimation(param1:AnimationStateData, param2:int, param3:Boolean=true):Boolean
+        protected function setSubAnimation(param1: AnimationStateData, param2: int, param3: Boolean = true): Boolean
         {
-            var _loc5_:int;
-            var _loc6_:int;
-            var _loc4_:int = param1.animationId;
+            var _loc5_: int;
+            var _loc6_: int;
+            var _loc4_: int = param1.animationId;
             if (param3)
             {
                 if (this.isPlayingTransition(param1, param2))
                 {
-                    return (false);
-                };
+                    return false;
+                }
+
                 _loc5_ = this.getCurrentState(param1);
                 if (param2 != _loc5_)
                 {
@@ -191,9 +210,12 @@
                             {
                                 param1.animationAfterTransitionId = param2;
                                 param2 = _loc6_;
-                            };
-                        };
-                    };
+                            }
+
+                        }
+
+                    }
+
                 }
                 else
                 {
@@ -204,7 +226,8 @@
                         {
                             param1.animationAfterTransitionId = param2;
                             param2 = _loc6_;
-                        };
+                        }
+
                     }
                     else
                     {
@@ -225,125 +248,146 @@
                                     {
                                         param1.animationAfterTransitionId = param2;
                                         param2 = _loc6_;
-                                    };
-                                };
-                            };
-                        };
-                    };
-                };
-            };
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
             if (_loc4_ != param2)
             {
                 param1.animationId = param2;
-                return (true);
-            };
-            return (false);
+                return true;
+            }
+
+            return false;
         }
 
-        protected function getLastFramePlayed(param1:int):Boolean
+        protected function getLastFramePlayed(param1: int): Boolean
         {
-            return (this.var_4063.getLastFramePlayed(param1));
+            return this.var_4063.getLastFramePlayed(param1);
         }
 
-        protected function resetAllAnimationFrames():void
+        protected function resetAllAnimationFrames(): void
         {
             if (this.var_4063 != null)
             {
                 this.var_4063.setLayerCount(this.var_4053);
-            };
+            }
+
         }
 
-        override protected function updateAnimation(param1:Number):int
+        override protected function updateAnimation(param1: Number): int
         {
             if (this._animationData == null)
             {
-                return (0);
-            };
+                return 0;
+            }
+
             if (param1 != this.var_4065)
             {
                 this.var_4065 = param1;
                 this.var_4053 = this._animationData.getLayerCount(param1);
                 this.resetAllAnimationFrames();
-            };
-            var _loc2_:int = this.updateAnimations(param1);
+            }
+
+            var _loc2_: int = this.updateAnimations(param1);
             this.var_4066 = false;
-            return (_loc2_);
+            return _loc2_;
         }
 
-        protected function updateAnimations(param1:Number):int
+        protected function updateAnimations(param1: Number): int
         {
-            var _loc2_:int;
-            if (((!(this.var_4063.animationOver)) || (this.var_4066)))
+            var _loc2_: int;
+            if (!this.var_4063.animationOver || this.var_4066)
             {
                 _loc2_ = this.updateFramesForAnimation(this.var_4063, param1);
                 if (this.var_4063.animationOver)
                 {
-                    if (((AnimationData.isTransitionFromAnimation(this.var_4063.animationId)) || (AnimationData.isTransitionToAnimation(this.var_4063.animationId))))
+                    if (AnimationData.isTransitionFromAnimation(this.var_4063.animationId) || AnimationData.isTransitionToAnimation(this.var_4063.animationId))
                     {
                         this.setAnimation(this.var_4063.animationAfterTransitionId);
                         this.var_4063.animationOver = false;
-                    };
-                };
-            };
-            return (_loc2_);
+                    }
+
+                }
+
+            }
+
+            return _loc2_;
         }
 
-        protected function updateFramesForAnimation(param1:AnimationStateData, param2:Number):int
+        protected function updateFramesForAnimation(param1: AnimationStateData, param2: Number): int
         {
-            var _loc9_:Boolean;
-            var _loc10_:Boolean;
-            var _loc11_:AnimationFrame;
-            var _loc12_:int;
-            if (((param1.animationOver) && (!(this.var_4066))))
+            var _loc9_: Boolean;
+            var _loc10_: Boolean;
+            var _loc11_: AnimationFrame;
+            var _loc12_: int;
+            if (param1.animationOver && !this.var_4066)
             {
-                return (0);
-            };
-            var _loc3_:int = param1.frameCounter;
-            var _loc4_:int = this.getAnimationId(param1);
+                return 0;
+            }
+
+            var _loc3_: int = param1.frameCounter;
+            var _loc4_: int = this.getAnimationId(param1);
             if (_loc3_ == 0)
             {
                 _loc3_ = this._animationData.getStartFrame(param2, _loc4_, direction);
-            };
-            var _loc5_:int = 1;
-            _loc3_ = (_loc3_ + _loc5_);
+            }
+
+            var _loc5_: int = 1;
+            _loc3_ = _loc3_ + _loc5_;
             param1.frameCounter = _loc3_;
-            var _loc6_:int;
+            var _loc6_: int;
             param1.animationOver = true;
-            var _loc7_:* = (1 << (this.var_4053 - 1));
-            var _loc8_:int = (this.var_4053 - 1);
+            var _loc7_: * = 1 << this.var_4053 - 1;
+            var _loc8_: int = this.var_4053 - 1;
             while (_loc8_ >= 0)
             {
                 _loc9_ = param1.getAnimationPlayed(_loc8_);
-                if (((!(_loc9_)) || (this.var_4066)))
+                if (!_loc9_ || this.var_4066)
                 {
                     _loc10_ = param1.getLastFramePlayed(_loc8_);
                     _loc11_ = param1.getFrame(_loc8_);
                     if (_loc11_ != null)
                     {
-                        if (((_loc11_.isLastFrame) && (_loc11_.remainingFrameRepeats <= _loc5_)))
+                        if (_loc11_.isLastFrame && _loc11_.remainingFrameRepeats <= _loc5_)
                         {
                             _loc10_ = true;
-                        };
-                    };
-                    if ((((this.var_4066) || (_loc11_ == null)) || ((_loc11_.remainingFrameRepeats >= 0) && ((_loc11_.remainingFrameRepeats = (_loc11_.remainingFrameRepeats - _loc5_)) <= 0))))
+                        }
+
+                    }
+
+                    if (this.var_4066 || _loc11_ == null || _loc11_.remainingFrameRepeats >= 0 && (_loc11_.remainingFrameRepeats = _loc11_.remainingFrameRepeats - _loc5_) <= 0)
                     {
                         _loc12_ = AnimationFrame.var_1461;
                         if (_loc11_ != null)
                         {
                             _loc12_ = _loc11_.activeSequence;
-                        };
+                        }
+
                         if (_loc12_ == AnimationFrame.var_1461)
                         {
                             _loc11_ = this._animationData.getFrame(param2, _loc4_, direction, _loc8_, _loc3_);
                         }
                         else
                         {
-                            _loc11_ = this._animationData.getFrameFromSequence(param2, _loc4_, direction, _loc8_, _loc12_, (_loc11_.activeSequenceOffset + _loc11_.repeats), _loc3_);
-                        };
+                            _loc11_ = this._animationData.getFrameFromSequence(param2, _loc4_, direction, _loc8_, _loc12_, _loc11_.activeSequenceOffset + _loc11_.repeats, _loc3_);
+                        }
+
                         param1.setFrame(_loc8_, _loc11_);
-                        _loc6_ = (_loc6_ | _loc7_);
-                    };
-                    if (((_loc11_ == null) || (_loc11_.remainingFrameRepeats == AnimationFrame.var_1462)))
+                        _loc6_ = _loc6_ | _loc7_;
+                    }
+
+                    if (_loc11_ == null || _loc11_.remainingFrameRepeats == AnimationFrame.FRAME_REPEAT_FOREVER)
                     {
                         _loc10_ = true;
                         _loc9_ = true;
@@ -351,51 +395,57 @@
                     else
                     {
                         param1.animationOver = false;
-                    };
+                    }
+
                     param1.setLastFramePlayed(_loc8_, _loc10_);
                     param1.setAnimationPlayed(_loc8_, _loc9_);
-                };
-                _loc7_ = (_loc7_ >> 1);
+                }
+
+                _loc7_ = _loc7_ >> 1;
                 _loc8_--;
-            };
-            return (_loc6_);
+            }
+
+            return _loc6_;
         }
 
-        override protected function getFrameNumber(param1:int, param2:int):int
+        override protected function getFrameNumber(param1: int, param2: int): int
         {
-            var _loc3_:AnimationFrame = this.var_4063.getFrame(param2);
+            var _loc3_: AnimationFrame = this.var_4063.getFrame(param2);
             if (_loc3_ != null)
             {
-                return (_loc3_.id);
-            };
-            return (super.getFrameNumber(param1, param2));
+                return _loc3_.id;
+            }
+
+            return super.getFrameNumber(param1, param2);
         }
 
-        override protected function getSpriteXOffset(param1:int, param2:int, param3:int):int
+        override protected function getSpriteXOffset(param1: int, param2: int, param3: int): int
         {
-            var _loc4_:int = super.getSpriteXOffset(param1, param2, param3);
-            var _loc5_:AnimationFrame = this.var_4063.getFrame(param3);
+            var _loc4_: int = super.getSpriteXOffset(param1, param2, param3);
+            var _loc5_: AnimationFrame = this.var_4063.getFrame(param3);
             if (_loc5_ != null)
             {
-                _loc4_ = (_loc4_ + _loc5_.x);
-            };
-            return (_loc4_);
+                _loc4_ = _loc4_ + _loc5_.x;
+            }
+
+            return _loc4_;
         }
 
-        override protected function getSpriteYOffset(param1:int, param2:int, param3:int):int
+        override protected function getSpriteYOffset(param1: int, param2: int, param3: int): int
         {
-            var _loc4_:int = super.getSpriteYOffset(param1, param2, param3);
-            var _loc5_:AnimationFrame = this.var_4063.getFrame(param3);
+            var _loc4_: int = super.getSpriteYOffset(param1, param2, param3);
+            var _loc5_: AnimationFrame = this.var_4063.getFrame(param3);
             if (_loc5_ != null)
             {
-                _loc4_ = (_loc4_ + _loc5_.y);
-            };
-            return (_loc4_);
+                _loc4_ = _loc4_ + _loc5_.y;
+            }
+
+            return _loc4_;
         }
 
-        protected function usesAnimationResetting():Boolean
+        protected function usesAnimationResetting(): Boolean
         {
-            return (false);
+            return false;
         }
 
     }

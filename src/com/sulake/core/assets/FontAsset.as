@@ -1,88 +1,95 @@
 ﻿package com.sulake.core.assets
 {
+
     import flash.text.Font;
+
     import com.sulake.core.utils.FontEnum;
 
-    public class FontAsset implements IAsset 
+    public class FontAsset implements IAsset
     {
 
-        protected var var_2128:AssetTypeDeclaration;
-        protected var var_1997:Font;
-        protected var _disposed:Boolean = false;
+        protected var _declaration: AssetTypeDeclaration;
+        protected var _content: Font;
+        protected var _disposed: Boolean = false;
 
-        public function FontAsset(param1:AssetTypeDeclaration, param2:String=null)
+        public function FontAsset(param1: AssetTypeDeclaration, param2: String = null)
         {
-            this.var_2128 = param1;
+            this._declaration = param1;
         }
 
-        public function get url():String
+        public function get url(): String
         {
-            return (null);
+            return null;
         }
 
-        public function get content():Object
+        public function get content(): Object
         {
-            return (this.var_1997 as Object);
+            return this._content as Object;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get declaration():AssetTypeDeclaration
+        public function get declaration(): AssetTypeDeclaration
         {
-            return (this.var_2128);
+            return this._declaration;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (!this._disposed)
             {
-                this.var_2128 = null;
-                this.var_1997 = null;
+                this._declaration = null;
+                this._content = null;
                 this._disposed = true;
-            };
+            }
+
         }
 
-        public function setUnknownContent(unknown:Object):void
+        public function setUnknownContent(content: Object): void
         {
             try
             {
-                if ((unknown is Class))
+                if (content is Class)
                 {
-                    this.var_1997 = Font(FontEnum.registerFont((unknown as Class)));
-                };
+                    this._content = Font(FontEnum.registerFont(content as Class));
+                }
+
             }
-            catch(e:Error)
+            catch (e: Error)
             {
-                throw (new Error(("Failed to register font from resource: " + unknown.toString())));
-            };
+                throw new Error("Failed to register font from resource: " + content.toString());
+            }
+
         }
 
-        public function setFromOtherAsset(param1:IAsset):void
+        public function setFromOtherAsset(asset: IAsset): void
         {
-            if ((param1 is FontAsset))
+            if (asset is FontAsset)
             {
-                this.var_1997 = FontAsset(param1).var_1997;
+                this._content = FontAsset(asset)._content;
             }
             else
             {
-                throw (new Error("Provided asset should be of type FontAsset!"));
-            };
+                throw new Error("Provided asset should be of type FontAsset!");
+            }
+
         }
 
-        public function setParamsDesc(param1:XMLList):void
+        public function setParamsDesc(param1: XMLList): void
         {
-            var _loc3_:String;
-            var _loc4_:String;
-            var _loc2_:uint;
-            while (_loc2_ < param1.length())
-            {
-                _loc3_ = param1[_loc2_].attribute("key");
-                _loc4_ = param1[_loc2_].attribute("value");
-                _loc2_++;
-            };
+            // no-op
+
+            // var key:String;
+            // var value:String;
+
+            // for (var i: int = 0; i < param1.length(); i++)
+            // {
+            //     key = param1[i].attribute("key");
+            //     value = param1[i].attribute("value");
+            // };
         }
 
     }

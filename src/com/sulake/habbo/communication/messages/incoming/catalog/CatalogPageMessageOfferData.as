@@ -1,62 +1,66 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class CatalogPageMessageOfferData 
+    public class CatalogPageMessageOfferData
     {
 
-        private var _offerId:int;
-        private var var_2828:String;
-        private var var_2829:int;
-        private var var_2830:int;
-        private var var_2831:int;
-        private var var_2839:Array;
+        private var _offerId: int;
+        private var _localizationId: String;
+        private var _priceInCredits: int;
+        private var _priceInActivityPoints: int;
+        private var _activityPointType: int;
+        private var _products: Array;
 
-        public function CatalogPageMessageOfferData(param1:IMessageDataWrapper)
+        public function CatalogPageMessageOfferData(data: IMessageDataWrapper)
         {
-            this._offerId = param1.readInteger();
-            this.var_2828 = param1.readString();
-            this.var_2829 = param1.readInteger();
-            this.var_2830 = param1.readInteger();
-            this.var_2831 = param1.readInteger();
-            var _loc2_:int = param1.readInteger();
-            this.var_2839 = new Array();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._offerId = data.readInteger();
+            this._localizationId = data.readString();
+            this._priceInCredits = data.readInteger();
+            this._priceInActivityPoints = data.readInteger();
+            this._activityPointType = data.readInteger();
+            this._products = [];
+
+            var productCount: int = data.readInteger();
+            var i: int;
+
+            while (i < productCount)
             {
-                this.var_2839.push(new CatalogPageMessageProductData(param1));
-                _loc3_++;
-            };
+                this._products.push(new CatalogPageMessageProductData(data));
+                i++;
+            }
+
         }
 
-        public function get offerId():int
+        public function get offerId(): int
         {
-            return (this._offerId);
+            return this._offerId;
         }
 
-        public function get localizationId():String
+        public function get localizationId(): String
         {
-            return (this.var_2828);
+            return this._localizationId;
         }
 
-        public function get priceInCredits():int
+        public function get priceInCredits(): int
         {
-            return (this.var_2829);
+            return this._priceInCredits;
         }
 
-        public function get priceInActivityPoints():int
+        public function get priceInActivityPoints(): int
         {
-            return (this.var_2830);
+            return this._priceInActivityPoints;
         }
 
-        public function get products():Array
+        public function get products(): Array
         {
-            return (this.var_2839);
+            return this._products;
         }
 
-        public function get activityPointType():int
+        public function get activityPointType(): int
         {
-            return (this.var_2831);
+            return this._activityPointType;
         }
 
     }

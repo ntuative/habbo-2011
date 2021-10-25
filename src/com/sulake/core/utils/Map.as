@@ -1,209 +1,235 @@
 ﻿package com.sulake.core.utils
 {
+
     import flash.utils.Proxy;
+
     import com.sulake.core.runtime.IDisposable;
+
     import flash.utils.Dictionary;
+
     import com.sulake.core.Core;
-    import flash.utils.flash_proxy; 
+
+    import flash.utils.flash_proxy;
 
     use namespace flash.utils.flash_proxy;
 
-    public class Map extends Proxy implements IDisposable 
+    public class Map extends Proxy implements IDisposable
     {
 
-        private var _length:uint;
-        private var var_2170:Dictionary;
-        private var var_2217:Array;
-        private var _keys:Array;
-        private var _singleWrite:Boolean = false;
+        private var _length: uint;
+        private var _items: Dictionary;
+        private var _values: Array;
+        private var _keys: Array;
+        private var _singleWrite: Boolean = false;
 
-        public function Map(param1:Boolean=false)
+        public function Map(singleWrite: Boolean = false)
         {
-            this._singleWrite = param1;
+            this._singleWrite = singleWrite;
             this._length = 0;
-            this.var_2170 = new Dictionary();
-            this.var_2217 = [];
+            this._items = new Dictionary();
+            this._values = [];
             this._keys = [];
         }
 
-        public function get length():uint
+        public function get length(): uint
         {
-            return (this._length);
+            return this._length;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this.var_2170 == null);
+            return this._items == null;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            var _loc1_:Object;
-            if (this.var_2170 != null)
+            var _loc1_: Object;
+
+            if (this._items != null)
             {
-                for (_loc1_ in this.var_2170)
+                for (_loc1_ in this._items)
                 {
-                    delete this.var_2170[_loc1_];
-                };
-                this.var_2170 = null;
-            };
+                    this._items[_loc1_] = null;
+                }
+
+                this._items = null;
+            }
+
+
             this._length = 0;
-            this.var_2217 = null;
+            this._values = null;
             this._keys = null;
         }
 
-        public function reset():void
+        public function reset(): void
         {
-            var _loc1_:Object;
-            for (_loc1_ in this.var_2170)
+            var item: Object;
+
+            for (item in this._items)
             {
-                delete this.var_2170[_loc1_];
-            };
+                this._items[item] = null;
+            }
+
+
             this._length = 0;
-            this.var_2217 = [];
+            this._values = [];
             this._keys = [];
         }
 
-        public function unshift(param1:*, param2:*):Boolean
+        public function unshift(param1: *, param2: *): Boolean
         {
-            if (this.var_2170[param1] != null)
+            if (this._items[param1] != null)
             {
-                return (false);
-            };
-            this.var_2170[param1] = param2;
-            this.var_2217.unshift(param2);
+                return false;
+            }
+
+
+            this._items[param1] = param2;
+            this._values.unshift(param2);
             this._keys.unshift(param1);
             this._length++;
-            return (true);
+            return true;
         }
 
-        public function add(param1:*, param2:*):Boolean
+        public function add(param1: *, param2: *): Boolean
         {
-            if (this.var_2170[param1] != null)
+            if (this._items[param1] != null)
             {
-                return (false);
-            };
-            this.var_2170[param1] = param2;
-            this.var_2217[this._length] = param2;
+                return false;
+            }
+
+            this._items[param1] = param2;
+            this._values[this._length] = param2;
             this._keys[this._length] = param1;
             this._length++;
-            return (true);
+            return true;
         }
 
-        public function getValue(param1:*):*
+        public function getValue(param1: *): *
         {
-            return (this.var_2170[param1]);
+            return this._items[param1];
         }
 
-        public function remove(param1:*):*
+        public function remove(param1: *): *
         {
-            var _loc2_:Object = this.var_2170[param1];
+            var _loc2_: Object = this._items[param1];
             if (_loc2_ == null)
             {
-                return (null);
-            };
-            var _loc3_:int = this.var_2217.indexOf(_loc2_);
+                return null;
+            }
+
+            var _loc3_: int = this._values.indexOf(_loc2_);
             if (_loc3_ >= 0)
             {
-                this.var_2217.splice(_loc3_, 1);
+                this._values.splice(_loc3_, 1);
                 this._keys.splice(_loc3_, 1);
                 this._length--;
-            };
-            delete this.var_2170[param1];
-            return (_loc2_);
+            }
+
+            this._items[param1] = null;
+            return _loc2_;
         }
 
-        public function getWithIndex(param1:int):*
+        public function getWithIndex(param1: int): *
         {
-            if (((param1 < 0) || (param1 >= this._length)))
+            if (param1 < 0 || param1 >= this._length)
             {
-                return (null);
-            };
-            return (this.var_2217[param1]);
+                return null;
+            }
+
+            return this._values[param1];
         }
 
-        public function getKey(param1:int):*
+        public function getKey(param1: int): *
         {
-            if (((param1 < 0) || (param1 >= this._length)))
+            if (param1 < 0 || param1 >= this._length)
             {
-                return (null);
-            };
-            return (this._keys[param1]);
+                return null;
+            }
+
+            return this._keys[param1];
         }
 
-        public function getKeys():Array
+        public function getKeys(): Array
         {
-            return (this._keys.slice());
+            return this._keys.slice();
         }
 
-        public function getValues():Array
+        public function getValues(): Array
         {
-            return (this.var_2217.slice());
+            return this._values.slice();
         }
 
-        override flash_proxy function getProperty(param1:*):*
+        override flash_proxy function getProperty(param1: *): *
         {
-            if ((param1 is QName))
-            {
-                param1 = QName(param1).localName;
-            };
-            return (this.var_2170[param1]);
-        }
-
-        override flash_proxy function setProperty(param1:*, param2:*):void
-        {
-            if ((param1 is QName))
+            if (param1 is QName)
             {
                 param1 = QName(param1).localName;
-            };
+            }
+
+            return this._items[param1];
+        }
+
+        override flash_proxy function setProperty(param1: *, param2: *): void
+        {
+            if (param1 is QName)
+            {
+                param1 = QName(param1).localName;
+            }
+
             if (this._singleWrite)
             {
-                if (this.var_2170[param1] != null)
+                if (this._items[param1] != null)
                 {
-                    Core.error(((("Trying to write to a single write Map. Key: " + param1) + ", value: ") + param2), true, Core.var_87);
-                };
-            };
-            this.var_2170[param1] = param2;
-            var _loc3_:int = this._keys.indexOf(param1);
+                    Core.error("Trying to write to a single write Map. Key: " + param1 + ", value: " + param2, true, Core.ERROR_CATEGORY_INTENTIONAL_CRASH);
+                }
+
+            }
+
+            this._items[param1] = param2;
+            var _loc3_: int = this._keys.indexOf(param1);
             if (_loc3_ == -1)
             {
-                this.var_2217[this._length] = param2;
+                this._values[this._length] = param2;
                 this._keys[this._length] = param1;
                 this._length++;
             }
             else
             {
-                this.var_2217.splice(_loc3_, 1, param2);
-            };
+                this._values.splice(_loc3_, 1, param2);
+            }
+
         }
 
-        override flash_proxy function nextNameIndex(param1:int):int
+        override flash_proxy function nextNameIndex(param1: int): int
         {
             if (param1 < this._keys.length)
             {
-                return (param1 + 1);
-            };
-            return (0);
+                return param1 + 1;
+            }
+
+            return 0;
         }
 
-        override flash_proxy function nextName(param1:int):String
+        override flash_proxy function nextName(param1: int): String
         {
-            return (this._keys[(param1 - 1)]);
+            return this._keys[(param1 - 1)];
         }
 
-        override flash_proxy function nextValue(param1:int):*
+        override flash_proxy function nextValue(param1: int): *
         {
-            return (this.var_2217[(param1 - 1)]);
+            return this._values[(param1 - 1)];
         }
 
-        override flash_proxy function callProperty(param1:*, ... _args):*
+        override flash_proxy function callProperty(param1: *, ..._args): *
         {
-            var _loc3_:String;
+            var _loc3_: String;
             if (param1.localName == "toString")
             {
-                return ("Map");
-            };
-            return (null);
+                return "Map";
+            }
+
+            return null;
         }
 
     }

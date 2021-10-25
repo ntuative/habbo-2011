@@ -1,18 +1,19 @@
 ﻿package com.sulake.habbo.room.messages
 {
-    public class RoomObjectAvatarChatUpdateMessage extends RoomObjectUpdateStateMessage 
+
+    public class RoomObjectAvatarChatUpdateMessage extends RoomObjectUpdateStateMessage
     {
 
-        private var var_3942:int;
+        private var _numberOfWords: int;
 
-        public function RoomObjectAvatarChatUpdateMessage(param1:int)
+        public function RoomObjectAvatarChatUpdateMessage(numberOfWords: int)
         {
-            this.var_3942 = param1;
+            this._numberOfWords = numberOfWords;
         }
 
-        public function get numberOfWords():int
+        public function get numberOfWords(): int
         {
-            return (this.var_3942);
+            return this._numberOfWords;
         }
 
     }

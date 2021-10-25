@@ -1,132 +1,142 @@
 ﻿package com.sulake.habbo.inventory.effects
 {
+
     import com.sulake.habbo.widget.memenu.IWidgetAvatarEffect;
     import com.sulake.habbo.inventory.common.IThumbListDrawableItem;
+
     import flash.display.BitmapData;
 
-    public class Effect implements IWidgetAvatarEffect, IThumbListDrawableItem 
+    public class Effect implements IWidgetAvatarEffect, IThumbListDrawableItem
     {
 
-        private var _type:int;
-        private var var_2930:int;
-        private var var_3540:int = 1;
-        private var var_3541:int;
-        private var var_3542:Boolean = false;
-        private var _isSelected:Boolean = false;
-        private var var_3525:Boolean = false;
-        private var var_2456:BitmapData;
-        private var var_3543:Date;
+        private var _type: int;
+        private var _duration: int;
+        private var _effectsInInventory: int = 1;
+        private var _secondsLeft: int;
+        private var _isActive: Boolean = false;
+        private var _isSelected: Boolean = false;
+        private var _isInUse: Boolean = false;
+        private var _iconImage: BitmapData;
+        private var _activatedOn: Date;
 
-        public function get type():int
+        public function get type(): int
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get duration():int
+        public function get duration(): int
         {
-            return (this.var_2930);
+            return this._duration;
         }
 
-        public function get effectsInInventory():int
+        public function get effectsInInventory(): int
         {
-            return (this.var_3540);
+            return this._effectsInInventory;
         }
 
-        public function get isActive():Boolean
+        public function get isActive(): Boolean
         {
-            return (this.var_3542);
+            return this._isActive;
         }
 
-        public function get isInUse():Boolean
+        public function get isInUse(): Boolean
         {
-            return (this.var_3525);
+            return this._isInUse;
         }
 
-        public function get isSelected():Boolean
+        public function get isSelected(): Boolean
         {
-            return (this._isSelected);
+            return this._isSelected;
         }
 
-        public function get icon():BitmapData
+        public function get icon(): BitmapData
         {
-            return (this.var_2456);
+            return this._iconImage;
         }
 
-        public function get iconImage():BitmapData
+        public function get iconImage(): BitmapData
         {
-            return (this.var_2456);
+            return this._iconImage;
         }
 
-        public function get secondsLeft():int
+        public function get secondsLeft(): int
         {
-            var _loc1_:int;
-            if (this.var_3542)
+            var total: int;
+
+            if (this._isActive)
             {
-                _loc1_ = int((this.var_3541 - ((new Date().valueOf() - this.var_3543.valueOf()) / 1000)));
-                _loc1_ = Math.floor(_loc1_);
-                if (_loc1_ < 0)
+                total = int(this._secondsLeft - (new Date().valueOf() - this._activatedOn.valueOf()) / 1000);
+                
+                total = Math.floor(total);
+                
+                if (total < 0)
                 {
-                    _loc1_ = 0;
-                };
-                return (_loc1_);
-            };
-            return (this.var_3541);
+                    total = 0;
+                }
+
+                return total;
+            }
+
+            return this._secondsLeft;
         }
 
-        public function set type(param1:int):void
+        public function set type(value: int): void
         {
-            this._type = param1;
+            this._type = value;
         }
 
-        public function set duration(param1:int):void
+        public function set duration(value: int): void
         {
-            this.var_2930 = param1;
+            this._duration = value;
         }
 
-        public function set secondsLeft(param1:int):void
+        public function set secondsLeft(value: int): void
         {
-            this.var_3541 = param1;
+            this._secondsLeft = value;
         }
 
-        public function set isSelected(param1:Boolean):void
+        public function set isSelected(value: Boolean): void
         {
-            this._isSelected = param1;
+            this._isSelected = value;
         }
 
-        public function set isInUse(param1:Boolean):void
+        public function set isInUse(value: Boolean): void
         {
-            this.var_3525 = param1;
+            this._isInUse = value;
         }
 
-        public function set iconImage(param1:BitmapData):void
+        public function set iconImage(value: BitmapData): void
         {
-            this.var_2456 = param1;
+            this._iconImage = value;
         }
 
-        public function set effectsInInventory(param1:int):void
+        public function set effectsInInventory(value: int): void
         {
-            this.var_3540 = param1;
+            this._effectsInInventory = value;
         }
 
-        public function set isActive(param1:Boolean):void
+        public function set isActive(value: Boolean): void
         {
-            if (((param1) && (!(this.var_3542))))
+            if (value && !this._isActive)
             {
-                this.var_3543 = new Date();
-            };
-            this.var_3542 = param1;
+                this._activatedOn = new Date();
+            }
+
+            this._isActive = value;
         }
 
-        public function setOneEffectExpired():void
+        public function setOneEffectExpired(): void
         {
-            this.var_3540--;
-            if (this.var_3540 < 0)
+            this._effectsInInventory--;
+
+            if (this._effectsInInventory < 0)
             {
-                this.var_3540 = 0;
-            };
-            this.var_3541 = this.var_2930;
-            this.var_3542 = false;
-            this.var_3525 = false;
+                this._effectsInInventory = 0;
+            }
+
+            this._secondsLeft = this._duration;
+            this._isActive = false;
+            this._isInUse = false;
         }
 
     }

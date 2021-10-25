@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.catalog.marketplace
 {
+
     import com.sulake.habbo.catalog.IHabboCatalog;
     import com.sulake.habbo.window.IHabboWindowManager;
     import com.sulake.habbo.room.IRoomEngine;
@@ -21,301 +22,369 @@
     import com.sulake.habbo.session.furniture.IFurnitureData;
     import com.sulake.habbo.catalog.enum.ProductTypeEnum;
 
-    public class MarketPlaceLogic implements IMarketPlace 
+    public class MarketPlaceLogic implements IMarketPlace
     {
 
-        private static const var_778:String = "poster";
+        private static const var_778: String = "poster";
 
-        public const var_775:int = 1;
-        public const var_777:int = 2;
-        public const var_2637:int = 3;
+        public const var_775: int = 1;
+        public const var_777: int = 2;
+        public const var_2637: int = 3;
 
-        private var _catalog:IHabboCatalog;
-        private var _windowManager:IHabboWindowManager;
-        private var _roomEngine:IRoomEngine;
-        private var _visualization:IMarketPlaceVisualization;
-        private var var_2609:MarketplaceConfirmationDialog;
-        private var var_2638:Map;
-        private var var_2639:Map;
-        private var var_2640:int;
-        private var var_2641:int = -1;
-        private var var_2642:MarketplaceItemStats;
-        private var var_2643:int;
-        private var var_2644:int;
-        private var var_2645:int = 0;
-        private var var_2646:int = 0;
-        private var var_2647:String = "";
-        private var var_2648:int = -1;
-        private var _disposed:Boolean = false;
+        private var _catalog: IHabboCatalog;
+        private var _windowManager: IHabboWindowManager;
+        private var _roomEngine: IRoomEngine;
+        private var _visualization: IMarketPlaceVisualization;
+        private var _dialog: MarketplaceConfirmationDialog;
+        private var _latestOffers: Map;
+        private var _latestOwnOffers: Map;
+        private var _creditsWaiting: int;
+        private var _averagePricePeriod: int = -1;
+        private var _itemStats: MarketplaceItemStats;
+        private var var_2643: int;
+        private var var_2644: int;
+        private var var_2645: int = 0;
+        private var var_2646: int = 0;
+        private var var_2647: String = "";
+        private var var_2648: int = -1;
+        private var _disposed: Boolean = false;
 
-        public function MarketPlaceLogic(param1:IHabboCatalog, param2:IHabboWindowManager, param3:IRoomEngine)
+        public function MarketPlaceLogic(catalog: IHabboCatalog, windowManager: IHabboWindowManager, roomEngine: IRoomEngine)
         {
-            this._catalog = param1;
-            this._windowManager = param2;
-            this._roomEngine = param3;
+            this._catalog = catalog;
+            this._windowManager = windowManager;
+            this._roomEngine = roomEngine;
             this.getConfiguration();
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (this.disposed)
             {
                 return;
-            };
+            }
+
+
             this._catalog = null;
             this._windowManager = null;
-            if (this.var_2638 != null)
+
+            if (this._latestOffers != null)
             {
-                this.disposeOffers(this.var_2638);
-                this.var_2638 = null;
-            };
-            if (this.var_2639 != null)
+                this.disposeOffers(this._latestOffers);
+                this._latestOffers = null;
+            }
+
+
+            if (this._latestOwnOffers != null)
             {
-                this.disposeOffers(this.var_2639);
-                this.var_2639 = null;
-            };
+                this.disposeOffers(this._latestOwnOffers);
+                this._latestOwnOffers = null;
+            }
+
+
             this._disposed = true;
         }
 
-        public function get windowManager():IHabboWindowManager
+        public function get windowManager(): IHabboWindowManager
         {
-            return (this._windowManager);
+            return this._windowManager;
         }
 
-        public function get localization():ICoreLocalizationManager
+        public function get localization(): ICoreLocalizationManager
         {
-            return (this._catalog.localization);
+            return this._catalog.localization;
         }
 
-        public function registerVisualization(param1:IMarketPlaceVisualization=null):void
+        public function registerVisualization(visualization: IMarketPlaceVisualization = null): void
         {
-            if (param1 == null)
+            if (visualization == null)
             {
                 return;
-            };
-            this._visualization = param1;
+            }
+
+
+            this._visualization = visualization;
         }
 
-        private function getConfiguration():void
+        private function getConfiguration(): void
         {
-            if (((!(this._catalog)) || (!(this._catalog.connection))))
+            if (!this._catalog || !this._catalog.connection)
             {
                 return;
-            };
+            }
+
+
             this._catalog.connection.send(new GetMarketplaceConfigurationMessageComposer());
         }
 
-        private function showConfirmation(param1:int, param2:MarketPlaceOfferData):void
+        private function showConfirmation(param1: int, param2: MarketPlaceOfferData): void
         {
-            if (!this.var_2609)
+            if (!this._dialog)
             {
-                this.var_2609 = new MarketplaceConfirmationDialog(this, this._catalog, this._roomEngine);
-            };
-            this.var_2609.showConfirmation(param1, param2);
+                this._dialog = new MarketplaceConfirmationDialog(this, this._catalog, this._roomEngine);
+            }
+
+
+            this._dialog.showConfirmation(param1, param2);
         }
 
-        public function requestOffersByName(param1:String):void
+        public function requestOffersByName(param1: String): void
         {
             if (this._catalog)
             {
                 this._catalog.getPublicMarketPlaceOffers(-1, -1, param1, -1);
-            };
+            }
+
         }
 
-        public function requestOffersByPrice(param1:int):void
+        public function requestOffersByPrice(param1: int): void
         {
             if (this._catalog)
             {
                 this._catalog.getPublicMarketPlaceOffers(param1, -1, "", -1);
-            };
+            }
+
         }
 
-        public function requestOffers(param1:int, param2:int, param3:String, param4:int):void
+        public function requestOffers(param1: int, param2: int, param3: String, param4: int): void
         {
             this.var_2645 = param1;
             this.var_2646 = param2;
             this.var_2647 = param3;
             this.var_2648 = param4;
+
             if (this._catalog)
             {
                 this._catalog.getPublicMarketPlaceOffers(param1, param2, param3, param4);
-            };
+            }
+
         }
 
-        public function refreshOffers():void
+        public function refreshOffers(): void
         {
             this.requestOffers(this.var_2645, this.var_2646, this.var_2647, this.var_2648);
         }
 
-        public function requestOwnItems():void
+        public function requestOwnItems(): void
         {
             if (this._catalog)
             {
                 this._catalog.getOwnMarketPlaceOffers();
-            };
+            }
+
         }
 
-        public function requestItemStats(param1:int, param2:int):void
+        public function requestItemStats(param1: int, param2: int): void
         {
             if (this._catalog)
             {
                 this.var_2644 = param2;
                 this.var_2643 = param1;
                 this._catalog.getMarketplaceItemStats(param1, param2);
-            };
+            }
+
         }
 
-        public function buyOffer(param1:int):void
+        public function buyOffer(param1: int): void
         {
-            if ((((!(this.var_2638)) || (!(this._catalog))) || (!(this._catalog.getPurse()))))
+            if (!this._latestOffers || !this._catalog || !this._catalog.getPurse())
             {
                 return;
-            };
-            var _loc2_:MarketPlaceOfferData = (this.var_2638.getValue(param1) as MarketPlaceOfferData);
+            }
+
+            var _loc2_: MarketPlaceOfferData = this._latestOffers.getValue(param1) as MarketPlaceOfferData;
             if (!_loc2_)
             {
                 return;
-            };
+            }
+
             if (this._catalog.getPurse().credits < _loc2_.price)
             {
                 this._catalog.showNotEnoughCreditsAlert();
                 return;
-            };
+            }
+
             this.showConfirmation(this.var_775, _loc2_);
         }
 
-        public function redeemExpiredOffer(param1:int):void
+        public function redeemExpiredOffer(param1: int): void
         {
             if (this._catalog)
             {
                 this._catalog.redeemExpiredMarketPlaceOffer(param1);
-            };
+            }
+
         }
 
-        public function redeemSoldOffers():void
+        public function redeemSoldOffers(): void
         {
-            var _loc2_:int;
-            var _loc3_:MarketPlaceOfferData;
+            var key: int;
+            var offerData: MarketPlaceOfferData;
+
             if (this.disposed)
             {
                 return;
-            };
-            if (this.var_2639 == null)
+            }
+
+
+            if (this._latestOwnOffers == null)
             {
                 return;
-            };
-            var _loc1_:Array = this.var_2639.getKeys();
-            for each (_loc2_ in _loc1_)
+            }
+
+
+            var ownOfferKeys: Array = this._latestOwnOffers.getKeys();
+
+            for each (key in ownOfferKeys)
             {
-                _loc3_ = this.var_2639.getValue(_loc2_);
-                if (_loc3_.status == MarketPlaceOfferState.var_776)
+                offerData = this._latestOwnOffers.getValue(key);
+
+                if (offerData.status == MarketPlaceOfferState.var_776)
                 {
-                    this.var_2639.remove(_loc2_);
-                    _loc3_.dispose();
-                };
-            };
+                    this._latestOwnOffers.remove(key);
+                    offerData.dispose();
+                }
+
+            }
+
+
             if (this._catalog)
             {
                 this._catalog.redeemSoldMarketPlaceOffers();
-            };
+            }
+
+
             if (this._visualization != null)
             {
                 this._visualization.listUpdatedNotify();
-            };
+            }
+
         }
 
-        private function disposeOffers(param1:Map):void
+        private function disposeOffers(offers: Map): void
         {
-            var _loc2_:MarketPlaceOfferData;
-            if (param1 != null)
+            var offerData: MarketPlaceOfferData;
+
+            if (offers != null)
             {
-                for each (_loc2_ in param1)
+                for each (offerData in offers)
                 {
-                    if (_loc2_ != null)
+                    if (offerData != null)
                     {
-                        _loc2_.dispose();
-                    };
-                };
-                param1.dispose();
-            };
+                        offerData.dispose();
+                    }
+
+                }
+
+
+                offers.dispose();
+            }
+
         }
 
-        public function onOffers(param1:IMessageEvent):void
+        public function onOffers(event: IMessageEvent): void
         {
-            var _loc4_:MarketPlaceOffer;
-            var _loc5_:MarketPlaceOfferData;
-            var _loc2_:MarketPlaceOffersEvent = (param1 as MarketPlaceOffersEvent);
-            if (_loc2_ == null)
-            {
-                return;
-            };
-            var _loc3_:MarketPlaceOffersParser = (_loc2_.getParser() as MarketPlaceOffersParser);
-            if (_loc3_ == null)
-            {
-                return;
-            };
-            this.disposeOffers(this.var_2638);
-            this.var_2638 = new Map();
-            for each (_loc4_ in _loc3_.offers)
-            {
-                _loc5_ = new MarketPlaceOfferData(_loc4_.offerId, _loc4_.furniId, _loc4_.furniType, _loc4_.stuffData, _loc4_.price, _loc4_.status, _loc4_.averagePrice, _loc4_.offerCount);
-                _loc5_.timeLeftMinutes = _loc4_.timeLeftMinutes;
-                this.var_2638.add(_loc4_.offerId, _loc5_);
-            };
-            if (this._visualization != null)
-            {
-                this._visualization.listUpdatedNotify();
-            };
-        }
+            var offer: MarketPlaceOffer;
+            var offerData: MarketPlaceOfferData;
+            var offersEvent: MarketPlaceOffersEvent = event as MarketPlaceOffersEvent;
 
-        public function onOwnOffers(param1:IMessageEvent):void
-        {
-            var _loc4_:MarketPlaceOffer;
-            var _loc5_:MarketPlaceOfferData;
-            var _loc2_:MarketPlaceOwnOffersEvent = (param1 as MarketPlaceOwnOffersEvent);
-            if (_loc2_ == null)
+            if (offersEvent == null)
             {
                 return;
-            };
-            var _loc3_:MarketPlaceOwnOffersParser = (_loc2_.getParser() as MarketPlaceOwnOffersParser);
-            if (_loc3_ == null)
-            {
-                return;
-            };
-            this.disposeOffers(this.var_2639);
-            this.var_2639 = new Map();
-            this.var_2640 = _loc3_.creditsWaiting;
-            for each (_loc4_ in _loc3_.offers)
-            {
-                _loc5_ = new MarketPlaceOfferData(_loc4_.offerId, _loc4_.furniId, _loc4_.furniType, _loc4_.stuffData, _loc4_.price, _loc4_.status, _loc4_.averagePrice);
-                _loc5_.timeLeftMinutes = _loc4_.timeLeftMinutes;
-                this.var_2639.add(_loc4_.offerId, _loc5_);
-            };
-            if (this._visualization != null)
-            {
-                this._visualization.listUpdatedNotify();
-            };
-        }
+            }
 
-        public function onBuyResult(event:IMessageEvent):void
-        {
-            var item:MarketPlaceOfferData;
-            var updateItem:MarketPlaceOfferData;
-            var buyEvent:MarketplaceBuyOfferResultEvent = (event as MarketplaceBuyOfferResultEvent);
-            if (event == null)
-            {
-                return;
-            };
-            var parser:MarketplaceBuyOfferResultParser = (buyEvent.getParser() as MarketplaceBuyOfferResultParser);
+
+            var parser: MarketPlaceOffersParser = offersEvent.getParser() as MarketPlaceOffersParser;
+
             if (parser == null)
             {
                 return;
-            };
+            }
+
+
+            this.disposeOffers(this._latestOffers);
+            this._latestOffers = new Map();
+
+            for each (offer in parser.offers)
+            {
+                offerData = new MarketPlaceOfferData(offer.offerId, offer.furniId, offer.furniType, offer.stuffData, offer.price, offer.status, offer.averagePrice, offer.offerCount);
+                offerData.timeLeftMinutes = offer.timeLeftMinutes;
+                this._latestOffers.add(offer.offerId, offerData);
+            }
+
+
+            if (this._visualization != null)
+            {
+                this._visualization.listUpdatedNotify();
+            }
+
+        }
+
+        public function onOwnOffers(event: IMessageEvent): void
+        {
+            var offer: MarketPlaceOffer;
+            var offerData: MarketPlaceOfferData;
+            var offersEvent: MarketPlaceOwnOffersEvent = event as MarketPlaceOwnOffersEvent;
+
+            if (offersEvent == null)
+            {
+                return;
+            }
+
+
+            var parser: MarketPlaceOwnOffersParser = offersEvent.getParser() as MarketPlaceOwnOffersParser;
+
+            if (parser == null)
+            {
+                return;
+            }
+
+
+            this.disposeOffers(this._latestOwnOffers);
+
+            this._latestOwnOffers = new Map();
+            this._creditsWaiting = parser.creditsWaiting;
+
+            for each (offer in parser.offers)
+            {
+                offerData = new MarketPlaceOfferData(offer.offerId, offer.furniId, offer.furniType, offer.stuffData, offer.price, offer.status, offer.averagePrice);
+                offerData.timeLeftMinutes = offer.timeLeftMinutes;
+                this._latestOwnOffers.add(offer.offerId, offerData);
+            }
+
+
+            if (this._visualization != null)
+            {
+                this._visualization.listUpdatedNotify();
+            }
+
+        }
+
+        public function onBuyResult(event: IMessageEvent): void
+        {
+            var item: MarketPlaceOfferData;
+            var updateItem: MarketPlaceOfferData;
+            var buyEvent: MarketplaceBuyOfferResultEvent = event as MarketplaceBuyOfferResultEvent;
+
+            if (event == null)
+            {
+                return;
+            }
+
+
+            var parser: MarketplaceBuyOfferResultParser = buyEvent.getParser() as MarketplaceBuyOfferResultParser;
+
+            if (parser == null)
+            {
+                return;
+            }
+
+
             if (parser.result == 1)
             {
                 this.refreshOffers();
@@ -324,41 +393,53 @@
             {
                 if (parser.result == 2)
                 {
-                    item = this.var_2638.remove(parser.requestedOfferId);
+                    item = this._latestOffers.remove(parser.requestedOfferId);
+
                     if (item != null)
                     {
                         item.dispose();
-                    };
+                    }
+
+
                     if (this._visualization != null)
                     {
                         this._visualization.listUpdatedNotify();
-                    };
+                    }
+
+
                     if (this._windowManager != null)
                     {
-                        this._windowManager.alert("${catalog.marketplace.not_available_title}", "${catalog.marketplace.not_available_header}", 0, function (param1:IAlertDialog, param2:WindowEvent):void
+                        this._windowManager.alert("${catalog.marketplace.not_available_title}", "${catalog.marketplace.not_available_header}", 0, function (param1: IAlertDialog, param2: WindowEvent): void
                         {
-                            param1.dispose();
+                            event.dispose();
                         });
-                    };
+                    }
+
                 }
                 else
                 {
                     if (parser.result == 3)
                     {
-                        updateItem = (this.var_2638.getValue(parser.requestedOfferId) as MarketPlaceOfferData);
+                        updateItem = (this._latestOffers.getValue(parser.requestedOfferId) as MarketPlaceOfferData);
+
                         if (updateItem)
                         {
                             updateItem.offerId = parser.offerId;
                             updateItem.price = parser.newPrice;
                             updateItem.offerCount--;
-                            this.var_2638.add(parser.offerId, updateItem);
-                        };
-                        this.var_2638.remove(parser.requestedOfferId);
+                            this._latestOffers.add(parser.offerId, updateItem);
+                        }
+
+
+                        this._latestOffers.remove(parser.requestedOfferId);
+
                         this.showConfirmation(this.var_777, updateItem);
+
                         if (this._visualization != null)
                         {
                             this._visualization.listUpdatedNotify();
-                        };
+                        }
+
                     }
                     else
                     {
@@ -366,41 +447,56 @@
                         {
                             if (this._windowManager != null)
                             {
-                                this._windowManager.alert("${catalog.alert.notenough.title}", "${catalog.alert.notenough.credits.description}", 0, function (param1:IAlertDialog, param2:WindowEvent):void
+                                this._windowManager.alert("${catalog.alert.notenough.title}", "${catalog.alert.notenough.credits.description}", 0, function (param1: IAlertDialog, param2: WindowEvent): void
                                 {
                                     param1.dispose();
                                 });
-                            };
-                        };
-                    };
-                };
-            };
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
         }
 
-        public function onCancelResult(event:IMessageEvent):void
+        public function onCancelResult(event: IMessageEvent): void
         {
-            var item:MarketPlaceOfferData;
-            var cancelEvent:MarketplaceCancelOfferResultEvent = (event as MarketplaceCancelOfferResultEvent);
+            var item: MarketPlaceOfferData;
+            var cancelEvent: MarketplaceCancelOfferResultEvent = event as MarketplaceCancelOfferResultEvent;
+
             if (event == null)
             {
                 return;
-            };
-            var parser:MarketplaceCancelOfferResultParser = (cancelEvent.getParser() as MarketplaceCancelOfferResultParser);
+            }
+
+
+            var parser: MarketplaceCancelOfferResultParser = cancelEvent.getParser() as MarketplaceCancelOfferResultParser;
+
             if (parser == null)
             {
                 return;
-            };
+            }
+
+
             if (parser.result == 1)
             {
-                item = this.var_2639.remove(parser.offerId);
+                item = this._latestOwnOffers.remove(parser.offerId);
+
                 if (item != null)
                 {
                     item.dispose();
-                };
+                }
+
+
                 if (this._visualization != null)
                 {
                     this._visualization.listUpdatedNotify();
-                };
+                }
+
             }
             else
             {
@@ -408,110 +504,128 @@
                 {
                     if (this._windowManager != null)
                     {
-                        this._windowManager.alert("${catalog.marketplace.operation_failed.topic}", "{{catalog.marketplace.cancel_failed}", 0, function (param1:IAlertDialog, param2:WindowEvent):void
+                        this._windowManager.alert("${catalog.marketplace.operation_failed.topic}", "{{catalog.marketplace.cancel_failed}", 0, function (param1: IAlertDialog, param2: WindowEvent): void
                         {
                             param1.dispose();
                         });
-                    };
-                };
-            };
+                    }
+
+                }
+
+            }
+
         }
 
-        public function latestOffers():Map
+        public function latestOffers(): Map
         {
-            return (this.var_2638);
+            return this._latestOffers;
         }
 
-        public function latestOwnOffers():Map
+        public function latestOwnOffers(): Map
         {
-            return (this.var_2639);
+            return this._latestOwnOffers;
         }
 
-        public function set itemStats(param1:MarketplaceItemStats):void
+        public function set itemStats(itemStates: MarketplaceItemStats): void
         {
-            if (((!(param1.furniCategoryId == this.var_2643)) || (!(param1.furniTypeId == this.var_2644))))
+            if (itemStates.furniCategoryId != this.var_2643 || itemStates.furniTypeId != this.var_2644)
             {
                 return;
-            };
-            this.var_2642 = param1;
+            }
+
+
+            this._itemStats = itemStates;
+
             if (this._visualization != null)
             {
                 this._visualization.updateStats();
-            };
+            }
+
         }
 
-        public function get itemStats():MarketplaceItemStats
+        public function get itemStats(): MarketplaceItemStats
         {
-            return (this.var_2642);
+            return this._itemStats;
         }
 
-        public function get creditsWaiting():int
+        public function get creditsWaiting(): int
         {
-            return (this.var_2640);
+            return this._creditsWaiting;
         }
 
-        public function get averagePricePeriod():int
+        public function get averagePricePeriod(): int
         {
-            return (this.var_2641);
+            return this._averagePricePeriod;
         }
 
-        public function set averagePricePeriod(param1:int):void
+        public function set averagePricePeriod(param1: int): void
         {
-            this.var_2641 = param1;
+            this._averagePricePeriod = param1;
         }
 
-        private function isPosterItem(param1:IMarketPlaceOfferData):Boolean
+        private function isPosterItem(offerData: IMarketPlaceOfferData): Boolean
         {
-            var _loc3_:IFurnitureData;
-            var _loc4_:String;
-            var _loc2_:Boolean;
-            if (((param1.furniType == 2) && (!(param1.stuffData == null))))
+            var furnitureData: IFurnitureData;
+            var name: String;
+            var isPoster: Boolean;
+
+            if (offerData.furniType == 2 && offerData.stuffData != null)
             {
-                _loc3_ = this._catalog.getFurnitureData(param1.furniId, ProductTypeEnum.var_113);
-                if (_loc3_)
+                furnitureData = this._catalog.getFurnitureData(offerData.furniId, ProductTypeEnum.var_113);
+                if (furnitureData)
                 {
-                    _loc4_ = _loc3_.name;
-                    if (((!(_loc4_ == null)) && (_loc4_ == var_778)))
+                    name = furnitureData.name;
+                    if (name != null && name == var_778)
                     {
-                        _loc2_ = true;
-                    };
-                };
-            };
-            return (_loc2_);
+                        isPoster = true;
+                    }
+
+                }
+
+            }
+
+            return isPoster;
         }
 
-        public function getNameLocalizationKey(param1:IMarketPlaceOfferData):String
+        public function getNameLocalizationKey(offerData: IMarketPlaceOfferData): String
         {
-            var _loc2_:String = "";
-            if (param1 != null)
+            var localizationKey: String = "";
+
+            if (offerData != null)
             {
-                if (this.isPosterItem(param1))
+                if (this.isPosterItem(offerData))
                 {
-                    _loc2_ = (("poster_" + param1.stuffData) + "_name");
+                    localizationKey = "poster_" + offerData.stuffData + "_name";
                 }
                 else
                 {
-                    _loc2_ = ("roomItem.name." + param1.furniId);
-                };
-            };
-            return (_loc2_);
+                    localizationKey = "roomItem.name." + offerData.furniId;
+                }
+
+            }
+
+
+            return localizationKey;
         }
 
-        public function getDescriptionLocalizationKey(param1:IMarketPlaceOfferData):String
+        public function getDescriptionLocalizationKey(offerData: IMarketPlaceOfferData): String
         {
-            var _loc2_:String = "";
-            if (param1 != null)
+            var localizationKey: String = "";
+
+            if (offerData != null)
             {
-                if (this.isPosterItem(param1))
+                if (this.isPosterItem(offerData))
                 {
-                    _loc2_ = (("poster_" + param1.stuffData) + "_desc");
+                    localizationKey = "poster_" + offerData.stuffData + "_desc";
                 }
                 else
                 {
-                    _loc2_ = ("roomItem.desc." + param1.furniId);
-                };
-            };
-            return (_loc2_);
+                    localizationKey = "roomItem.desc." + offerData.furniId;
+                }
+
+            }
+
+            return localizationKey;
         }
 
     }

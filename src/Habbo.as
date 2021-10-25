@@ -1,5 +1,6 @@
-﻿package 
+﻿package
 {
+
     import flash.display.MovieClip;
     import flash.display.DisplayObjectContainer;
     import flash.text.TextField;
@@ -29,458 +30,573 @@
     import flash.text.TextFieldAutoSize;
     import flash.display.Stage;
 
-    public class Habbo extends MovieClip 
+    public class Habbo extends MovieClip
     {
+        protected static var PROCESSLOG_ENABLED: Boolean = false;
 
-        protected static var PROCESSLOG_ENABLED:Boolean = false;
-        private static var _crashed:Boolean = false;
-        private static var _crashURL:String = "";
-        public static const var_1:String = "client.init.start";
-        public static const var_5:String = "client.init.swf.error";
-        public static const var_6:String = "client.init.swf.loaded";
-        private static const var_7:String = "client.starting";
-        public static const var_8:String = "client.init.core.init";
-        public static const var_9:String = "client.init.core.fail";
-        public static const var_10:String = "crash_time";
-        public static const var_11:String = "error_ctx";
-        public static const var_12:String = "flash_version";
-        public static const var_13:String = "avg_update";
-        public static const var_14:String = "debug";
-        public static const var_15:String = "error_desc";
-        public static const var_16:String = "error_cat";
-        public static const ERROR_VARIABLE_DATA:String = "error_data";
-        public static const var_17:int = 9;
-        public static const var_18:int = 11;
-        public static const var_19:String = "fileLoadingBar";
-        public static const var_20:String = "fileBarSprite";
-        public static const var_21:String = "byteLoadingBar";
-        public static const var_22:String = "byteBarSprite";
-        public static const var_23:String = "background";
-        public static const var_24:String = "habboLogo";
-        public static const var_25:String = "textField";
+        private static var _crashed: Boolean = false;
+        private static var _crashURL: String = "";
 
-        private var _disposed:Boolean = false;
-        private var var_26:Boolean = false;
-        private var var_4:DisplayObjectContainer;
-        private var var_27:int = 0;
-        private var var_28:int;
-        private var var_29:String;
-        private var var_30:TextField;
-        private var var_3:Timer;
-        private var var_31:Array;
-        private var var_32:int = 0;
+        public static const CLIENT_STARTING: String = "client.starting";
+        public static const CLIENT_INIT_CORE_FAIL: String = "client.init.core.fail";
+        public static const CLIENT_INIT_CORE_INIT: String = "client.init.core.init";
+        public static const CLIENT_INIT_START: String = "client.init.start";
+        public static const CLIENT_INIT_SWF_ERROR: String = "client.init.swf.error";
+        public static const CLIENT_INIT_SWF_LOADED: String = "client.init.swf.loaded";
 
-        private var habboLogoClass:Class = Habbo_habboLogoClass;
-        private const var_2:Array = [[".", "..", "...", ""], [" [*    ]", " [ *   ]", " [  *  ]", " [   * ]", " [    *]", " [   * ]", " [  *  ]", " [ *   ]"], [".", "..", "....", "...", "..", ".", ""]];
+        public static const ERROR_CATEGORY_DOWNLOAD_FONT: int = 11;
+        public static const ERROR_CATEGORY_FINALIZE_PRELOADING: int = 9;
+
+        public static const ERROR_VARIABLE_AVG_UPDATE: String = "avg_update";
+        public static const ERROR_VARIABLE_CAT: String = "error_cat";
+        public static const ERROR_VARIABLE_CRASH_TIME: String = "crash_time";
+        public static const ERROR_VARIABLE_CTX: String = "error_ctx";
+        public static const ERROR_VARIABLE_DATA: String = "error_data";
+        public static const ERROR_VARIABLE_DEBUG: String = "debug";
+        public static const ERROR_VARIABLE_DESC: String = "error_desc";
+        public static const ERROR_VARIABLE_FLASH_VERSION: String = "flash_version";
+
+        public static const FILE_LOADING_BAR: String = "fileLoadingBar";
+        public static const FILE_BAR_SPRITE: String = "fileBarSprite";
+        public static const BYTE_LOADING_BAR: String = "byteLoadingBar";
+        public static const BYTE_BAR_SPRITE: String = "byteBarSprite";
+        public static const BACKGROUND: String = "background";
+        public static const HABBO_LOGO: String = "habboLogo";
+        public static const TEXT_FIELD: String = "textField";
+
+        private var _disposed: Boolean = false;
+        private var _hasFinishedPreloading: Boolean = false;
+        private var _clientLoadingScreen: DisplayObjectContainer;
+        private var _httpStatus: int = 0;
+        private var _clientStarted: int;
+        private var _clientStartingMessage: String;
+        private var _clientLoadingTextField: TextField;
+        private var _timer: Timer;
+        private var _clientLoadingText: Array;
+        private var _clientLoadingTextIndex: int = 0;
+
+        private var HabboLogoClass: Class = Habbo_habboLogoClass;
+        private const _loadingTexts: Array = [
+            [".", "..", "...", ""],
+            [" [*    ]", " [ *   ]", " [  *  ]", " [   * ]", " [    *]", " [   * ]", " [  *  ]", " [ *   ]"],
+            [".", "..", "....", "...", "..", ".", ""]
+        ];
 
         public function Habbo()
         {
             stop();
+
             stage.scaleMode = StageScaleMode.NO_SCALE;
             stage.quality = StageQuality.LOW;
             stage.align = StageAlign.TOP_LEFT;
-            Habbo.PROCESSLOG_ENABLED = (stage.loaderInfo.parameters["processlog.enabled"] == "1");
-            trackLoginStep(var_1);
-            var _loc1_:String = stage.loaderInfo.parameters["url_prefix"];
-            if (_loc1_ != null)
+
+            Habbo.PROCESSLOG_ENABLED = stage.loaderInfo.parameters["processlog.enabled"] == "1";
+
+            trackLoginStep(CLIENT_INIT_START);
+
+            var url_prefix: String = stage.loaderInfo.parameters["url_prefix"];
+
+            if (url_prefix != null)
             {
-                _crashURL = (_loc1_ + "/flash_client_error");
-            };
-            root.loaderInfo.addEventListener(ProgressEvent.PROGRESS, this.onPreLoadingProgress);
-            root.loaderInfo.addEventListener(HTTPStatusEvent.HTTP_STATUS, this.onPreLoadingStatus);
-            root.loaderInfo.addEventListener(Event.COMPLETE, this.onPreLoadingCompleted);
-            root.loaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onPreLoadingFailed);
-            this.var_31 = this.var_2[int((Math.random() * (this.var_2.length - 1)))];
-            this.var_3 = new Timer(250, 0);
-            this.var_3.addEventListener(TimerEvent.TIMER, this.onVisualizationUpdate);
-            this.var_4 = this.createLoadingScreen();
-            addChild(this.var_4);
+                _crashURL = url_prefix + "/flash_client_error";
+            }
+
+
+            this.root.loaderInfo.addEventListener(ProgressEvent.PROGRESS, this.onPreLoadingProgress);
+            this.root.loaderInfo.addEventListener(HTTPStatusEvent.HTTP_STATUS, this.onPreLoadingStatus);
+            this.root.loaderInfo.addEventListener(Event.COMPLETE, this.onPreLoadingCompleted);
+            this.root.loaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onPreLoadingFailed);
+
+            this._clientLoadingText = this._loadingTexts[int(Math.random() * (this._loadingTexts.length - 1))];
+
+            this._timer = new Timer(250, 0);
+            this._timer.addEventListener(TimerEvent.TIMER, this.onVisualizationUpdate);
+
+            this._clientLoadingScreen = this.createLoadingScreen();
+            addChild(this._clientLoadingScreen);
+
             addEventListener(Event.ENTER_FRAME, this.onEnterFrame);
             addEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage);
-            this.var_28 = getTimer();
+
+            this._clientStarted = getTimer();
+
             this.checkPreLoadingStatus();
         }
 
-        public static function trackLoginStep(param1:String):void
+        public static function trackLoginStep(message: String): void
         {
             if (Habbo.PROCESSLOG_ENABLED)
             {
-                Logger.log(("* HabboMain Login Step: " + param1));
+                Logger.log("* HabboMain Login Step: " + message);
+
                 if (ExternalInterface.available)
                 {
-                    ExternalInterface.call("FlashExternalInterface.logLoginStep", param1);
+                    ExternalInterface.call("FlashExternalInterface.logLoginStep", message);
                 }
                 else
                 {
                     Logger.log("HabboMain: ExternalInterface is not available, tracking is disabled");
-                };
-            };
+                }
+
+            }
+
         }
 
-        public static function reportCrash(param1:String, param2:int, param3:Error):void
+        public static function reportCrash(description: String, category: int, error: Error): void
         {
-            var _loc4_:String;
-            var _loc5_:URLRequest;
-            var _loc6_:URLVariables;
-            var _loc7_:String;
             if (!Habbo._crashed)
             {
                 Habbo._crashed = true;
-                _loc4_ = Habbo._crashURL;
-                _loc5_ = new URLRequest(_loc4_);
-                _loc6_ = new URLVariables();
-                _loc6_[var_10] = new Date().getTime().toString();
-                _loc7_ = "";
-                _loc6_[var_11] = _loc7_;
-                _loc6_[var_12] = Capabilities.version;
-                _loc6_[var_13] = 0;
-                _loc6_[var_15] = param1;
-                _loc6_[var_16] = String(param2);
-                if (param3 != null)
+
+                var url: String = Habbo._crashURL;
+                var request: URLRequest = new URLRequest(url);
+                var requestData: URLVariables = new URLVariables();
+                var context: String = "";
+
+                requestData[ERROR_VARIABLE_CRASH_TIME] = new Date().getTime().toString();
+                requestData[ERROR_VARIABLE_CTX] = context;
+                requestData[ERROR_VARIABLE_FLASH_VERSION] = Capabilities.version;
+                requestData[ERROR_VARIABLE_AVG_UPDATE] = 0;
+                requestData[ERROR_VARIABLE_DESC] = description;
+                requestData[ERROR_VARIABLE_CAT] = String(category);
+                requestData[ERROR_VARIABLE_DEBUG] = "Memory usage: " + Math.round(System.totalMemory / (0x0400 * 0x0400)) + " MB";
+
+                if (error != null)
                 {
-                    _loc6_[ERROR_VARIABLE_DATA] = String(param3.getStackTrace());
-                };
-                _loc6_[var_14] = (("Memory usage: " + Math.round((System.totalMemory / (0x0400 * 0x0400)))) + " MB");
-                _loc5_.data = _loc6_;
-                _loc5_.method = URLRequestMethod.POST;
-                navigateToURL(_loc5_, "_self");
-            };
+                    requestData[ERROR_VARIABLE_DATA] = String(error.getStackTrace());
+                }
+
+
+                request.method = URLRequestMethod.POST;
+                request.data = requestData;
+
+                navigateToURL(request, "_self");
+            }
+
         }
 
-        private function dispose():void
+        private function dispose(): void
         {
             removeEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage);
             removeEventListener(Event.ENTER_FRAME, this.onEnterFrame);
-            root.removeEventListener(Event.RESIZE, this.onResize);
+            removeEventListener(Event.RESIZE, this.onResize);
+
             if (!this._disposed)
             {
                 this._disposed = true;
-                if (this.var_30)
+
+                if (this._clientLoadingTextField != null)
                 {
-                    this.var_30 = null;
-                };
-                if (this.var_4)
+                    this._clientLoadingTextField = null;
+                }
+
+
+                if (this._clientLoadingScreen != null)
                 {
-                    this.disposeLoadingScreen(this.var_4);
-                    removeChild(this.var_4);
-                    this.var_4 = null;
-                };
-                if (parent)
+                    this.disposeLoadingScreen(this._clientLoadingScreen);
+                    removeChild(this._clientLoadingScreen);
+                    this._clientLoadingScreen = null;
+                }
+
+
+                if (parent != null)
                 {
                     parent.removeChild(this);
-                };
-            };
+                }
+
+            }
+
         }
 
-        private function onLocalConnectionStatus(param1:StatusEvent):void
+        private function onLocalConnectionStatus(status: StatusEvent): void
         {
         }
 
-        public function testLocalConnection(identifier:int):void
+        public function testLocalConnection(identifier: int): void
         {
             try
             {
-                if (identifier != this.var_28)
+                if (identifier != this._clientStarted)
                 {
                     this.dispose();
-                };
+                }
+
             }
-            catch(e:Error)
+            catch (e: Error)
             {
-            };
+            }
+
         }
 
-        private function onPreLoadingProgress(param1:Event):void
+        private function onPreLoadingProgress(event: Event): void
         {
             this.checkPreLoadingStatus();
-            if (this.var_4)
+
+            if (this._clientLoadingScreen != null)
             {
-                this.updateLoadingBar(this.var_4, (root.loaderInfo.bytesLoaded / root.loaderInfo.bytesTotal));
-            };
+                this.updateLoadingBar(this._clientLoadingScreen, this.root.loaderInfo.bytesLoaded / this.root.loaderInfo.bytesTotal);
+            }
+
         }
 
-        private function onPreLoadingStatus(param1:HTTPStatusEvent):void
+        private function onPreLoadingStatus(httpEvent: HTTPStatusEvent): void
         {
-            this.var_27 = param1.status;
+            this._httpStatus = httpEvent.status;
         }
 
-        private function onPreLoadingCompleted(event:Event):void
+        private function onPreLoadingCompleted(event: Event): void
         {
             try
             {
                 this.checkPreLoadingStatus();
             }
-            catch(error:Error)
+            catch (error: Error)
             {
-                trackLoginStep(var_5);
-                reportCrash(("Failed to finalize main swf preloading: " + error.message), var_17, error);
-            };
+                trackLoginStep(CLIENT_INIT_SWF_ERROR);
+
+                reportCrash("Failed to finalize main swf preloading: " + error.message, ERROR_CATEGORY_FINALIZE_PRELOADING, error);
+            }
+
         }
 
-        private function onPreLoadingFailed(param1:IOErrorEvent):void
+        private function onPreLoadingFailed(errorEvent: IOErrorEvent): void
         {
-            trackLoginStep(var_5);
-            reportCrash(((("Failed to finalize main swf preloading: " + param1.text) + " / HTTP status: ") + this.var_27), var_17, null);
+            trackLoginStep(CLIENT_INIT_SWF_ERROR);
+
+            reportCrash(
+                    "Failed to finalize main swf preloading: " + errorEvent.text + " / HTTP status: " + this._httpStatus,
+                    ERROR_CATEGORY_FINALIZE_PRELOADING,
+                    null
+            );
         }
 
-        private function checkPreLoadingStatus():void
+        private function checkPreLoadingStatus(): void
         {
-            if (!this.var_26)
+            if (!this._hasFinishedPreloading)
             {
-                if (root.loaderInfo.bytesLoaded == root.loaderInfo.bytesTotal)
+                if (this.root.loaderInfo.bytesLoaded == this.root.loaderInfo.bytesTotal)
                 {
                     this.finalizePreloading();
-                };
-            };
+                }
+
+            }
+
         }
 
-        private function finalizePreloading():void
+        private function finalizePreloading(): void
         {
-            var _loc1_:Class;
-            var _loc2_:Sprite;
-            var _loc3_:HabboMain;
-            if (!this.var_26)
+            if (!this._hasFinishedPreloading)
             {
-                this.var_26 = true;
-                trackLoginStep(var_6);
-                if (this.var_4)
+                this._hasFinishedPreloading = true;
+
+                trackLoginStep(CLIENT_INIT_SWF_LOADED);
+
+                if (this._clientLoadingScreen != null)
                 {
-                    _loc2_ = (this.var_4.getChildByName(var_21) as Sprite);
-                    _loc2_.visible = false;
-                };
-                root.loaderInfo.removeEventListener(ProgressEvent.PROGRESS, this.onPreLoadingProgress);
-                root.loaderInfo.removeEventListener(HTTPStatusEvent.HTTP_STATUS, this.onPreLoadingStatus);
-                root.loaderInfo.removeEventListener(Event.COMPLETE, this.onPreLoadingCompleted);
-                root.loaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, this.onPreLoadingFailed);
+                    var byteLoadingBar: Sprite = this._clientLoadingScreen.getChildByName(BYTE_LOADING_BAR) as Sprite;
+                    byteLoadingBar.visible = false;
+                }
+
+
+                this.root.loaderInfo.removeEventListener(ProgressEvent.PROGRESS, this.onPreLoadingProgress);
+                this.root.loaderInfo.removeEventListener(HTTPStatusEvent.HTTP_STATUS, this.onPreLoadingStatus);
+                this.root.loaderInfo.removeEventListener(Event.COMPLETE, this.onPreLoadingCompleted);
+                this.root.loaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, this.onPreLoadingFailed);
+
                 nextFrame();
-                _loc1_ = Class(getDefinitionByName("HabboMain"));
-                if (_loc1_)
+
+                var HabboMainClass: Class = Class(getDefinitionByName("HabboMain"));
+
+                if (HabboMainClass != null)
                 {
-                    _loc3_ = (new _loc1_(this.var_4) as HabboMain);
-                    if (_loc3_)
+                    var HabboMainInstance: HabboMain = new HabboMainClass(this._clientLoadingScreen) as HabboMain;
+
+                    if (HabboMainInstance != null)
                     {
-                        _loc3_.addEventListener(Event.REMOVED, this.onMainRemoved);
-                        addChild(_loc3_);
-                    };
-                };
-            };
+                        HabboMainInstance.addEventListener(Event.REMOVED, this.onMainRemoved);
+
+                        addChild(HabboMainInstance);
+                    }
+
+                }
+
+            }
+
         }
 
-        private function onResize(param1:Event):void
+        private function onResize(event: Event): void
         {
-            if (param1.type == Event.RESIZE)
+            if (event.type == Event.RESIZE)
             {
-                if (this.var_4)
+                if (this._clientLoadingScreen != null)
                 {
-                    this.positionLoadingScreenDisplayElements(this.var_4);
-                };
-            };
+                    this.positionLoadingScreenDisplayElements(this._clientLoadingScreen);
+                }
+
+            }
+
         }
 
-        private function onEnterFrame(param1:Event):void
+        private function onEnterFrame(event: Event): void
         {
-            parent.setChildIndex(this, (parent.numChildren - 1));
+            this.parent.setChildIndex(this, parent.numChildren - 1);
         }
 
-        private function onAddedToStage(param1:Event):void
+        private function onAddedToStage(param1: Event): void
         {
             removeEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage);
             stage.addEventListener(Event.RESIZE, this.onResize);
-            this.positionLoadingScreenDisplayElements(this.var_4);
+            this.positionLoadingScreenDisplayElements(this._clientLoadingScreen);
         }
 
-        private function onMainRemoved(param1:Event):void
+        private function onMainRemoved(param1: Event): void
         {
             this.dispose();
         }
 
-        private function onVisualizationUpdate(param1:Event):void
+        private function onVisualizationUpdate(param1: Event): void
         {
-            if (this.var_30)
+            if (this._clientLoadingTextField)
             {
-                if (this.var_32 >= this.var_31.length)
+                if (this._clientLoadingTextIndex >= this._clientLoadingText.length)
                 {
-                    this.var_32 = 0;
-                };
-                this.var_30.text = ((this.var_29 + "") + this.var_31[this.var_32]);
-                this.var_32++;
-            };
+                    this._clientLoadingTextIndex = 0;
+                }
+
+
+                this._clientLoadingTextField.text = this._clientStartingMessage + "" + this._clientLoadingText[this._clientLoadingTextIndex];
+
+                this._clientLoadingTextIndex++;
+            }
+
         }
 
-        private function updateLoadingBar(param1:DisplayObjectContainer, param2:Number):void
+        private function updateLoadingBar(container: DisplayObjectContainer, percentageComplete: Number): void
         {
-            var _loc11_:int;
-            var _loc12_:int;
-            var _loc3_:* = 200;
-            var _loc4_:int = 20;
-            var _loc5_:int = 1;
-            var _loc6_:int = 1;
-            var _loc7_:Sprite = (param1.getChildByName(var_19) as Sprite);
-            var _loc8_:Sprite = (_loc7_.getChildByName(var_20) as Sprite);
-            var _loc9_:Sprite = (param1.getChildByName(var_21) as Sprite);
-            var _loc10_:Sprite = (_loc9_.getChildByName(var_22) as Sprite);
-            _loc8_.x = (_loc5_ + _loc6_);
-            _loc8_.y = (_loc5_ + _loc6_);
-            _loc8_.graphics.clear();
-            _loc11_ = ((_loc4_ - (_loc5_ * 2)) - (_loc6_ * 2));
-            _loc12_ = 0;
-            _loc8_.graphics.beginFill(12241619);
-            _loc8_.graphics.drawRect(0, 0, _loc12_, (_loc11_ / 2));
-            _loc8_.graphics.endFill();
-            _loc8_.graphics.beginFill(9216429);
-            _loc8_.graphics.drawRect(0, (_loc11_ / 2), _loc12_, ((_loc11_ / 2) + 1));
-            _loc8_.graphics.endFill();
-            _loc10_.x = (_loc5_ + _loc6_);
-            _loc10_.y = (_loc5_ + _loc6_);
-            _loc10_.graphics.clear();
-            _loc11_ = ((_loc4_ - (_loc5_ * 2)) - (_loc6_ * 2));
-            _loc12_ = (((_loc3_ - (_loc5_ * 2)) - (_loc6_ * 2)) * param2);
-            _loc10_.graphics.beginFill(8030867);
-            _loc10_.graphics.drawRect(0, 0, _loc12_, (_loc11_ / 2));
-            _loc10_.graphics.endFill();
-            _loc10_.graphics.beginFill(8159645);
-            _loc10_.graphics.drawRect(0, (_loc11_ / 2), _loc12_, ((_loc11_ / 2) + 1));
-            _loc10_.graphics.endFill();
+            var fileLoadingBar: Sprite = container.getChildByName(FILE_LOADING_BAR) as Sprite;
+            var fileBarSprite: Sprite = fileLoadingBar.getChildByName(FILE_BAR_SPRITE) as Sprite;
+            var byteLoadingBar: Sprite = container.getChildByName(BYTE_LOADING_BAR) as Sprite;
+            var byteBarSprite: Sprite = byteLoadingBar.getChildByName(BYTE_BAR_SPRITE) as Sprite;
+
+            var rectHeight: int;
+            var rectWidth: int;
+
+            var maxRectWidth: int = 200;
+            var maxRectHeight: int = 20;
+
+            var unknown1: int = 1;
+            var unknown2: int = 1;
+
+            fileBarSprite.x = unknown1 + unknown2;
+            fileBarSprite.y = unknown1 + unknown2;
+            fileBarSprite.graphics.clear();
+
+            rectHeight = maxRectHeight - unknown1 * 2 - unknown2 * 2;
+            rectWidth = 0;
+
+            fileBarSprite.graphics.beginFill(12241619);
+            fileBarSprite.graphics.drawRect(0, 0, rectWidth, rectHeight / 2);
+            fileBarSprite.graphics.endFill();
+            fileBarSprite.graphics.beginFill(9216429);
+            fileBarSprite.graphics.drawRect(0, rectHeight / 2, rectWidth, rectHeight / 2 + 1);
+            fileBarSprite.graphics.endFill();
+
+            byteBarSprite.x = unknown1 + unknown2;
+            byteBarSprite.y = unknown1 + unknown2;
+            byteBarSprite.graphics.clear();
+
+            rectHeight = maxRectHeight - unknown1 * 2 - unknown2 * 2;
+            rectWidth = (maxRectWidth - unknown1 * 2 - unknown2 * 2) * percentageComplete;
+
+            byteBarSprite.graphics.beginFill(8030867);
+            byteBarSprite.graphics.drawRect(0, 0, rectWidth, rectHeight / 2);
+            byteBarSprite.graphics.endFill();
+            byteBarSprite.graphics.beginFill(8159645);
+            byteBarSprite.graphics.drawRect(0, rectHeight / 2, rectWidth, rectHeight / 2 + 1);
+            byteBarSprite.graphics.endFill();
         }
 
-        public function createLoadingScreen():DisplayObjectContainer
+        public function createLoadingScreen(): DisplayObjectContainer
         {
-            var _loc5_:Sprite;
-            var _loc6_:Sprite;
-            var _loc1_:Sprite = new Sprite();
-            var _loc2_:Sprite = new Sprite();
-            _loc2_.name = var_23;
-            _loc2_.graphics.clear();
-            _loc2_.graphics.beginFill(0xFF000000);
-            _loc2_.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
-            _loc1_.addChild(_loc2_);
-            var _loc3_:Bitmap = (new this.habboLogoClass() as Bitmap);
-            _loc3_.name = var_24;
-            _loc1_.addChild(_loc3_);
-            this.var_30 = new TextField();
-            this.var_30.name = var_25;
-            if (stage.loaderInfo.parameters[var_7] != null)
+            var container: Sprite = new Sprite();
+            var fileBarSprite: Sprite;
+
+            var loadingScreenBackground: Sprite = new Sprite();
+            loadingScreenBackground.name = BACKGROUND;
+            loadingScreenBackground.graphics.clear();
+            loadingScreenBackground.graphics.beginFill(0xFF000000);
+            loadingScreenBackground.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
+            container.addChild(loadingScreenBackground);
+
+            var habboLogoBitmap: Bitmap = new this.HabboLogoClass() as Bitmap;
+            habboLogoBitmap.name = HABBO_LOGO;
+            container.addChild(habboLogoBitmap);
+
+            this._clientLoadingTextField = new TextField();
+            this._clientLoadingTextField.name = TEXT_FIELD;
+
+            if (stage.loaderInfo.parameters[CLIENT_STARTING] != null)
             {
-                this.var_29 = stage.loaderInfo.parameters[var_7];
+                this._clientStartingMessage = stage.loaderInfo.parameters[CLIENT_STARTING];
             }
             else
             {
-                this.var_29 = var_7;
-            };
-            var _loc4_:TextFormat = new TextFormat();
-            _loc4_.font = "Verdana";
-            _loc4_.color = 0xFFFFFF;
-            _loc4_.size = 9;
-            this.var_30.defaultTextFormat = _loc4_;
-            this.var_30.text = this.var_29;
-            this.var_30.autoSize = TextFieldAutoSize.LEFT;
-            _loc1_.addChild(this.var_30);
-            _loc5_ = new Sprite();
-            _loc5_.name = var_19;
-            _loc5_.graphics.lineStyle(1, 0xFFFFFF);
-            _loc5_.graphics.beginFill(2500143);
-            _loc5_.graphics.drawRect(1, 0, (200 - 1), 0);
-            _loc5_.graphics.drawRect(200, 1, 0, (20 - 1));
-            _loc5_.graphics.drawRect(1, 20, (200 - 1), 0);
-            _loc5_.graphics.drawRect(0, 1, 0, (20 - 1));
-            _loc5_.graphics.endFill();
-            _loc1_.addChild(_loc5_);
-            _loc6_ = new Sprite();
-            _loc6_.name = var_20;
-            _loc5_.addChild(_loc6_);
-            _loc5_ = new Sprite();
-            _loc5_.name = var_21;
-            _loc5_.graphics.lineStyle(1, 0x888888);
-            _loc5_.graphics.beginFill(2500143);
-            _loc5_.graphics.drawRect(1, 0, (200 - 1), 0);
-            _loc5_.graphics.drawRect(200, 1, 0, (20 - 1));
-            _loc5_.graphics.drawRect(1, 20, (200 - 1), 0);
-            _loc5_.graphics.drawRect(0, 1, 0, (20 - 1));
-            _loc5_.graphics.endFill();
-            _loc1_.addChild(_loc5_);
-            _loc6_ = new Sprite();
-            _loc6_.name = var_22;
-            _loc5_.addChild(_loc6_);
-            _loc5_.visible = true;
-            this.updateLoadingBar(_loc1_, 0);
-            this.positionLoadingScreenDisplayElements(_loc1_);
-            this.var_3.start();
-            return (_loc1_);
+                this._clientStartingMessage = CLIENT_STARTING;
+            }
+
+
+            var textFormat: TextFormat = new TextFormat();
+            textFormat.font = "Verdana";
+            textFormat.color = 0xFFFFFF;
+            textFormat.size = 9;
+
+            this._clientLoadingTextField.defaultTextFormat = textFormat;
+            this._clientLoadingTextField.text = this._clientStartingMessage;
+            this._clientLoadingTextField.autoSize = TextFieldAutoSize.LEFT;
+
+            container.addChild(this._clientLoadingTextField);
+
+            var fileLoadingBar: Sprite = new Sprite();
+            fileLoadingBar.name = FILE_LOADING_BAR;
+            fileLoadingBar.graphics.lineStyle(1, 0xFFFFFF);
+            fileLoadingBar.graphics.beginFill(2500143);
+            fileLoadingBar.graphics.drawRect(1, 0, 200 - 1, 0);
+            fileLoadingBar.graphics.drawRect(200, 1, 0, 20 - 1);
+            fileLoadingBar.graphics.drawRect(1, 20, 200 - 1, 0);
+            fileLoadingBar.graphics.drawRect(0, 1, 0, 20 - 1);
+            fileLoadingBar.graphics.endFill();
+            container.addChild(fileLoadingBar);
+
+            fileBarSprite = new Sprite();
+            fileBarSprite.name = FILE_BAR_SPRITE;
+            fileLoadingBar.addChild(fileBarSprite);
+            fileLoadingBar = new Sprite();
+            fileLoadingBar.name = BYTE_LOADING_BAR;
+            fileLoadingBar.graphics.lineStyle(1, 0x888888);
+            fileLoadingBar.graphics.beginFill(2500143);
+            fileLoadingBar.graphics.drawRect(1, 0, 200 - 1, 0);
+            fileLoadingBar.graphics.drawRect(200, 1, 0, 20 - 1);
+            fileLoadingBar.graphics.drawRect(1, 20, 200 - 1, 0);
+            fileLoadingBar.graphics.drawRect(0, 1, 0, 20 - 1);
+            fileLoadingBar.graphics.endFill();
+            container.addChild(fileLoadingBar);
+
+            fileBarSprite = new Sprite();
+            fileBarSprite.name = BYTE_BAR_SPRITE;
+            fileLoadingBar.addChild(fileBarSprite);
+
+            fileLoadingBar.visible = true;
+            this.updateLoadingBar(container, 0);
+            this.positionLoadingScreenDisplayElements(container);
+            this._timer.start();
+            return container;
         }
 
-        public function disposeLoadingScreen(param1:DisplayObjectContainer):void
+        public function disposeLoadingScreen(container: DisplayObjectContainer): void
         {
-            var _loc2_:DisplayObject;
-            _loc2_ = param1.getChildByName(var_23);
-            if (_loc2_)
+            var displayObject: DisplayObject = container.getChildByName(BACKGROUND);
+
+            if (displayObject != null)
             {
-                param1.removeChild(_loc2_);
-            };
-            if (this.var_30)
+                container.removeChild(displayObject);
+            }
+
+
+            if (this._clientLoadingTextField != null)
             {
-                param1.removeChild(this.var_30);
-            };
-            _loc2_ = param1.getChildByName(var_24);
-            if (_loc2_)
+                container.removeChild(this._clientLoadingTextField);
+            }
+
+
+            displayObject = container.getChildByName(HABBO_LOGO);
+
+            if (displayObject != null)
             {
-                param1.removeChild(_loc2_);
-            };
-            _loc2_ = param1.getChildByName(var_19);
-            if (_loc2_)
+                container.removeChild(displayObject);
+            }
+
+
+            displayObject = container.getChildByName(FILE_LOADING_BAR);
+
+            if (displayObject != null)
             {
-                param1.removeChild(_loc2_);
-            };
-            _loc2_ = param1.getChildByName(var_21);
-            if (_loc2_)
+                container.removeChild(displayObject);
+            }
+
+
+            displayObject = container.getChildByName(BYTE_LOADING_BAR);
+
+            if (displayObject != null)
             {
-                param1.removeChild(_loc2_);
-            };
-            if (this.var_3)
+                container.removeChild(displayObject);
+            }
+
+
+            if (this._timer)
             {
-                this.var_3.stop();
-                this.var_3 = null;
-            };
+                this._timer.stop();
+                this._timer = null;
+            }
+
         }
 
-        private function positionLoadingScreenDisplayElements(param1:DisplayObjectContainer):void
+        private function positionLoadingScreenDisplayElements(container: DisplayObjectContainer): void
         {
-            var _loc2_:Stage = param1.stage;
-            var _loc3_:Sprite = (param1.getChildByName(var_23) as Sprite);
-            if (_loc3_)
+            var containerStage: Stage = container.stage;
+            var background: Sprite = container.getChildByName(BACKGROUND) as Sprite;
+
+            if (background != null)
             {
-                _loc3_.x = 0;
-                _loc3_.y = 0;
-                _loc3_.graphics.clear();
-                _loc3_.graphics.beginFill(0xFF000000);
-                _loc3_.graphics.drawRect(0, 0, ((_loc2_) ? _loc2_.stageWidth : param1.width), ((_loc2_) ? _loc2_.stageHeight : param1.height));
-            };
-            var _loc4_:Bitmap = (param1.getChildByName(var_24) as Bitmap);
-            if (_loc4_)
+                background.x = 0;
+                background.y = 0;
+                background.graphics.clear();
+                background.graphics.beginFill(0xFF000000);
+                background.graphics.drawRect(0, 0, containerStage
+                        ? containerStage.stageWidth
+                        : container.width, containerStage ? containerStage.stageHeight : container.height);
+            }
+
+
+            var habboLogo: Bitmap = container.getChildByName(HABBO_LOGO) as Bitmap;
+
+            if (habboLogo != null)
             {
-                _loc4_.x = 117;
-                _loc4_.y = 57;
-            };
-            var _loc5_:TextField = (param1.getChildByName(var_25) as TextField);
-            if (_loc5_)
+                habboLogo.x = 117;
+                habboLogo.y = 57;
+            }
+
+
+            var loadingText: TextField = container.getChildByName(TEXT_FIELD) as TextField;
+
+            if (loadingText != null)
             {
-                _loc5_.x = (191 - (_loc5_.width / 2));
-                if (_loc4_)
+                loadingText.x = 191 - loadingText.width / 2;
+
+                if (habboLogo != null)
                 {
-                    _loc5_.y = (((_loc4_.y + _loc4_.height) + 28) - 10);
-                };
-            };
-            var _loc6_:Sprite = (param1.getChildByName(var_19) as Sprite);
-            if (_loc6_)
+                    loadingText.y = (habboLogo.y + habboLogo.height + 28) - 10;
+                }
+
+            }
+
+
+            var fileLoadingBar: Sprite = container.getChildByName(FILE_LOADING_BAR) as Sprite;
+
+            if (fileLoadingBar != null)
             {
-                _loc6_.x = 89;
-                _loc6_.y = 149;
-            };
-            var _loc7_:Sprite = (param1.getChildByName(var_21) as Sprite);
-            if (_loc7_)
+                fileLoadingBar.x = 89;
+                fileLoadingBar.y = 149;
+            }
+
+
+            var byteLoadingBar: Sprite = container.getChildByName(BYTE_LOADING_BAR) as Sprite;
+
+            if (byteLoadingBar != null)
             {
-                _loc7_.x = 89;
-                _loc7_.y = 179;
-            };
+                byteLoadingBar.x = 89;
+                byteLoadingBar.y = 179;
+            }
+
         }
 
     }

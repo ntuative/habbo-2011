@@ -1,21 +1,22 @@
 ﻿package com.sulake.habbo.room.messages
 {
+
     import com.sulake.room.messages.RoomObjectUpdateMessage;
 
-    public class RoomObjectItemDataUpdateMessage extends RoomObjectUpdateMessage 
+    public class RoomObjectItemDataUpdateMessage extends RoomObjectUpdateMessage
     {
 
-        private var var_3300:String;
+        private var _itemData: String;
 
-        public function RoomObjectItemDataUpdateMessage(param1:String)
+        public function RoomObjectItemDataUpdateMessage(itemData: String)
         {
             super(null, null);
-            this.var_3300 = param1;
+            this._itemData = itemData;
         }
 
-        public function get itemData():String
+        public function get itemData(): String
         {
-            return (this.var_3300);
+            return this._itemData;
         }
 
     }

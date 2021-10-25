@@ -1,50 +1,51 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.room.engine
 {
+
     import com.sulake.core.communication.messages.MessageEvent;
     import com.sulake.core.communication.messages.IMessageEvent;
     import com.sulake.habbo.communication.messages.parser.room.engine.UserChangeMessageParser;
 
-    public class UserChangeMessageEvent extends MessageEvent implements IMessageEvent 
+    public class UserChangeMessageEvent extends MessageEvent implements IMessageEvent
     {
 
-        public function UserChangeMessageEvent(param1:Function)
+        public function UserChangeMessageEvent(param1: Function)
         {
             super(param1, UserChangeMessageParser);
         }
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return ((var_361 as UserChangeMessageParser).roomId);
+            return (_parser as UserChangeMessageParser).roomId;
         }
 
-        public function get roomCategory():int
+        public function get roomCategory(): int
         {
-            return ((var_361 as UserChangeMessageParser).roomCategory);
+            return (_parser as UserChangeMessageParser).roomCategory;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return ((var_361 as UserChangeMessageParser).id);
+            return (_parser as UserChangeMessageParser).id;
         }
 
-        public function get figure():String
+        public function get figure(): String
         {
-            return ((var_361 as UserChangeMessageParser).figure);
+            return (_parser as UserChangeMessageParser).figure;
         }
 
-        public function get sex():String
+        public function get sex(): String
         {
-            return ((var_361 as UserChangeMessageParser).sex);
+            return (_parser as UserChangeMessageParser).sex;
         }
 
-        public function get customInfo():String
+        public function get customInfo(): String
         {
-            return ((var_361 as UserChangeMessageParser).customInfo);
+            return (_parser as UserChangeMessageParser).customInfo;
         }
 
-        public function get achievementScore():int
+        public function get achievementScore(): int
         {
-            return ((var_361 as UserChangeMessageParser).achievementScore);
+            return (_parser as UserChangeMessageParser).achievementScore;
         }
 
     }

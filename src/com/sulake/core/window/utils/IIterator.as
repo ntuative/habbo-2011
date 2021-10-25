@@ -1,10 +1,12 @@
 package com.sulake.core.window.utils
 {
-    public interface IIterator 
+
+    public interface IIterator
     {
 
-        function get length():uint;
-        function indexOf(param1:*):int;
+        function get length(): uint;
+
+        function indexOf(param1: *): int;
 
     }
 }

@@ -1,25 +1,27 @@
 ﻿package com.sulake.room.events
 {
+
     import flash.events.Event;
 
-    public class RoomContentLoadedEvent extends Event 
+    public class RoomContentLoadedEvent extends Event
     {
 
-        public static const var_293:String = "RCLE_SUCCESS";
-        public static const var_294:String = "RCLE_FAILURE";
-        public static const var_295:String = "RCLE_CANCEL";
+        public static const ROOM_CONTENT_SUCCESS: String = "RCLE_SUCCESS";
+        public static const ROOM_CONTENT_FAILURE: String = "RCLE_FAILURE";
+        public static const ROOM_CONTENT_CANCEL: String = "RCLE_CANCEL";
 
-        private var var_4977:String;
+        private var _contentType: String;
 
-        public function RoomContentLoadedEvent(param1:String, param2:String, param3:Boolean=false, param4:Boolean=false)
+        public function RoomContentLoadedEvent(type: String, contentType: String, bubbles: Boolean = false, cancelable: Boolean = false)
         {
-            super(param1, param3, param4);
-            this.var_4977 = param2;
+            super(type, bubbles, cancelable);
+            
+            this._contentType = contentType;
         }
 
-        public function get contentType():String
+        public function get contentType(): String
         {
-            return (this.var_4977);
+            return this._contentType;
         }
 
     }

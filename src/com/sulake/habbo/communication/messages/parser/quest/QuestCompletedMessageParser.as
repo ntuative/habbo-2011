@@ -1,33 +1,37 @@
 ﻿package com.sulake.habbo.communication.messages.parser.quest
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.quest.QuestMessageData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class QuestCompletedMessageParser implements IMessageParser 
+    public class QuestCompletedMessageParser implements IMessageParser
     {
 
-        private var var_3279:QuestMessageData;
+        private var _questData: QuestMessageData;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            if (this.var_3279)
+            if (this._questData)
             {
-                this.var_3279.dispose();
-            };
-            this.var_3279 = null;
-            return (true);
+                this._questData.dispose();
+            }
+
+            this._questData = null;
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3279 = new QuestMessageData(param1);
-            return (true);
+            this._questData = new QuestMessageData(data);
+
+            return true;
         }
 
-        public function get questData():QuestMessageData
+        public function get questData(): QuestMessageData
         {
-            return (this.var_3279);
+            return this._questData;
         }
 
     }

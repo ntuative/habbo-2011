@@ -1,57 +1,65 @@
 ﻿package com.sulake.habbo.communication.messages.parser.moderation
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class IssuePickFailedMessageParser implements IMessageParser 
+    public class IssuePickFailedMessageParser implements IMessageParser
     {
 
-        private var _issues:Array;
-        private var var_3237:Boolean;
-        private var var_3238:int;
+        private var _issues: Array;
+        private var _retryEnabled: Boolean;
+        private var _retryCount: int;
 
-        public function get issues():Array
+        public function get issues(): Array
         {
-            return (this._issues);
+            return this._issues;
         }
 
-        public function get retryEnabled():Boolean
+        public function get retryEnabled(): Boolean
         {
-            return (this.var_3237);
+            return this._retryEnabled;
         }
 
-        public function get retryCount():int
+        public function get retryCount(): int
         {
-            return (this.var_3238);
+            return this._retryCount;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._issues = null;
-            return (true);
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc4_:int;
-            var _loc5_:int;
-            var _loc6_:String;
-            var _loc7_:IssueMessageData;
-            this._issues = new Array();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            var issueId: int;
+            var pickerUserId: int;
+            var pickerUserName: String;
+            var issue: IssueMessageData;
+            this._issues = [];
+            
+            var issueCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < issueCount)
             {
-                _loc4_ = param1.readInteger();
-                _loc5_ = param1.readInteger();
-                _loc6_ = param1.readString();
-                _loc7_ = new IssueMessageData(_loc4_, 0, 0, 0, 0, 0, 0, null, 0, null, _loc5_, _loc6_, null, 0, null, 0, null, 0, null, null, 0, 0);
-                this._issues.push(_loc7_);
-                _loc3_++;
-            };
-            this.var_3237 = param1.readBoolean();
-            this.var_3238 = param1.readInteger();
-            return (true);
+                issueId = data.readInteger();
+                pickerUserId = data.readInteger();
+                pickerUserName = data.readString();
+                
+                issue = new IssueMessageData(issueId, 0, 0, 0, 0, 0, 0, null, 0, null, pickerUserId, pickerUserName, null, 0, null, 0, null, 0, null, null, 0, 0);
+                
+                this._issues.push(issue);
+                i++;
+            }
+
+            this._retryEnabled = data.readBoolean();
+            this._retryCount = data.readInteger();
+            
+            return true;
         }
 
     }

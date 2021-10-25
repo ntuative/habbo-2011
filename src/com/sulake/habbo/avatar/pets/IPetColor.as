@@ -1,10 +1,12 @@
 ﻿package com.sulake.habbo.avatar.pets
 {
-    public interface IPetColor 
+
+    public interface IPetColor
     {
 
-        function get id():int;
-        function get rgb():uint;
+        function get id(): int;
+
+        function get rgb(): uint;
 
     }
 }

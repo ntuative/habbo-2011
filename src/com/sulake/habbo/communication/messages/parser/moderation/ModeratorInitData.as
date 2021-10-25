@@ -1,148 +1,165 @@
 ﻿package com.sulake.habbo.communication.messages.parser.moderation
 {
+
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.habbo.communication.messages.incoming.moderation.OffenceCategoryData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ModeratorInitData implements IDisposable 
+    public class ModeratorInitData implements IDisposable
     {
 
-        private var var_3239:Array;
-        private var var_3241:Array;
-        private var _issues:Array;
-        private var var_3240:Array;
-        private var var_3242:Boolean;
-        private var var_3243:Boolean;
-        private var var_3244:Boolean;
-        private var var_3245:Boolean;
-        private var var_3246:Boolean;
-        private var var_3247:Boolean;
-        private var var_3248:Boolean;
-        private var _disposed:Boolean;
+        private var _messageTemplates: Array;
+        private var _roomMessageTemplates: Array;
+        private var _issues: Array;
+        private var _offenceCategories: Array;
+        private var _cfhPermission: Boolean;
+        private var _chatlogsPermission: Boolean;
+        private var _alertPermission: Boolean;
+        private var _kickPermission: Boolean;
+        private var _banPermission: Boolean;
+        private var _roomAlertPermission: Boolean;
+        private var _roomKickPermission: Boolean;
+        private var _disposed: Boolean;
 
-        public function ModeratorInitData(param1:IMessageDataWrapper)
+        public function ModeratorInitData(data: IMessageDataWrapper)
         {
-            var _loc2_:IssueInfoMessageParser = new IssueInfoMessageParser();
+            var issueInfoParser: IssueInfoMessageParser = new IssueInfoMessageParser();
+            
             this._issues = [];
-            this.var_3239 = [];
-            this.var_3241 = [];
-            this.var_3240 = [];
-            var _loc3_:int = param1.readInteger();
-            var _loc4_:int;
-            while (_loc4_ < _loc3_)
+            this._messageTemplates = [];
+            this._roomMessageTemplates = [];
+            this._offenceCategories = [];
+            
+            var itemCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < itemCount)
             {
-                if (_loc2_.parse(param1))
+                if (issueInfoParser.parse(data))
                 {
-                    this._issues.push(_loc2_.issueData);
-                };
-                _loc4_++;
-            };
-            _loc3_ = param1.readInteger();
-            _loc4_ = 0;
-            while (_loc4_ < _loc3_)
+                    this._issues.push(issueInfoParser.issueData);
+                }
+
+                i++;
+            }
+
+            itemCount = data.readInteger();
+            i = 0;
+
+            while (i < itemCount)
             {
-                this.var_3239.push(param1.readString());
-                _loc4_++;
-            };
-            _loc3_ = param1.readInteger();
-            _loc4_ = 0;
-            while (_loc4_ < _loc3_)
+                this._messageTemplates.push(data.readString());
+                i++;
+            }
+
+            itemCount = data.readInteger();
+            i = 0;
+            
+            while (i < itemCount)
             {
-                this.var_3240.push(new OffenceCategoryData(param1));
-                _loc4_++;
-            };
-            this.var_3242 = param1.readBoolean();
-            this.var_3243 = param1.readBoolean();
-            this.var_3244 = param1.readBoolean();
-            this.var_3245 = param1.readBoolean();
-            this.var_3246 = param1.readBoolean();
-            this.var_3247 = param1.readBoolean();
-            this.var_3248 = param1.readBoolean();
-            _loc3_ = param1.readInteger();
-            _loc4_ = 0;
-            while (_loc4_ < _loc3_)
+                this._offenceCategories.push(new OffenceCategoryData(data));
+                i++;
+            }
+
+            this._cfhPermission = data.readBoolean();
+            this._chatlogsPermission = data.readBoolean();
+            this._alertPermission = data.readBoolean();
+            this._kickPermission = data.readBoolean();
+            this._banPermission = data.readBoolean();
+            this._roomAlertPermission = data.readBoolean();
+            this._roomKickPermission = data.readBoolean();
+            
+            itemCount = data.readInteger();
+            i = 0;
+            
+            while (i < itemCount)
             {
-                this.var_3241.push(param1.readString());
-                _loc4_++;
-            };
+                this._roomMessageTemplates.push(data.readString());
+                i++;
+            }
+
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            var _loc1_:OffenceCategoryData;
             if (this._disposed)
             {
                 return;
-            };
+            }
+
             this._disposed = true;
-            this.var_3239 = null;
-            this.var_3241 = null;
+            this._messageTemplates = null;
+            this._roomMessageTemplates = null;
             this._issues = null;
-            for each (_loc1_ in this.var_3240)
+            
+            var offenceCategoryData: OffenceCategoryData;
+            
+            for each (offenceCategoryData in this._offenceCategories)
             {
-                _loc1_.dispose();
-            };
-            this.var_3240 = null;
+                offenceCategoryData.dispose();
+            }
+
+            this._offenceCategories = null;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get messageTemplates():Array
+        public function get messageTemplates(): Array
         {
-            return (this.var_3239);
+            return this._messageTemplates;
         }
 
-        public function get roomMessageTemplates():Array
+        public function get roomMessageTemplates(): Array
         {
-            return (this.var_3241);
+            return this._roomMessageTemplates;
         }
 
-        public function get issues():Array
+        public function get issues(): Array
         {
-            return (this._issues);
+            return this._issues;
         }
 
-        public function get offenceCategories():Array
+        public function get offenceCategories(): Array
         {
-            return (this.var_3240);
+            return this._offenceCategories;
         }
 
-        public function get cfhPermission():Boolean
+        public function get cfhPermission(): Boolean
         {
-            return (this.var_3242);
+            return this._cfhPermission;
         }
 
-        public function get chatlogsPermission():Boolean
+        public function get chatlogsPermission(): Boolean
         {
-            return (this.var_3243);
+            return this._chatlogsPermission;
         }
 
-        public function get alertPermission():Boolean
+        public function get alertPermission(): Boolean
         {
-            return (this.var_3244);
+            return this._alertPermission;
         }
 
-        public function get kickPermission():Boolean
+        public function get kickPermission(): Boolean
         {
-            return (this.var_3245);
+            return this._kickPermission;
         }
 
-        public function get banPermission():Boolean
+        public function get banPermission(): Boolean
         {
-            return (this.var_3246);
+            return this._banPermission;
         }
 
-        public function get roomAlertPermission():Boolean
+        public function get roomAlertPermission(): Boolean
         {
-            return (this.var_3247);
+            return this._roomAlertPermission;
         }
 
-        public function get roomKickPermission():Boolean
+        public function get roomKickPermission(): Boolean
         {
-            return (this.var_3248);
+            return this._roomKickPermission;
         }
 
     }

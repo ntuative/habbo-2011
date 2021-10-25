@@ -1,101 +1,102 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.inventory.trading
 {
-    public class ItemDataStructure 
+
+    public class ItemDataStructure
     {
 
-        private var var_2942:int;
-        private var var_2934:String;
-        private var var_2943:int;
-        private var var_2944:int;
-        private var _category:int;
-        private var var_2650:String;
-        private var var_2940:int;
-        private var var_2945:int;
-        private var var_2946:int;
-        private var var_2947:int;
-        private var var_2948:int;
-        private var var_2949:Boolean;
-        private var var_2950:int;
+        private var _itemId: int;
+        private var _itemType: String;
+        private var _roomItemId: int;
+        private var _itemTypeId: int;
+        private var _category: int;
+        private var _stuffData: String;
+        private var _extra: int;
+        private var _timeToExpiration: int;
+        private var _creationDay: int;
+        private var _creationMonth: int;
+        private var _creationYear: int;
+        private var _groupable: Boolean;
+        private var _unknown1: int;
 
-        public function ItemDataStructure(param1:int, param2:String, param3:int, param4:int, param5:int, param6:String, param7:int, param8:int, param9:int, param10:int, param11:int, param12:Boolean)
+        public function ItemDataStructure(itemId: int, itemType: String, roomItemId: int, itemTypeId: int, category: int, stuffData: String, extra: int, timeToExpiration: int, creationDay: int, creationMonth: int, creationYear: int, groupable: Boolean)
         {
-            this.var_2942 = param1;
-            this.var_2934 = param2;
-            this.var_2943 = param3;
-            this.var_2944 = param4;
-            this._category = param5;
-            this.var_2650 = param6;
-            this.var_2940 = param7;
-            this.var_2945 = param8;
-            this.var_2946 = param9;
-            this.var_2947 = param10;
-            this.var_2948 = param11;
-            this.var_2949 = param12;
+            this._itemId = itemId;
+            this._itemType = itemType;
+            this._roomItemId = roomItemId;
+            this._itemTypeId = itemTypeId;
+            this._category = category;
+            this._stuffData = stuffData;
+            this._extra = extra;
+            this._timeToExpiration = timeToExpiration;
+            this._creationDay = creationDay;
+            this._creationMonth = creationMonth;
+            this._creationYear = creationYear;
+            this._groupable = groupable;
         }
 
-        public function get itemID():int
+        public function get itemID(): int
         {
-            return (this.var_2942);
+            return this._itemId;
         }
 
-        public function get itemType():String
+        public function get itemType(): String
         {
-            return (this.var_2934);
+            return this._itemType;
         }
 
-        public function get roomItemID():int
+        public function get roomItemID(): int
         {
-            return (this.var_2943);
+            return this._roomItemId;
         }
 
-        public function get itemTypeID():int
+        public function get itemTypeID(): int
         {
-            return (this.var_2944);
+            return this._itemTypeId;
         }
 
-        public function get category():int
+        public function get category(): int
         {
-            return (this._category);
+            return this._category;
         }
 
-        public function get stuffData():String
+        public function get stuffData(): String
         {
-            return (this.var_2650);
+            return this._stuffData;
         }
 
-        public function get extra():int
+        public function get extra(): int
         {
-            return (this.var_2940);
+            return this._extra;
         }
 
-        public function get timeToExpiration():int
+        public function get timeToExpiration(): int
         {
-            return (this.var_2945);
+            return this._timeToExpiration;
         }
 
-        public function get creationDay():int
+        public function get creationDay(): int
         {
-            return (this.var_2946);
+            return this._creationDay;
         }
 
-        public function get creationMonth():int
+        public function get creationMonth(): int
         {
-            return (this.var_2947);
+            return this._creationMonth;
         }
 
-        public function get creationYear():int
+        public function get creationYear(): int
         {
-            return (this.var_2948);
+            return this._creationYear;
         }
 
-        public function get groupable():Boolean
+        public function get groupable(): Boolean
         {
-            return (this.var_2949);
+            return this._groupable;
         }
 
-        public function get songID():int
+        public function get songID(): int
         {
-            return (this.var_2940);
+            return this._extra;
         }
 
     }

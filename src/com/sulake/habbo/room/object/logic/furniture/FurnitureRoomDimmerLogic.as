@@ -1,9 +1,12 @@
 ﻿package com.sulake.habbo.room.object.logic.furniture
 {
+
     import com.sulake.habbo.room.events.RoomObjectWidgetRequestEvent;
     import com.sulake.habbo.room.events.RoomObjectDimmerStateUpdateEvent;
     import com.sulake.room.events.RoomObjectEvent;
+
     import flash.events.MouseEvent;
+
     import com.sulake.room.events.RoomSpriteMouseEvent;
     import com.sulake.room.utils.IRoomGeometry;
     import com.sulake.room.object.IRoomObjectModelController;
@@ -11,30 +14,36 @@
     import com.sulake.room.messages.RoomObjectUpdateMessage;
     import com.sulake.habbo.room.object.RoomObjectVariableEnum;
 
-    public class FurnitureRoomDimmerLogic extends FurnitureLogic 
+    public class FurnitureRoomDimmerLogic extends FurnitureLogic
     {
 
-        private var var_3967:Boolean = false;
+        private var var_3967: Boolean = false;
 
-        override public function getEventTypes():Array
+        override public function getEventTypes(): Array
         {
-            var _loc1_:Array = [RoomObjectWidgetRequestEvent.var_412, RoomObjectWidgetRequestEvent.var_417, RoomObjectDimmerStateUpdateEvent.var_400];
-            return (getAllEventTypes(super.getEventTypes(), _loc1_));
+            var _loc1_: Array = [
+                RoomObjectWidgetRequestEvent.var_412,
+                RoomObjectWidgetRequestEvent.var_417,
+                RoomObjectDimmerStateUpdateEvent.RODSUE_DIMMER_STATE
+            ];
+            return getAllEventTypes(super.getEventTypes(), _loc1_);
         }
 
-        override public function mouseEvent(param1:RoomSpriteMouseEvent, param2:IRoomGeometry):void
+        override public function mouseEvent(param1: RoomSpriteMouseEvent, param2: IRoomGeometry): void
         {
-            var _loc3_:int;
-            var _loc4_:String;
-            var _loc5_:RoomObjectEvent;
-            if (((param1 == null) || (param2 == null)))
+            var _loc3_: int;
+            var _loc4_: String;
+            var _loc5_: RoomObjectEvent;
+            if (param1 == null || param2 == null)
             {
                 return;
-            };
+            }
+
             if (object == null)
             {
                 return;
-            };
+            }
+
             switch (param1.type)
             {
                 case MouseEvent.DOUBLE_CLICK:
@@ -44,25 +53,27 @@
                         _loc4_ = object.getType();
                         _loc5_ = new RoomObjectWidgetRequestEvent(RoomObjectWidgetRequestEvent.var_412, _loc3_, _loc4_);
                         eventDispatcher.dispatchEvent(_loc5_);
-                    };
+                    }
+
                     return;
                 default:
                     super.mouseEvent(param1, param2);
-            };
+            }
+
         }
 
-        override public function dispose():void
+        override public function dispose(): void
         {
-            var _loc1_:int;
-            var _loc2_:String;
-            var _loc3_:RoomObjectDimmerStateUpdateEvent;
-            var _loc4_:int;
-            var _loc5_:uint;
-            var _loc6_:int;
-            var _loc7_:RoomObjectEvent;
+            var _loc1_: int;
+            var _loc2_: String;
+            var _loc3_: RoomObjectDimmerStateUpdateEvent;
+            var _loc4_: int;
+            var _loc5_: uint;
+            var _loc6_: int;
+            var _loc7_: RoomObjectEvent;
             if (this.var_3967)
             {
-                if (((!(eventDispatcher == null)) && (!(object == null))))
+                if (eventDispatcher != null && object != null)
                 {
                     _loc1_ = object.getId();
                     _loc2_ = object.getType();
@@ -73,28 +84,31 @@
                     eventDispatcher.dispatchEvent(_loc3_);
                     _loc7_ = new RoomObjectWidgetRequestEvent(RoomObjectWidgetRequestEvent.var_417, _loc1_, _loc2_);
                     eventDispatcher.dispatchEvent(_loc7_);
-                };
+                }
+
                 this.var_3967 = false;
-            };
+            }
+
             super.dispose();
         }
 
-        private function dispatchColorUpdateEvent(param1:String):void
+        private function dispatchColorUpdateEvent(param1: String): void
         {
-            var _loc3_:int;
-            var _loc4_:int;
-            var _loc5_:int;
-            var _loc6_:String;
-            var _loc7_:uint;
-            var _loc8_:int;
-            var _loc9_:int;
-            var _loc10_:String;
-            var _loc11_:RoomObjectDimmerStateUpdateEvent;
+            var _loc3_: int;
+            var _loc4_: int;
+            var _loc5_: int;
+            var _loc6_: String;
+            var _loc7_: uint;
+            var _loc8_: int;
+            var _loc9_: int;
+            var _loc10_: String;
+            var _loc11_: RoomObjectDimmerStateUpdateEvent;
             if (param1 == null)
             {
                 return;
-            };
-            var _loc2_:Array = param1.split(",");
+            }
+
+            var _loc2_: Array = param1.split(",");
             if (_loc2_.length >= 5)
             {
                 _loc3_ = this.readState(param1);
@@ -107,8 +121,9 @@
                 {
                     _loc7_ = 0xFFFFFF;
                     _loc8_ = 0xFF;
-                };
-                if (((!(eventDispatcher == null)) && (!(object == null))))
+                }
+
+                if (eventDispatcher != null && object != null)
                 {
                     _loc9_ = object.getId();
                     _loc10_ = object.getType();
@@ -116,30 +131,34 @@
                     _loc11_ = new RoomObjectDimmerStateUpdateEvent(_loc9_, _loc10_, _loc3_, _loc4_, _loc5_, _loc7_, _loc8_);
                     eventDispatcher.dispatchEvent(_loc11_);
                     this.var_3967 = true;
-                };
-            };
+                }
+
+            }
+
         }
 
-        private function readState(param1:String):int
+        private function readState(param1: String): int
         {
-            var _loc3_:int;
+            var _loc3_: int;
             if (param1 == null)
             {
-                return (0);
-            };
-            var _loc2_:Array = param1.split(",");
+                return 0;
+            }
+
+            var _loc2_: Array = param1.split(",");
             if (_loc2_.length >= 5)
             {
-                return (parseInt(_loc2_[0]) - 1);
-            };
-            return (0);
+                return parseInt(_loc2_[0]) - 1;
+            }
+
+            return 0;
         }
 
-        override public function processUpdateMessage(param1:RoomObjectUpdateMessage):void
+        override public function processUpdateMessage(param1: RoomObjectUpdateMessage): void
         {
-            var _loc4_:int;
-            var _loc2_:IRoomObjectModelController = object.getModelController();
-            var _loc3_:RoomObjectDataUpdateMessage = (param1 as RoomObjectDataUpdateMessage);
+            var _loc4_: int;
+            var _loc2_: IRoomObjectModelController = object.getModelController();
+            var _loc3_: RoomObjectDataUpdateMessage = param1 as RoomObjectDataUpdateMessage;
             if (_loc3_ != null)
             {
                 if (_loc3_.data != null)
@@ -148,25 +167,29 @@
                     _loc4_ = this.readState(_loc3_.data);
                     _loc3_ = new RoomObjectDataUpdateMessage(_loc4_, _loc3_.data);
                     super.processUpdateMessage(_loc3_);
-                };
+                }
+
                 return;
-            };
+            }
+
             super.processUpdateMessage(param1);
         }
 
-        override public function update(param1:int):void
+        override public function update(param1: int): void
         {
-            var _loc2_:String;
+            var _loc2_: String;
             super.update(param1);
-            if (((!(object == null)) && (!(object.getModelController() == null))))
+            if (object != null && object.getModelController() != null)
             {
-                _loc2_ = object.getModelController().getString(RoomObjectVariableEnum.var_503);
-                if (((!(_loc2_ == null)) && (_loc2_.length > 0)))
+                _loc2_ = object.getModelController().getString(RoomObjectVariableEnum.FURNITURE_DATA);
+                if (_loc2_ != null && _loc2_.length > 0)
                 {
-                    object.getModelController().setString(RoomObjectVariableEnum.var_503, "");
+                    object.getModelController().setString(RoomObjectVariableEnum.FURNITURE_DATA, "");
                     this.dispatchColorUpdateEvent(_loc2_);
-                };
-            };
+                }
+
+            }
+
         }
 
     }

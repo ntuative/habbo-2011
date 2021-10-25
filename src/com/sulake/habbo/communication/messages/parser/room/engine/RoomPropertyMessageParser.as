@@ -1,77 +1,81 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.engine
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class RoomPropertyMessageParser implements IMessageParser 
+    public class RoomPropertyMessageParser implements IMessageParser
     {
 
-        private var _roomId:int = 0;
-        private var _roomCategory:int = 0;
-        private var _floorType:String = null;
-        private var var_2721:String = null;
-        private var var_2722:String = null;
-        private var var_3305:String = null;
+        private var _roomId: int = 0;
+        private var _roomCategory: int = 0;
+        private var _floorType: String = null;
+        private var _wallType: String = null;
+        private var _landscapeType: String = null;
+        private var _animatedLandskapeType: String = null;
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get roomCategory():int
+        public function get roomCategory(): int
         {
-            return (this._roomCategory);
+            return this._roomCategory;
         }
 
-        public function get floorType():String
+        public function get floorType(): String
         {
-            return (this._floorType);
+            return this._floorType;
         }
 
-        public function get wallType():String
+        public function get wallType(): String
         {
-            return (this.var_2721);
+            return this._wallType;
         }
 
-        public function get landscapeType():String
+        public function get landscapeType(): String
         {
-            return (this.var_2722);
+            return this._landscapeType;
         }
 
-        public function get animatedLandskapeType():String
+        public function get animatedLandskapeType(): String
         {
-            return (this.var_3305);
+            return this._animatedLandskapeType;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._floorType = null;
-            this.var_2721 = null;
-            this.var_2722 = null;
-            this.var_3305 = null;
-            return (true);
+            this._wallType = null;
+            this._landscapeType = null;
+            this._animatedLandskapeType = null;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc2_:String = param1.readString();
-            var _loc3_:String = param1.readString();
-            switch (_loc2_)
+            var type: String = data.readString();
+            var value: String = data.readString();
+
+            switch (type)
             {
                 case "floor":
-                    this._floorType = _loc3_;
+                    this._floorType = value;
                     break;
                 case "wallpaper":
-                    this.var_2721 = _loc3_;
+                    this._wallType = value;
                     break;
                 case "landscape":
-                    this.var_2722 = _loc3_;
+                    this._landscapeType = value;
                     break;
                 case "landscapeanim":
-                    this.var_3305 = _loc3_;
+                    this._animatedLandskapeType = value;
                     break;
-            };
-            return (true);
+            }
+
+            return true;
         }
 
     }

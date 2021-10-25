@@ -1,9 +1,10 @@
 ﻿package com.sulake.core.window.utils
 {
-    public interface IIterable 
+
+    public interface IIterable
     {
 
-        function get iterator():IIterator;
+        function get iterator(): IIterator;
 
     }
 }

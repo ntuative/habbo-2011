@@ -1,42 +1,48 @@
 ﻿package com.sulake.habbo.communication.messages.parser.inventory.avatareffect
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.inventory.avatareffect.AvatarEffect;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class AvatarEffectsMessageParser implements IMessageParser 
+    public class AvatarEffectsMessageParser implements IMessageParser
     {
 
-        private var var_3192:Array;
+        private var _effects: Array;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3192 = null;
-            return (true);
+            this._effects = null;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(param1: IMessageDataWrapper): Boolean
         {
-            var _loc4_:AvatarEffect;
-            this.var_3192 = new Array();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._effects = [];
+            var effect: AvatarEffect;
+            var effectCount: int = param1.readInteger();
+            var i: int;
+            
+            while (i < effectCount)
             {
-                _loc4_ = new AvatarEffect();
-                _loc4_.type = param1.readInteger();
-                _loc4_.duration = param1.readInteger();
-                _loc4_.inactiveEffectsInInventory = param1.readInteger();
-                _loc4_.secondsLeftIfActive = param1.readInteger();
-                this.var_3192.push(_loc4_);
-                _loc3_++;
-            };
-            return (true);
+                effect = new AvatarEffect();
+                
+                effect.type = param1.readInteger();
+                effect.duration = param1.readInteger();
+                effect.inactiveEffectsInInventory = param1.readInteger();
+                effect.secondsLeftIfActive = param1.readInteger();
+                
+                this._effects.push(effect);
+                i++;
+            }
+            
+            return true;
         }
 
-        public function get effects():Array
+        public function get effects(): Array
         {
-            return (this.var_3192);
+            return this._effects;
         }
 
     }

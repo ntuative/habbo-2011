@@ -1,25 +1,26 @@
 ﻿package com.sulake.habbo.avatar.pets
 {
-    public class PetEditorInfo 
+
+    public class PetEditorInfo
     {
 
-        private var var_2512:Boolean;
-        private var var_2513:Boolean;
+        private var _isClub: Boolean;
+        private var _isSelectable: Boolean;
 
-        public function PetEditorInfo(param1:XML)
+        public function PetEditorInfo(param1: XML)
         {
-            this.var_2512 = Boolean(parseInt(param1.@club));
-            this.var_2513 = Boolean(parseInt(param1.@selectable));
+            this._isClub = Boolean(parseInt(param1.@club));
+            this._isSelectable = Boolean(parseInt(param1.@selectable));
         }
 
-        public function get isClub():Boolean
+        public function get isClub(): Boolean
         {
-            return (this.var_2512);
+            return this._isClub;
         }
 
-        public function get isSelectable():Boolean
+        public function get isSelectable(): Boolean
         {
-            return (this.var_2513);
+            return this._isSelectable;
         }
 
     }

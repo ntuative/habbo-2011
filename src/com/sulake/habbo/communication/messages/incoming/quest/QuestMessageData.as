@@ -1,105 +1,106 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.quest
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class QuestMessageData 
+    public class QuestMessageData
     {
 
-        private var var_3020:String;
-        private var var_3021:int;
-        private var var_3022:int;
-        private var var_2831:int;
-        private var _id:int;
-        private var var_3023:Boolean;
-        private var _type:String;
-        private var var_3024:String;
-        private var var_3025:int;
-        private var var_3026:String;
-        private var var_3027:int;
-        private var var_3028:int;
+        private var _campaignCode: String;
+        private var _completedQuestsInCampaign: int;
+        private var _questCountInCampaign: int;
+        private var _activityPointType: int;
+        private var _id: int;
+        private var _accepted: Boolean;
+        private var _type: String;
+        private var _roomItemTypeName: String;
+        private var _rewardCurrencyAmount: int;
+        private var _localizationCode: String;
+        private var _completedSteps: int;
+        private var _totalSteps: int;
 
-        public function QuestMessageData(param1:IMessageDataWrapper)
+        public function QuestMessageData(param1: IMessageDataWrapper)
         {
-            this.var_3020 = param1.readString();
-            this.var_3021 = param1.readInteger();
-            this.var_3022 = param1.readInteger();
-            this.var_2831 = param1.readInteger();
+            this._campaignCode = param1.readString();
+            this._completedQuestsInCampaign = param1.readInteger();
+            this._questCountInCampaign = param1.readInteger();
+            this._activityPointType = param1.readInteger();
             this._id = param1.readInteger();
-            this.var_3023 = param1.readBoolean();
+            this._accepted = param1.readBoolean();
             this._type = param1.readString();
-            this.var_3024 = param1.readString();
-            this.var_3025 = param1.readInteger();
-            this.var_3026 = param1.readString();
-            this.var_3027 = param1.readInteger();
-            this.var_3028 = param1.readInteger();
+            this._roomItemTypeName = param1.readString();
+            this._rewardCurrencyAmount = param1.readInteger();
+            this._localizationCode = param1.readString();
+            this._completedSteps = param1.readInteger();
+            this._totalSteps = param1.readInteger();
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this._id = 0;
             this._type = "";
-            this.var_3024 = "";
-            this.var_3025 = 0;
+            this._roomItemTypeName = "";
+            this._rewardCurrencyAmount = 0;
         }
 
-        public function get campaignCode():String
+        public function get campaignCode(): String
         {
-            return (this.var_3020);
+            return this._campaignCode;
         }
 
-        public function get completedQuestsInCampaign():int
+        public function get completedQuestsInCampaign(): int
         {
-            return (this.var_3021);
+            return this._completedQuestsInCampaign;
         }
 
-        public function get questCountInCampaign():int
+        public function get questCountInCampaign(): int
         {
-            return (this.var_3022);
+            return this._questCountInCampaign;
         }
 
-        public function get activityPointType():int
+        public function get activityPointType(): int
         {
-            return (this.var_2831);
+            return this._activityPointType;
         }
 
-        public function get accepted():Boolean
+        public function get accepted(): Boolean
         {
-            return (this.var_3023);
+            return this._accepted;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get type():String
+        public function get type(): String
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get roomItemTypeName():String
+        public function get roomItemTypeName(): String
         {
-            return (this.var_3024);
+            return this._roomItemTypeName;
         }
 
-        public function get rewardCurrencyAmount():int
+        public function get rewardCurrencyAmount(): int
         {
-            return (this.var_3025);
+            return this._rewardCurrencyAmount;
         }
 
-        public function get localizationCode():String
+        public function get localizationCode(): String
         {
-            return (this.var_3026);
+            return this._localizationCode;
         }
 
-        public function get completedSteps():int
+        public function get completedSteps(): int
         {
-            return (this.var_3027);
+            return this._completedSteps;
         }
 
-        public function get totalSteps():int
+        public function get totalSteps(): int
         {
-            return (this.var_3028);
+            return this._totalSteps;
         }
 
     }

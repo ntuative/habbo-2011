@@ -1,28 +1,31 @@
 ﻿package com.sulake.habbo.communication.messages.parser.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class VoucherRedeemErrorMessageParser implements IMessageParser 
+    public class VoucherRedeemErrorMessageParser implements IMessageParser
     {
 
-        private var var_2102:String = "";
+        private var _errorCode: String = "";
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_2102 = "";
-            return (true);
+            this._errorCode = "";
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2102 = param1.readString();
-            return (true);
+            this._errorCode = data.readString();
+
+            return true;
         }
 
-        public function get errorCode():String
+        public function get errorCode(): String
         {
-            return (this.var_2102);
+            return this._errorCode;
         }
 
     }

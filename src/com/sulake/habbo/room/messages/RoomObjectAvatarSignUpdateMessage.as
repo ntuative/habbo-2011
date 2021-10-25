@@ -1,18 +1,19 @@
 ﻿package com.sulake.habbo.room.messages
 {
-    public class RoomObjectAvatarSignUpdateMessage extends RoomObjectUpdateStateMessage 
+
+    public class RoomObjectAvatarSignUpdateMessage extends RoomObjectUpdateStateMessage
     {
 
-        private var var_3948:int;
+        private var _signType: int;
 
-        public function RoomObjectAvatarSignUpdateMessage(param1:int)
+        public function RoomObjectAvatarSignUpdateMessage(signType: int)
         {
-            this.var_3948 = param1;
+            this._signType = signType;
         }
 
-        public function get signType():int
+        public function get signType(): int
         {
-            return (this.var_3948);
+            return this._signType;
         }
 
     }

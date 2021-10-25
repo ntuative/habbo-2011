@@ -1,30 +1,31 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.notifications
 {
+
     import com.sulake.core.communication.messages.MessageEvent;
     import com.sulake.core.communication.messages.IMessageEvent;
     import com.sulake.habbo.communication.messages.parser.notifications.HabboActivityPointNotificationMessageParser;
 
-    public class HabboActivityPointNotificationMessageEvent extends MessageEvent implements IMessageEvent 
+    public class HabboActivityPointNotificationMessageEvent extends MessageEvent implements IMessageEvent
     {
 
-        public function HabboActivityPointNotificationMessageEvent(param1:Function)
+        public function HabboActivityPointNotificationMessageEvent(param1: Function)
         {
             super(param1, HabboActivityPointNotificationMessageParser);
         }
 
-        public function get amount():int
+        public function get amount(): int
         {
-            return ((var_361 as HabboActivityPointNotificationMessageParser).amount);
+            return (_parser as HabboActivityPointNotificationMessageParser).amount;
         }
 
-        public function get change():int
+        public function get change(): int
         {
-            return ((var_361 as HabboActivityPointNotificationMessageParser).change);
+            return (_parser as HabboActivityPointNotificationMessageParser).change;
         }
 
-        public function get type():int
+        public function get type(): int
         {
-            return ((var_361 as HabboActivityPointNotificationMessageParser).type);
+            return (_parser as HabboActivityPointNotificationMessageParser).type;
         }
 
     }

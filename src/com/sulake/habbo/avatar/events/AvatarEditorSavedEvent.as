@@ -1,23 +1,24 @@
 ﻿package com.sulake.habbo.avatar.events
 {
+
     import flash.events.Event;
 
-    public class AvatarEditorSavedEvent extends Event 
+    public class AvatarEditorSavedEvent extends Event
     {
 
-        public static const AVATAREDITOR_SAVED:String = "AVATAREDITOR_SAVED";
+        public static const AVATAREDITOR_SAVED: String = "AVATAREDITOR_SAVED";
 
-        private var var_2474:String;
+        private var _figureString: String;
 
-        public function AvatarEditorSavedEvent(param1:String, param2:Boolean=false, param3:Boolean=false)
+        public function AvatarEditorSavedEvent(figureString: String, param2: Boolean = false, param3: Boolean = false)
         {
             super(AVATAREDITOR_SAVED, param2, param3);
-            this.var_2474 = param1;
+            this._figureString = figureString;
         }
 
-        public function get figureString():String
+        public function get figureString(): String
         {
-            return (this.var_2474);
+            return this._figureString;
         }
 
     }

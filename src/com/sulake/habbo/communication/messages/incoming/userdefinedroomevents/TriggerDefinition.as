@@ -1,39 +1,44 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.userdefinedroomevents
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class TriggerDefinition extends Triggerable 
+    public class TriggerDefinition extends Triggerable
     {
 
-        private var var_3078:int;
-        private var var_3077:Array = new Array();
+        private var _code: int;
+        private var _conflictingActions: Array = [];
 
-        public function TriggerDefinition(param1:IMessageDataWrapper)
+        public function TriggerDefinition(data: IMessageDataWrapper)
         {
-            super(param1);
-            this.var_3078 = param1.readInteger();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            super(data);
+
+            this._code = data.readInteger();
+            
+            var conflictingActionCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < conflictingActionCount)
             {
-                this.var_3077.push(param1.readInteger());
-                _loc3_++;
-            };
+                this._conflictingActions.push(data.readInteger());
+                i++;
+            }
+
         }
 
-        public function get triggerConf():int
+        public function get triggerConf(): int
         {
-            return (this.var_3078);
+            return this._code;
         }
 
-        override public function get code():int
+        override public function get code(): int
         {
-            return (this.var_3078);
+            return this._code;
         }
 
-        public function get conflictingActions():Array
+        public function get conflictingActions(): Array
         {
-            return (this.var_3077);
+            return this._conflictingActions;
         }
 
     }

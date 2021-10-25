@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.inventory.pets
 {
+
     import com.sulake.habbo.inventory.IInventoryView;
     import com.sulake.habbo.avatar.IPetImageListener;
     import com.sulake.habbo.room.IGetImageListener;
@@ -13,8 +14,10 @@
     import com.sulake.core.window.components.IButtonWindow;
     import com.sulake.core.assets.XmlAsset;
     import com.sulake.core.window.components.IBitmapWrapperWindow;
+
     import flash.display.BitmapData;
     import flash.geom.Point;
+
     import com.sulake.core.window.events.WindowMouseEvent;
     import com.sulake.habbo.localization.IHabboLocalizationManager;
     import com.sulake.habbo.communication.messages.parser.inventory.pets.PetData;
@@ -29,29 +32,29 @@
     import com.sulake.habbo.avatar.enum.AvatarSetType;
     import com.sulake.room.utils.Vector3d;
 
-    public class PetsView implements IInventoryView, IPetImageListener, IGetImageListener 
+    public class PetsView implements IInventoryView, IPetImageListener, IGetImageListener
     {
 
-        private const var_3556:int = 0;
-        private const var_3557:int = 1;
-        private const var_3558:int = 2;
-        private const var_3559:int = 3;
+        private const var_3556: int = 0;
+        private const var_3557: int = 1;
+        private const var_3558: int = 2;
+        private const var_3559: int = 3;
 
-        private var _windowManager:IHabboWindowManager;
-        private var _assetLibrary:IAssetLibrary;
-        private var _view:IWindowContainer;
-        private var var_2446:PetsModel;
-        private var _disposed:Boolean = false;
-        private var var_2842:IItemGridWindow;
-        private var _roomEngine:IRoomEngine;
-        private var _avatarRenderer:IAvatarRenderManager;
-        private var var_3581:Map;
-        private var var_2730:PetsGridItem;
-        private var var_3563:int = 0;
+        private var _windowManager: IHabboWindowManager;
+        private var _assetLibrary: IAssetLibrary;
+        private var _view: IWindowContainer;
+        private var var_2446: PetsModel;
+        private var _disposed: Boolean = false;
+        private var var_2842: IItemGridWindow;
+        private var _roomEngine: IRoomEngine;
+        private var _avatarRenderer: IAvatarRenderManager;
+        private var var_3581: Map;
+        private var var_2730: PetsGridItem;
+        private var var_3563: int = 0;
 
-        public function PetsView(param1:PetsModel, param2:IHabboWindowManager, param3:IAssetLibrary, param4:IHabboLocalizationManager, param5:IRoomEngine, param6:IAvatarRenderManager)
+        public function PetsView(param1: PetsModel, param2: IHabboWindowManager, param3: IAssetLibrary, param4: IHabboLocalizationManager, param5: IRoomEngine, param6: IAvatarRenderManager)
         {
-            var _loc11_:IButtonWindow;
+            var _loc11_: IButtonWindow;
             super();
             this.var_2446 = param1;
             this._assetLibrary = param3;
@@ -59,48 +62,52 @@
             this._roomEngine = param5;
             this._avatarRenderer = param6;
             this.var_3581 = new Map();
-            var _loc7_:XmlAsset = (this._assetLibrary.getAssetByName("inventory_pets_view_xml") as XmlAsset);
-            if (((_loc7_ == null) || (_loc7_.content == null)))
+            var _loc7_: XmlAsset = this._assetLibrary.getAssetByName("inventory_pets_view_xml") as XmlAsset;
+            if (_loc7_ == null || _loc7_.content == null)
             {
                 return;
-            };
-            this._view = (this._windowManager.buildFromXML((_loc7_.content as XML)) as IWindowContainer);
+            }
+
+            this._view = (this._windowManager.buildFromXML(_loc7_.content as XML) as IWindowContainer);
             if (this._view == null)
             {
                 return;
-            };
+            }
+
             this._view.visible = false;
             this._view.procedure = this.windowEventHandler;
             this.var_2842 = (this._view.findChildByName("grid") as IItemGridWindow);
-            var _loc8_:IBitmapWrapperWindow = (this._view.findChildByName("download_image") as IBitmapWrapperWindow);
+            var _loc8_: IBitmapWrapperWindow = this._view.findChildByName("download_image") as IBitmapWrapperWindow;
             _loc8_.bitmap = new BitmapData(_loc8_.width, _loc8_.height);
-            var _loc9_:BitmapData = (this._assetLibrary.getAssetByName("download_icon_png").content as BitmapData);
-            _loc8_.bitmap.copyPixels(_loc9_, _loc9_.rect, new Point(((_loc8_.width - _loc9_.width) / 2), ((_loc8_.height - _loc9_.height) / 2)), null, null, true);
+            var _loc9_: BitmapData = this._assetLibrary.getAssetByName("download_icon_png").content as BitmapData;
+            _loc8_.bitmap.copyPixels(_loc9_, _loc9_.rect, new Point((_loc8_.width - _loc9_.width) / 2, (_loc8_.height - _loc9_.height) / 2), null, null, true);
             _loc8_ = (this._view.findChildByName("image") as IBitmapWrapperWindow);
             _loc8_.bitmap = new BitmapData(_loc8_.width, _loc8_.height);
-            var _loc10_:BitmapData = (this._assetLibrary.getAssetByName("inventory_empty_png").content as BitmapData);
-            _loc8_.bitmap.copyPixels(_loc10_, _loc10_.rect, new Point(((_loc8_.width - _loc10_.width) / 2), ((_loc8_.height - _loc10_.height) / 2)), null, null, true);
+            var _loc10_: BitmapData = this._assetLibrary.getAssetByName("inventory_empty_png").content as BitmapData;
+            _loc8_.bitmap.copyPixels(_loc10_, _loc10_.rect, new Point((_loc8_.width - _loc10_.width) / 2, (_loc8_.height - _loc10_.height) / 2), null, null, true);
             _loc11_ = (this._view.findChildByName("place_button") as IButtonWindow);
             if (_loc11_ != null)
             {
                 _loc11_.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.placeButtonClickHandler);
-            };
+            }
+
             _loc11_ = (this._view.findChildByName("open_catalog_btn") as IButtonWindow);
             if (_loc11_ != null)
             {
                 _loc11_.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.catalogButtonClickHandler);
-            };
+            }
+
             this.selectPetsTab();
             this.updatePreview();
             this.setViewToState();
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (!this._disposed)
             {
@@ -108,51 +115,57 @@
                 this.var_2446 = null;
                 this._view = null;
                 this._disposed = true;
-            };
+            }
+
         }
 
-        public function update():void
+        public function update(): void
         {
             this.updateGrid();
             this.updatePreview(this.var_2730);
         }
 
-        public function removePet(param1:int):void
+        public function removePet(param1: int): void
         {
-            var _loc2_:PetsGridItem = (this.var_3581.remove(param1) as PetsGridItem);
+            var _loc2_: PetsGridItem = this.var_3581.remove(param1) as PetsGridItem;
             if (_loc2_ == null)
             {
                 return;
-            };
+            }
+
             this.var_2842.removeGridItem(_loc2_.window);
             if (this.var_2730 == _loc2_)
             {
                 this.var_2730 = null;
                 this.selectFirst();
-            };
+            }
+
         }
 
-        private function selectFirst():void
+        private function selectFirst(): void
         {
-            if (((this.var_3581 == null) || (this.var_3581.length == 0)))
+            if (this.var_3581 == null || this.var_3581.length == 0)
             {
                 this.updatePreview();
                 return;
-            };
+            }
+
             this.setSelectedGridItem(this.var_3581.getWithIndex(0));
         }
 
-        public function addPet(param1:PetData):void
+        public function addPet(param1: PetData): void
         {
             if (param1 == null)
             {
                 return;
-            };
+            }
+
             if (this.var_3581.getValue(param1.id) != null)
             {
                 return;
-            };
-            var _loc2_:PetsGridItem = new PetsGridItem(this, param1, this._windowManager, this._assetLibrary, this._avatarRenderer);
+            }
+
+            var _loc2_: PetsGridItem = new PetsGridItem(this, param1, this._windowManager, this._assetLibrary, this._avatarRenderer);
             if (_loc2_ != null)
             {
                 this.var_2842.addGridItem(_loc2_.window);
@@ -160,139 +173,157 @@
                 if (this.var_2730 == null)
                 {
                     this.selectFirst();
-                };
-            };
+                }
+
+            }
+
         }
 
-        private function updateGrid():void
+        private function updateGrid(): void
         {
-            var _loc2_:PetData;
+            var _loc2_: PetData;
             if (this._view == null)
             {
                 return;
-            };
+            }
+
             this.var_2842.removeGridItems();
             this.var_3581.reset();
-            var _loc1_:Map = this.var_2446.pets;
+            var _loc1_: Map = this.var_2446.pets;
             if (_loc1_ == null)
             {
                 return;
-            };
+            }
+
             for each (_loc2_ in _loc1_)
             {
                 this.addPet(_loc2_);
-            };
+            }
+
         }
 
-        private function catalogButtonClickHandler(param1:WindowMouseEvent):void
+        private function catalogButtonClickHandler(param1: WindowMouseEvent): void
         {
             this.var_2446.requestCatalogOpen();
         }
 
-        private function placeButtonClickHandler(param1:WindowMouseEvent):void
+        private function placeButtonClickHandler(param1: WindowMouseEvent): void
         {
             if (this.var_2730 == null)
             {
                 return;
-            };
-            var _loc2_:PetData = this.var_2730.pet;
+            }
+
+            var _loc2_: PetData = this.var_2730.pet;
             if (_loc2_ == null)
             {
                 return;
-            };
+            }
+
             this.placePetToRoom(_loc2_.id);
         }
 
-        public function placePetToRoom(param1:int, param2:Boolean=false):void
+        public function placePetToRoom(param1: int, param2: Boolean = false): void
         {
             this.var_2446.placePetToRoom(param1, param2);
         }
 
-        public function getWindowContainer():IWindowContainer
+        public function getWindowContainer(): IWindowContainer
         {
             if (this._view == null)
             {
-                return (null);
-            };
+                return null;
+            }
+
             if (this._view.disposed)
             {
-                return (null);
-            };
-            return (this._view);
+                return null;
+            }
+
+            return this._view;
         }
 
-        private function windowEventHandler(param1:WindowEvent, param2:IWindow):void
+        private function windowEventHandler(param1: WindowEvent, param2: IWindow): void
         {
             if (param1.type == WindowEvent.var_560)
             {
                 switch (param2.name)
                 {
                     case "tab_floor":
-                        this.var_2446.switchCategory(FurniModel.var_1222);
+                        this.var_2446.switchCategory(FurniModel.FLOOR);
                         break;
                     case "tab_wall":
-                        this.var_2446.switchCategory(FurniModel.var_1223);
+                        this.var_2446.switchCategory(FurniModel.WALL);
                         break;
-                };
+                }
+
                 this.selectPetsTab();
-            };
+            }
+
         }
 
-        private function selectPetsTab():void
+        private function selectPetsTab(): void
         {
             if (this._view == null)
             {
                 return;
-            };
-            var _loc1_:ISelectorWindow = (this._view.findChildByName("category_selector") as ISelectorWindow);
+            }
+
+            var _loc1_: ISelectorWindow = this._view.findChildByName("category_selector") as ISelectorWindow;
             if (_loc1_ != null)
             {
                 _loc1_.setSelected(_loc1_.getSelectableByName("tab_pets"));
-            };
+            }
+
         }
 
-        public function setSelectedGridItem(param1:PetsGridItem):void
+        public function setSelectedGridItem(param1: PetsGridItem): void
         {
             if (this.var_2730 != null)
             {
                 this.var_2730.setSelected(false);
-            };
+            }
+
             this.var_2730 = param1;
             if (this.var_2730 != null)
             {
                 this.var_2730.setSelected(true);
-            };
+            }
+
             this.updatePreview(param1);
         }
 
-        public function setViewToState():void
+        public function setViewToState(): void
         {
-            var _loc2_:int;
-            var _loc1_:Map = this.var_2446.pets;
+            var _loc2_: int;
+            var _loc1_: Map = this.var_2446.pets;
             if (!this.var_2446.isListInited())
             {
                 _loc2_ = this.var_3557;
             }
             else
             {
-                if (((!(_loc1_)) || (_loc1_.length == 0)))
+                if (!_loc1_ || _loc1_.length == 0)
                 {
                     _loc2_ = this.var_3558;
                 }
                 else
                 {
                     _loc2_ = this.var_3559;
-                };
-            };
+                }
+
+            }
+
             if (this.var_3563 == _loc2_)
             {
                 return;
-            };
+            }
+
             this.var_3563 = _loc2_;
-            var _loc3_:IWindowContainer = (this._view.findChildByName("loading_container") as IWindowContainer);
-            var _loc4_:IWindowContainer = (this._view.findChildByName("empty_container") as IWindowContainer);
-            var _loc5_:IWindowContainer = (this._view.findChildByName("grid_container") as IWindowContainer);
-            var _loc6_:IWindowContainer = (this._view.findChildByName("preview_container") as IWindowContainer);
+            var _loc3_: IWindowContainer = this._view.findChildByName("loading_container") as IWindowContainer;
+            var _loc4_: IWindowContainer = this._view.findChildByName("empty_container") as IWindowContainer;
+            var _loc5_: IWindowContainer = this._view.findChildByName("grid_container") as IWindowContainer;
+            var _loc6_: IWindowContainer = this._view.findChildByName("preview_container") as IWindowContainer;
             switch (_loc2_)
             {
                 case this.var_3557:
@@ -315,22 +346,24 @@
                     this.updateGrid();
                     this.updatePreview();
                     return;
-            };
+            }
+
         }
 
-        private function updatePreview(param1:PetsGridItem=null):void
+        private function updatePreview(param1: PetsGridItem = null): void
         {
-            var _loc2_:BitmapData;
-            var _loc3_:String;
-            var _loc4_:String;
-            var _loc5_:Boolean;
-            var _loc12_:PetData;
-            var _loc13_:BitmapData;
+            var _loc2_: BitmapData;
+            var _loc3_: String;
+            var _loc4_: String;
+            var _loc5_: Boolean;
+            var _loc12_: PetData;
+            var _loc13_: BitmapData;
             if (this._view == null)
             {
                 return;
-            };
-            if (((param1 == null) || (param1.pet == null)))
+            }
+
+            if (param1 == null || param1.pet == null)
             {
                 _loc2_ = new BitmapData(1, 1);
                 _loc3_ = "";
@@ -343,34 +376,39 @@
                 _loc3_ = _loc12_.name;
                 _loc2_ = this.getPetImage(_loc12_.type, _loc12_.breed, _loc12_.color, 4, true);
                 _loc5_ = true;
-            };
-            var _loc6_:IBitmapWrapperWindow = (this._view.findChildByName("preview_image") as IBitmapWrapperWindow);
+            }
+
+            var _loc6_: IBitmapWrapperWindow = this._view.findChildByName("preview_image") as IBitmapWrapperWindow;
             if (_loc6_ != null)
             {
                 _loc13_ = new BitmapData(_loc6_.width, _loc6_.height);
                 _loc13_.fillRect(_loc13_.rect, 0);
-                _loc13_.copyPixels(_loc2_, _loc2_.rect, new Point(((_loc13_.width / 2) - (_loc2_.width / 2)), ((_loc13_.height / 2) - (_loc2_.height / 2))));
+                _loc13_.copyPixels(_loc2_, _loc2_.rect, new Point(_loc13_.width / 2 - _loc2_.width / 2, _loc13_.height / 2 - _loc2_.height / 2));
                 _loc6_.bitmap = _loc13_;
-            };
+            }
+
             _loc2_.dispose();
-            var _loc7_:ITextWindow = (this._view.findChildByName("preview_text") as ITextWindow);
+            var _loc7_: ITextWindow = this._view.findChildByName("preview_text") as ITextWindow;
             if (_loc7_ != null)
             {
                 _loc7_.caption = _loc3_;
-            };
+            }
+
             _loc7_ = (this._view.findChildByName("preview_description") as ITextWindow);
             if (_loc7_ != null)
             {
                 _loc7_.caption = _loc4_;
-            };
-            var _loc8_:Boolean;
-            var _loc9_:Boolean;
+            }
+
+            var _loc8_: Boolean;
+            var _loc9_: Boolean;
             if (this.var_2446.roomSession != null)
             {
                 _loc8_ = this.var_2446.roomSession.arePetsAllowed;
                 _loc9_ = this.var_2446.roomSession.isRoomOwner;
-            };
-            var _loc10_:String = "";
+            }
+
+            var _loc10_: String = "";
             if (!_loc9_)
             {
                 if (_loc8_)
@@ -380,34 +418,39 @@
                 else
                 {
                     _loc10_ = "${inventory.pets.forbidden}";
-                };
-            };
+                }
+
+            }
+
             _loc7_ = (this._view.findChildByName("preview_info") as ITextWindow);
             if (_loc7_ != null)
             {
                 _loc7_.caption = _loc10_;
-            };
-            var _loc11_:IButtonWindow = (this._view.findChildByName("place_button") as IButtonWindow);
+            }
+
+            var _loc11_: IButtonWindow = this._view.findChildByName("place_button") as IButtonWindow;
             if (_loc11_ != null)
             {
-                if (((_loc5_) && ((_loc9_) || (_loc8_))))
+                if (_loc5_ && (_loc9_ || _loc8_))
                 {
                     _loc11_.enable();
                 }
                 else
                 {
                     _loc11_.disable();
-                };
-            };
+                }
+
+            }
+
         }
 
-        public function getPetImage(param1:int, param2:int, param3:String, param4:int, param5:Boolean):BitmapData
+        public function getPetImage(param1: int, param2: int, param3: String, param4: int, param5: Boolean): BitmapData
         {
-            var _loc7_:uint;
-            var _loc8_:IAvatarImage;
-            var _loc9_:uint;
-            var _loc10_:ImageResult;
-            var _loc6_:BitmapData;
+            var _loc7_: uint;
+            var _loc8_: IAvatarImage;
+            var _loc9_: uint;
+            var _loc10_: ImageResult;
+            var _loc6_: BitmapData;
             if (param1 < 8)
             {
                 _loc7_ = parseInt(param3, 16);
@@ -422,32 +465,37 @@
                     else
                     {
                         _loc6_ = _loc8_.getCroppedImage(AvatarSetType.var_107);
-                    };
+                    }
+
                     _loc8_.dispose();
-                };
+                }
+
             }
             else
             {
                 _loc9_ = 0;
-                _loc10_ = this._roomEngine.getPetImage(param1, param2, new Vector3d((param4 * 45)), 64, this, _loc9_);
+                _loc10_ = this._roomEngine.getPetImage(param1, param2, new Vector3d(param4 * 45), 64, this, _loc9_);
                 if (_loc10_ != null)
                 {
                     _loc6_ = _loc10_.data;
-                };
-            };
+                }
+
+            }
+
             if (_loc6_ == null)
             {
                 _loc6_ = new BitmapData(30, 30, false, 4289374890);
-            };
-            return (_loc6_);
+            }
+
+            return _loc6_;
         }
 
-        public function petImageReady(param1:String):void
+        public function petImageReady(param1: String): void
         {
             this.update();
         }
 
-        public function imageReady(param1:int, param2:BitmapData):void
+        public function imageReady(param1: int, param2: BitmapData): void
         {
             param2.dispose();
             this.update();

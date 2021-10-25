@@ -1,34 +1,36 @@
 ﻿package com.sulake.habbo.communication.messages.parser.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class IsOfferGiftableMessageParser implements IMessageParser 
+    public class IsOfferGiftableMessageParser implements IMessageParser
     {
 
-        private var _offerId:int;
-        private var var_3134:Boolean;
+        private var _offerId: int;
+        private var _isGiftable: Boolean;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this._offerId = param1.readInteger();
-            this.var_3134 = param1.readBoolean();
-            return (true);
+            this._offerId = data.readInteger();
+            this._isGiftable = data.readBoolean();
+            
+            return true;
         }
 
-        public function get offerId():int
+        public function get offerId(): int
         {
-            return (this._offerId);
+            return this._offerId;
         }
 
-        public function get isGiftable():Boolean
+        public function get isGiftable(): Boolean
         {
-            return (this.var_3134);
+            return this._isGiftable;
         }
 
     }

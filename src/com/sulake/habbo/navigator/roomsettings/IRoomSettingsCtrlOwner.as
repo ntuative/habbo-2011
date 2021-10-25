@@ -1,9 +1,10 @@
 ﻿package com.sulake.habbo.navigator.roomsettings
 {
-    public interface IRoomSettingsCtrlOwner 
+
+    public interface IRoomSettingsCtrlOwner
     {
 
-        function roomSettingsRefreshNeeded():void;
+        function roomSettingsRefreshNeeded(): void;
 
     }
 }

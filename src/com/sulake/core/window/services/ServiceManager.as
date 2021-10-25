@@ -1,106 +1,115 @@
 ﻿package com.sulake.core.window.services
 {
+
     import com.sulake.core.runtime.IDisposable;
+
     import flash.display.DisplayObject;
+
     import com.sulake.core.window.IWindowContext;
 
-    public class ServiceManager implements IInternalWindowServices, IDisposable 
+    public class ServiceManager implements IInternalWindowServices, IDisposable
     {
 
-        private var var_2273:uint;
-        private var var_2274:DisplayObject;
-        private var _disposed:Boolean = false;
-        private var var_2064:IWindowContext;
-        private var var_2275:IMouseDraggingService;
-        private var var_2276:IMouseScalingService;
-        private var var_2277:IMouseListenerService;
-        private var var_2278:IFocusManagerService;
-        private var var_2279:IToolTipAgentService;
-        private var var_2280:IGestureAgentService;
+        private var var_2273: uint;
+        private var _displayObject: DisplayObject;
+        private var _disposed: Boolean = false;
+        private var _context: IWindowContext;
+        private var _mouseDraggingService: IMouseDraggingService;
+        private var _mouseScalingService: IMouseScalingService;
+        private var _mouseListenerService: IMouseListenerService;
+        private var _focusManagerService: IFocusManagerService;
+        private var _toolTipAgentService: IToolTipAgentService;
+        private var _gestureAgentService: IGestureAgentService;
 
-        public function ServiceManager(param1:IWindowContext, param2:DisplayObject)
+        public function ServiceManager(ctx: IWindowContext, displayObject: DisplayObject)
         {
             this.var_2273 = 0;
-            this.var_2274 = param2;
-            this.var_2064 = param1;
-            this.var_2275 = new WindowMouseDragger(param2);
-            this.var_2276 = new WindowMouseScaler(param2);
-            this.var_2277 = new WindowMouseListener(param2);
-            this.var_2278 = new FocusManager(param2);
-            this.var_2279 = new WindowToolTipAgent(param2);
-            this.var_2280 = new GestureAgentService();
+            this._context = ctx;
+            this._displayObject = displayObject;
+            this._mouseDraggingService = new WindowMouseDragger(displayObject);
+            this._mouseScalingService = new WindowMouseScaler(displayObject);
+            this._mouseListenerService = new WindowMouseListener(displayObject);
+            this._focusManagerService = new FocusManager(displayObject);
+            this._toolTipAgentService = new WindowToolTipAgent(displayObject);
+            this._gestureAgentService = new GestureAgentService();
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            if (this.var_2275 != null)
+            if (this._mouseDraggingService != null)
             {
-                this.var_2275.dispose();
-                this.var_2275 = null;
-            };
-            if (this.var_2276 != null)
+                this._mouseDraggingService.dispose();
+                this._mouseDraggingService = null;
+            }
+
+            if (this._mouseScalingService != null)
             {
-                this.var_2276.dispose();
-                this.var_2276 = null;
-            };
-            if (this.var_2277 != null)
+                this._mouseScalingService.dispose();
+                this._mouseScalingService = null;
+            }
+
+            if (this._mouseListenerService != null)
             {
-                this.var_2277.dispose();
-                this.var_2277 = null;
-            };
-            if (this.var_2278 != null)
+                this._mouseListenerService.dispose();
+                this._mouseListenerService = null;
+            }
+
+            if (this._focusManagerService != null)
             {
-                this.var_2278.dispose();
-                this.var_2278 = null;
-            };
-            if (this.var_2279 != null)
+                this._focusManagerService.dispose();
+                this._focusManagerService = null;
+            }
+
+            if (this._toolTipAgentService != null)
             {
-                this.var_2279.dispose();
-                this.var_2279 = null;
-            };
-            if (this.var_2280 != null)
+                this._toolTipAgentService.dispose();
+                this._toolTipAgentService = null;
+            }
+
+            if (this._gestureAgentService != null)
             {
-                this.var_2280.dispose();
-                this.var_2280 = null;
-            };
-            this.var_2274 = null;
-            this.var_2064 = null;
+                this._gestureAgentService.dispose();
+                this._gestureAgentService = null;
+            }
+
+            this._displayObject = null;
+            this._context = null;
             this._disposed = true;
         }
 
-        public function getMouseDraggingService():IMouseDraggingService
+        public function getMouseDraggingService(): IMouseDraggingService
         {
-            return (this.var_2275);
+            return this._mouseDraggingService;
         }
 
-        public function getMouseScalingService():IMouseScalingService
+        public function getMouseScalingService(): IMouseScalingService
         {
-            return (this.var_2276);
+            return this._mouseScalingService;
         }
 
-        public function getMouseListenerService():IMouseListenerService
+        public function getMouseListenerService(): IMouseListenerService
         {
-            return (this.var_2277);
+            return this._mouseListenerService;
         }
 
-        public function getFocusManagerService():IFocusManagerService
+        public function getFocusManagerService(): IFocusManagerService
         {
-            return (this.var_2278);
+            return this._focusManagerService;
         }
 
-        public function getToolTipAgentService():IToolTipAgentService
+        public function getToolTipAgentService(): IToolTipAgentService
         {
-            return (this.var_2279);
+            return this._toolTipAgentService;
         }
 
-        public function getGestureAgentService():IGestureAgentService
+        public function getGestureAgentService(): IGestureAgentService
         {
-            return (this.var_2280);
+            return this._gestureAgentService;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
     }

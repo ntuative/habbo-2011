@@ -1,46 +1,49 @@
 ﻿package com.sulake.core.assets
 {
-    public class AssetTypeDeclaration 
+
+    public class AssetTypeDeclaration
     {
 
-        private var var_2122:String;
-        private var var_2123:Class;
-        private var var_2124:Class;
-        private var var_2125:Array;
+        private var _mimeType: String;
+        private var _assetClass: Class;
+        private var _loaderClass: Class;
+        private var _fileTypes: Array;
 
-        public function AssetTypeDeclaration(param1:String, param2:Class, param3:Class, ... _args)
+        public function AssetTypeDeclaration(mimeType: String, assetClass: Class, loaderClass: Class, ...fileTypes)
         {
-            this.var_2122 = param1;
-            this.var_2123 = param2;
-            this.var_2124 = param3;
-            if (_args == null)
+            this._mimeType = mimeType;
+            this._assetClass = assetClass;
+            this._loaderClass = loaderClass;
+
+            if (fileTypes == null)
             {
-                this.var_2125 = new Array();
+                this._fileTypes = [];
             }
             else
             {
-                this.var_2125 = _args;
-            };
+                this._fileTypes = fileTypes;
+            }
+
         }
 
-        public function get mimeType():String
+        public function get mimeType(): String
         {
-            return (this.var_2122);
+            return this._mimeType;
         }
 
-        public function get assetClass():Class
+        public function get assetClass(): Class
         {
-            return (this.var_2123);
+            return this._assetClass;
         }
 
-        public function get loaderClass():Class
+        public function get loaderClass(): Class
         {
-            return (this.var_2124);
+            return this._loaderClass;
         }
 
-        public function get fileTypes():Array
+        public function get fileTypes(): Array
         {
-            return (this.var_2125);
+            return this._fileTypes;
         }
 
     }

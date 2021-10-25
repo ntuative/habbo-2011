@@ -1,49 +1,50 @@
 ﻿package com.sulake.habbo.roomevents.userdefinedroomevents.conditions
 {
+
     import com.sulake.habbo.roomevents.userdefinedroomevents.UserDefinedRoomEventsCtrl;
     import com.sulake.core.window.IWindowContainer;
     import com.sulake.habbo.roomevents.HabboUserDefinedRoomEvents;
     import com.sulake.habbo.communication.messages.incoming.userdefinedroomevents.Triggerable;
 
-    public class ActorIsOnFurni implements ConditionType 
+    public class ActorIsOnFurni implements ConditionType
     {
 
-        public function get code():int
+        public function get code(): int
         {
-            return (ConditionCodes.var_1944);
+            return ConditionCodes.var_1944;
         }
 
-        public function get requiresFurni():int
+        public function get requiresFurni(): int
         {
-            return (UserDefinedRoomEventsCtrl.STUFF_SELECTION_OPTION_BY_ID);
+            return UserDefinedRoomEventsCtrl.STUFF_SELECTION_OPTION_BY_ID;
         }
 
-        public function get hasStateSnapshot():Boolean
+        public function get hasStateSnapshot(): Boolean
         {
-            return (false);
+            return false;
         }
 
-        public function onInit(param1:IWindowContainer, param2:HabboUserDefinedRoomEvents):void
-        {
-        }
-
-        public function onEditStart(param1:IWindowContainer, param2:Triggerable):void
+        public function onInit(param1: IWindowContainer, param2: HabboUserDefinedRoomEvents): void
         {
         }
 
-        public function readIntParamsFromForm(param1:IWindowContainer):Array
+        public function onEditStart(param1: IWindowContainer, param2: Triggerable): void
         {
-            return (new Array());
         }
 
-        public function readStringParamFromForm(param1:IWindowContainer):String
+        public function readIntParamsFromForm(param1: IWindowContainer): Array
         {
-            return ("");
+            return [];
         }
 
-        public function get hasSpecialInputs():Boolean
+        public function readStringParamFromForm(param1: IWindowContainer): String
         {
-            return (false);
+            return "";
+        }
+
+        public function get hasSpecialInputs(): Boolean
+        {
+            return false;
         }
 
     }

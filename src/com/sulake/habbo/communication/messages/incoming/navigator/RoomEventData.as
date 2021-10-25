@@ -1,109 +1,115 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.navigator
 {
+
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class RoomEventData implements IDisposable 
+    public class RoomEventData implements IDisposable
     {
 
-        private var var_2971:Boolean;
-        private var var_3007:int;
-        private var var_3008:String;
-        private var var_2972:int;
-        private var var_3009:int;
-        private var var_3010:String;
-        private var var_3011:String;
-        private var var_3012:String;
-        private var var_1029:Array = new Array();
-        private var _disposed:Boolean;
+        private var _exists: Boolean;
+        private var _ownerAvatarId: int;
+        private var _ownerAvatarName: String;
+        private var _flatId: int;
+        private var _eventType: int;
+        private var _eventName: String;
+        private var _eventDescription: String;
+        private var _creationTime: String;
+        private var _tags: Array = [];
+        private var _disposed: Boolean;
 
-        public function RoomEventData(param1:IMessageDataWrapper)
+        public function RoomEventData(data: IMessageDataWrapper)
         {
-            var _loc5_:String;
             super();
-            var _loc2_:String = param1.readString();
-            if (_loc2_ == "-1")
+            
+            var ownerId: String = data.readString();
+            
+            if (ownerId == "-1")
             {
                 Logger.log("Got null room event");
-                this.var_2971 = false;
+                this._exists = false;
                 return;
-            };
-            this.var_2971 = true;
-            this.var_3007 = int(_loc2_);
-            this.var_3008 = param1.readString();
-            this.var_2972 = int(param1.readString());
-            this.var_3009 = param1.readInteger();
-            this.var_3010 = param1.readString();
-            this.var_3011 = param1.readString();
-            this.var_3012 = param1.readString();
-            var _loc3_:int = param1.readInteger();
-            var _loc4_:int;
-            while (_loc4_ < _loc3_)
+            }
+
+            this._exists = true;
+            this._ownerAvatarId = int(ownerId);
+            this._ownerAvatarName = data.readString();
+            this._flatId = int(data.readString());
+            this._eventType = data.readInteger();
+            this._eventName = data.readString();
+            this._eventDescription = data.readString();
+            this._creationTime = data.readString();
+            
+            var tagCount: int = data.readInteger();
+            var i: int;
+
+            while (i < tagCount)
             {
-                _loc5_ = param1.readString();
-                this.var_1029.push(_loc5_);
-                _loc4_++;
-            };
+                this._tags.push(data.readString());
+                i++;
+            }
+
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (this._disposed)
             {
                 return;
-            };
+            }
+
             this._disposed = true;
-            this.var_1029 = null;
+            this._tags = null;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get ownerAvatarId():int
+        public function get ownerAvatarId(): int
         {
-            return (this.var_3007);
+            return this._ownerAvatarId;
         }
 
-        public function get ownerAvatarName():String
+        public function get ownerAvatarName(): String
         {
-            return (this.var_3008);
+            return this._ownerAvatarName;
         }
 
-        public function get flatId():int
+        public function get flatId(): int
         {
-            return (this.var_2972);
+            return this._flatId;
         }
 
-        public function get eventType():int
+        public function get eventType(): int
         {
-            return (this.var_3009);
+            return this._eventType;
         }
 
-        public function get eventName():String
+        public function get eventName(): String
         {
-            return (this.var_3010);
+            return this._eventName;
         }
 
-        public function get eventDescription():String
+        public function get eventDescription(): String
         {
-            return (this.var_3011);
+            return this._eventDescription;
         }
 
-        public function get creationTime():String
+        public function get creationTime(): String
         {
-            return (this.var_3012);
+            return this._creationTime;
         }
 
-        public function get tags():Array
+        public function get tags(): Array
         {
-            return (this.var_1029);
+            return this._tags;
         }
 
-        public function get exists():Boolean
+        public function get exists(): Boolean
         {
-            return (this.var_2971);
+            return this._exists;
         }
 
     }

@@ -1,37 +1,38 @@
 ﻿package com.sulake.habbo.communication.messages.parser.marketplace
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.marketplace.MarketPlaceOffer;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class MarketPlaceOffersParser implements IMessageParser 
+    public class MarketPlaceOffersParser implements IMessageParser
     {
 
-        private const var_3222:int = 500;
+        private const var_3222: int = 500;
 
-        private var _offers:Array;
+        private var _offers: Array;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._offers = null;
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(param1: IMessageDataWrapper): Boolean
         {
-            var _loc2_:int;
-            var _loc3_:int;
-            var _loc4_:int;
-            var _loc5_:int;
-            var _loc6_:String;
-            var _loc7_:int;
-            var _loc8_:int;
-            var _loc9_:int;
-            var _loc10_:int;
-            var _loc13_:MarketPlaceOffer;
-            this._offers = new Array();
-            var _loc11_:int = param1.readInteger();
-            var _loc12_:int;
+            var _loc2_: int;
+            var _loc3_: int;
+            var _loc4_: int;
+            var _loc5_: int;
+            var _loc6_: String;
+            var _loc7_: int;
+            var _loc8_: int;
+            var _loc9_: int;
+            var _loc10_: int;
+            var _loc13_: MarketPlaceOffer;
+            this._offers = [];
+            var _loc11_: int = param1.readInteger();
+            var _loc12_: int;
             while (_loc12_ < _loc11_)
             {
                 _loc2_ = param1.readInteger();
@@ -47,15 +48,17 @@
                 if (_loc12_ < this.var_3222)
                 {
                     this._offers.push(_loc13_);
-                };
+                }
+
                 _loc12_++;
-            };
-            return (true);
+            }
+
+            return true;
         }
 
-        public function get offers():Array
+        public function get offers(): Array
         {
-            return (this._offers);
+            return this._offers;
         }
 
     }

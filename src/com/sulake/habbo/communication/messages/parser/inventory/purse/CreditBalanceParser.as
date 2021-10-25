@@ -1,27 +1,29 @@
 ﻿package com.sulake.habbo.communication.messages.parser.inventory.purse
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class CreditBalanceParser implements IMessageParser 
+    public class CreditBalanceParser implements IMessageParser
     {
 
-        private var var_2668:int;
+        private var _balance: int;
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2668 = int(param1.readString());
-            return (true);
+            this._balance = int(data.readString());
+            
+            return true;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function get balance():int
+        public function get balance(): int
         {
-            return (this.var_2668);
+            return this._balance;
         }
 
     }

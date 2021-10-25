@@ -1,41 +1,45 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.recycler
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PrizeLevelMessageData 
+    public class PrizeLevelMessageData
     {
 
-        private var var_2709:int;
-        private var var_3029:int;
-        private var var_2710:Array;
+        private var _prizeLevelId: int;
+        private var _probabilityDenominator: int;
+        private var _prizes: Array;
 
-        public function PrizeLevelMessageData(param1:IMessageDataWrapper)
+        public function PrizeLevelMessageData(data: IMessageDataWrapper)
         {
-            this.var_2709 = param1.readInteger();
-            this.var_3029 = param1.readInteger();
-            this.var_2710 = new Array();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._prizeLevelId = data.readInteger();
+            this._probabilityDenominator = data.readInteger();
+            this._prizes = [];
+            
+            var prizeCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < prizeCount)
             {
-                this.var_2710.push(new PrizeMessageData(param1));
-                _loc3_++;
-            };
+                this._prizes.push(new PrizeMessageData(data));
+                i++;
+            }
+
         }
 
-        public function get prizeLevelId():int
+        public function get prizeLevelId(): int
         {
-            return (this.var_2709);
+            return this._prizeLevelId;
         }
 
-        public function get probabilityDenominator():int
+        public function get probabilityDenominator(): int
         {
-            return (this.var_3029);
+            return this._probabilityDenominator;
         }
 
-        public function get prizes():Array
+        public function get prizes(): Array
         {
-            return (this.var_2710);
+            return this._prizes;
         }
 
     }

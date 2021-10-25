@@ -1,66 +1,71 @@
 ﻿package com.sulake.habbo.catalog.viewer
 {
+
     import com.sulake.habbo.room.IGetImageListener;
     import com.sulake.habbo.room.IRoomEngine;
+
     import flash.display.BitmapData;
 
-    public class ProductContainer extends ProductGridItem implements IGetImageListener, IProductContainer, IGridItem 
+    public class ProductContainer extends ProductGridItem implements IGetImageListener, IProductContainer, IGridItem
     {
 
-        protected var var_2607:Offer;
-        private var var_2839:Array;
-        private var var_2840:int;
+        protected var _offer: Offer;
+        private var _products: Array;
+        private var _iconCallbackId: int;
 
-        public function ProductContainer(param1:Offer, param2:Array)
+        public function ProductContainer(offer: Offer, products: Array)
         {
-            this.var_2607 = param1;
-            this.var_2839 = param2;
+            this._offer = offer;
+            this._products = products;
         }
 
-        public function get iconCallbackId():int
+        public function get iconCallbackId(): int
         {
-            return (this.var_2840);
+            return this._iconCallbackId;
         }
 
-        public function set iconCallbackId(param1:int):void
+        public function set iconCallbackId(param1: int): void
         {
-            this.var_2840 = param1;
+            this._iconCallbackId = param1;
         }
 
-        public function get products():Array
+        public function get products(): Array
         {
-            return (this.var_2839);
+            return this._products;
         }
 
-        public function get firstProduct():IProduct
+        public function get firstProduct(): IProduct
         {
-            return (this.var_2839[0] as IProduct);
+            return this._products[0] as IProduct;
         }
 
-        public function get offer():Offer
+        public function get offer(): Offer
         {
-            return (this.var_2607);
+            return this._offer;
         }
 
-        override public function dispose():void
+        override public function dispose(): void
         {
-            var _loc1_:Product;
             super.dispose();
-            for each (_loc1_ in this.var_2839)
+
+            var product: Product;
+            for each (product in this._products)
             {
-                _loc1_.dispose();
-            };
-            this.var_2839 = null;
-            this.var_2840 = 0;
+                product.dispose();
+            }
+
+
+            this._products = null;
+            this._iconCallbackId = 0;
         }
 
-        public function initProductIcon(param1:IRoomEngine):void
+        public function initProductIcon(param1: IRoomEngine): void
         {
         }
 
-        public function imageReady(param1:int, param2:BitmapData):void
+        public function imageReady(_: int, bitmap: BitmapData): void
         {
-            setIconImage(param2);
+            setIconImage(bitmap);
         }
 
     }

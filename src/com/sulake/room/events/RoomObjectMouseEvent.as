@@ -1,54 +1,56 @@
 ﻿package com.sulake.room.events
 {
-    public class RoomObjectMouseEvent extends RoomObjectEvent 
+
+    public class RoomObjectMouseEvent extends RoomObjectEvent
     {
 
-        public static const var_483:String = "ROE_MOUSE_CLICK";
-        public static const var_1621:String = "ROE_MOUSE_ENTER";
-        public static const var_484:String = "ROE_MOUSE_MOVE";
-        public static const var_1622:String = "ROE_MOUSE_LEAVE";
-        public static const var_1623:String = "ROE_MOUSE_DOUBLE_CLICK";
-        public static const ROOM_OBJECT_MOUSE_DOWN:String = "ROE_MOUSE_DOWN";
+        public static const ROOM_OBJECT_MOUSE_CLICK: String = "ROE_MOUSE_CLICK";
+        public static const ROOM_OBJECT_MOUSE_ENTER: String = "ROE_MOUSE_ENTER";
+        public static const ROOM_OBJECT_MOUSE_MOVE: String = "ROE_MOUSE_MOVE";
+        public static const ROOM_OBJECT_MOUSE_LEAVE: String = "ROE_MOUSE_LEAVE";
+        public static const ROOM_OBJECT_MOUSE_DOUBLE_CLICK: String = "ROE_MOUSE_DOUBLE_CLICK";
+        public static const ROOM_OBJECT_MOUSE_DOWN: String = "ROE_MOUSE_DOWN";
 
-        private var var_4978:String = "";
-        private var var_4979:Boolean;
-        private var var_4980:Boolean;
-        private var var_4981:Boolean;
-        private var var_4982:Boolean;
+        private var _eventId: String = "";
+        private var _altKey: Boolean;
+        private var _ctrlKey: Boolean;
+        private var _shiftKey: Boolean;
+        private var _buttonDown: Boolean;
 
-        public function RoomObjectMouseEvent(param1:String, param2:String, param3:int, param4:String, param5:Boolean=false, param6:Boolean=false, param7:Boolean=false, param8:Boolean=false, param9:Boolean=false, param10:Boolean=false)
+        public function RoomObjectMouseEvent(type: String, eventId: String, objectId: int, objectType: String, altKey: Boolean = false, ctrlKey: Boolean = false, shiftKey: Boolean = false, buttonDown: Boolean = false, bubbles: Boolean = false, cancelable: Boolean = false)
         {
-            super(param1, param3, param4, param9, param10);
-            this.var_4978 = param2;
-            this.var_4979 = param5;
-            this.var_4980 = param6;
-            this.var_4981 = param7;
-            this.var_4982 = param8;
+            super(type, objectId, objectType, bubbles, cancelable);
+            
+            this._eventId = eventId;
+            this._altKey = altKey;
+            this._ctrlKey = ctrlKey;
+            this._shiftKey = shiftKey;
+            this._buttonDown = buttonDown;
         }
 
-        public function get eventId():String
+        public function get eventId(): String
         {
-            return (this.var_4978);
+            return this._eventId;
         }
 
-        public function get altKey():Boolean
+        public function get altKey(): Boolean
         {
-            return (this.var_4979);
+            return this._altKey;
         }
 
-        public function get ctrlKey():Boolean
+        public function get ctrlKey(): Boolean
         {
-            return (this.var_4980);
+            return this._ctrlKey;
         }
 
-        public function get shiftKey():Boolean
+        public function get shiftKey(): Boolean
         {
-            return (this.var_4981);
+            return this._shiftKey;
         }
 
-        public function get buttonDown():Boolean
+        public function get buttonDown(): Boolean
         {
-            return (this.var_4982);
+            return this._buttonDown;
         }
 
     }

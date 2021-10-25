@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.session
 {
+
     import com.sulake.core.communication.connection.IConnection;
     import com.sulake.core.utils.Map;
     import com.sulake.habbo.tracking.IHabboTracking;
@@ -7,7 +8,9 @@
     import com.sulake.habbo.communication.messages.outgoing.room.session.OpenConnectionMessageComposer;
     import com.sulake.habbo.communication.messages.outgoing.room.session.OpenFlatConnectionMessageComposer;
     import com.sulake.habbo.communication.messages.outgoing.room.chat.ChatMessageComposer;
+
     import flash.utils.getTimer;
+
     import com.sulake.habbo.communication.messages.outgoing.room.avatar.ChangeMottoMessageComposer;
     import com.sulake.habbo.communication.messages.outgoing.room.chat.ShoutMessageComposer;
     import com.sulake.habbo.communication.messages.outgoing.room.chat.WhisperMessageComposer;
@@ -42,94 +45,98 @@
     import com.sulake.habbo.communication.messages.outgoing.room.engine.SetClothingChangeDataMessageComposer;
     import com.sulake.habbo.communication.messages.outgoing.users.GetUserNotificationsMessageComposer;
 
-    public class RoomSession implements IRoomSession 
+    public class RoomSession implements IRoomSession
     {
 
-        private const var_4428:int = 2500;
+        private const var_4428: int = 2500;
 
-        private var _connection:IConnection;
-        private var _roomId:int = 0;
-        private var _roomCategory:int = 0;
-        private var _password:String = "";
-        private var var_3235:String = "";
-        private var _state:String = "RSE_CREATED";
-        private var var_4429:UserDataManager;
-        private var var_4430:Boolean = false;
-        private var var_4431:Boolean = false;
-        private var var_4432:Boolean = false;
-        private var var_4433:Boolean = false;
-        private var var_4434:Boolean = false;
-        private var var_4435:Map = new Map();
-        private var var_3095:int;
-        private var _habboTracking:IHabboTracking;
+        private var _connection: IConnection;
+        private var _roomId: int = 0;
+        private var _roomCategory: int = 0;
+        private var _password: String = "";
+        private var _roomResources: String = "";
+        private var _state: String = "RSE_CREATED";
+        private var var_4429: UserDataManager;
+        private var var_4430: Boolean = false;
+        private var var_4431: Boolean = false;
+        private var var_4432: Boolean = false;
+        private var var_4433: Boolean = false;
+        private var var_4434: Boolean = false;
+        private var var_4435: Map = new Map();
+        private var var_3095: int;
+        private var _habboTracking: IHabboTracking;
 
-        public function RoomSession(param1:int, param2:int, param3:IHabboTracking, param4:String="", param5:String="")
+        public function RoomSession(param1: int, param2: int, param3: IHabboTracking, param4: String = "", param5: String = "")
         {
             this._roomId = param1;
             this._roomCategory = param2;
             this._habboTracking = param3;
             this._password = param4;
-            this.var_3235 = param5;
+            this._roomResources = param5;
             this.var_4429 = new UserDataManager();
         }
 
-        public function set connection(param1:IConnection):void
+        public function set connection(param1: IConnection): void
         {
             if (param1 == null)
             {
                 return;
-            };
+            }
+
             this._connection = param1;
             if (this.var_4429 != null)
             {
                 this.var_4429.connection = param1;
-            };
+            }
+
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this._connection = null;
             this.var_4429.dispose();
             this.var_4435.dispose();
         }
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get roomCategory():int
+        public function get roomCategory(): int
         {
-            return (this._roomCategory);
+            return this._roomCategory;
         }
 
-        public function get var_3236():String
+        public function get roomResources(): String
         {
-            return (this.var_3235);
+            return this._roomResources;
         }
 
-        public function get state():String
+        public function get state(): String
         {
-            return (this._state);
+            return this._state;
         }
 
-        public function start():Boolean
+        public function start(): Boolean
         {
-            if (((this._state == RoomSessionEvent.var_93) && (!(this._connection == null))))
+            if (this._state == RoomSessionEvent.RSE_CREATED && this._connection != null)
             {
-                this._state = RoomSessionEvent.var_94;
+                this._state = RoomSessionEvent.RSE_STARTED;
                 if (this.isPrivateRoom)
                 {
-                    return (this.sendOpenFlatConnectionMessage());
-                };
-                return (this.sendOpenConnectionMessage(this._roomId, 0, true));
-            };
-            return (false);
+                    return this.sendOpenFlatConnectionMessage();
+                }
+
+                return this.sendOpenConnectionMessage(this._roomId, 0, true);
+            }
+
+            return false;
         }
 
-        public function reset(param1:int, param2:int):void
+        public function reset(param1: int, param2: int): void
         {
-            if (((!(param1 == this._roomId)) || (!(param2 == this._roomCategory))))
+            if (param1 != this._roomId || param2 != this._roomCategory)
             {
                 this._roomId = param1;
                 this._roomCategory = param2;
@@ -137,69 +144,75 @@
                 this.var_4431 = false;
                 this.var_4432 = false;
                 this.var_4433 = false;
-            };
+            }
+
         }
 
-        private function sendOpenConnectionMessage(param1:int, param2:int, param3:Boolean):Boolean
+        private function sendOpenConnectionMessage(param1: int, param2: int, param3: Boolean): Boolean
         {
             if (this._connection == null)
             {
-                return (false);
-            };
+                return false;
+            }
+
             this._connection.send(new OpenConnectionMessageComposer(param3, param1, param2));
-            return (true);
+            return true;
         }
 
-        private function sendOpenFlatConnectionMessage():Boolean
+        private function sendOpenFlatConnectionMessage(): Boolean
         {
             if (this._connection == null)
             {
-                return (false);
-            };
+                return false;
+            }
+
             this._connection.send(new OpenFlatConnectionMessageComposer(this._roomId, this._password));
-            return (true);
+            return true;
         }
 
-        public function sendChatMessage(param1:String):void
+        public function sendChatMessage(param1: String): void
         {
             this._connection.send(new ChatMessageComposer(param1, this.var_3095));
             this.var_4435.add(this.var_3095, getTimer());
             this.var_3095++;
         }
 
-        public function sendChangeMottoMessage(param1:String):void
+        public function sendChangeMottoMessage(param1: String): void
         {
             this._connection.send(new ChangeMottoMessageComposer(param1));
         }
 
-        public function receivedChatWithTrackingId(param1:int):void
+        public function receivedChatWithTrackingId(param1: int): void
         {
-            var _loc3_:int;
-            var _loc2_:Object = this.var_4435.remove(param1);
+            var _loc3_: int;
+            var _loc2_: Object = this.var_4435.remove(param1);
             if (_loc2_ != null)
             {
                 _loc3_ = getTimer();
-                if ((_loc3_ - int(_loc2_)) > this.var_4428)
+                if (_loc3_ - int(_loc2_) > this.var_4428)
                 {
                     if (this._habboTracking != null)
                     {
                         this._habboTracking.chatLagDetected(_loc3_);
-                    };
-                };
-            };
+                    }
+
+                }
+
+            }
+
         }
 
-        public function sendShoutMessage(param1:String):void
+        public function sendShoutMessage(param1: String): void
         {
             this._connection.send(new ShoutMessageComposer(param1));
         }
 
-        public function sendWhisperMessage(param1:String, param2:String):void
+        public function sendWhisperMessage(param1: String, param2: String): void
         {
             this._connection.send(new WhisperMessageComposer(param1, param2));
         }
 
-        public function sendChatTypingMessage(param1:Boolean):void
+        public function sendChatTypingMessage(param1: Boolean): void
         {
             if (param1)
             {
@@ -208,241 +221,248 @@
             else
             {
                 this._connection.send(new CancelTypingMessageComposer(this._roomId, this._roomCategory));
-            };
+            }
+
         }
 
-        public function sendWaveMessage():void
+        public function sendWaveMessage(): void
         {
             this._connection.send(new WaveMessageComposer());
         }
 
-        public function sendSignMessage(param1:int):void
+        public function sendSignMessage(param1: int): void
         {
-            if (((param1 >= 0) && (param1 <= 14)))
+            if (param1 >= 0 && param1 <= 14)
             {
                 this._connection.send(new SignMessageComposer(param1));
-            };
+            }
+
         }
 
-        public function sendDanceMessage(param1:int):void
+        public function sendDanceMessage(param1: int): void
         {
             this._connection.send(new DanceMessageComposer(param1));
         }
 
-        public function sendCreditFurniRedeemMessage(param1:int):void
+        public function sendCreditFurniRedeemMessage(param1: int): void
         {
             this._connection.send(new CreditFurniRedeemMessageComposer(param1));
         }
 
-        public function sendPresentOpenMessage(param1:int):void
+        public function sendPresentOpenMessage(param1: int): void
         {
             this._connection.send(new PresentOpenMessageComposer(param1));
         }
 
-        public function sendOpenPetPackageMessage(param1:int, param2:String):void
+        public function sendOpenPetPackageMessage(param1: int, param2: String): void
         {
             this._connection.send(new OpenPetPackageMessageComposer(param1, param2));
         }
 
-        public function sendViralFurniFoundMessage():void
+        public function sendViralFurniFoundMessage(): void
         {
             this._connection.send(new ViralTeaserFoundMessageComposer());
         }
 
-        public function sendRoomDimmerGetPresetsMessage():void
+        public function sendRoomDimmerGetPresetsMessage(): void
         {
             this._connection.send(new RoomDimmerGetPresetsMessageComposer(this._roomId, this._roomCategory));
         }
 
-        public function sendRoomDimmerSavePresetMessage(param1:int, param2:int, param3:uint, param4:int, param5:Boolean):void
+        public function sendRoomDimmerSavePresetMessage(param1: int, param2: int, param3: uint, param4: int, param5: Boolean): void
         {
-            var _loc6_:String = ("000000" + param3.toString(16).toUpperCase());
-            var _loc7_:String = ("#" + _loc6_.substr((_loc6_.length - 6)));
+            var _loc6_: String = "000000" + param3.toString(16).toUpperCase();
+            var _loc7_: String = "#" + _loc6_.substr(_loc6_.length - 6);
             this._connection.send(new RoomDimmerSavePresetMessageComposer(param1, param2, _loc7_, param4, param5, this._roomId, this._roomCategory));
         }
 
-        public function sendRoomDimmerChangeStateMessage():void
+        public function sendRoomDimmerChangeStateMessage(): void
         {
             this._connection.send(new RoomDimmerChangeStateMessageComposer(this._roomId, this._roomCategory));
         }
 
-        public function sendConversionPoint(param1:String, param2:String, param3:String, param4:String=null):void
+        public function sendConversionPoint(param1: String, param2: String, param3: String, param4: String = null): void
         {
             this._connection.send(new ConversionPointMessageComposer(param1, param2, param3, param4));
         }
 
-        public function sendVote(param1:int):void
+        public function sendVote(param1: int): void
         {
             this._connection.send(new VoteAnswerMessageComposer(param1));
         }
 
-        public function sendPollStartMessage(param1:int):void
+        public function sendPollStartMessage(param1: int): void
         {
             this._connection.send(new PollStartComposer(param1));
         }
 
-        public function sendPollRejectMessage(param1:int):void
+        public function sendPollRejectMessage(param1: int): void
         {
             this._connection.send(new PollRejectComposer(param1));
         }
 
-        public function sendPollAnswerMessage(param1:int, param2:int, param3:Array):void
+        public function sendPollAnswerMessage(param1: int, param2: int, param3: Array): void
         {
             this._connection.send(new PollAnswerComposer(param1, param2, param3));
         }
 
-        public function kickUser(param1:int):void
+        public function kickUser(param1: int): void
         {
             this._connection.send(new KickUserMessageComposer(param1, this.roomId, this.roomCategory));
         }
 
-        public function kickBot(param1:int):void
+        public function kickBot(param1: int): void
         {
             this._connection.send(new KickBotMessageComposer(param1));
         }
 
-        public function banUser(param1:int):void
+        public function banUser(param1: int): void
         {
             this._connection.send(new BanUserMessageComposer(param1, this.roomId, this.roomCategory));
         }
 
-        public function assignRights(param1:int):void
+        public function assignRights(param1: int): void
         {
             this._connection.send(new AssignRightsMessageComposer(param1));
         }
 
-        public function removeRights(param1:int):void
+        public function removeRights(param1: int): void
         {
-            var _loc2_:Array = new Array();
+            var _loc2_: Array = [];
             _loc2_.push(param1);
-            var _loc3_:RemoveRightsMessageComposer = new RemoveRightsMessageComposer(_loc2_);
+            var _loc3_: RemoveRightsMessageComposer = new RemoveRightsMessageComposer(_loc2_);
             this._connection.send(_loc3_);
         }
 
-        public function letUserIn(param1:String, param2:Boolean):void
+        public function letUserIn(param1: String, param2: Boolean): void
         {
             this._connection.send(new LetUserInMessageComposer(param1, param2));
         }
 
-        public function pickUpPet(param1:int):void
+        public function pickUpPet(param1: int): void
         {
             this._connection.send(new RemovePetFromFlatMessageComposer(param1));
         }
 
-        public function requestPetCommands(param1:int):void
+        public function requestPetCommands(param1: int): void
         {
             this._connection.send(new GetPetCommandsMessageComposer(param1));
         }
 
-        public function quit():void
+        public function quit(): void
         {
             if (this._connection != null)
             {
                 this._connection.send(new QuitMessageComposer());
-            };
+            }
+
         }
 
-        public function changeQueue(param1:int):void
+        public function changeQueue(param1: int): void
         {
             if (this._connection == null)
             {
                 return;
-            };
+            }
+
             this._connection.send(new ChangeQueueMessageComposer(param1));
         }
 
-        public function sendUpdateFigureData(param1:String, param2:String):void
+        public function sendUpdateFigureData(param1: String, param2: String): void
         {
             if (this._connection == null)
             {
                 return;
-            };
-            var _loc3_:UpdateFigureDataMessageComposer = new UpdateFigureDataMessageComposer(param1, param2);
+            }
+
+            var _loc3_: UpdateFigureDataMessageComposer = new UpdateFigureDataMessageComposer(param1, param2);
             this._connection.send(_loc3_);
             _loc3_.dispose();
             _loc3_ = null;
         }
 
-        public function sendUpdateClothingChangeFurniture(param1:int, param2:String, param3:String):void
+        public function sendUpdateClothingChangeFurniture(param1: int, param2: String, param3: String): void
         {
             if (this._connection == null)
             {
                 return;
-            };
-            var _loc4_:SetClothingChangeDataMessageComposer = new SetClothingChangeDataMessageComposer(param1, param2, param3);
+            }
+
+            var _loc4_: SetClothingChangeDataMessageComposer = new SetClothingChangeDataMessageComposer(param1, param2, param3);
             this._connection.send(_loc4_);
             _loc4_.dispose();
             _loc4_ = null;
         }
 
-        public function sendGetUserNotifications():void
+        public function sendGetUserNotifications(): void
         {
             if (this._connection == null)
             {
                 return;
-            };
-            var _loc1_:GetUserNotificationsMessageComposer = new GetUserNotificationsMessageComposer();
+            }
+
+            var _loc1_: GetUserNotificationsMessageComposer = new GetUserNotificationsMessageComposer();
             this._connection.send(_loc1_);
             _loc1_.dispose();
             _loc1_ = null;
         }
 
-        public function get userDataManager():IUserDataManager
+        public function get userDataManager(): IUserDataManager
         {
-            return (this.var_4429 as IUserDataManager);
+            return this.var_4429 as IUserDataManager;
         }
 
-        public function set isRoomOwner(param1:Boolean):void
+        public function set isRoomOwner(param1: Boolean): void
         {
             this.var_4430 = param1;
         }
 
-        public function get isRoomOwner():Boolean
+        public function get isRoomOwner(): Boolean
         {
-            return (this.var_4430);
+            return this.var_4430;
         }
 
-        public function set isRoomController(param1:Boolean):void
+        public function set isRoomController(param1: Boolean): void
         {
             this.var_4431 = param1;
         }
 
-        public function get isRoomController():Boolean
+        public function get isRoomController(): Boolean
         {
-            return (this.var_4431);
+            return this.var_4431;
         }
 
-        public function get isTradingRoom():Boolean
+        public function get isTradingRoom(): Boolean
         {
-            return (this.var_4432);
+            return this.var_4432;
         }
 
-        public function get isPrivateRoom():Boolean
+        public function get isPrivateRoom(): Boolean
         {
-            return (this._roomCategory == 0);
+            return this._roomCategory == 0;
         }
 
-        public function set isTradingRoom(param1:Boolean):void
+        public function set isTradingRoom(param1: Boolean): void
         {
             this.var_4432 = param1;
         }
 
-        public function get isSpectatorMode():Boolean
+        public function get isSpectatorMode(): Boolean
         {
-            return (this.var_4433);
+            return this.var_4433;
         }
 
-        public function set isSpectatorMode(param1:Boolean):void
+        public function set isSpectatorMode(param1: Boolean): void
         {
             this.var_4433 = param1;
         }
 
-        public function get arePetsAllowed():Boolean
+        public function get arePetsAllowed(): Boolean
         {
-            return (this.var_4434);
+            return this.var_4434;
         }
 
-        public function set arePetsAllowed(param1:Boolean):void
+        public function set arePetsAllowed(param1: Boolean): void
         {
             this.var_4434 = param1;
         }

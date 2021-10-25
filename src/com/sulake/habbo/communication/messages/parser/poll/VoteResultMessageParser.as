@@ -1,61 +1,69 @@
 ﻿package com.sulake.habbo.communication.messages.parser.poll
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class VoteResultMessageParser implements IMessageParser 
+    public class VoteResultMessageParser implements IMessageParser
     {
 
-        private var var_3275:String;
-        private var var_3276:Array;
-        private var var_3277:Array;
-        private var var_3278:int;
+        private var _question: String;
+        private var _choices: Array;
+        private var _votes: Array;
+        private var _totalVotes: int;
 
-        public function get question():String
+        public function get question(): String
         {
-            return (this.var_3275);
+            return this._question;
         }
 
-        public function get choices():Array
+        public function get choices(): Array
         {
-            return (this.var_3276.slice());
+            return this._choices.slice();
         }
 
-        public function get votes():Array
+        public function get votes(): Array
         {
-            return (this.var_3277.slice());
+            return this._votes.slice();
         }
 
-        public function get totalVotes():int
+        public function get totalVotes(): int
         {
-            return (this.var_3278);
+            return this._totalVotes;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3275 = "";
-            this.var_3276 = [];
-            this.var_3277 = [];
-            this.var_3278 = 0;
-            return (true);
+            this._question = "";
+            this._choices = [];
+            this._votes = [];
+            this._totalVotes = 0;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3275 = param1.readString();
-            this.var_3276 = [];
-            this.var_3277 = [];
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._question = data.readString();
+            
+            this._choices = [];
+            this._votes = [];
+            
+            var entryCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < entryCount)
             {
-                param1.readInteger();
-                this.var_3276.push(param1.readString());
-                this.var_3277.push(param1.readInteger());
-                _loc3_++;
-            };
-            this.var_3278 = param1.readInteger();
-            return (true);
+                var unknown1: int = data.readInteger();
+                
+                this._choices.push(data.readString());
+                this._votes.push(data.readInteger());
+                i++;
+            }
+
+            this._totalVotes = data.readInteger();
+            
+            return true;
         }
 
     }

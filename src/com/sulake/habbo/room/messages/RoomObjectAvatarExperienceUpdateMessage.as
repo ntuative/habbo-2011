@@ -1,18 +1,19 @@
 ﻿package com.sulake.habbo.room.messages
 {
-    public class RoomObjectAvatarExperienceUpdateMessage extends RoomObjectUpdateStateMessage 
+
+    public class RoomObjectAvatarExperienceUpdateMessage extends RoomObjectUpdateStateMessage
     {
 
-        private var var_3322:int;
+        private var _gainedExperience: int;
 
-        public function RoomObjectAvatarExperienceUpdateMessage(param1:int)
+        public function RoomObjectAvatarExperienceUpdateMessage(gainedExperience: int)
         {
-            this.var_3322 = param1;
+            this._gainedExperience = gainedExperience;
         }
 
-        public function get gainedExperience():int
+        public function get gainedExperience(): int
         {
-            return (this.var_3322);
+            return this._gainedExperience;
         }
 
     }

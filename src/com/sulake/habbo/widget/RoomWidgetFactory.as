@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.widget
 {
+
     import com.sulake.core.runtime.Component;
     import com.sulake.habbo.window.IHabboWindowManager;
     import com.sulake.core.assets.IAssetLibrary;
@@ -9,7 +10,9 @@
     import com.sulake.habbo.inventory.IHabboInventory;
     import com.sulake.habbo.sound.IHabboSoundManager;
     import com.sulake.habbo.navigator.IHabboNavigator;
+
     import iid.IIDHabboWindowManager;
+
     import com.sulake.iid.IIDHabboLocalizationManager;
     import com.sulake.iid.IIDHabboConfigurationManager;
     import com.sulake.iid.IIDHabboCatalog;
@@ -50,20 +53,20 @@
     import com.sulake.habbo.widget.playlisteditor.PlayListEditorWidget;
     import com.sulake.habbo.widget.roominfo.RoomInfoWidget;
 
-    public class RoomWidgetFactory extends Component implements IRoomWidgetFactory 
+    public class RoomWidgetFactory extends Component implements IRoomWidgetFactory
     {
 
-        private var _windowManager:IHabboWindowManager;
-        private var var_4965:IAssetLibrary;
-        private var var_1364:IHabboLocalizationManager;
-        private var var_2868:IHabboConfigurationManager;
-        private var _catalog:IHabboCatalog;
-        private var _inventory:IHabboInventory;
-        private var _soundManager:IHabboSoundManager;
-        private var _navigator:IHabboNavigator;
-        private var var_4966:int = 0;
+        private var _windowManager: IHabboWindowManager;
+        private var var_4965: IAssetLibrary;
+        private var var_1364: IHabboLocalizationManager;
+        private var var_2868: IHabboConfigurationManager;
+        private var _catalog: IHabboCatalog;
+        private var _inventory: IHabboInventory;
+        private var _soundManager: IHabboSoundManager;
+        private var _navigator: IHabboNavigator;
+        private var var_4966: int = 0;
 
-        public function RoomWidgetFactory(param1:IContext, param2:uint=0, param3:IAssetLibrary=null)
+        public function RoomWidgetFactory(param1: IContext, param2: uint = 0, param3: IAssetLibrary = null)
         {
             super(param1, param2, param3);
             this.var_4965 = param1.root.assets;
@@ -76,94 +79,104 @@
             queueInterface(new IIDHabboNavigator(), this.onNavigatorReady);
         }
 
-        override public function dispose():void
+        override public function dispose(): void
         {
             if (this._windowManager)
             {
                 this._windowManager.release(new IIDHabboWindowManager());
                 this._windowManager = null;
-            };
+            }
+
             if (this.var_1364)
             {
                 this.var_1364.release(new IIDHabboLocalizationManager());
                 this.var_1364 = null;
-            };
+            }
+
             if (this.var_2868)
             {
                 this.var_2868.release(new IIDHabboConfigurationManager());
                 this.var_2868 = null;
-            };
+            }
+
             if (this._soundManager)
             {
                 this._soundManager.release(new IIDHabboSoundManager());
                 this._soundManager = null;
-            };
+            }
+
             if (this._catalog)
             {
                 this._catalog.release(new IIDHabboCatalog());
                 this._catalog = null;
-            };
+            }
+
             super.dispose();
         }
 
-        private function onWindowManagerReady(param1:IID=null, param2:IUnknown=null):void
+        private function onWindowManagerReady(param1: IID = null, param2: IUnknown = null): void
         {
             this._windowManager = (param2 as IHabboWindowManager);
         }
 
-        private function onLocalizationReady(param1:IID=null, param2:IUnknown=null):void
+        private function onLocalizationReady(param1: IID = null, param2: IUnknown = null): void
         {
             this.var_1364 = (param2 as IHabboLocalizationManager);
         }
 
-        private function onHabboConfigurationReady(param1:IID=null, param2:IUnknown=null):void
+        private function onHabboConfigurationReady(param1: IID = null, param2: IUnknown = null): void
         {
             this.var_2868 = (param2 as IHabboConfigurationManager);
         }
 
-        private function onCatalogReady(param1:IID=null, param2:IUnknown=null):void
+        private function onCatalogReady(param1: IID = null, param2: IUnknown = null): void
         {
             if (disposed)
             {
                 return;
-            };
+            }
+
             this._catalog = (param2 as IHabboCatalog);
         }
 
-        private function onInventoryReady(param1:IID=null, param2:IUnknown=null):void
+        private function onInventoryReady(param1: IID = null, param2: IUnknown = null): void
         {
             if (disposed)
             {
                 return;
-            };
+            }
+
             this._inventory = (param2 as IHabboInventory);
         }
 
-        private function onSoundManagerReady(param1:IID=null, param2:IUnknown=null):void
+        private function onSoundManagerReady(param1: IID = null, param2: IUnknown = null): void
         {
             if (disposed)
             {
                 return;
-            };
+            }
+
             this._soundManager = (param2 as IHabboSoundManager);
         }
 
-        private function onNavigatorReady(param1:IID=null, param2:IUnknown=null):void
+        private function onNavigatorReady(param1: IID = null, param2: IUnknown = null): void
         {
             if (disposed)
             {
                 return;
-            };
+            }
+
             this._navigator = (param2 as IHabboNavigator);
         }
 
-        public function createWidget(param1:String):IRoomWidget
+        public function createWidget(param1: String): IRoomWidget
         {
-            var _loc2_:IRoomWidget;
+            var _loc2_: IRoomWidget;
             if (this._windowManager == null)
             {
-                return (null);
-            };
+                return null;
+            }
+
             switch (param1)
             {
                 case RoomWidgetEnum.var_258:
@@ -177,7 +190,8 @@
                     else
                     {
                         _loc2_ = new RoomChatInputWidgetOld(this._windowManager, assets, this.var_1364, this.var_2868, this);
-                    };
+                    }
+
                     break;
                 case RoomWidgetEnum.var_259:
                     _loc2_ = new InfostandWidget(this._windowManager, assets, this.var_1364, this.var_2868, this._catalog);
@@ -260,28 +274,29 @@
                 case RoomWidgetEnum.var_285:
                     _loc2_ = new RoomInfoWidget(this);
                     break;
-            };
-            return (_loc2_);
+            }
+
+            return _loc2_;
         }
 
-        public function get windowManager():IHabboWindowManager
+        public function get windowManager(): IHabboWindowManager
         {
-            return (this._windowManager);
+            return this._windowManager;
         }
 
-        public function get localizations():IHabboLocalizationManager
+        public function get localizations(): IHabboLocalizationManager
         {
-            return (this.var_1364);
+            return this.var_1364;
         }
 
-        public function get config():IHabboConfigurationManager
+        public function get config(): IHabboConfigurationManager
         {
-            return (this.var_2868);
+            return this.var_2868;
         }
 
-        public function get navigator():IHabboNavigator
+        public function get navigator(): IHabboNavigator
         {
-            return (this._navigator);
+            return this._navigator;
         }
 
     }

@@ -1,17 +1,18 @@
 ﻿package com.sulake.habbo.communication.messages.outgoing.friendlist
 {
+
     import com.sulake.core.communication.messages.IMessageComposer;
     import com.sulake.core.runtime.IDisposable;
 
-    public class DeclineBuddyMessageComposer implements IMessageComposer, IDisposable 
+    public class DeclineBuddyMessageComposer implements IMessageComposer, IDisposable
     {
 
-        private var _declinedRequestIds:Array = new Array();
+        private var _declinedRequestIds: Array = [];
 
-        public function getMessageArray():Array
+        public function getMessageArray(): Array
         {
-            var _loc2_:int;
-            var _loc1_:Array = new Array();
+            var _loc2_: int;
+            var _loc1_: Array = [];
             if (this._declinedRequestIds.length == 0)
             {
                 _loc1_.push(1);
@@ -26,24 +27,26 @@
                 {
                     _loc1_.push(this._declinedRequestIds[_loc2_]);
                     _loc2_++;
-                };
-            };
-            return (_loc1_);
+                }
+
+            }
+
+            return _loc1_;
         }
 
-        public function addDeclinedRequest(param1:int):void
+        public function addDeclinedRequest(param1: int): void
         {
             this._declinedRequestIds.push(param1);
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this._declinedRequestIds = null;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (false);
+            return false;
         }
 
     }

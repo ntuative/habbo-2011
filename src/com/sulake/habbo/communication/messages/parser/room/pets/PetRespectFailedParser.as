@@ -1,34 +1,36 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.pets
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PetRespectFailedParser implements IMessageParser 
+    public class PetRespectFailedParser implements IMessageParser
     {
 
-        private var _requiredDays:int;
-        private var var_3330:int;
+        private var _requiredDays: int;
+        private var _avatarAgeInDays: int;
 
-        public function get requiredDays():int
+        public function get requiredDays(): int
         {
-            return (this._requiredDays);
+            return this._requiredDays;
         }
 
-        public function get avatarAgeInDays():int
+        public function get avatarAgeInDays(): int
         {
-            return (this.var_3330);
+            return this._avatarAgeInDays;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this._requiredDays = param1.readInteger();
-            this.var_3330 = param1.readInteger();
-            return (true);
+            this._requiredDays = data.readInteger();
+            this._avatarAgeInDays = data.readInteger();
+            
+            return true;
         }
 
     }

@@ -1,58 +1,61 @@
 ﻿package com.sulake.habbo.avatar.palette
 {
+
     import flash.utils.ByteArray;
     import flash.geom.Point;
     import flash.display.BitmapData;
 
-    public class PaletteMap 
+    public class PaletteMap
     {
 
-        private var var_2501:Array;
-        private var _blank:Array;
+        private var var_2501: Array;
+        private var _blank: Array;
 
-        public function PaletteMap(param1:ByteArray)
+        public function PaletteMap(param1: ByteArray)
         {
-            var _loc2_:uint;
-            var _loc3_:uint;
-            var _loc4_:uint;
-            var _loc5_:uint;
+            var _loc2_: uint;
+            var _loc3_: uint;
+            var _loc4_: uint;
+            var _loc5_: uint;
             super();
-            this.var_2501 = new Array();
+            this.var_2501 = [];
             param1.position = 0;
             while (param1.bytesAvailable >= 3)
             {
                 _loc2_ = param1.readUnsignedByte();
                 _loc3_ = param1.readUnsignedByte();
                 _loc4_ = param1.readUnsignedByte();
-                _loc5_ = (((_loc2_ << 16) | (_loc3_ << 8)) | _loc4_);
+                _loc5_ = _loc2_ << 16 | _loc3_ << 8 | _loc4_;
                 this.var_2501.push(_loc5_);
-            };
-            this._blank = new Array();
+            }
+
+            this._blank = [];
             while (this._blank.length < 0x0100)
             {
                 this._blank.push(0);
-            };
+            }
+
         }
 
-        public function getIndex(param1:uint):int
+        public function getIndex(param1: uint): int
         {
-            var _loc2_:int = this.var_2501.indexOf(param1);
-            return ((_loc2_ < 0) ? 0 : _loc2_);
+            var _loc2_: int = this.var_2501.indexOf(param1);
+            return _loc2_ < 0 ? 0 : _loc2_;
         }
 
-        public function colorizeBitmap(param1:BitmapData):void
+        public function colorizeBitmap(param1: BitmapData): void
         {
             param1.paletteMap(param1, param1.rect, new Point(0, 0), this._blank, this.var_2501, this._blank, this._blank);
         }
 
-        public function colorize(param1:ByteArray):ByteArray
+        public function colorize(param1: ByteArray): ByteArray
         {
-            var _loc3_:uint;
-            var _loc4_:uint;
-            var _loc5_:uint;
-            var _loc6_:uint;
-            var _loc7_:uint;
-            var _loc2_:ByteArray = new ByteArray();
+            var _loc3_: uint;
+            var _loc4_: uint;
+            var _loc5_: uint;
+            var _loc6_: uint;
+            var _loc7_: uint;
+            var _loc2_: ByteArray = new ByteArray();
             param1.position = 0;
             while (param1.bytesAvailable >= 4)
             {
@@ -61,19 +64,21 @@
                 _loc5_ = param1.readUnsignedByte();
                 _loc6_ = param1.readUnsignedByte();
                 _loc7_ = (this.var_2501[_loc5_] as uint);
-                _loc2_.writeUnsignedInt(((_loc3_ << 24) | _loc7_));
-            };
+                _loc2_.writeUnsignedInt(_loc3_ << 24 | _loc7_);
+            }
+
             _loc2_.position = 0;
-            return (_loc2_);
+            return _loc2_;
         }
 
-        public function invert():void
+        public function invert(): void
         {
-            var _loc1_:Array = new Array();
+            var _loc1_: Array = [];
             while (this.var_2501.length > 0)
             {
                 _loc1_.push(this.var_2501.pop());
-            };
+            }
+
             this.var_2501 = _loc1_;
         }
 

@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.room
 {
+
     import com.sulake.core.runtime.Component;
     import com.sulake.room.IRoomObjectFactory;
     import com.sulake.core.utils.Map;
@@ -45,211 +46,233 @@
     import com.sulake.room.RoomObjectManager;
     import com.sulake.room.IRoomObjectManager;
 
-    public class RoomObjectFactory extends Component implements IRoomObjectFactory 
+    public class RoomObjectFactory extends Component implements IRoomObjectFactory
     {
 
-        private var var_4375:Map = new Map();
-        private var var_4376:Map = new Map();
-        private var var_4377:Array = [];
+        private var _trackedLogicTypes: Map = new Map();
+        private var _roomObjectEvents: Map = new Map();
+        private var _objectEventListeners: Array = [];
 
-        public function RoomObjectFactory(param1:IContext, param2:uint=0)
+        public function RoomObjectFactory(ctx: IContext, flags: uint = 0)
         {
-            super(param1, param2);
+            super(ctx, flags);
         }
 
-        public function addObjectEventListener(param1:Function):void
+        public function addObjectEventListener(callback: Function): void
         {
-            var _loc2_:String;
-            if (this.var_4377.indexOf(param1) < 0)
+            if (this._objectEventListeners.indexOf(callback) < 0)
             {
-                this.var_4377.push(param1);
-                if (param1 != null)
+                this._objectEventListeners.push(callback);
+
+                if (callback != null)
                 {
-                    for each (_loc2_ in this.var_4376.getKeys())
+                    for each (var eventName: String in this._roomObjectEvents.getKeys())
                     {
-                        events.addEventListener(_loc2_, param1);
-                    };
-                };
-            };
+                        events.addEventListener(eventName, callback);
+                    }
+
+                }
+
+            }
+
         }
 
-        public function removeObjectEventListener(param1:Function):void
+        public function removeObjectEventListener(callback: Function): void
         {
-            var _loc2_:String;
-            var _loc3_:int = this.var_4377.indexOf(param1);
-            if (_loc3_ >= 0)
+            var index: int = this._objectEventListeners.indexOf(callback);
+
+            if (index >= 0)
             {
-                this.var_4377.splice(_loc3_, 1);
-                if (param1 != null)
+                this._objectEventListeners.splice(index, 1);
+
+                if (callback != null)
                 {
-                    for each (_loc2_ in this.var_4376.getKeys())
+                    for each (var eventName: String in this._roomObjectEvents.getKeys())
                     {
-                        events.removeEventListener(_loc2_, param1);
-                    };
-                };
-            };
+                        events.removeEventListener(eventName, callback);
+                    }
+
+                }
+
+            }
+
         }
 
-        private function addTrackedEventType(param1:String):void
+        private function addTrackedEventType(eventType: String): void
         {
-            var _loc2_:Function;
-            if (this.var_4376.getValue(param1) == null)
+            if (this._roomObjectEvents.getValue(eventType) == null)
             {
-                this.var_4376.add(param1, true);
-                for each (_loc2_ in this.var_4377)
+                this._roomObjectEvents.add(eventType, true);
+
+                for each (var callback: Function in this._objectEventListeners)
                 {
-                    if (_loc2_ != null)
+                    if (callback != null)
                     {
-                        events.addEventListener(param1, _loc2_);
-                    };
-                };
-            };
+                        events.addEventListener(eventType, callback);
+                    }
+
+                }
+
+            }
+
         }
 
-        public function createRoomObjectLogic(param1:String):IRoomObjectEventHandler
+        public function createRoomObjectLogic(logicType: String): IRoomObjectEventHandler
         {
-            var _loc4_:IRoomObjectEventHandler;
-            var _loc5_:Array;
-            var _loc6_:String;
-            var _loc2_:Class;
-            switch (param1)
+            var roomObjectLogicHandlerClass: Class = null;
+
+            switch (logicType)
             {
-                case RoomObjectLogicEnum.var_215:
-                    _loc2_ = FurnitureLogic;
+                case RoomObjectLogicEnum.FURNITURE_BASIC:
+                    roomObjectLogicHandlerClass = FurnitureLogic;
                     break;
-                case RoomObjectLogicEnum.var_216:
-                    _loc2_ = FurnitureMultiStateLogic;
+                case RoomObjectLogicEnum.FURNITURE_MULTISTATE:
+                    roomObjectLogicHandlerClass = FurnitureMultiStateLogic;
                     break;
-                case RoomObjectLogicEnum.var_217:
-                    _loc2_ = FurniturePlaceholderLogic;
+                case RoomObjectLogicEnum.FURNITURE_PLACEHOLDER:
+                    roomObjectLogicHandlerClass = FurniturePlaceholderLogic;
                     break;
-                case RoomObjectLogicEnum.var_218:
+                case RoomObjectLogicEnum.USER:
                 case RoomObjectLogicEnum.BOT:
-                    _loc2_ = AvatarLogic;
+                    roomObjectLogicHandlerClass = AvatarLogic;
                     break;
-                case RoomObjectLogicEnum.var_180:
-                    _loc2_ = PetLogic;
+                case RoomObjectLogicEnum.PET:
+                    roomObjectLogicHandlerClass = PetLogic;
                     break;
-                case RoomObjectLogicEnum.var_219:
-                    _loc2_ = FurnitureRandomStateLogic;
+                case RoomObjectLogicEnum.FURNITURE_RANDOMSTATE:
+                    roomObjectLogicHandlerClass = FurnitureRandomStateLogic;
                     break;
-                case RoomObjectLogicEnum.var_220:
-                    _loc2_ = FurnitureCreditLogic;
+                case RoomObjectLogicEnum.FURNITURE_CREDIT:
+                    roomObjectLogicHandlerClass = FurnitureCreditLogic;
                     break;
-                case RoomObjectLogicEnum.var_221:
-                    _loc2_ = FurnitureStickieLogic;
+                case RoomObjectLogicEnum.FURNITURE_STICKIE:
+                    roomObjectLogicHandlerClass = FurnitureStickieLogic;
                     break;
-                case RoomObjectLogicEnum.var_222:
-                    _loc2_ = FurniturePresentLogic;
+                case RoomObjectLogicEnum.FURNITURE_PRESENT:
+                    roomObjectLogicHandlerClass = FurniturePresentLogic;
                     break;
-                case RoomObjectLogicEnum.var_223:
-                    _loc2_ = FurnitureTrophyLogic;
+                case RoomObjectLogicEnum.FURNITURE_TROPHY:
+                    roomObjectLogicHandlerClass = FurnitureTrophyLogic;
                     break;
-                case RoomObjectLogicEnum.var_224:
-                    _loc2_ = FurnitureTeaserLogic;
+                case RoomObjectLogicEnum.FURNITURE_TEASER:
+                    roomObjectLogicHandlerClass = FurnitureTeaserLogic;
                     break;
-                case RoomObjectLogicEnum.var_225:
-                    _loc2_ = FurnitureEcotronBoxLogic;
+                case RoomObjectLogicEnum.FURNITURE_ECOTRON_BOX:
+                    roomObjectLogicHandlerClass = FurnitureEcotronBoxLogic;
                     break;
-                case RoomObjectLogicEnum.var_226:
-                    _loc2_ = FurnitureDiceLogic;
+                case RoomObjectLogicEnum.FURNITURE_DICE:
+                    roomObjectLogicHandlerClass = FurnitureDiceLogic;
                     break;
-                case RoomObjectLogicEnum.var_227:
-                    _loc2_ = FurnitureHockeyScoreLogic;
+                case RoomObjectLogicEnum.FURNITURE_HOCKY_SCORE:
+                    roomObjectLogicHandlerClass = FurnitureHockeyScoreLogic;
                     break;
-                case RoomObjectLogicEnum.var_228:
-                    _loc2_ = FurnitureHabboWheelLogic;
+                case RoomObjectLogicEnum.FURNITURE_HABBOWHEEL:
+                    roomObjectLogicHandlerClass = FurnitureHabboWheelLogic;
                     break;
-                case RoomObjectLogicEnum.var_229:
-                    _loc2_ = FurnitureQuestVendingWallItemLogic;
+                case RoomObjectLogicEnum.FURNITURE_QUEST_WALLITEM:
+                    roomObjectLogicHandlerClass = FurnitureQuestVendingWallItemLogic;
                     break;
-                case RoomObjectLogicEnum.var_230:
-                    _loc2_ = FurnitureOneWayDoorLogic;
+                case RoomObjectLogicEnum.FURNITURE_ONE_WAY_DOOR:
+                    roomObjectLogicHandlerClass = FurnitureOneWayDoorLogic;
                     break;
-                case RoomObjectLogicEnum.var_231:
-                    _loc2_ = FurniturePlanetSystemLogic;
+                case RoomObjectLogicEnum.FURNITURE_PLANET_SYSTEM:
+                    roomObjectLogicHandlerClass = FurniturePlanetSystemLogic;
                     break;
-                case RoomObjectLogicEnum.var_232:
-                    _loc2_ = FurnitureWindowLogic;
+                case RoomObjectLogicEnum.FURNITURE_WINDOW:
+                    roomObjectLogicHandlerClass = FurnitureWindowLogic;
                     break;
-                case RoomObjectLogicEnum.var_233:
-                    _loc2_ = FurnitureRoomDimmerLogic;
+                case RoomObjectLogicEnum.FURNITURE_ROOMDIMMER:
+                    roomObjectLogicHandlerClass = FurnitureRoomDimmerLogic;
                     break;
-                case RoomObjectLogicEnum.var_234:
-                    _loc2_ = RoomTileCursorLogic;
+                case RoomObjectLogicEnum.TILE_CURSOR:
+                    roomObjectLogicHandlerClass = RoomTileCursorLogic;
                     break;
-                case RoomObjectLogicEnum.var_235:
-                    _loc2_ = SelectionArrowLogic;
+                case RoomObjectLogicEnum.SELECTION_ARROW:
+                    roomObjectLogicHandlerClass = SelectionArrowLogic;
                     break;
-                case RoomObjectLogicEnum.var_236:
-                    _loc2_ = FurnitureSoundMachineLogic;
+                case RoomObjectLogicEnum.FURNITURE_SOUND_MACHINE:
+                    roomObjectLogicHandlerClass = FurnitureSoundMachineLogic;
                     break;
-                case RoomObjectLogicEnum.var_237:
-                    _loc2_ = FurnitureJukeboxLogic;
+                case RoomObjectLogicEnum.FURNITURE_JUKEBOX:
+                    roomObjectLogicHandlerClass = FurnitureJukeboxLogic;
                     break;
-                case RoomObjectLogicEnum.var_238:
-                    _loc2_ = FurnitureSongDiskLogic;
+                case RoomObjectLogicEnum.FURNITURE_SONG_DISK:
+                    roomObjectLogicHandlerClass = FurnitureSongDiskLogic;
                     break;
-                case RoomObjectLogicEnum.var_239:
-                    _loc2_ = FurniturePushableLogic;
+                case RoomObjectLogicEnum.FURNITURE_PUSHABLE:
+                    roomObjectLogicHandlerClass = FurniturePushableLogic;
                     break;
-                case RoomObjectLogicEnum.var_240:
-                    _loc2_ = FurnitureClothingChangeLogic;
+                case RoomObjectLogicEnum.FURNITURE_CLOTHING_CHANGE:
+                    roomObjectLogicHandlerClass = FurnitureClothingChangeLogic;
                     break;
-                case RoomObjectLogicEnum.var_241:
-                    _loc2_ = FurnitureCounterClockLogic;
+                case RoomObjectLogicEnum.FURNITURE_COUNTER_CLOCK:
+                    roomObjectLogicHandlerClass = FurnitureCounterClockLogic;
                     break;
-                case RoomObjectLogicEnum.var_242:
-                    _loc2_ = FurnitureScoreBoardLogic;
+                case RoomObjectLogicEnum.FURNITURE_SCORE:
+                    roomObjectLogicHandlerClass = FurnitureScoreBoardLogic;
                     break;
-                case RoomObjectLogicEnum.var_243:
-                    _loc2_ = FurnitureIceStormLogic;
+                case RoomObjectLogicEnum.FURNITURE_ES:
+                    roomObjectLogicHandlerClass = FurnitureIceStormLogic;
                     break;
-                case RoomObjectLogicEnum.var_244:
-                    _loc2_ = FurnitureFireworksLogic;
+                case RoomObjectLogicEnum.FURNITURE_FIREWORKS:
+                    roomObjectLogicHandlerClass = FurnitureFireworksLogic;
                     break;
-                case RoomObjectLogicEnum.var_245:
-                    _loc2_ = FurnitureBillboardLogic;
+                case RoomObjectLogicEnum.FURNITURE_BILLBOARD:
+                    roomObjectLogicHandlerClass = FurnitureBillboardLogic;
                     break;
-                case RoomObjectLogicEnum.var_246:
-                    _loc2_ = FurnitureWelcomeGiftLogic;
+                case RoomObjectLogicEnum.FURNITURE_WELCOME_GIFT:
+                    roomObjectLogicHandlerClass = FurnitureWelcomeGiftLogic;
                     break;
-                case RoomObjectLogicEnum.var_247:
-                    _loc2_ = RoomLogic;
+                case RoomObjectLogicEnum.ROOM:
+                    roomObjectLogicHandlerClass = RoomLogic;
                     break;
-                case RoomObjectLogicEnum.var_248:
-                    _loc2_ = PublicRoomLogic;
+                case RoomObjectLogicEnum.ROOM_PUBLIC:
+                    roomObjectLogicHandlerClass = PublicRoomLogic;
                     break;
-                case RoomObjectLogicEnum.var_249:
-                    _loc2_ = PublicRoomParkLogic;
+                case RoomObjectLogicEnum.ROOM_PUBLIC_PARK:
+                    roomObjectLogicHandlerClass = PublicRoomParkLogic;
                     break;
-            };
-            if (_loc2_ == null)
+            }
+
+
+            if (roomObjectLogicHandlerClass == null)
             {
-                return (null);
-            };
-            var _loc3_:Object = new (_loc2_)();
-            if ((_loc3_ is IRoomObjectEventHandler))
+                return null;
+            }
+
+
+            var roomObjectLogicHandler: Object = new roomObjectLogicHandlerClass();
+
+            if (roomObjectLogicHandler is IRoomObjectEventHandler)
             {
-                _loc4_ = (_loc3_ as IRoomObjectEventHandler);
-                _loc4_.eventDispatcher = this.events;
-                if (this.var_4375.getValue(param1) == null)
+                var roomObjectEventHandler: IRoomObjectEventHandler = roomObjectLogicHandler as IRoomObjectEventHandler;
+
+                roomObjectEventHandler.eventDispatcher = this.events;
+
+                if (this._trackedLogicTypes.getValue(logicType) == null)
                 {
-                    this.var_4375.add(param1, true);
-                    _loc5_ = _loc4_.getEventTypes();
-                    for each (_loc6_ in _loc5_)
+                    this._trackedLogicTypes.add(logicType, true);
+
+                    var eventTypes: Array = roomObjectEventHandler.getEventTypes();
+
+                    for each (var type: String in eventTypes)
                     {
-                        this.addTrackedEventType(_loc6_);
-                    };
-                };
-                return (_loc4_);
-            };
-            return (null);
+                        this.addTrackedEventType(type);
+                    }
+
+                }
+
+
+                return roomObjectEventHandler;
+            }
+
+
+            return null;
         }
 
-        public function createRoomObjectManager():IRoomObjectManager
+        public function createRoomObjectManager(): IRoomObjectManager
         {
-            return (new RoomObjectManager());
+            return new RoomObjectManager();
         }
 
     }

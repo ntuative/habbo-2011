@@ -1,169 +1,185 @@
 ﻿package com.sulake.habbo.help.help.data
 {
+
     import com.sulake.core.utils.Map;
 
-    public class FaqCategory 
+    public class FaqCategory
     {
 
-        private var var_2465:int;
-        private var var_3467:String;
-        private var var_2400:String;
-        private var var_3468:Map;
-        private var var_3469:int = 0;
-        private var var_3225:Date;
+        private var _categoryId: int;
+        private var _categoryTitle: String;
+        private var _description: String;
+        private var _items: Map;
+        private var _itemCount: int = 0;
+        private var _timestamp: Date;
 
-        public function FaqCategory(param1:int, param2:String)
+        public function FaqCategory(categoryId: int, categoryTitle: String)
         {
-            this.var_3468 = new Map();
-            this.var_2465 = param1;
-            this.var_3467 = param2;
+            this._items = new Map();
+            this._categoryId = categoryId;
+            this._categoryTitle = categoryTitle;
         }
 
-        public function get categoryId():int
+        public function get categoryId(): int
         {
-            return (this.var_2465);
+            return this._categoryId;
         }
 
-        public function get categoryTitle():String
+        public function get categoryTitle(): String
         {
-            return (this.var_3467);
+            return this._categoryTitle;
         }
 
-        public function get description():String
+        public function get description(): String
         {
-            return (this.var_2400);
+            return this._description;
         }
 
-        public function get itemCount():int
+        public function get itemCount(): int
         {
-            if (this.var_3468.length == 0)
+            if (this._items.length == 0)
             {
-                return (this.var_3469);
-            };
-            return (this.var_3468.length);
+                return this._itemCount;
+            }
+
+            return this._items.length;
         }
 
-        public function set description(param1:String):void
+        public function set description(param1: String): void
         {
-            this.var_2400 = param1;
+            this._description = param1;
         }
 
-        public function set itemCount(param1:int):void
+        public function set itemCount(param1: int): void
         {
-            this.var_3469 = param1;
+            this._itemCount = param1;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            if (this.var_3468 != null)
+            if (this._items != null)
             {
-                this.var_3468.dispose();
-                this.var_3468 = null;
-            };
+                this._items.dispose();
+                this._items = null;
+            }
+
         }
 
-        public function storeItem(param1:int, param2:String, param3:String=null):void
+        public function storeItem(questionId: int, questionText: String, param3: String = null): void
         {
-            var _loc4_:FaqItem = this.getItem(param1);
-            if (_loc4_ == null)
+            var item: FaqItem = this.getItem(questionId);
+            
+            if (item == null)
             {
-                _loc4_ = new FaqItem(param1, param2, this.var_3468.length, this);
-                this.var_3468.add(param1, _loc4_);
-            };
+                item = new FaqItem(questionId, questionText, this._items.length, this);
+                this._items.add(questionId, item);
+            }
+
         }
 
-        public function storeItemAnswer(param1:int, param2:String):void
+        public function storeItemAnswer(questionId: int, answer: String): void
         {
-            var _loc3_:FaqItem = this.getItem(param1);
-            if (_loc3_ != null)
+            var item: FaqItem = this.getItem(questionId);
+            
+            if (item != null)
             {
-                _loc3_.answerText = param2;
-            };
+                item.answerText = answer;
+            }
+
         }
 
-        public function reset():void
+        public function reset(): void
         {
-            if (this.var_3468 != null)
+            if (this._items != null)
             {
-                this.var_3468.reset();
-            };
+                this._items.reset();
+            }
+
         }
 
-        public function getItemByIndex(param1:int):FaqItem
+        public function getItemByIndex(index: int): FaqItem
         {
-            if (param1 >= this.var_3468.length)
+            if (index >= this._items.length)
             {
-                return (null);
-            };
-            return (this.var_3468.getWithIndex(param1));
+                return null;
+            }
+
+            return this._items.getWithIndex(index);
         }
 
-        public function getItemIdByIndex(param1:int):int
+        public function getItemIdByIndex(index: int): int
         {
-            var _loc2_:FaqItem = this.getItemByIndex(param1);
-            if (_loc2_ == null)
+            var item: FaqItem = this.getItemByIndex(index);
+            
+            if (item == null)
             {
-                return (-1);
-            };
-            return (_loc2_.questionId);
+                return -1;
+            }
+
+            return item.questionId;
         }
 
-        public function hasItem(param1:int):Boolean
+        public function hasItem(id: int): Boolean
         {
-            return (!(this.var_3468.getValue(param1) == null));
+            return this._items.getValue(id) != null;
         }
 
-        public function getItem(param1:int):FaqItem
+        public function getItem(id: int): FaqItem
         {
-            return (this.var_3468.getValue(param1));
+            return this._items.getValue(id);
         }
 
-        public function getItemIndex(param1:int):int
+        public function getItemIndex(id: int): int
         {
-            var _loc2_:FaqItem = this.getItem(param1);
-            if (_loc2_ == null)
+            var item: FaqItem = this.getItem(id);
+            
+            if (item == null)
             {
-                return (-1);
-            };
-            return (_loc2_.index);
+                return -1;
+            }
+
+            return item.index;
         }
 
-        public function getQuestionTitleArray():Array
+        public function getQuestionTitleArray(): Array
         {
-            var _loc2_:FaqItem;
-            var _loc1_:Array = new Array();
-            var _loc3_:int;
-            while (_loc3_ < this.var_3468.length)
+            var item: FaqItem;
+            var questions: Array = [];
+            var i: int;
+
+            while (i < this._items.length)
             {
-                _loc2_ = this.var_3468.getWithIndex(_loc3_);
-                _loc1_.push(_loc2_.questionText);
-                _loc3_++;
-            };
-            return (_loc1_);
+                item = this._items.getWithIndex(i);
+                questions.push(item.questionText);
+                i++;
+            }
+
+            return questions;
         }
 
-        public function hasContent():Boolean
+        public function hasContent(): Boolean
         {
-            return ((this.var_3468.length > 0) || (this.hasUpdatedWithinHour()));
+            return this._items.length > 0 || this.hasUpdatedWithinHour();
         }
 
-        public function setTimeStamp():void
+        public function setTimeStamp(): void
         {
-            this.var_3225 = new Date();
+            this._timestamp = new Date();
         }
 
-        public function getAgeSeconds():Number
+        public function getAgeSeconds(): Number
         {
-            if (this.var_3225 == null)
+            if (this._timestamp == null)
             {
-                return (new Date().valueOf());
-            };
-            return ((new Date().valueOf() - this.var_3225.valueOf()) / 1000);
+                return new Date().valueOf();
+            }
+
+            return (new Date().valueOf() - this._timestamp.valueOf()) / 1000;
         }
 
-        private function hasUpdatedWithinHour():Boolean
+        private function hasUpdatedWithinHour(): Boolean
         {
-            return (this.getAgeSeconds() < (60 * 60));
+            return this.getAgeSeconds() < 60 * 60;
         }
 
     }

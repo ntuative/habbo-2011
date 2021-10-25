@@ -1,48 +1,49 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.moderation
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ChatlineData 
+    public class ChatlineData
     {
 
-        private var var_2956:int;
-        private var var_2957:int;
-        private var var_2958:int;
-        private var var_2959:String;
-        private var var_2960:String;
+        private var _hour: int;
+        private var _minute: int;
+        private var _chatterId: int;
+        private var _chatterName: String;
+        private var _msg: String;
 
-        public function ChatlineData(param1:IMessageDataWrapper)
+        public function ChatlineData(data: IMessageDataWrapper)
         {
-            this.var_2956 = param1.readInteger();
-            this.var_2957 = param1.readInteger();
-            this.var_2958 = param1.readInteger();
-            this.var_2959 = param1.readString();
-            this.var_2960 = param1.readString();
+            this._hour = data.readInteger();
+            this._minute = data.readInteger();
+            this._chatterId = data.readInteger();
+            this._chatterName = data.readString();
+            this._msg = data.readString();
         }
 
-        public function get hour():int
+        public function get hour(): int
         {
-            return (this.var_2956);
+            return this._hour;
         }
 
-        public function get minute():int
+        public function get minute(): int
         {
-            return (this.var_2957);
+            return this._minute;
         }
 
-        public function get chatterId():int
+        public function get chatterId(): int
         {
-            return (this.var_2958);
+            return this._chatterId;
         }
 
-        public function get chatterName():String
+        public function get chatterName(): String
         {
-            return (this.var_2959);
+            return this._chatterName;
         }
 
-        public function get msg():String
+        public function get msg(): String
         {
-            return (this.var_2960);
+            return this._msg;
         }
 
     }

@@ -1,87 +1,93 @@
 ﻿package com.sulake.core.window.components
 {
+
     import com.sulake.core.window.WindowContext;
+
     import flash.geom.Rectangle;
+
     import com.sulake.core.window.IWindow;
     import com.sulake.core.window.graphics.GraphicContext;
     import com.sulake.core.window.graphics.IGraphicContext;
+
     import flash.display.DisplayObject;
+
     import com.sulake.core.window.events.WindowEvent;
 
-    public class DesktopController extends ActivatorController implements IDesktopWindow, IDisplayObjectWrapper 
+    public class DesktopController extends ActivatorController implements IDesktopWindow, IDisplayObjectWrapper
     {
 
-        public function DesktopController(param1:String, param2:WindowContext, param3:Rectangle)
+        public function DesktopController(param1: String, param2: WindowContext, param3: Rectangle)
         {
             super(param1, 0, 0, 0, param2, param3, null, this.defaultProcedure, null, null, 0);
         }
 
-        public function get mouseX():int
+        public function get mouseX(): int
         {
-            return (this.getDisplayObject().stage.mouseX);
+            return this.getDisplayObject().stage.mouseX;
         }
 
-        public function get mouseY():int
+        public function get mouseY(): int
         {
-            return (this.getDisplayObject().stage.mouseY);
+            return this.getDisplayObject().stage.mouseY;
         }
 
-        override public function set parent(param1:IWindow):void
+        override public function set parent(param1: IWindow): void
         {
-            throw (new Error("Desktop window doesn't have parent!"));
+            throw new Error("Desktop window doesn't have parent!");
         }
 
-        override public function set procedure(param1:Function):void
+        override public function set procedure(param1: Function): void
         {
-            var_1987 = ((param1 != null) ? param1 : this.defaultProcedure);
+            var_1987 = param1 != null ? param1 : this.defaultProcedure;
         }
 
-        override public function get host():IWindow
+        override public function get host(): IWindow
         {
-            return (this);
+            return this;
         }
 
-        override public function get desktop():IDesktopWindow
+        override public function get desktop(): IDesktopWindow
         {
-            return (this);
+            return this;
         }
 
-        override public function getGraphicContext(param1:Boolean):IGraphicContext
+        override public function getGraphicContext(param1: Boolean): IGraphicContext
         {
-            if (((param1) && (!(var_1154))))
+            if (param1 && !var_1154)
             {
-                var_1154 = new GraphicContext((("GC {" + _name) + "}"), GraphicContext.var_1755, var_1018);
+                var_1154 = new GraphicContext("GC {" + _name + "}", GraphicContext.var_1755, _current);
                 GraphicContext(var_1154).mouseEnabled = true;
                 GraphicContext(var_1154).doubleClickEnabled = true;
-            };
-            return (var_1154);
+            }
+
+            return var_1154;
         }
 
-        public function getActiveWindow():IWindow
+        public function getActiveWindow(): IWindow
         {
-            return (getActiveChild());
+            return getActiveChild();
         }
 
-        public function setActiveWindow(param1:IWindow):IWindow
+        public function setActiveWindow(param1: IWindow): IWindow
         {
-            return (setActiveChild(param1));
+            return setActiveChild(param1);
         }
 
-        public function getDisplayObject():DisplayObject
+        public function getDisplayObject(): DisplayObject
         {
-            return (this.getGraphicContext(true) as DisplayObject);
+            return this.getGraphicContext(true) as DisplayObject;
         }
 
-        public function setDisplayObject(param1:DisplayObject):void
+        public function setDisplayObject(param1: DisplayObject): void
         {
             this.getGraphicContext(true).setDisplayObject(param1);
         }
 
-        override public function invalidate(param1:Rectangle=null):void
+        override public function invalidate(param1: Rectangle = null): void
         {
         }
 
-        private function defaultProcedure(param1:WindowEvent, param2:IWindow):void
+        private function defaultProcedure(param1: WindowEvent, param2: IWindow): void
         {
         }
 

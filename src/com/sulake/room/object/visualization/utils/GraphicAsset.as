@@ -1,134 +1,147 @@
 ﻿package com.sulake.room.object.visualization.utils
 {
+
     import com.sulake.core.assets.BitmapDataAsset;
     import com.sulake.core.assets.IAsset;
+
     import flash.display.BitmapData;
 
-    public class GraphicAsset implements IGraphicAsset 
+    public class GraphicAsset implements IGraphicAsset
     {
 
-        private var var_2120:String;
-        private var var_4987:String;
-        private var var_2242:BitmapDataAsset;
-        private var var_2126:Boolean;
-        private var var_2127:Boolean;
-        private var var_4988:Boolean;
-        private var _offsetX:int;
-        private var var_2038:int;
-        private var var_2237:int;
-        private var _height:int;
-        private var var_2047:Boolean;
+        private var _assetName: String;
+        private var _libraryAssetName: String;
+        private var _asset: BitmapDataAsset;
+        private var _flipH: Boolean;
+        private var _flipV: Boolean;
+        private var _usesPalette: Boolean;
+        private var _offsetX: int;
+        private var _offsetY: int;
+        private var _width: int;
+        private var _height: int;
+        private var _loading: Boolean;
 
-        public function GraphicAsset(param1:String, param2:String, param3:IAsset, param4:Boolean, param5:Boolean, param6:int, param7:int, param8:Boolean=false)
+        public function GraphicAsset(assetName: String, libraryAssetName: String, asset: IAsset, flipH: Boolean, flipV: Boolean, offsetX: int, offsetY: int, usesPalette: Boolean = false)
         {
-            this.var_2120 = param1;
-            this.var_4987 = param2;
-            var _loc9_:BitmapDataAsset = (param3 as BitmapDataAsset);
-            if (_loc9_ != null)
+            this._assetName = assetName;
+            this._libraryAssetName = libraryAssetName;
+
+            var bitmap: BitmapDataAsset = asset as BitmapDataAsset;
+            
+            if (bitmap != null)
             {
-                this.var_2242 = _loc9_;
-                this.var_2047 = false;
+                this._asset = bitmap;
+                this._loading = false;
             }
             else
             {
-                this.var_2242 = null;
-                this.var_2047 = true;
-            };
-            this.var_2126 = param4;
-            this.var_2127 = param5;
-            this._offsetX = param6;
-            this.var_2038 = param7;
-            this.var_4988 = param8;
+                this._asset = null;
+                this._loading = true;
+            }
+
+            this._flipH = flipH;
+            this._flipV = flipV;
+            this._offsetX = offsetX;
+            this._offsetY = offsetY;
+            this._usesPalette = usesPalette;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            this.var_2242 = null;
+            this._asset = null;
         }
 
-        private function initialize():void
+        private function initialize(): void
         {
-            var _loc1_:BitmapData;
-            if (((!(this.var_2047)) && (!(this.var_2242 == null))))
+            var bitmap: BitmapData;
+
+            if (!this._loading && this._asset != null)
             {
-                _loc1_ = (this.var_2242.content as BitmapData);
-                if (_loc1_ != null)
+                bitmap = (this._asset.content as BitmapData);
+                
+                if (bitmap != null)
                 {
-                    this.var_2237 = _loc1_.width;
-                    this._height = _loc1_.height;
-                };
-                this.var_2047 = true;
-            };
+                    this._width = bitmap.width;
+                    this._height = bitmap.height;
+                }
+
+                this._loading = true;
+            }
+
         }
 
-        public function get flipV():Boolean
+        public function get flipV(): Boolean
         {
-            return (this.var_2127);
+            return this._flipV;
         }
 
-        public function get flipH():Boolean
+        public function get flipH(): Boolean
         {
-            return (this.var_2126);
+            return this._flipH;
         }
 
-        public function get width():int
-        {
-            this.initialize();
-            return (this.var_2237);
-        }
-
-        public function get height():int
+        public function get width(): int
         {
             this.initialize();
-            return (this._height);
+
+            return this._width;
         }
 
-        public function get assetName():String
+        public function get height(): int
         {
-            return (this.var_2120);
+            this.initialize();
+            
+            return this._height;
         }
 
-        public function get libraryAssetName():String
+        public function get assetName(): String
         {
-            return (this.var_4987);
+            return this._assetName;
         }
 
-        public function get asset():IAsset
+        public function get libraryAssetName(): String
         {
-            return (this.var_2242);
+            return this._libraryAssetName;
         }
 
-        public function get usesPalette():Boolean
+        public function get asset(): IAsset
         {
-            return (this.var_4988);
+            return this._asset;
         }
 
-        public function get offsetX():int
+        public function get usesPalette(): Boolean
         {
-            if (!this.var_2126)
+            return this._usesPalette;
+        }
+
+        public function get offsetX(): int
+        {
+            if (!this._flipH)
             {
-                return (this._offsetX);
-            };
-            return (-(this.width + this._offsetX));
+                return this._offsetX;
+            }
+
+            return -(this.width + this._offsetX);
         }
 
-        public function get offsetY():int
+        public function get offsetY(): int
         {
-            if (!this.var_2127)
+            if (!this._flipV)
             {
-                return (this.var_2038);
-            };
-            return (-(this.height + this.var_2038));
+                return this._offsetY;
+            }
+
+            return -(this.height + this._offsetY);
         }
 
-        public function get originalOffsetX():int
+        public function get originalOffsetX(): int
         {
-            return (this._offsetX);
+            return this._offsetX;
         }
 
-        public function get originalOffsetY():int
+        public function get originalOffsetY(): int
         {
-            return (this.var_2038);
+            return this._offsetY;
         }
 
     }

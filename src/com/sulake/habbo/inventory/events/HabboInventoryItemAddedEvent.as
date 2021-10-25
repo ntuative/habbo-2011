@@ -1,37 +1,39 @@
 ﻿package com.sulake.habbo.inventory.events
 {
+
     import flash.events.Event;
 
-    public class HabboInventoryItemAddedEvent extends Event 
+    public class HabboInventoryItemAddedEvent extends Event
     {
 
-        public static const HABBO_INVENTORY_ITEM_ADDED:String = "HABBO_INVENTORY_ITEM_ADDED";
+        public static const HABBO_INVENTORY_ITEM_ADDED: String = "HABBO_INVENTORY_ITEM_ADDED";
 
-        private var var_2935:int;
-        private var var_2933:int;
-        private var _category:int;
+        private var _classId: int;
+        private var _stripId: int;
+        private var _category: int;
 
-        public function HabboInventoryItemAddedEvent(param1:int, param2:int, param3:int, param4:Boolean=false, param5:Boolean=false)
+        public function HabboInventoryItemAddedEvent(classId: int, stripId: int, category: int, param4: Boolean = false, param5: Boolean = false)
         {
             super(HABBO_INVENTORY_ITEM_ADDED, param4, param5);
-            this.var_2935 = param1;
-            this.var_2933 = param2;
-            this._category = param3;
+            
+            this._classId = classId;
+            this._stripId = stripId;
+            this._category = category;
         }
 
-        public function get classId():int
+        public function get classId(): int
         {
-            return (this.var_2935);
+            return this._classId;
         }
 
-        public function get stripId():int
+        public function get stripId(): int
         {
-            return (this.var_2933);
+            return this._stripId;
         }
 
-        public function get category():int
+        public function get category(): int
         {
-            return (this._category);
+            return this._category;
         }
 
     }

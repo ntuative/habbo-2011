@@ -1,44 +1,47 @@
 ﻿package com.sulake.habbo.communication.messages.parser.availability
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class InfoHotelClosedMessageParser implements IMessageParser 
+    public class InfoHotelClosedMessageParser implements IMessageParser
     {
 
-        private var _openHour:int;
-        private var var_3126:int;
-        private var var_3127:Boolean;
+        private var _openHour: int;
+        private var _openMinute: int;
+        private var _userThrowOutAtClose: Boolean;
 
-        public function get openHour():int
+        public function get openHour(): int
         {
-            return (this._openHour);
+            return this._openHour;
         }
 
-        public function get openMinute():int
+        public function get openMinute(): int
         {
-            return (this.var_3126);
+            return this._openMinute;
         }
 
-        public function get userThrownOutAtClose():Boolean
+        public function get userThrownOutAtClose(): Boolean
         {
-            return (this.var_3127);
+            return this._userThrowOutAtClose;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._openHour = 0;
-            this.var_3126 = 0;
-            this.var_3127 = false;
-            return (true);
+            this._openMinute = 0;
+            this._userThrowOutAtClose = false;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this._openHour = param1.readInteger();
-            this.var_3126 = param1.readInteger();
-            this.var_3127 = (param1.readInteger() > 0);
-            return (true);
+            this._openHour = data.readInteger();
+            this._openMinute = data.readInteger();
+            this._userThrowOutAtClose = data.readInteger() > 0;
+
+            return true;
         }
 
     }

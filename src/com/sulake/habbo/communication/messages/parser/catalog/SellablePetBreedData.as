@@ -1,41 +1,42 @@
 ﻿package com.sulake.habbo.communication.messages.parser.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class SellablePetBreedData 
+    public class SellablePetBreedData
     {
 
-        private var _type:int;
-        private var var_2517:int;
-        private var var_3137:Boolean;
-        private var var_3138:Boolean;
+        private var _type: int;
+        private var _breed: int;
+        private var _sellable: Boolean;
+        private var _rare: Boolean;
 
-        public function SellablePetBreedData(param1:IMessageDataWrapper)
+        public function SellablePetBreedData(data: IMessageDataWrapper)
         {
-            this._type = param1.readInteger();
-            this.var_2517 = param1.readInteger();
-            this.var_3137 = param1.readBoolean();
-            this.var_3138 = param1.readBoolean();
+            this._type = data.readInteger();
+            this._breed = data.readInteger();
+            this._sellable = data.readBoolean();
+            this._rare = data.readBoolean();
         }
 
-        public function get type():int
+        public function get type(): int
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get breed():int
+        public function get breed(): int
         {
-            return (this.var_2517);
+            return this._breed;
         }
 
-        public function get sellable():Boolean
+        public function get sellable(): Boolean
         {
-            return (this.var_3137);
+            return this._sellable;
         }
 
-        public function get rare():Boolean
+        public function get rare(): Boolean
         {
-            return (this.var_3138);
+            return this._rare;
         }
 
     }

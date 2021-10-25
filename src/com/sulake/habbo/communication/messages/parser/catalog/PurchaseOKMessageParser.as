@@ -1,28 +1,30 @@
 ﻿package com.sulake.habbo.communication.messages.parser.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.catalog.CatalogPageMessageOfferData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PurchaseOKMessageParser implements IMessageParser 
+    public class PurchaseOKMessageParser implements IMessageParser
     {
 
-        private var var_2607:CatalogPageMessageOfferData;
+        private var _offer: CatalogPageMessageOfferData;
 
-        public function get offer():CatalogPageMessageOfferData
+        public function get offer(): CatalogPageMessageOfferData
         {
-            return (this.var_2607);
+            return this._offer;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(param1: IMessageDataWrapper): Boolean
         {
-            this.var_2607 = new CatalogPageMessageOfferData(param1);
-            return (true);
+            this._offer = new CatalogPageMessageOfferData(param1);
+            
+            return true;
         }
 
     }

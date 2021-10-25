@@ -1,34 +1,35 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.friendlist
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class FriendRequestData 
+    public class FriendRequestData
     {
 
-        private var var_2913:int;
-        private var var_2914:String;
-        private var var_2915:int;
+        private var _requestId: int;
+        private var _requesterName: String;
+        private var _requesterUserId: int;
 
-        public function FriendRequestData(param1:IMessageDataWrapper)
+        public function FriendRequestData(param1: IMessageDataWrapper)
         {
-            this.var_2913 = param1.readInteger();
-            this.var_2914 = param1.readString();
-            this.var_2915 = int(param1.readString());
+            this._requestId = param1.readInteger();
+            this._requesterName = param1.readString();
+            this._requesterUserId = int(param1.readString());
         }
 
-        public function get requestId():int
+        public function get requestId(): int
         {
-            return (this.var_2913);
+            return this._requestId;
         }
 
-        public function get requesterName():String
+        public function get requesterName(): String
         {
-            return (this.var_2914);
+            return this._requesterName;
         }
 
-        public function get requesterUserId():int
+        public function get requesterUserId(): int
         {
-            return (this.var_2915);
+            return this._requesterUserId;
         }
 
     }

@@ -1,6 +1,8 @@
 ﻿package com.sulake.habbo.friendlist.domain
 {
+
     import flash.utils.Dictionary;
+
     import com.sulake.habbo.communication.messages.parser.friendlist.FriendListUpdateMessageParser;
     import com.sulake.habbo.communication.messages.incoming.friendlist.FriendData;
     import com.sulake.habbo.communication.messages.incoming.friendlist.FriendListUpdateEvent;
@@ -11,261 +13,324 @@
     import com.sulake.habbo.communication.messages.incoming.friendlist.*;
     import com.sulake.habbo.communication.messages.parser.friendlist.*;
 
-    public class FriendCategories 
+    public class FriendCategories
     {
 
-        private var var_3412:IFriendCategoriesDeps;
-        private var var_511:Array = new Array();
-        private var _friendsById:Dictionary = new Dictionary();
+        private var _deps: IFriendCategoriesDeps;
+        private var _categories: Array = [];
+        private var _friendsById: Dictionary = new Dictionary();
 
-        public function FriendCategories(param1:IFriendCategoriesDeps)
+        public function FriendCategories(deps: IFriendCategoriesDeps)
         {
-            this.var_3412 = param1;
+            this._deps = deps;
         }
 
-        public function addFriend(param1:Friend):FriendCategory
+        public function addFriend(friend: Friend): FriendCategory
         {
-            var _loc2_:int = ((param1.online) ? param1.categoryId : FriendCategory.var_514);
-            var _loc3_:FriendCategory = this.findCategory(_loc2_);
-            if (_loc3_ != null)
+            var categoryId: int = friend.online ? friend.categoryId : FriendCategory.FRIENDS_OFFLINE;
+            var category: FriendCategory = this.findCategory(categoryId);
+
+            if (category != null)
             {
-                _loc3_.addFriend(param1);
-                this._friendsById[param1.id] = param1;
-                return (_loc3_);
-            };
-            Logger.log((((("No category " + _loc2_) + " found for friend ") + param1.id) + ". Ignoring"));
-            return (null);
+                category.addFriend(friend);
+                this._friendsById[friend.id] = friend;
+
+                return category;
+            }
+
+            Logger.log("No category " + categoryId + " found for friend " + friend.id + ". Ignoring");
+
+            return null;
         }
 
-        public function getSelectedFriends():Array
+        public function getSelectedFriends(): Array
         {
-            var _loc2_:FriendCategory;
-            var _loc1_:Array = new Array();
-            for each (_loc2_ in this.var_511)
+            var category: FriendCategory;
+            var friends: Array = [];
+
+            for each (category in this._categories)
             {
-                _loc2_.getSelectedFriends(_loc1_);
-            };
-            return (_loc1_);
+                category.getSelectedFriends(friends);
+            }
+
+            return friends;
         }
 
-        public function getSelectedFriend():Friend
+        public function getSelectedFriend(): Friend
         {
-            var _loc1_:Array = this.getSelectedFriends();
-            return ((_loc1_.length == 1) ? _loc1_[0] : null);
+            var friends: Array = this.getSelectedFriends();
+
+            return friends.length == 1 ? friends[0] : null;
         }
 
-        public function getAllFriends():Dictionary
+        public function getAllFriends(): Dictionary
         {
-            return (this._friendsById);
+            return this._friendsById;
         }
 
-        public function getFriendCount(param1:Boolean, param2:Boolean=false):int
+        public function getFriendCount(includeOffline: Boolean, includeNoFollow: Boolean = false): int
         {
-            var _loc4_:FriendCategory;
-            var _loc3_:int;
-            for each (_loc4_ in this.var_511)
+            var category: FriendCategory;
+            var total: int;
+
+            for each (category in this._categories)
             {
-                _loc3_ = (_loc3_ + _loc4_.getFriendCount(param1, param2));
-            };
-            return (_loc3_);
+                total = total + category.getFriendCount(includeOffline, includeNoFollow);
+            }
+
+            return total;
         }
 
-        public function getCategories():Array
+        public function getCategories(): Array
         {
-            return (this.var_511);
+            return this._categories;
         }
 
-        public function addCategory(param1:FriendCategory):void
+        public function addCategory(category: FriendCategory): void
         {
-            this.var_511.push(param1);
+            this._categories.push(category);
         }
 
-        public function findFriend(param1:int):Friend
+        public function findFriend(id: int): Friend
         {
-            return (this._friendsById[param1]);
+            return this._friendsById[id];
         }
 
-        public function findCategory(param1:int):FriendCategory
+        public function findCategory(id: int): FriendCategory
         {
-            var _loc2_:FriendCategory;
-            for each (_loc2_ in this.var_511)
+            var category: FriendCategory;
+
+            for each (category in this._categories)
             {
-                if (_loc2_.id == param1)
+                if (category.id == id)
                 {
-                    return (_loc2_);
-                };
-            };
-            return (null);
+                    return category;
+                }
+
+            }
+
+            return null;
         }
 
-        public function onFriendListUpdate(event:IMessageEvent):void
+        public function onFriendListUpdate(event: IMessageEvent): void
         {
-            var status:int;
-            var p:FriendListUpdateMessageParser;
-            var removedFriendId:int;
-            var updatedFriend:FriendData;
-            var addedFriend:FriendData;
-            var currentlyOnline:Boolean;
-            var wasSelected:Boolean;
-            var friend:Friend;
+            var status: int;
+            var parser: FriendListUpdateMessageParser;
+            var removedFriendId: int;
+            var updatedFriend: FriendData;
+            var addedFriend: FriendData;
+            var currentlyOnline: Boolean;
+            var wasSelected: Boolean;
+            var friend: Friend;
+
             Logger.log("Received friend list update");
+
             status = 0;
+
             try
             {
-                p = (event as FriendListUpdateEvent).getParser();
+                parser = (event as FriendListUpdateEvent).getParser();
+
                 status = 1;
-                this.updateCategories(p.cats);
+
+                this.updateCategories(parser.cats);
                 status = 2;
-                for each (removedFriendId in p.removedFriendIds)
+
+                for each (removedFriendId in parser.removedFriendIds)
                 {
                     this.removeFriend(removedFriendId, true);
-                };
+                }
+
                 status = 3;
-                for each (updatedFriend in p.updatedFriends)
+
+                for each (updatedFriend in parser.updatedFriends)
                 {
-                    Logger.log(((((((("Got UPDATE: " + updatedFriend.id) + ", ") + updatedFriend.online) + ", ") + updatedFriend.name) + ", ") + updatedFriend.followingAllowed));
-                    this.var_3412.messenger.setFollowingAllowed(updatedFriend.id, ((updatedFriend.followingAllowed) && (updatedFriend.online)));
+                    Logger.log("Got UPDATE: " + updatedFriend.id + ", " + updatedFriend.online + ", " + updatedFriend.name + ", " + updatedFriend.followingAllowed);
+
+                    this._deps.messenger.setFollowingAllowed(updatedFriend.id, updatedFriend.followingAllowed && updatedFriend.online);
+
                     currentlyOnline = this.isFriendOnline(updatedFriend.id);
-                    if (((currentlyOnline) && (!(updatedFriend.online))))
+
+                    if (currentlyOnline && !updatedFriend.online)
                     {
-                        this.var_3412.messenger.setOnlineStatus(updatedFriend.id, updatedFriend.online);
-                        this.var_3412.notifications.addOfflineNotification(updatedFriend.name, updatedFriend.realName);
-                    };
-                    if (((!(currentlyOnline)) && (updatedFriend.online)))
+                        this._deps.messenger.setOnlineStatus(updatedFriend.id, updatedFriend.online);
+                        this._deps.notifications.addOfflineNotification(updatedFriend.name, updatedFriend.realName);
+                    }
+
+                    if (!currentlyOnline && updatedFriend.online)
                     {
-                        this.var_3412.messenger.setOnlineStatus(updatedFriend.id, updatedFriend.online);
-                        this.var_3412.view.setNewMessageArrived();
-                        this.var_3412.notifications.addOnlineNotification(updatedFriend.name, updatedFriend.figure, updatedFriend.realName);
-                    };
+                        this._deps.messenger.setOnlineStatus(updatedFriend.id, updatedFriend.online);
+                        this._deps.view.setNewMessageArrived();
+                        this._deps.notifications.addOnlineNotification(updatedFriend.name, updatedFriend.figure, updatedFriend.realName);
+                    }
+
                     wasSelected = this.removeFriend(updatedFriend.id, true);
+
                     friend = new Friend(updatedFriend);
                     friend.selected = wasSelected;
+
                     this.addFriend(friend);
-                };
+                }
+
                 status = 4;
-                for each (addedFriend in p.addedFriends)
+
+                for each (addedFriend in parser.addedFriends)
                 {
-                    Logger.log(((("Got INSERT: " + addedFriend.id) + ", ") + addedFriend.name));
+                    Logger.log("Got INSERT: " + addedFriend.id + ", " + addedFriend.name);
                     this.removeFriend(addedFriend.id, true);
                     this.addFriend(new Friend(addedFriend));
-                };
+                }
+
                 status = 5;
-                this.var_3412.view.refreshList();
+
+                this._deps.view.refreshList();
+
                 status = 6;
             }
-            catch(e:Error)
+            catch (e: Error)
             {
-                ErrorReportStorage.addDebugData("FriendCategories", (("onFriendListUpdate crashed, status = " + String(status)) + "!"));
-                throw (e);
-            };
+                ErrorReportStorage.addDebugData("FriendCategories", "onFriendListUpdate crashed, status = " + String(status) + "!");
+                throw e;
+            }
+
         }
 
-        private function updateCategories(param1:Array):void
+        private function updateCategories(categories: Array): void
         {
-            var _loc2_:FriendCategoryData;
-            var _loc3_:FriendCategory;
-            var _loc4_:FriendCategory;
-            var _loc5_:FriendCategory;
+            var categoryData: FriendCategoryData;
+            var notRecieved: FriendCategory;
+            var category: FriendCategory;
+
             this.flushReceivedStatus();
-            this.findCategory(FriendCategory.var_514).received = true;
-            this.findCategory(FriendCategory.var_513).received = true;
-            for each (_loc2_ in param1)
+
+            this.findCategory(FriendCategory.FRIENDS_OFFLINE).received = true;
+            this.findCategory(FriendCategory.FRIENDS_ONLINE).received = true;
+
+            for each (categoryData in categories)
             {
-                _loc4_ = this.findCategory(_loc2_.id);
-                if (_loc4_ != null)
+                category = this.findCategory(categoryData.id);
+
+                if (category != null)
                 {
-                    _loc4_.received = true;
-                    if (_loc4_.name != _loc2_.name)
+                    category.received = true;
+
+                    if (category.name != categoryData.name)
                     {
-                        _loc4_.name = _loc2_.name;
-                    };
+                        category.name = categoryData.name;
+                    }
+
                 }
                 else
                 {
-                    _loc5_ = new FriendCategory(_loc2_.id, _loc2_.name);
-                    _loc5_.received = true;
-                    this.addCategory(_loc5_);
-                };
-            };
-            for each (_loc3_ in this.getCategoriesNotReceived())
+                    var instance: FriendCategory = new FriendCategory(categoryData.id, categoryData.name);
+
+                    instance.received = true;
+
+                    this.addCategory(instance);
+                }
+
+            }
+
+            for each (notRecieved in this.getCategoriesNotReceived())
             {
-                if (_loc3_.friends.length <= 0)
+                if (notRecieved.friends.length <= 0)
                 {
-                    Util.remove(this.var_511, _loc3_);
-                    _loc3_.dispose();
-                };
-            };
+                    Util.remove(this._categories, notRecieved);
+                    notRecieved.dispose();
+                }
+
+            }
+
         }
 
-        private function removeFriend(param1:int, param2:Boolean):Boolean
+        private function removeFriend(id: int, dispose: Boolean): Boolean
         {
-            var _loc4_:FriendCategory;
-            var _loc5_:Friend;
-            if (param2)
+            var category: FriendCategory;
+            var friend: Friend;
+
+            if (dispose)
             {
-                this._friendsById[param1] = null;
-            };
-            var _loc3_:Boolean;
-            for each (_loc4_ in this.var_511)
+                this._friendsById[id] = null;
+            }
+
+            var selected: Boolean;
+
+            for each (category in this._categories)
             {
-                _loc5_ = _loc4_.removeFriend(param1);
-                if (_loc5_ != null)
+                friend = category.removeFriend(id);
+
+                if (friend != null)
                 {
-                    _loc3_ = _loc5_.selected;
-                    if (param2)
+                    selected = friend.selected;
+
+                    if (dispose)
                     {
-                        _loc5_.dispose();
-                    };
-                };
-            };
-            return (_loc3_);
+                        friend.dispose();
+                    }
+
+                }
+
+            }
+
+            return selected;
         }
 
-        private function flushReceivedStatus():void
+        private function flushReceivedStatus(): void
         {
-            var _loc1_:FriendCategory;
-            for each (_loc1_ in this.var_511)
+            var category: FriendCategory;
+
+            for each (category in this._categories)
             {
-                _loc1_.received = false;
-            };
+                category.received = false;
+            }
+
         }
 
-        private function getCategoriesNotReceived():Array
+        private function getCategoriesNotReceived(): Array
         {
-            var _loc2_:FriendCategory;
-            var _loc1_:Array = new Array();
-            for each (_loc2_ in this.var_511)
+            var category: FriendCategory;
+            var notReceived: Array = [];
+
+            for each (category in this._categories)
             {
-                if (!_loc2_.received)
+                if (!category.received)
                 {
-                    _loc1_.push(_loc2_);
-                };
-            };
-            return (_loc1_);
+                    notReceived.push(category);
+                }
+
+            }
+
+            return notReceived;
         }
 
-        private function isFriendOnline(param1:int):Boolean
+        private function isFriendOnline(param1: int): Boolean
         {
-            var _loc2_:Friend = this.findFriend(param1);
-            return ((_loc2_ == null) ? false : _loc2_.online);
+            var friend: Friend = this.findFriend(param1);
+
+            return friend == null ? false : friend.online;
         }
 
-        public function getFriendNames():Array
+        public function getFriendNames(): Array
         {
-            var _loc2_:Friend;
+            var friend: Friend;
+
             if (this._friendsById == null)
             {
-                return ([]);
-            };
-            var _loc1_:Array = [];
-            for each (_loc2_ in this._friendsById)
+                return [];
+            }
+
+            var names: Array = [];
+
+            for each (friend in this._friendsById)
             {
-                if (_loc2_ != null)
+                if (friend != null)
                 {
-                    _loc1_.push(_loc2_.name);
-                };
-            };
-            return (_loc1_);
+                    names.push(friend.name);
+                }
+
+            }
+
+            return names;
         }
 
     }

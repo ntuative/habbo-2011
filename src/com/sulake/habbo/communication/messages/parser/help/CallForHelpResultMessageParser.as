@@ -1,28 +1,31 @@
 ﻿package com.sulake.habbo.communication.messages.parser.help
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class CallForHelpResultMessageParser implements IMessageParser 
+    public class CallForHelpResultMessageParser implements IMessageParser
     {
 
-        private var var_3184:int;
+        private var _resultType: int;
 
-        public function get resultType():int
+        public function get resultType(): int
         {
-            return (this.var_3184);
+            return this._resultType;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3184 = -1;
-            return (true);
+            this._resultType = -1;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3184 = param1.readInteger();
-            return (true);
+            this._resultType = data.readInteger();
+            
+            return true;
         }
 
     }

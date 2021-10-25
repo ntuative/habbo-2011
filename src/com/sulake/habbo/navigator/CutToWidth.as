@@ -1,21 +1,22 @@
 ﻿package com.sulake.habbo.navigator
 {
+
     import com.sulake.core.window.components.ITextWindow;
 
-    public class CutToWidth implements BinarySearchTest 
+    public class CutToWidth implements BinarySearchTest
     {
 
-        private var var_2162:String;
-        private var _text:ITextWindow;
-        private var var_2340:int;
+        private var var_2162: String;
+        private var _text: ITextWindow;
+        private var var_2340: int;
 
-        public function test(param1:int):Boolean
+        public function test(param1: int): Boolean
         {
-            this._text.text = (this.var_2162.substring(0, param1) + "...");
-            return (this._text.textWidth > this.var_2340);
+            this._text.text = this.var_2162.substring(0, param1) + "...";
+            return this._text.textWidth > this.var_2340;
         }
 
-        public function beforeSearch(param1:String, param2:ITextWindow, param3:int):void
+        public function beforeSearch(param1: String, param2: ITextWindow, param3: int): void
         {
             this.var_2162 = param1;
             this._text = param2;

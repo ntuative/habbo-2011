@@ -1,23 +1,24 @@
 ﻿package com.sulake.habbo.communication.messages.outgoing.tracking
 {
+
     import com.sulake.core.communication.messages.IMessageComposer;
 
-    public class LagWarningReportMessageComposer implements IMessageComposer 
+    public class LagWarningReportMessageComposer implements IMessageComposer
     {
 
-        private var var_3109:int;
+        private var var_3109: int;
 
-        public function LagWarningReportMessageComposer(param1:int)
+        public function LagWarningReportMessageComposer(param1: int)
         {
             this.var_3109 = param1;
         }
 
-        public function getMessageArray():Array
+        public function getMessageArray(): Array
         {
-            return ([this.var_3109]);
+            return [this.var_3109];
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
         }
 

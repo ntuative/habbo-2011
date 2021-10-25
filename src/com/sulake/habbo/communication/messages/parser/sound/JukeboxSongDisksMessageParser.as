@@ -1,52 +1,60 @@
 ﻿package com.sulake.habbo.communication.messages.parser.sound
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.utils.Map;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class JukeboxSongDisksMessageParser implements IMessageParser 
+    public class JukeboxSongDisksMessageParser implements IMessageParser
     {
 
-        private var var_3337:Map;
-        private var var_3338:int;
+        private var _songDisks: Map;
+        private var _maxLength: int;
 
         public function JukeboxSongDisksMessageParser()
         {
-            this.var_3337 = new Map();
+            this._songDisks = new Map();
         }
 
-        public function get songDisks():Map
+        public function get songDisks(): Map
         {
-            return (this.var_3337);
+            return this._songDisks;
         }
 
-        public function get maxLength():int
+        public function get maxLength(): int
         {
-            return (this.var_3338);
+            return this._maxLength;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3337.reset();
-            this.var_3338 = 0;
-            return (true);
+            this._songDisks.reset();
+            this._maxLength = 0;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3338 = param1.readInteger();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int = -1;
-            var _loc4_:int = -1;
-            var _loc5_:int;
-            while (_loc5_ < _loc2_)
+            this._maxLength = data.readInteger();
+           
+            var id: int = -1;
+            var length: int = -1;
+           
+            var diskCount: int = data.readInteger();
+            var i: int;
+
+            while (i < diskCount)
             {
-                _loc3_ = param1.readInteger();
-                _loc4_ = param1.readInteger();
-                this.var_3337.add(_loc3_, _loc4_);
-                _loc5_++;
-            };
-            return (true);
+                id = data.readInteger();
+                length = data.readInteger();
+
+                this._songDisks.add(id, length);
+                
+                i++;
+            }
+
+            return true;
         }
 
     }

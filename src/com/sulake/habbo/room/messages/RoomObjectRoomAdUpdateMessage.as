@@ -1,54 +1,56 @@
 ﻿package com.sulake.habbo.room.messages
 {
+
     import com.sulake.room.messages.RoomObjectUpdateMessage;
+
     import flash.display.BitmapData;
 
-    public class RoomObjectRoomAdUpdateMessage extends RoomObjectUpdateMessage 
+    public class RoomObjectRoomAdUpdateMessage extends RoomObjectUpdateMessage
     {
 
-        public static const var_508:String = "RORUM_ROOM_AD_ACTIVATE";
-        public static const var_509:String = "RORUM_ROOM_BILLBOARD_IMAGE_LOADED";
-        public static const var_510:String = "RORUM_ROOM_BILLBOARD_IMAGE_LOADING_FAILED";
+        public static const RORUM_ROOM_AD_ACTIVATE: String = "RORUM_ROOM_AD_ACTIVATE";
+        public static const RORUM_ROOM_BILLBOARD_IMAGE_LOADED: String = "RORUM_ROOM_BILLBOARD_IMAGE_LOADED";
+        public static const RORUM_ROOM_BILLBOARD_IMAGE_LOADING_FAILED: String = "RORUM_ROOM_BILLBOARD_IMAGE_LOADING_FAILED";
 
-        private var _type:String;
-        private var var_2242:String;
-        private var dynamic:String;
-        private var var_2358:int;
-        private var _bitmapData:BitmapData;
+        private var _type: String;
+        private var _asset: String;
+        private var _dynamic: String;
+        private var _objectId: int;
+        private var _bitmapData: BitmapData;
 
-        public function RoomObjectRoomAdUpdateMessage(param1:String, param2:String, param3:String, param4:int=-1, param5:BitmapData=null)
+        public function RoomObjectRoomAdUpdateMessage(type: String, asset: String, dynamic: String, objectId: int = -1, bitmapData: BitmapData = null)
         {
             super(null, null);
-            this._type = param1;
-            this.var_2242 = param2;
-            this.dynamic = param3;
-            this.var_2358 = param4;
-            this._bitmapData = param5;
+            this._type = type;
+            this._asset = asset;
+            this._dynamic = dynamic;
+            this._objectId = objectId;
+            this._bitmapData = bitmapData;
         }
 
-        public function get type():String
+        public function get type(): String
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get asset():String
+        public function get asset(): String
         {
-            return (this.var_2242);
+            return this._asset;
         }
 
-        public function get clickUrl():String
+        public function get clickUrl(): String
         {
-            return (this.dynamic);
+            return this._dynamic;
         }
 
-        public function get objectId():int
+        public function get objectId(): int
         {
-            return (this.var_2358);
+            return this._objectId;
         }
 
-        public function get bitmapData():BitmapData
+        public function get bitmapData(): BitmapData
         {
-            return (this._bitmapData);
+            return this._bitmapData;
         }
 
     }

@@ -1,240 +1,303 @@
 ﻿package com.sulake.habbo.friendbar.view.tabs
 {
+
     import com.sulake.habbo.friendbar.data.IFriendEntity;
     import com.sulake.core.window.IWindowContainer;
     import com.sulake.core.window.components.IItemListWindow;
     import com.sulake.core.window.components.IBitmapWrapperWindow;
     import com.sulake.core.window.IWindow;
     import com.sulake.core.window.components.ITextWindow;
+
     import flash.display.BitmapData;
+
     import com.sulake.core.window.events.WindowMouseEvent;
 
-    public class FriendEntityTab extends Tab 
+    public class FriendEntityTab extends Tab
     {
 
-        private static const var_3388:String = "entity_xml";
-        private static const var_3389:String = "facebook_piece_xml";
-        private static const var_3390:String = "controls_piece_xml";
-        private static const var_1386:String = "list";
-        private static const var_186:String = "header";
-        private static const var_3391:String = "facebook";
-        private static const var_3392:String = "controls";
-        private static const var_1396:String = "canvas";
-        private static const var_341:String = "name";
-        private static const var_3393:String = "btn_message";
-        private static const var_3394:String = "btn_visit";
-        private static const var_3385:String = "icon";
-        private static const POOL:Array = [];
-        private static const var_3395:Array = [];
+        private static const ENTITY_XML: String = "entity_xml";
+        private static const FACEBOOK_PIECE_XML: String = "facebook_piece_xml";
+        private static const CONTROLS_PIECE_XML: String = "controls_piece_xml";
+        private static const LIST: String = "list";
+        private static const HEADER: String = "header";
+        private static const FACEBOOK: String = "facebook";
+        private static const CONTROLS: String = "controls";
+        private static const CANVAS: String = "canvas";
+        private static const NAME: String = "name";
+        private static const BUTTON_MESSAGE: String = "btn_message";
+        private static const BUTTON_VISIT: String = "btn_visit";
+        private static const ICON: String = "icon";
+        
+        private static const POOL: Array = [];
+        private static const CONTAINER_POOL: Array = [];
 
-        private var var_3396:IFriendEntity;
+        private var _friend: IFriendEntity;
 
-        public static function allocate(param1:IFriendEntity):FriendEntityTab
+        public static function allocate(entity: IFriendEntity): FriendEntityTab
         {
-            var _loc2_:FriendEntityTab = ((POOL.length > 0) ? POOL.pop() : new (FriendEntityTab)());
-            _loc2_.var_2223 = false;
-            _loc2_.friend = param1;
-            return (_loc2_);
+            var friendEntity: FriendEntityTab = POOL.length > 0 ? POOL.pop() : new FriendEntityTab();
+            
+            friendEntity._recycled = false;
+            friendEntity.friend = entity;
+            
+            return friendEntity;
         }
 
-        private static function purgeEntityPieces(param1:IWindowContainer):void
+        private static function purgeEntityPieces(parent: IWindowContainer): void
         {
-            var _loc3_:IWindowContainer;
-            var _loc2_:IItemListWindow = IItemListWindow(param1.getChildByName(var_1386));
-            _loc3_ = (_loc2_.getListItemByName(var_3391) as IWindowContainer);
-            if (_loc3_)
+            var container: IWindowContainer;
+            var itemList: IItemListWindow = IItemListWindow(parent.getChildByName(LIST));
+            
+            container = (itemList.getListItemByName(FACEBOOK) as IWindowContainer);
+            
+            if (container != null)
             {
-                _loc3_.dispose();
-            };
-            _loc3_ = (_loc2_.getListItemByName(var_3392) as IWindowContainer);
-            if (_loc3_)
+                container.dispose();
+            }
+
+            container = (itemList.getListItemByName(CONTROLS) as IWindowContainer);
+            
+            if (container != null)
             {
-                _loc3_.dispose();
-            };
-            param1.height = var_623;
-            param1.y = 0;
+                container.dispose();
+            }
+
+            parent.height = INITIAL_HEIGHT;
+            parent.y = 0;
         }
 
-        public function set friend(param1:IFriendEntity):void
+        public function set friend(friend: IFriendEntity): void
         {
-            this.var_3396 = param1;
+            this._friend = friend;
+
             this.refresh();
         }
 
-        public function get friend():IFriendEntity
+        public function get friend(): IFriendEntity
         {
-            return (this.var_3396);
+            return this._friend;
         }
 
-        override public function recycle():void
+        override public function recycle(): void
         {
             if (!disposed)
             {
-                if (!var_2223)
+                if (!_recycled)
                 {
                     if (_window)
                     {
                         this.releaseEntityWindow(_window);
                         _window = null;
-                    };
-                    this.var_3396 = null;
-                    var_2223 = true;
+                    }
+
+                    this._friend = null;
+                    _recycled = true;
                     POOL.push(this);
-                };
-            };
+                }
+
+            }
+
         }
 
-        override public function select():void
+        override public function select(): void
         {
-            var _loc1_:IItemListWindow;
-            var _loc2_:IWindowContainer;
-            var _loc3_:IBitmapWrapperWindow;
-            var _loc4_:IWindow;
+            var itemList: IItemListWindow;
+            var container: IWindowContainer;
+            var bitmapWindow: IBitmapWrapperWindow;
+            var button: IWindow;
+
             if (!selected)
             {
-                _loc1_ = IItemListWindow(window.getChildByName(var_1386));
-                if (((!(this.friend.realName == null)) && (!(this.friend.realName == ""))))
+                itemList = IItemListWindow(window.getChildByName(LIST));
+                if (this.friend.realName != null && this.friend.realName != "")
                 {
-                    _loc2_ = (var_1394.buildFromXML((var_1393.getAssetByName(var_3389).content as XML)) as IWindowContainer);
-                    _loc2_.name = var_3391;
-                    _loc2_.getChildByName(var_341).caption = this.friend.realName;
-                    var_1395.crop((_loc2_.getChildByName(var_341) as ITextWindow));
-                    _loc3_ = IBitmapWrapperWindow(_loc2_.getChildByName(var_3385));
-                    _loc3_.bitmap = (var_1393.getAssetByName(_loc3_.bitmapAssetName).content as BitmapData);
-                    _loc3_.width = _loc3_.bitmap.width;
-                    _loc3_.height = _loc3_.bitmap.height;
-                    _loc1_.addListItem(_loc2_);
-                };
+                    container = (WINDOW_MANAGER.buildFromXML(ASSETS.getAssetByName(FACEBOOK_PIECE_XML).content as XML) as IWindowContainer);
+                    
+                    container.name = FACEBOOK;
+                    container.getChildByName(NAME).caption = this.friend.realName;
+                    
+                    TEXT_CROPPER.crop(container.getChildByName(NAME) as ITextWindow);
+                    
+                    bitmapWindow = IBitmapWrapperWindow(container.getChildByName(ICON));
+                    
+                    bitmapWindow.bitmap = (ASSETS.getAssetByName(bitmapWindow.bitmapAssetName).content as BitmapData);
+                    bitmapWindow.width = bitmapWindow.bitmap.width;
+                    bitmapWindow.height = bitmapWindow.bitmap.height;
+                    
+                    itemList.addListItem(container);
+                }
+
                 if (this.friend.online)
                 {
-                    _loc2_ = (var_1394.buildFromXML((var_1393.getAssetByName(var_3390).content as XML)) as IWindowContainer);
-                    _loc2_.name = var_3392;
-                    _loc4_ = _loc2_.getChildByName(var_3393);
-                    if (_loc4_)
+                    container = (WINDOW_MANAGER.buildFromXML(ASSETS.getAssetByName(CONTROLS_PIECE_XML).content as XML) as IWindowContainer);
+                    
+                    container.name = CONTROLS;
+                    
+                    button = container.getChildByName(BUTTON_MESSAGE);
+                    
+                    if (button != null)
                     {
-                        _loc4_.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onControlClick);
-                    };
-                    _loc4_ = _loc2_.getChildByName(var_3394);
-                    if (_loc4_)
+                        button.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onControlClick);
+                    }
+
+                    button = container.getChildByName(BUTTON_VISIT);
+                    
+                    if (button != null)
                     {
                         if (this.friend.allowFollow)
                         {
-                            _loc4_.visible = true;
-                            _loc4_.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onControlClick);
+                            button.visible = true;
+                            button.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onControlClick);
                         }
                         else
                         {
-                            _loc4_.visible = false;
-                        };
-                    };
-                    _loc1_.addListItem(_loc2_);
-                };
-                window.height = _loc1_.height;
-                window.y = (var_623 - window.height);
+                            button.visible = false;
+                        }
+
+                    }
+
+                    itemList.addListItem(container);
+                }
+
+                window.height = itemList.height;
+                window.y = INITIAL_HEIGHT - window.height;
+
                 super.select();
-            };
+            }
+
         }
 
-        override public function deselect():void
+        override public function deselect(): void
         {
             if (selected)
             {
                 if (_window)
                 {
                     purgeEntityPieces(_window);
-                };
+                }
+
                 super.deselect();
-            };
+            }
+
         }
 
-        protected function refresh():void
+        protected function refresh(): void
         {
-            var _loc1_:IWindowContainer;
-            var _loc2_:IBitmapWrapperWindow;
+            var container: IWindowContainer;
+            var bitmapWindow: IBitmapWrapperWindow;
+
             if (!_window)
             {
                 _window = this.allocateEntityWindow();
-            };
-            if (this.var_3396)
+            }
+
+            if (this._friend)
             {
-                _window.id = this.var_3396.id;
-                _loc1_ = (IItemListWindow(_window.getChildByName(var_1386)).getListItemByName(var_186) as IWindowContainer);
-                _loc1_.findChildByName(var_341).caption = this.var_3396.name;
-                var_1395.crop((_loc1_.getChildByName(var_341) as ITextWindow));
-                _loc2_ = IBitmapWrapperWindow(_loc1_.findChildByName(var_1396));
-                _loc2_.bitmap = var_1392.getAvatarFaceBitmap(this.var_3396.figure);
-                _loc2_.width = _loc2_.bitmap.width;
-                _loc2_.height = _loc2_.bitmap.height;
-            };
+                _window.id = this._friend.id;
+
+                container = (IItemListWindow(_window.getChildByName(LIST))
+                        .getListItemByName(HEADER) as IWindowContainer);
+
+                container.findChildByName(NAME).caption = this._friend.name;
+
+                TEXT_CROPPER.crop(container.getChildByName(NAME) as ITextWindow);
+                
+                bitmapWindow = IBitmapWrapperWindow(container.findChildByName(CANVAS));
+                
+                bitmapWindow.bitmap = FRIEND_BAR_VIEW.getAvatarFaceBitmap(this._friend.figure);
+                bitmapWindow.width = bitmapWindow.bitmap.width;
+                bitmapWindow.height = bitmapWindow.bitmap.height;
+            }
+
         }
 
-        private function allocateEntityWindow():IWindowContainer
+        private function allocateEntityWindow(): IWindowContainer
         {
-            var _loc1_:IWindowContainer = ((var_3395.length > 0) ? var_3395.pop() : (var_1394.buildFromXML((var_1393.getAssetByName(var_3388).content as XML)) as IWindowContainer));
-            var _loc2_:IBitmapWrapperWindow = IBitmapWrapperWindow(_loc1_.findChildByName(var_1396));
-            _loc1_.x = 0;
-            _loc1_.y = 0;
-            _loc1_.width = var_622;
-            _loc1_.height = var_623;
-            _loc1_.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onMouseClick);
-            _loc2_.disposesBitmap = true;
-            return (_loc1_);
+            var container: IWindowContainer = CONTAINER_POOL.length > 0
+                    ? CONTAINER_POOL.pop()
+                    : (WINDOW_MANAGER.buildFromXML(ASSETS.getAssetByName(ENTITY_XML).content as XML) as IWindowContainer);
+
+            var bitmapWindow: IBitmapWrapperWindow = IBitmapWrapperWindow(container.findChildByName(CANVAS));
+            
+            container.x = 0;
+            container.y = 0;
+            container.width = INITIAL_WIDTH;
+            container.height = INITIAL_HEIGHT;
+            container.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onMouseClick);
+            
+            bitmapWindow.disposesBitmap = true;
+            
+            return container;
         }
 
-        private function releaseEntityWindow(param1:IWindowContainer):void
+        private function releaseEntityWindow(container: IWindowContainer): void
         {
-            var _loc2_:IBitmapWrapperWindow;
-            if (((param1) && (!(param1.disposed))))
+            var bitmapWindow: IBitmapWrapperWindow;
+            
+            if (container != null && !container.disposed)
             {
-                param1.procedure = null;
-                param1.removeEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onMouseClick);
-                param1.width = var_622;
-                param1.height = var_623;
-                _loc2_ = IBitmapWrapperWindow(param1.findChildByName(var_1396));
-                _loc2_.bitmap = null;
-                purgeEntityPieces(param1);
-                if (var_3395.indexOf(param1) == -1)
+                container.procedure = null;
+                container.removeEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onMouseClick);
+                container.width = INITIAL_WIDTH;
+                container.height = INITIAL_HEIGHT;
+             
+                bitmapWindow = IBitmapWrapperWindow(container.findChildByName(CANVAS));
+             
+                bitmapWindow.bitmap = null;
+             
+                purgeEntityPieces(container);
+             
+                if (CONTAINER_POOL.indexOf(container) == -1)
                 {
-                    var_3395.push(param1);
-                };
-            };
+                    CONTAINER_POOL.push(container);
+                }
+
+            }
+
         }
 
-        private function onControlClick(param1:WindowMouseEvent):void
+        private function onControlClick(event: WindowMouseEvent): void
         {
-            if (((!(disposed)) && (!(recycled))))
+            if (!disposed && !recycled)
             {
-                switch (param1.window.name)
+                switch (event.window.name)
                 {
-                    case var_3393:
-                        if (((var_1391) && (this.var_3396)))
+                    case BUTTON_MESSAGE:
+                        if (FRIEND_BAR_DATA && this._friend)
                         {
-                            var_1391.startConversation(this.var_3396.id);
-                        };
+                            FRIEND_BAR_DATA.startConversation(this._friend.id);
+                        }
+
                         return;
-                    case var_3394:
-                        if (((var_1391) && (this.var_3396)))
+
+                    case BUTTON_VISIT:
+                        if (FRIEND_BAR_DATA && this._friend)
                         {
-                            var_1391.followToRoom(this.var_3396.id);
-                        };
+                            FRIEND_BAR_DATA.followToRoom(this._friend.id);
+                        }
+
                         return;
-                };
-            };
+                }
+
+            }
+
         }
 
-        private function onMouseClick(param1:WindowMouseEvent):void
+        private function onMouseClick(event: WindowMouseEvent): void
         {
-            if (((!(disposed)) && (!(recycled))))
+            if (!disposed && !recycled)
             {
                 if (selected)
                 {
-                    var_1392.deSelect();
+                    FRIEND_BAR_VIEW.deSelect();
                 }
                 else
                 {
-                    var_1392.selectFriendEntity(this.var_3396.id);
-                };
-            };
+                    FRIEND_BAR_VIEW.selectFriendEntity(this._friend.id);
+                }
+
+            }
+
         }
 
     }

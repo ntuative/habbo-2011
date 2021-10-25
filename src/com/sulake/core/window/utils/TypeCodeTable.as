@@ -1,14 +1,16 @@
 ﻿package com.sulake.core.window.utils
 {
+
     import com.sulake.core.window.enum.WindowType;
+
     import flash.utils.Dictionary;
 
-    public class TypeCodeTable extends WindowType 
+    public class TypeCodeTable extends WindowType
     {
 
-        public static function fillTables(param1:Dictionary, param2:Dictionary=null):void
+        public static function fillTables(param1: Dictionary, param2: Dictionary = null): void
         {
-            var _loc3_:String;
+            var _loc3_: String;
             param1["background"] = var_884;
             param1["bitmap"] = var_885;
             param1["border"] = var_891;
@@ -83,8 +85,10 @@
                 for (_loc3_ in param1)
                 {
                     param2[param1[_loc3_]] = _loc3_;
-                };
-            };
+                }
+
+            }
+
         }
 
     }

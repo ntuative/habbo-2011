@@ -1,82 +1,89 @@
 ﻿package com.sulake.core.window.utils
 {
-    public class ChildEntityArrayReader implements IChildEntityArrayReader 
+
+    public class ChildEntityArrayReader implements IChildEntityArrayReader
     {
 
-        protected var var_2217:Array = new Array();
+        protected var var_2217: Array = [];
 
-        public function get numChildren():int
+        public function get numChildren(): int
         {
-            return (this.var_2217.length);
+            return this.var_2217.length;
         }
 
-        public function getChildAt(param1:int):IChildEntity
+        public function getChildAt(param1: int): IChildEntity
         {
-            return (this.var_2217[param1]);
+            return this.var_2217[param1];
         }
 
-        public function getChildByID(param1:uint):IChildEntity
+        public function getChildByID(param1: uint): IChildEntity
         {
-            var _loc3_:IChildEntity;
-            var _loc2_:uint = this.var_2217.length;
-            var _loc4_:uint;
+            var _loc3_: IChildEntity;
+            var _loc2_: uint = this.var_2217.length;
+            var _loc4_: uint;
             while (_loc4_ < _loc2_)
             {
                 _loc3_ = this.var_2217[_loc4_];
                 if (_loc3_.id == param1)
                 {
-                    return (_loc3_);
-                };
+                    return _loc3_;
+                }
+
                 _loc4_++;
-            };
-            return (null);
+            }
+
+            return null;
         }
 
-        public function getChildByTag(param1:String):IChildEntity
+        public function getChildByTag(param1: String): IChildEntity
         {
-            var _loc3_:IChildEntity;
-            var _loc2_:uint = this.var_2217.length;
-            var _loc4_:uint;
+            var _loc3_: IChildEntity;
+            var _loc2_: uint = this.var_2217.length;
+            var _loc4_: uint;
             while (_loc4_ < _loc2_)
             {
                 _loc3_ = this.var_2217[_loc4_];
                 if (_loc3_.tags.indexOf(param1) > -1)
                 {
-                    return (_loc3_);
-                };
+                    return _loc3_;
+                }
+
                 _loc4_++;
-            };
-            return (null);
+            }
+
+            return null;
         }
 
-        public function getChildByName(param1:String):IChildEntity
+        public function getChildByName(param1: String): IChildEntity
         {
-            var _loc3_:IChildEntity;
-            var _loc2_:uint = this.var_2217.length;
-            var _loc4_:uint;
+            var _loc3_: IChildEntity;
+            var _loc2_: uint = this.var_2217.length;
+            var _loc4_: uint;
             while (_loc4_ < _loc2_)
             {
                 _loc3_ = this.var_2217[_loc4_];
                 if (_loc3_.name == param1)
                 {
-                    return (_loc3_);
-                };
+                    return _loc3_;
+                }
+
                 _loc4_++;
-            };
-            return (null);
+            }
+
+            return null;
         }
 
-        public function getChildIndex(param1:IChildEntity):int
+        public function getChildIndex(param1: IChildEntity): int
         {
-            return (this.var_2217.indexOf(param1));
+            return this.var_2217.indexOf(param1);
         }
 
-        public function groupChildrenWithID(param1:uint, param2:Array):uint
+        public function groupChildrenWithID(param1: uint, param2: Array): uint
         {
-            var _loc3_:IChildEntity;
-            var _loc6_:uint;
-            var _loc4_:uint;
-            var _loc5_:uint = this.var_2217.length;
+            var _loc3_: IChildEntity;
+            var _loc6_: uint;
+            var _loc4_: uint;
+            var _loc5_: uint = this.var_2217.length;
             _loc6_ = 0;
             while (_loc6_ < _loc5_)
             {
@@ -85,18 +92,20 @@
                 {
                     param2.push(_loc3_);
                     _loc4_++;
-                };
+                }
+
                 _loc6_++;
-            };
-            return (_loc4_);
+            }
+
+            return _loc4_;
         }
 
-        public function groupChildrenWithTag(param1:String, param2:Array):uint
+        public function groupChildrenWithTag(param1: String, param2: Array): uint
         {
-            var _loc3_:IChildEntity;
-            var _loc6_:uint;
-            var _loc4_:uint;
-            var _loc5_:uint = this.var_2217.length;
+            var _loc3_: IChildEntity;
+            var _loc6_: uint;
+            var _loc4_: uint;
+            var _loc5_: uint = this.var_2217.length;
             _loc6_ = 0;
             while (_loc6_ < _loc5_)
             {
@@ -105,10 +114,12 @@
                 {
                     param2.push(_loc3_);
                     _loc4_++;
-                };
+                }
+
                 _loc6_++;
-            };
-            return (_loc4_);
+            }
+
+            return _loc4_;
         }
 
     }

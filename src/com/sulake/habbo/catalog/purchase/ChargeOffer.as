@@ -1,69 +1,70 @@
 ﻿package com.sulake.habbo.catalog.purchase
 {
+
     import com.sulake.habbo.catalog.IPurchasableOffer;
     import com.sulake.habbo.communication.messages.incoming.catalog.ChargeInfo;
     import com.sulake.habbo.catalog.viewer.ICatalogPage;
     import com.sulake.habbo.catalog.viewer.IProductContainer;
 
-    public class ChargeOffer implements IPurchasableOffer 
+    public class ChargeOffer implements IPurchasableOffer
     {
 
-        private var var_2671:ChargeInfo;
-        private var var_2620:String;
+        private var _chargeInfo: ChargeInfo;
+        private var _extraParameter: String;
 
-        public function ChargeOffer(param1:ChargeInfo)
+        public function ChargeOffer(chargeInfo: ChargeInfo)
         {
-            this.var_2671 = param1;
+            this._chargeInfo = chargeInfo;
         }
 
-        public function get offerId():int
+        public function get offerId(): int
         {
-            return (0);
+            return 0;
         }
 
-        public function get extraParameter():String
+        public function get extraParameter(): String
         {
-            return (this.var_2620);
+            return this._extraParameter;
         }
 
-        public function set extraParameter(param1:String):void
+        public function set extraParameter(param1: String): void
         {
-            this.var_2620 = param1;
+            this._extraParameter = param1;
         }
 
-        public function get priceInActivityPoints():int
+        public function get priceInActivityPoints(): int
         {
-            return (this.var_2671.priceInActivityPoints);
+            return this._chargeInfo.priceInActivityPoints;
         }
 
-        public function get activityPointType():int
+        public function get activityPointType(): int
         {
-            return (this.var_2671.activityPointType);
+            return this._chargeInfo.activityPointType;
         }
 
-        public function get priceInCredits():int
+        public function get priceInCredits(): int
         {
-            return (this.var_2671.priceInCredits);
+            return this._chargeInfo.priceInCredits;
         }
 
-        public function get page():ICatalogPage
+        public function get page(): ICatalogPage
         {
-            return (null);
+            return null;
         }
 
-        public function get priceType():String
+        public function get priceType(): String
         {
-            return (null);
+            return null;
         }
 
-        public function get productContainer():IProductContainer
+        public function get productContainer(): IProductContainer
         {
-            return (null);
+            return null;
         }
 
-        public function get localizationId():String
+        public function get localizationId(): String
         {
-            return (null);
+            return null;
         }
 
     }

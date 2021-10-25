@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.help.help
 {
+
     import com.sulake.core.assets.IAssetLibrary;
     import com.sulake.habbo.window.IHabboWindowManager;
     import com.sulake.habbo.toolbar.IHabboToolbar;
@@ -16,7 +17,9 @@
     import com.sulake.core.window.events.WindowMouseEvent;
     import com.sulake.core.window.components.IItemListWindow;
     import com.sulake.core.window.IWindow;
+
     import flash.events.Event;
+
     import com.sulake.habbo.help.enum.HabboHelpTrackingEvent;
     import com.sulake.habbo.window.utils.IAlertDialog;
     import com.sulake.core.window.events.WindowEvent;
@@ -25,477 +28,566 @@
     import com.sulake.habbo.help.enum.HabboHelpTutorialEvent;
     import com.sulake.core.communication.messages.IMessageComposer;
     import com.sulake.habbo.help.help.data.FaqIndex;
+
     import flash.utils.Dictionary;
+
     import com.sulake.core.assets.XmlAsset;
     import com.sulake.core.window.enum.WindowParam;
     import com.sulake.core.assets.BitmapDataAsset;
+
     import flash.display.BitmapData;
+
     import com.sulake.core.window.components.IBitmapWrapperWindow;
+
     import flash.geom.Point;
 
-    public class HelpUI 
+    public class HelpUI
     {
 
-        private var _assetLibrary:IAssetLibrary;
-        private var _windowManager:IHabboWindowManager;
-        private var var_2844:IHabboToolbar;
-        private var _window:IWindowContainer;
-        private var var_3479:HabboHelp;
-        private var _defaultViewId:String = "HHVE_HELP_FRONTPAGE";
-        private var var_2560:String = _defaultViewId;
-        private var var_3480:Array = new Array();
-        private var var_3478:Map;
-        private var var_3481:int = 0;
-        private var var_3482:int = 0;
-        private var var_3483:IWindowContainer;
-        private var var_3484:Array = new Array();
-        private var var_3485:Boolean = false;
+        private var _assetLibrary: IAssetLibrary;
+        private var _windowManager: IHabboWindowManager;
+        private var _toolbar: IHabboToolbar;
+        private var _window: IWindowContainer;
+        private var _component: HabboHelp;
+        private var _defaultViewId: String = "HHVE_HELP_FRONTPAGE";
+        private var _viewControllerId: String = _defaultViewId;
+        private var _previousControllers: Array = [];
+        private var _controllers: Map;
+        private var _width: int = 0;
+        private var _height: int = 0;
+        private var _goBackUI: IWindowContainer;
+        private var _backButtons: Array = [];
+        private var _callForGuideBotEnabled: Boolean = false;
 
-        public function HelpUI(param1:HabboHelp, param2:IAssetLibrary, param3:IHabboWindowManager, param4:IHabboLocalizationManager, param5:IHabboToolbar)
+        public function HelpUI(component: HabboHelp, assetLibrary: IAssetLibrary, windowManager: IHabboWindowManager, localizationManager: IHabboLocalizationManager, toolbar: IHabboToolbar)
         {
-            this.var_3479 = param1;
-            this._assetLibrary = param2;
-            this._windowManager = param3;
-            this._windowManager.registerLocalizationParameter("info.client.version", "version", new String(201104122301));
-            this.var_2844 = param5;
-            this.var_3478 = new Map();
-            this.var_3478.add(HabboHelpViewEnum.var_1412, IHelpViewController(new PlaceholderView(this, this._windowManager, this._assetLibrary)));
-            this.var_3478.add(HabboHelpViewEnum.var_1413, IHelpViewController(new HelpMainView(this, this._windowManager, this._assetLibrary)));
-            this.var_3478.add(HabboHelpViewEnum.var_1414, IHelpViewController(new FaqBrowseTopView(this, this._windowManager, this._assetLibrary)));
-            this.var_3478.add(HabboHelpViewEnum.var_1415, IHelpViewController(new FaqBrowseCategoryView(this, this._windowManager, this._assetLibrary)));
-            this.var_3478.add(HabboHelpViewEnum.var_1416, IHelpViewController(new FaqBrowseEntry(this, this._windowManager, this._assetLibrary)));
-            this.var_3478.add(HabboHelpViewEnum.var_302, IHelpViewController(new CallForHelpTopicSelection(this, this._windowManager, this._assetLibrary)));
-            this.var_3478.add(HabboHelpViewEnum.var_1417, IHelpViewController(new CallForHelpTextInput(this, this._windowManager, this._assetLibrary)));
-            this.var_3478.add(HabboHelpViewEnum.var_1418, IHelpViewController(new CallForHelpSentView(this, this._windowManager, this._assetLibrary, "help_cfh_thanks")));
-            this.var_3478.add(HabboHelpViewEnum.var_1419, IHelpViewController(new CallForHelpSentView(this, this._windowManager, this._assetLibrary, "help_cfh_abusive")));
-            this.var_3478.add(HabboHelpViewEnum.var_1420, IHelpViewController(new CallForHelpPendingItemView(this, this._windowManager, this._assetLibrary)));
-            this.var_3478.add(HabboHelpViewEnum.var_1421, IHelpViewController(new CallForHelpReportUserSelection(this, this._windowManager, this._assetLibrary)));
+            this._component = component;
+            this._assetLibrary = assetLibrary;
+            this._windowManager = windowManager;
+            this._windowManager.registerLocalizationParameter("info.client.version", "version", String(201104122301));
+            this._toolbar = toolbar;
+            this._controllers = new Map();
+
+            this._controllers.add(HabboHelpViewEnum.HVVE_PH, IHelpViewController(new PlaceholderView(this, this._windowManager, this._assetLibrary)));
+            this._controllers.add(HabboHelpViewEnum.HHVE_HELP_FRONTPAGE, IHelpViewController(new HelpMainView(this, this._windowManager, this._assetLibrary)));
+            this._controllers.add(HabboHelpViewEnum.HHVE_FAQ_TOP, IHelpViewController(new FaqBrowseTopView(this, this._windowManager, this._assetLibrary)));
+            this._controllers.add(HabboHelpViewEnum.HHVE_FAQ_CATEGORY, IHelpViewController(new FaqBrowseCategoryView(this, this._windowManager, this._assetLibrary)));
+            this._controllers.add(HabboHelpViewEnum.HHVE_FAQ_TOPICS, IHelpViewController(new FaqBrowseEntry(this, this._windowManager, this._assetLibrary)));
+            this._controllers.add(HabboHelpViewEnum.HHVE_CFG_TOPIC_SELECT, IHelpViewController(new CallForHelpTopicSelection(this, this._windowManager, this._assetLibrary)));
+            this._controllers.add(HabboHelpViewEnum.HHVE_CFH_TEXT_INPUT, IHelpViewController(new CallForHelpTextInput(this, this._windowManager, this._assetLibrary)));
+            this._controllers.add(HabboHelpViewEnum.HHVE_CFH_SENT_OK, IHelpViewController(new CallForHelpSentView(this, this._windowManager, this._assetLibrary, "help_cfh_thanks")));
+            this._controllers.add(HabboHelpViewEnum.HHVE_CFH_HAS_ABUSIVE, IHelpViewController(new CallForHelpSentView(this, this._windowManager, this._assetLibrary, "help_cfh_abusive")));
+            this._controllers.add(HabboHelpViewEnum.HHVE_CFH_PENDING, IHelpViewController(new CallForHelpPendingItemView(this, this._windowManager, this._assetLibrary)));
+            this._controllers.add(HabboHelpViewEnum.HHVE_REPORT_USER_SELECT, IHelpViewController(new CallForHelpReportUserSelection(this, this._windowManager, this._assetLibrary)));
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            var _loc3_:String;
-            var _loc4_:IHelpViewController;
+            var _loc3_: String;
+            var _loc4_: IHelpViewController;
             if (this._window != null)
             {
                 this._window.removeEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onClick);
-            };
-            var _loc1_:Array = this.var_3478.getKeys();
-            var _loc2_:int;
+            }
+
+            var _loc1_: Array = this._controllers.getKeys();
+            var _loc2_: int;
             while (_loc2_ < _loc1_.length)
             {
                 _loc3_ = _loc1_[_loc2_];
-                _loc4_ = (this.var_3478.getValue(_loc3_) as IHelpViewController);
+                _loc4_ = (this._controllers.getValue(_loc3_) as IHelpViewController);
                 if (_loc4_ != null)
                 {
                     _loc4_.dispose();
-                };
+                }
+
                 _loc2_++;
-            };
-            this.var_3478.dispose();
-            if (this.var_3483 != null)
+            }
+
+            this._controllers.dispose();
+            if (this._goBackUI != null)
             {
-                this.var_3483.dispose();
-                this.var_3483 = null;
-            };
+                this._goBackUI.dispose();
+                this._goBackUI = null;
+            }
+
         }
 
-        public function toggleUI():void
+        public function toggleUI(): void
         {
-            if (((!(this._window == null)) && (this._window.visible)))
+            if (this._window != null && this._window.visible)
             {
                 this.hideUI();
             }
             else
             {
                 this.showUI();
-            };
+            }
+
         }
 
-        public function showUI(param1:String=null, param2:Boolean=true):void
+        public function showUI(controllerId: String = null, param2: Boolean = true): void
         {
-            if (param1 == null)
+            if (controllerId == null)
             {
-                param1 = this.var_2560;
-            };
+                controllerId = this._viewControllerId;
+            }
+
             if (this._window == null)
             {
                 this.createWindow();
                 if (this._window == null)
                 {
                     return;
-                };
+                }
+
                 this._window.visible = true;
             }
             else
             {
                 this.removeCurrentView();
-            };
-            if (param1 == this._defaultViewId)
+            }
+
+            if (controllerId == this._defaultViewId)
             {
-                this.var_3480 = new Array();
+                this._previousControllers = [];
             }
             else
             {
                 if (param2)
                 {
-                    if (((this.var_3480.length == 0) || (!(param1 == this.var_2560))))
+                    if (this._previousControllers.length == 0 || controllerId != this._viewControllerId)
                     {
-                        this.var_3480.push(this.var_2560);
-                    };
-                };
-            };
-            this.var_2560 = param1;
-            var _loc3_:IHelpViewController = this.getViewController();
-            if (_loc3_ == null)
+                        this._previousControllers.push(this._viewControllerId);
+                    }
+
+                }
+
+            }
+
+            this._viewControllerId = controllerId;
+            var controller: IHelpViewController = this.getViewController();
+            
+            if (controller == null)
             {
-                Logger.log(("* No view controller found for " + this.var_2560));
+                Logger.log("* No view controller found for " + this._viewControllerId);
                 return;
-            };
-            var _loc4_:IWindowContainer = (this._window.findChildByName("content_area") as IWindowContainer);
-            if (_loc4_ == null)
+            }
+
+            var container: IWindowContainer = this._window.findChildByName("content_area") as IWindowContainer;
+           
+            if (container == null)
             {
                 return;
-            };
-            var _loc5_:IItemListWindow = (this._window.findChildByName("content_list") as IItemListWindow);
-            if (_loc5_ == null)
+            }
+
+            var contentList: IItemListWindow = this._window.findChildByName("content_list") as IItemListWindow;
+            
+            if (contentList == null)
             {
                 return;
-            };
-            _loc5_.height = 0;
-            _loc3_.render();
-            var _loc6_:IWindow = (_loc3_.getWindowContainer() as IWindow);
-            if (_loc6_ != null)
+            }
+
+            contentList.height = 0;
+            controller.render();
+            
+            var parent: IWindow = controller.getWindowContainer() as IWindow;
+            
+            if (parent != null)
             {
-                _loc5_.addListItemAt(_loc6_, 0);
-            };
+                contentList.addListItemAt(parent, 0);
+            }
+
             this.addBackButtonWindow();
             this.updateWindowDimensions();
-            this.var_3479.events.dispatchEvent(new Event(HabboHelpTrackingEvent.HABBO_HELP_TRACKING_EVENT_DEFAULT));
+            this._component.events.dispatchEvent(new Event(HabboHelpTrackingEvent.HABBO_HELP_TRACKING_EVENT_DEFAULT));
         }
 
-        public function tellUI(param1:String, param2:*=null):void
+        public function tellUI(param1: String, param2: * = null): void
         {
-            if (this.var_2560 != param1)
+            if (this._viewControllerId != param1)
             {
                 return;
-            };
-            var _loc3_:IHelpViewController = this.getViewController();
-            if (_loc3_ != null)
+            }
+
+            var controller: IHelpViewController = this.getViewController();
+            if (controller != null)
             {
-                _loc3_.update(param2);
-            };
+                controller.update(param2);
+            }
+
         }
 
-        public function get component():HabboHelp
+        public function get component(): HabboHelp
         {
-            return (this.var_3479);
+            return this._component;
         }
 
-        public function get localization():IHabboLocalizationManager
+        public function get localization(): IHabboLocalizationManager
         {
-            return (this.var_3479.localization);
+            return this._component.localization;
         }
 
-        public function get visible():Boolean
+        public function get visible(): Boolean
         {
             if (this._window == null)
             {
-                return (false);
-            };
-            return (this._window.visible);
+                return false;
+            }
+
+            return this._window.visible;
         }
 
-        public function get window():IWindowContainer
+        public function get window(): IWindowContainer
         {
-            return (this._window);
+            return this._window;
         }
 
-        public function showCallForHelpReply(message:String):void
+        public function showCallForHelpReply(message: String): void
         {
-            this._windowManager.alert("${help.cfh.reply.title}", message, 0, function (param1:IAlertDialog, param2:WindowEvent):void
+            this._windowManager.alert("${help.cfh.reply.title}", message, 0, function (dialog: IAlertDialog, event: WindowEvent): void
             {
-                param1.dispose();
+                dialog.dispose();
             });
         }
 
-        public function showCallForHelpResult(param1:String):void
+        public function showCallForHelpResult(result: String): void
         {
-            switch (param1)
+            switch (result)
             {
-                case CallForHelpResultEnum.var_1418:
-                    this.showUI(HabboHelpViewEnum.var_1418);
+                case CallForHelpResultEnum.CFHRE_SENT_OK:
+                    this.showUI(HabboHelpViewEnum.HHVE_CFH_SENT_OK);
                     return;
-                case CallForHelpResultEnum.var_1422:
-                    this.showUI(HabboHelpViewEnum.var_1420);
+
+                case CallForHelpResultEnum.CFHRE_ERROR_TOO_MANY_PENDING:
+                    this.showUI(HabboHelpViewEnum.HHVE_CFH_PENDING);
                     return;
-                case CallForHelpResultEnum.var_1423:
-                    this.showUI(HabboHelpViewEnum.var_1419);
+
+                case CallForHelpResultEnum.CFHRE_HAS_ABUSIVE_CALL:
+                    this.showUI(HabboHelpViewEnum.HHVE_CFH_HAS_ABUSIVE);
                     return;
-            };
+            }
+
         }
 
-        public function updateCallForGuideBotUI(param1:Boolean):void
+        public function updateCallForGuideBotUI(value: Boolean): void
         {
-            this.var_3485 = param1;
-            var _loc2_:IHelpViewController = (this.var_3478.getValue(HabboHelpViewEnum.var_1413) as IHelpViewController);
-            if (((!(_loc2_ == null)) && (!(_loc2_.disposed))))
+            this._callForGuideBotEnabled = value;
+
+            var controller: IHelpViewController = this._controllers.getValue(HabboHelpViewEnum.HHVE_HELP_FRONTPAGE) as IHelpViewController;
+            
+            if (controller != null && !controller.disposed)
             {
-                _loc2_.update();
-            };
+                controller.update();
+            }
+
         }
 
-        public function isCallForGuideBotEnabled():Boolean
+        public function isCallForGuideBotEnabled(): Boolean
         {
-            return (this.var_3485);
+            return this._callForGuideBotEnabled;
         }
 
-        public function handleCallGuideBot():void
+        public function handleCallGuideBot(): void
         {
             this.sendMessage(new CallGuideBotMessageComposer());
+            
             this.hideUI();
-            this.var_3479.events.dispatchEvent(new HabboHelpTutorialEvent(HabboHelpTutorialEvent.var_1424));
+            
+            this._component.events.dispatchEvent(new HabboHelpTutorialEvent(HabboHelpTutorialEvent.HHTPNUFWE_DONE_GUIDEBOT));
         }
 
-        public function sendMessage(param1:IMessageComposer):void
+        public function sendMessage(message: IMessageComposer): void
         {
-            this.var_3479.sendMessage(param1);
+            this._component.sendMessage(message);
         }
 
-        public function getFaq():FaqIndex
+        public function getFaq(): FaqIndex
         {
-            return (this.var_3479.getFaq());
+            return this._component.getFaq();
         }
 
-        public function getText(param1:String, param2:String=null):String
+        public function getText(key: String, value: String = null): String
         {
-            if (param2 == null)
+            if (value == null)
             {
-                param2 = param1;
-            };
-            return (this.localization.getKey(param1, param2));
+                value = key;
+            }
+
+            return this.localization.getKey(key, value);
         }
 
-        public function getConfigurationKey(param1:String, param2:String=null, param3:Dictionary=null):String
+        public function getConfigurationKey(param1: String, param2: String = null, param3: Dictionary = null): String
         {
-            return (this.var_3479.getConfigurationKey(param1, param2, param3));
+            return this._component.getConfigurationKey(param1, param2, param3);
         }
 
-        public function setRoomSessionStatus(param1:Boolean):void
+        public function setRoomSessionStatus(active: Boolean): void
         {
-            var _loc3_:IHelpViewController;
-            var _loc2_:int;
-            while (_loc2_ < this.var_3478.length)
+            var controller: IHelpViewController;
+            var i: int;
+
+            while (i < this._controllers.length)
             {
-                _loc3_ = (this.var_3478.getWithIndex(_loc2_) as IHelpViewController);
-                if (_loc3_ != null)
+                controller = (this._controllers.getWithIndex(i) as IHelpViewController);
+                
+                if (controller != null)
                 {
-                    _loc3_.roomSessionActive = param1;
-                    if (!_loc3_.disposed)
+                    controller.roomSessionActive = active;
+                    
+                    if (!controller.disposed)
                     {
-                        _loc3_.update();
-                    };
-                };
-                _loc2_++;
-            };
+                        controller.update();
+                    }
+
+                }
+
+                i++;
+            }
+
         }
 
-        private function getViewController():IHelpViewController
+        private function getViewController(): IHelpViewController
         {
-            return (this.var_3478.getValue(this.var_2560));
+            return this._controllers.getValue(this._viewControllerId);
         }
 
-        private function createWindow():void
+        private function createWindow(): void
         {
-            var _loc1_:XmlAsset = XmlAsset(this._assetLibrary.getAssetByName("help_frame_xml"));
-            if (_loc1_ == null)
+            var layout: XmlAsset = XmlAsset(this._assetLibrary.getAssetByName("help_frame_xml"));
+            
+            if (layout == null)
             {
                 return;
-            };
-            this._window = (this._windowManager.buildFromXML(XML(_loc1_.content)) as IWindowContainer);
+            }
+
+            this._window = (this._windowManager.buildFromXML(XML(layout.content)) as IWindowContainer);
+            
             if (this._window == null)
             {
                 return;
-            };
+            }
+
             this._window.center();
             this._window.setParamFlag(WindowParam.var_593);
             this._window.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onClick);
-            var _loc2_:IWindow = this._window.findChildByTag("close");
-            if (_loc2_ != null)
+            
+            var closeButton: IWindow = this._window.findChildByTag("close");
+            
+            if (closeButton != null)
             {
-                _loc2_.setParamFlag(WindowParam.var_593);
-                _loc2_.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onClose);
-            };
-            var _loc3_:IItemListWindow = (this._window.findChildByName("content_list") as IItemListWindow);
-            if (_loc3_ == null)
+                closeButton.setParamFlag(WindowParam.var_593);
+                closeButton.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onClose);
+            }
+
+            var contentList: IItemListWindow = this._window.findChildByName("content_list") as IItemListWindow;
+            
+            if (contentList == null)
             {
                 return;
-            };
-            this.var_3481 = (this._window.width - _loc3_.width);
-            this.var_3482 = this._window.height;
+            }
+
+            this._width = this._window.width - contentList.width;
+            this._height = this._window.height;
         }
 
-        private function removeCurrentView():void
+        private function removeCurrentView(): void
         {
-            var _loc2_:IItemListWindow;
+            var view: IItemListWindow;
+
             if (this._window != null)
             {
-                _loc2_ = (this._window.findChildByName("content_list") as IItemListWindow);
-                if (_loc2_ != null)
+                view = (this._window.findChildByName("content_list") as IItemListWindow);
+                
+                if (view != null)
                 {
-                    while (_loc2_.numListItems > 1)
+                    while (view.numListItems > 1)
                     {
-                        _loc2_.getListItemAt(0).dispose();
-                        _loc2_.removeListItemAt(0);
-                    };
-                };
-            };
-            var _loc1_:IHelpViewController = this.getViewController();
-            if (_loc1_ != null)
+                        view.getListItemAt(0).dispose();
+                        view.removeListItemAt(0);
+                    }
+
+                }
+
+            }
+
+            var controller: IHelpViewController = this.getViewController();
+            
+            if (controller != null)
             {
-                _loc1_.dispose();
-            };
+                controller.dispose();
+            }
+
         }
 
-        public function updateWindowDimensions():void
+        public function updateWindowDimensions(): void
         {
             if (this._window == null)
             {
                 return;
-            };
-            var _loc1_:IItemListWindow = (this._window.findChildByName("content_list") as IItemListWindow);
-            if (_loc1_ == null)
+            }
+
+            var itemList: IItemListWindow = this._window.findChildByName("content_list") as IItemListWindow;
+            
+            if (itemList == null)
             {
                 return;
-            };
-            this._window.height = (_loc1_.height + this.var_3482);
-            this._window.width = (_loc1_.width + this.var_3481);
+            }
+
+            this._window.height = itemList.height + this._height;
+            this._window.width = itemList.width + this._width;
         }
 
-        public function hideUI():void
+        public function hideUI(): void
         {
             if (this._window != null)
             {
                 this.removeCurrentView();
                 this._window.dispose();
                 this._window = null;
-            };
-            this.var_2560 = this._defaultViewId;
-            this.var_3479.events.dispatchEvent(new Event(HabboHelpTrackingEvent.HABBO_HELP_TRACKING_EVENT_CLOSED));
+            }
+
+            this._viewControllerId = this._defaultViewId;
+            this._component.events.dispatchEvent(new Event(HabboHelpTrackingEvent.HABBO_HELP_TRACKING_EVENT_CLOSED));
         }
 
-        private function onClose(param1:WindowMouseEvent):void
+        private function onClose(param1: WindowMouseEvent): void
         {
             this.hideUI();
         }
 
-        private function onBack(param1:WindowMouseEvent):void
+        private function onBack(param1: WindowMouseEvent): void
         {
-            if (this.var_3480.length > 0)
+            if (this._previousControllers.length > 0)
             {
-                this.showUI(this.var_3480.pop(), false);
-            };
+                this.showUI(this._previousControllers.pop(), false);
+            }
+
         }
 
-        private function onMouseOut(param1:WindowMouseEvent):void
+        private function onMouseOut(param1: WindowMouseEvent): void
         {
             this.setBackButtonActiveState(false);
         }
 
-        private function onMouseOver(param1:WindowMouseEvent):void
+        private function onMouseOver(param1: WindowMouseEvent): void
         {
             this.setBackButtonActiveState(true);
         }
 
-        private function onClick(param1:WindowMouseEvent):void
+        private function onClick(param1: WindowMouseEvent): void
         {
-            var _loc2_:IWindow = (param1.target as IWindow);
-            if (_loc2_.tags.indexOf("close") > -1)
+            var target: IWindow = param1.target as IWindow;
+
+            if (target.tags.indexOf("close") > -1)
             {
                 this.hideUI();
                 return;
-            };
-            if (_loc2_.tags.indexOf("back") > -1)
+            }
+
+            if (target.tags.indexOf("back") > -1)
             {
-                if (this.var_3480.length > 0)
+                if (this._previousControllers.length > 0)
                 {
-                    this.showUI(this.var_3480.pop(), false);
-                };
-            };
+                    this.showUI(this._previousControllers.pop(), false);
+                }
+
+            }
+
         }
 
-        private function setBackButtonActiveState(param1:Boolean=false):void
+        private function setBackButtonActiveState(param1: Boolean = false): void
         {
-            var _loc3_:BitmapDataAsset;
-            if (this.var_2560 == HabboHelpViewEnum.var_1413)
+            var bitmap: BitmapDataAsset;
+
+            if (this._viewControllerId == HabboHelpViewEnum.HHVE_HELP_FRONTPAGE)
             {
                 return;
-            };
-            if (this.var_3484.length < 2)
+            }
+
+            if (this._backButtons.length < 2)
             {
-                _loc3_ = (this._assetLibrary.getAssetByName("back_png") as BitmapDataAsset);
-                this.var_3484.push((_loc3_.content as BitmapData));
-                _loc3_ = (this._assetLibrary.getAssetByName("back_hi_png") as BitmapDataAsset);
-                this.var_3484.push((_loc3_.content as BitmapData));
-            };
-            var _loc2_:IBitmapWrapperWindow = (this.var_3483.findChildByName("back_image") as IBitmapWrapperWindow);
-            if (_loc2_ == null)
+                bitmap = (this._assetLibrary.getAssetByName("back_png") as BitmapDataAsset);
+                this._backButtons.push(bitmap.content as BitmapData);
+                
+                bitmap = (this._assetLibrary.getAssetByName("back_hi_png") as BitmapDataAsset);
+                this._backButtons.push(bitmap.content as BitmapData);
+            }
+
+            var wrapper: IBitmapWrapperWindow = this._goBackUI.findChildByName("back_image") as IBitmapWrapperWindow;
+            
+            if (wrapper == null)
             {
                 return;
-            };
-            _loc2_.bitmap = new BitmapData(_loc2_.width, _loc2_.height, true);
+            }
+
+            wrapper.bitmap = new BitmapData(wrapper.width, wrapper.height, true);
+            
             if (param1)
             {
-                _loc2_.bitmap.copyPixels(this.var_3484[1], this.var_3484[1].rect, new Point(0, 0));
+                wrapper.bitmap.copyPixels(this._backButtons[1], this._backButtons[1].rect, new Point(0, 0));
             }
             else
             {
-                _loc2_.bitmap.copyPixels(this.var_3484[0], this.var_3484[0].rect, new Point(0, 0));
-            };
+                wrapper.bitmap.copyPixels(this._backButtons[0], this._backButtons[0].rect, new Point(0, 0));
+            }
+
         }
 
-        private function addBackButtonWindow():void
+        private function addBackButtonWindow(): void
         {
-            var _loc2_:XmlAsset;
-            var _loc3_:IWindow;
-            var _loc4_:IWindow;
-            if (((this.var_2560 == HabboHelpViewEnum.var_1413) || (this.var_3480.length == 0)))
+            var layout: XmlAsset;
+            var goBackImage: IWindow;
+            var goBackText: IWindow;
+
+            if (this._viewControllerId == HabboHelpViewEnum.HHVE_HELP_FRONTPAGE || this._previousControllers.length == 0)
             {
                 return;
-            };
-            if (this.var_3483 == null)
+            }
+
+            if (this._goBackUI == null)
             {
-                _loc2_ = XmlAsset(this._assetLibrary.getAssetByName("help_back_button_xml"));
-                if (_loc2_ == null)
+                layout = XmlAsset(this._assetLibrary.getAssetByName("help_back_button_xml"));
+                
+                if (layout == null)
                 {
                     return;
-                };
-                this.var_3483 = (this._windowManager.buildFromXML(XML(_loc2_.content)) as IWindowContainer);
-                _loc3_ = this.var_3483.findChildByName("back_image");
-                if (_loc3_ != null)
+                }
+
+                this._goBackUI = (this._windowManager.buildFromXML(XML(layout.content)) as IWindowContainer);
+                goBackImage = this._goBackUI.findChildByName("back_image");
+                
+                if (goBackImage != null)
                 {
-                    _loc3_.setParamFlag(WindowParam.var_593);
-                    _loc3_.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onBack);
-                    _loc3_.addEventListener(WindowMouseEvent.var_626, this.onMouseOut);
-                    _loc3_.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_OVER, this.onMouseOver);
-                };
-                _loc4_ = this.var_3483.findChildByName("back_text");
-                if (_loc4_ != null)
+                    goBackImage.setParamFlag(WindowParam.var_593);
+                    goBackImage.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onBack);
+                    goBackImage.addEventListener(WindowMouseEvent.var_626, this.onMouseOut);
+                    goBackImage.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_OVER, this.onMouseOver);
+                }
+
+                goBackText = this._goBackUI.findChildByName("back_text");
+                
+                if (goBackText != null)
                 {
-                    _loc4_.setParamFlag(WindowParam.var_593);
-                    _loc4_.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onBack);
-                };
-            };
-            var _loc1_:IItemListWindow = (this._window.findChildByName("content_list") as IItemListWindow);
-            if (((_loc1_ == null) || (this.var_3483 == null)))
+                    goBackText.setParamFlag(WindowParam.var_593);
+                    goBackText.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, this.onBack);
+                }
+
+            }
+
+            var contentList: IItemListWindow = this._window.findChildByName("content_list") as IItemListWindow;
+            
+            if (contentList == null || this._goBackUI == null)
             {
                 return;
-            };
-            if (_loc1_.getListItemIndex((this.var_3483 as IWindow)) > -1)
+            }
+
+            if (contentList.getListItemIndex(this._goBackUI as IWindow) > -1)
             {
                 return;
-            };
-            _loc1_.addListItem((this.var_3483 as IWindow));
+            }
+
+            contentList.addListItem(this._goBackUI as IWindow);
             this.setBackButtonActiveState(false);
         }
 

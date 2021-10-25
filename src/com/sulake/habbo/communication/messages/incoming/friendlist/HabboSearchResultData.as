@@ -1,77 +1,78 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.friendlist
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class HabboSearchResultData 
+    public class HabboSearchResultData
     {
 
-        private var var_2916:int;
-        private var var_2917:String;
-        private var var_2918:String;
-        private var var_2919:Boolean;
-        private var var_2920:Boolean;
-        private var var_2921:int;
-        private var var_2922:String;
-        private var var_2923:String;
-        private var var_2912:String;
+        private var _avatarId: int;
+        private var _avatarName: String;
+        private var _avatarMotto: String;
+        private var _isAvatarOnline: Boolean;
+        private var _canFollow: Boolean;
+        private var _avatarGender: int;
+        private var _avatarFigure: String;
+        private var _lastOnlineDate: String;
+        private var _realName: String;
 
-        public function HabboSearchResultData(param1:IMessageDataWrapper)
+        public function HabboSearchResultData(data: IMessageDataWrapper)
         {
-            this.var_2916 = param1.readInteger();
-            this.var_2917 = param1.readString();
-            this.var_2918 = param1.readString();
-            this.var_2919 = param1.readBoolean();
-            this.var_2920 = param1.readBoolean();
-            param1.readString();
-            this.var_2921 = param1.readInteger();
-            this.var_2922 = param1.readString();
-            this.var_2923 = param1.readString();
-            this.var_2912 = param1.readString();
+            this._avatarId = data.readInteger();
+            this._avatarName = data.readString();
+            this._avatarMotto = data.readString();
+            this._isAvatarOnline = data.readBoolean();
+            this._canFollow = data.readBoolean();
+            var _: String = data.readString();
+            this._avatarGender = data.readInteger();
+            this._avatarFigure = data.readString();
+            this._lastOnlineDate = data.readString();
+            this._realName = data.readString();
         }
 
-        public function get avatarId():int
+        public function get avatarId(): int
         {
-            return (this.var_2916);
+            return this._avatarId;
         }
 
-        public function get avatarName():String
+        public function get avatarName(): String
         {
-            return (this.var_2917);
+            return this._avatarName;
         }
 
-        public function get avatarMotto():String
+        public function get avatarMotto(): String
         {
-            return (this.var_2918);
+            return this._avatarMotto;
         }
 
-        public function get isAvatarOnline():Boolean
+        public function get isAvatarOnline(): Boolean
         {
-            return (this.var_2919);
+            return this._isAvatarOnline;
         }
 
-        public function get canFollow():Boolean
+        public function get canFollow(): Boolean
         {
-            return (this.var_2920);
+            return this._canFollow;
         }
 
-        public function get avatarGender():int
+        public function get avatarGender(): int
         {
-            return (this.var_2921);
+            return this._avatarGender;
         }
 
-        public function get avatarFigure():String
+        public function get avatarFigure(): String
         {
-            return (this.var_2922);
+            return this._avatarFigure;
         }
 
-        public function get lastOnlineDate():String
+        public function get lastOnlineDate(): String
         {
-            return (this.var_2923);
+            return this._lastOnlineDate;
         }
 
-        public function get realName():String
+        public function get realName(): String
         {
-            return (this.var_2912);
+            return this._realName;
         }
 
     }

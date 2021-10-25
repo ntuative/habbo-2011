@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.inventory.trading
 {
+
     import com.sulake.habbo.inventory.IInventoryModel;
     import com.sulake.habbo.room.IGetImageListener;
     import com.sulake.habbo.inventory.HabboInventory;
@@ -11,7 +12,9 @@
     import com.sulake.core.utils.Map;
     import com.sulake.habbo.window.IHabboWindowManager;
     import com.sulake.habbo.inventory.enum.InventoryCategory;
+
     import flash.events.Event;
+
     import com.sulake.habbo.inventory.events.HabboInventoryTrackingEvent;
     import com.sulake.habbo.inventory.enum.InventorySubCategory;
     import com.sulake.habbo.inventory.furni.FurniModel;
@@ -21,7 +24,9 @@
     import com.sulake.habbo.room.ImageResult;
     import com.sulake.habbo.inventory.items.FloorItem;
     import com.sulake.room.utils.Vector3d;
+
     import flash.display.BitmapData;
+
     import com.sulake.habbo.communication.messages.incoming.inventory.trading.TradingCloseEvent;
     import com.sulake.habbo.communication.messages.incoming.inventory.trading.TradingAlreadyOpenEvent;
     import com.sulake.habbo.communication.messages.incoming.inventory.trading.TradingAcceptEvent;
@@ -41,562 +46,603 @@
     import com.sulake.habbo.communication.messages.outgoing.inventory.trading.ConfirmDeclineTradingComposer;
     import com.sulake.habbo.communication.messages.outgoing.inventory.trading.CloseTradingComposer;
 
-    public class TradingModel implements IInventoryModel, IGetImageListener 
+    public class TradingModel implements IInventoryModel, IGetImageListener
     {
 
-        public static const var_1224:uint = 9;
-        public static const var_1225:uint = 0;
-        public static const var_1226:uint = 1;
-        public static const var_1227:uint = 2;
-        public static const var_1228:uint = 3;
-        public static const var_1229:uint = 4;
-        public static const var_1230:uint = 5;
-        public static const TRADING_STATE_CANCELLED:uint = 6;
+        public static const TRADING_MAX_ITEMS: uint = 9;
+        public static const TRADING_STATE_INIT: uint = 0;
+        public static const TRADING_STATE_MODIFY: uint = 1;
+        public static const TRADING_STATE_COUNTDOWN: uint = 2;
+        public static const TRADING_STATE_CONFIRM: uint = 3;
+        public static const TRADING_STATE_WAITING: uint = 4;
+        public static const TRADING_STATE_ACCEPTED: uint = 5;
+        public static const TRADING_STATE_CANCELLED: uint = 6;
 
-        private var _inventory:HabboInventory;
-        private var _assetLibrary:IAssetLibrary;
-        private var _roomEngine:IRoomEngine;
-        private var _communication:IHabboCommunicationManager;
-        private var _localization:IHabboLocalizationManager;
-        private var _soundManager:IHabboSoundManager;
-        private var var_3592:TradingView;
-        private var _disposed:Boolean = false;
-        private var var_2132:Boolean = false;
-        private var _state:uint = 0;
-        private var var_3584:int = -1;
-        private var var_3515:String = "";
-        private var var_3585:Map;
-        private var var_3586:Boolean = false;
-        private var var_3587:Boolean = false;
-        private var var_3588:int = -1;
-        private var var_3589:String = "";
-        private var var_3590:Map;
-        private var var_3591:Boolean = false;
-        private var var_3212:Boolean = false;
+        private var _inventory: HabboInventory;
+        private var _assetLibrary: IAssetLibrary;
+        private var _roomEngine: IRoomEngine;
+        private var _communication: IHabboCommunicationManager;
+        private var _localization: IHabboLocalizationManager;
+        private var _soundManager: IHabboSoundManager;
+        private var _view: TradingView;
+        private var _disposed: Boolean = false;
+        private var _isTrading: Boolean = false;
+        private var _state: uint = 0;
+        private var _ownUserId: int = -1;
+        private var _ownUserName: String = "";
+        private var _ownUserItems: Map;
+        private var _ownUserAccepts: Boolean = false;
+        private var _ownUserCanTrade: Boolean = false;
+        private var _otherUserId: int = -1;
+        private var _otherUserName: String = "";
+        private var _otherUserItems: Map;
+        private var _otherUserAccepts: Boolean = false;
+        private var _otherUserCanTrade: Boolean = false;
 
-        public function TradingModel(param1:HabboInventory, param2:IHabboWindowManager, param3:IHabboCommunicationManager, param4:IAssetLibrary, param5:IRoomEngine, param6:IHabboLocalizationManager, param7:IHabboSoundManager)
+        public function TradingModel(inventory: HabboInventory, windowManager: IHabboWindowManager, communication: IHabboCommunicationManager, assetLibrary: IAssetLibrary, roomEngine: IRoomEngine, localization: IHabboLocalizationManager, soundManager: IHabboSoundManager)
         {
-            this._inventory = param1;
-            this._communication = param3;
-            this._assetLibrary = param4;
-            this._roomEngine = param5;
-            this._localization = param6;
-            this._soundManager = param7;
-            this.var_3592 = new TradingView(this, param2, param4, param5, param6, param7);
+            this._inventory = inventory;
+            this._communication = communication;
+            this._assetLibrary = assetLibrary;
+            this._roomEngine = roomEngine;
+            this._localization = localization;
+            this._soundManager = soundManager;
+
+            this._view = new TradingView(this, windowManager, assetLibrary, roomEngine, localization, soundManager);
         }
 
-        public function get running():Boolean
+        public function get running(): Boolean
         {
-            return (!(this._state == var_1225));
+            return this._state != TRADING_STATE_INIT;
         }
 
-        public function get state():uint
+        public function get state(): uint
         {
-            return (this._state);
+            return this._state;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get ownUserId():int
+        public function get ownUserId(): int
         {
-            return (this.var_3584);
+            return this._ownUserId;
         }
 
-        public function get ownUserName():String
+        public function get ownUserName(): String
         {
-            return (this.var_3515);
+            return this._ownUserName;
         }
 
-        public function get ownUserItems():Map
+        public function get ownUserItems(): Map
         {
-            return (this.var_3585);
+            return this._ownUserItems;
         }
 
-        public function get ownUserAccepts():Boolean
+        public function get ownUserAccepts(): Boolean
         {
-            return (this.var_3586);
+            return this._ownUserAccepts;
         }
 
-        public function get ownUserCanTrade():Boolean
+        public function get ownUserCanTrade(): Boolean
         {
-            return (this.var_3587);
+            return this._ownUserCanTrade;
         }
 
-        public function get otherUserId():int
+        public function get otherUserId(): int
         {
-            return (this.var_3588);
+            return this._otherUserId;
         }
 
-        public function get otherUserName():String
+        public function get otherUserName(): String
         {
-            return (this.var_3589);
+            return this._otherUserName;
         }
 
-        public function get otherUserItems():Map
+        public function get otherUserItems(): Map
         {
-            return (this.var_3590);
+            return this._otherUserItems;
         }
 
-        public function get otherUserAccepts():Boolean
+        public function get otherUserAccepts(): Boolean
         {
-            return (this.var_3591);
+            return this._otherUserAccepts;
         }
 
-        public function get otherUserCanTrade():Boolean
+        public function get otherUserCanTrade(): Boolean
         {
-            return (this.var_3212);
+            return this._otherUserCanTrade;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (!this._disposed)
             {
-                if (((this.var_3592) && (!(this.var_3592.disposed))))
+                if (this._view && !this._view.disposed)
                 {
-                    this.var_3592.dispose();
-                    this.var_3592 = null;
-                };
+                    this._view.dispose();
+                    this._view = null;
+                }
+
                 this._inventory = null;
                 this._communication = null;
                 this._assetLibrary = null;
                 this._roomEngine = null;
                 this._localization = null;
                 this._disposed = true;
-            };
+            }
+
         }
 
-        public function startTrading(param1:int, param2:String, param3:Boolean, param4:int, param5:String, param6:Boolean):void
+        public function startTrading(ownUserId: int, ownerUserName: String, ownUserCanTrade: Boolean, otherUserId: int, otherUserName: String, otherUserCanTrade: Boolean): void
         {
-            this.var_3584 = param1;
-            this.var_3515 = param2;
-            this.var_3585 = new Map();
-            this.var_3586 = false;
-            this.var_3587 = param3;
-            this.var_3588 = param4;
-            this.var_3589 = param5;
-            this.var_3590 = new Map();
-            this.var_3591 = false;
-            this.var_3212 = param6;
-            this.var_2132 = true;
-            this.state = var_1226;
-            this.var_3592.setup(param1, param3, param4, param6);
-            this.var_3592.updateItemList(this.var_3584);
-            this.var_3592.updateItemList(this.var_3588);
-            this.var_3592.updateUserInterface();
-            this.var_3592.clearItemLists();
-            this._inventory.toggleInventoryPage(InventoryCategory.var_133);
+            this._ownUserId = ownUserId;
+            this._ownUserName = ownerUserName;
+            this._ownUserItems = new Map();
+            this._ownUserAccepts = false;
+            this._ownUserCanTrade = ownUserCanTrade;
+            this._otherUserId = otherUserId;
+            this._otherUserName = otherUserName;
+            this._otherUserItems = new Map();
+            this._otherUserAccepts = false;
+            this._otherUserCanTrade = otherUserCanTrade;
+            this._isTrading = true;
+            this.state = TRADING_STATE_MODIFY;
+            this._view.setup(ownUserId, ownUserCanTrade, otherUserId, otherUserCanTrade);
+            this._view.updateItemList(this._ownUserId);
+            this._view.updateItemList(this._otherUserId);
+            this._view.updateUserInterface();
+            this._view.clearItemLists();
+            this._inventory.toggleInventoryPage(InventoryCategory.FURNI);
             this._inventory.events.dispatchEvent(new Event(HabboInventoryTrackingEvent.HABBO_INVENTORY_TRACKING_EVENT_TRADING));
         }
 
-        public function close():void
+        public function close(): void
         {
-            if (this.var_2132)
+            if (this._isTrading)
             {
-                if (((!(this._state == var_1225)) && (!(this._state == var_1230))))
+                if (this._state != TRADING_STATE_INIT && this._state != TRADING_STATE_ACCEPTED)
                 {
                     this.requestCancelTrading();
                     this.state = TradingModel.TRADING_STATE_CANCELLED;
-                };
-                this.state = var_1225;
-                this._inventory.toggleInventorySubPage(InventorySubCategory.var_1231);
-                this.var_2132 = false;
-            };
-            this.var_3592.setMinimized(false);
+                }
+
+                this.state = TRADING_STATE_INIT;
+                this._inventory.toggleInventorySubPage(InventorySubCategory.EMPTY);
+                this._isTrading = false;
+            }
+
+            this._view.setMinimized(false);
         }
 
-        public function categorySwitch(param1:String):void
+        public function categorySwitch(id: String): void
         {
-            this.var_3592.setMinimized((!(param1 == InventoryCategory.var_133)));
+            this._view.setMinimized(id != InventoryCategory.FURNI);
             this._inventory.updateSubView();
         }
 
-        public function set state(param1:uint):void
+        public function set state(value: uint): void
         {
-            Logger.log(((((((("OLD STATE: " + this._state) + " NEW STATE: ") + param1) + " OWN: ") + this.var_3586) + " OTHER: ") + this.var_3591));
-            var _loc2_:Boolean;
-            if (this._state == param1)
+            Logger.log("OLD STATE: " + this._state + " NEW STATE: " + value + " OWN: " + this._ownUserAccepts + " OTHER: " + this._otherUserAccepts);
+            var updated: Boolean;
+
+            if (this._state == value)
             {
                 return;
-            };
+            }
+
             switch (this._state)
             {
-                case var_1225:
-                    if (((param1 == var_1226) || (param1 == var_1230)))
+                case TRADING_STATE_INIT:
+                    if (value == TRADING_STATE_MODIFY || value == TRADING_STATE_ACCEPTED)
                     {
-                        this._state = param1;
-                        _loc2_ = true;
-                    };
+                        this._state = value;
+                        updated = true;
+                    }
+
                     break;
-                case var_1226:
-                    if (param1 == var_1227)
+
+                case TRADING_STATE_MODIFY:
+
+                    if (value == TRADING_STATE_COUNTDOWN)
                     {
-                        this._state = param1;
-                        _loc2_ = true;
+                        this._state = value;
+                        updated = true;
                         this.startConfirmCountdown();
                     }
-                    else
+                    else if (value == TRADING_STATE_CANCELLED)
                     {
-                        if (param1 == TRADING_STATE_CANCELLED)
-                        {
-                            this._state = param1;
-                            this.var_3592.setMinimized(false);
-                            _loc2_ = true;
-                        };
-                    };
-                    break;
-                case var_1227:
-                    if (param1 == var_1228)
-                    {
-                        this._state = param1;
-                        _loc2_ = true;
+                        this._state = value;
+                        this._view.setMinimized(false);
+                        updated = true;
                     }
-                    else
-                    {
-                        if (param1 == TRADING_STATE_CANCELLED)
-                        {
-                            this._state = param1;
-                            this.var_3592.setMinimized(false);
-                            _loc2_ = true;
-                        }
-                        else
-                        {
-                            if (param1 == var_1226)
-                            {
-                                this._state = param1;
-                                _loc2_ = true;
-                                this.cancelConfirmCountdown();
-                            };
-                        };
-                    };
+
                     break;
-                case var_1228:
-                    if (param1 == var_1229)
+
+                case TRADING_STATE_COUNTDOWN:
+                    if (value == TRADING_STATE_CONFIRM)
                     {
-                        this._state = param1;
-                        _loc2_ = true;
+                        this._state = value;
+                        updated = true;
                     }
-                    else
+                    else if (value == TRADING_STATE_CANCELLED)
                     {
-                        if (param1 == var_1230)
-                        {
-                            this._state = param1;
-                            _loc2_ = true;
-                            this.close();
-                        }
-                        else
-                        {
-                            if (param1 == TRADING_STATE_CANCELLED)
-                            {
-                                this._state = param1;
-                                this.var_3592.setMinimized(false);
-                                _loc2_ = true;
-                                this.close();
-                            };
-                        };
-                    };
+                        this._state = value;
+                        this._view.setMinimized(false);
+                        updated = true;
+                    }
+                    else if (value == TRADING_STATE_MODIFY)
+                    {
+                        this._state = value;
+                        updated = true;
+                        this.cancelConfirmCountdown();
+                    }
+
                     break;
-                case var_1229:
-                    if (param1 == var_1230)
+
+                case TRADING_STATE_CONFIRM:
+                    if (value == TRADING_STATE_WAITING)
                     {
-                        this._state = param1;
-                        this.var_3592.setMinimized(false);
-                        _loc2_ = true;
+                        this._state = value;
+                        updated = true;
+                    }
+                    else if (value == TRADING_STATE_ACCEPTED)
+                    {
+                        this._state = value;
+                        updated = true;
                         this.close();
                     }
-                    else
+                    else if (value == TRADING_STATE_CANCELLED)
                     {
-                        if (param1 == TRADING_STATE_CANCELLED)
-                        {
-                            this._state = param1;
-                            this.var_3592.setMinimized(false);
-                            _loc2_ = true;
-                            this.close();
-                        };
-                    };
-                    break;
-                case var_1230:
-                    if (param1 == var_1225)
-                    {
-                        this._state = param1;
-                        _loc2_ = true;
-                    };
-                    break;
-                case TRADING_STATE_CANCELLED:
-                    if (param1 == var_1225)
-                    {
-                        this._state = param1;
-                        _loc2_ = true;
+                        this._state = value;
+                        this._view.setMinimized(false);
+                        updated = true;
+                        this.close();
                     }
-                    else
+
+                    break;
+
+                case TRADING_STATE_WAITING:
+                    if (value == TRADING_STATE_ACCEPTED)
                     {
-                        if (param1 == var_1226)
-                        {
-                            this._state = param1;
-                            _loc2_ = true;
-                        };
-                    };
+                        this._state = value;
+                        this._view.setMinimized(false);
+                        updated = true;
+                        this.close();
+                    }
+                    else if (value == TRADING_STATE_CANCELLED)
+                    {
+                        this._state = value;
+                        this._view.setMinimized(false);
+                        updated = true;
+                        this.close();
+                    }
+
+                    break;
+
+                case TRADING_STATE_ACCEPTED:
+                    if (value == TRADING_STATE_INIT)
+                    {
+                        this._state = value;
+                        updated = true;
+                    }
+
+                    break;
+
+                case TRADING_STATE_CANCELLED:
+                    if (value == TRADING_STATE_INIT)
+                    {
+                        this._state = value;
+                        updated = true;
+                    }
+                    else if (value == TRADING_STATE_MODIFY)
+                    {
+                        this._state = value;
+                        updated = true;
+                    }
+
                     break;
                 default:
-                    throw (new Error((('Unknown trading progress state: "' + this._state) + '"')));
-            };
-            if (_loc2_)
+                    throw new Error("Unknown trading progress state: \"" + this._state + "\"");
+            }
+
+            if (updated)
             {
-                this.var_3592.updateUserInterface();
+                this._view.updateUserInterface();
             }
             else
             {
-                throw (new Error("Error assigning trading process status!"));
-            };
+                throw new Error("Error assigning trading process status!");
+            }
+
         }
 
-        public function getFurniInventoryModel():FurniModel
+        public function getFurniInventoryModel(): FurniModel
         {
-            return (this._inventory.furniModel);
+            return this._inventory.furniModel;
         }
 
-        public function updateItemGroupMaps(param1:int, param2:Map, param3:int, param4:Map):void
+        public function updateItemGroupMaps(param1: int, param2: Map, param3: int, param4: Map): void
         {
             if (this._inventory == null)
             {
                 return;
-            };
-            if (this.var_3585 != null)
+            }
+
+            if (this._ownUserItems != null)
             {
-                this.var_3585.dispose();
-            };
-            if (this.var_3590 != null)
+                this._ownUserItems.dispose();
+            }
+
+            if (this._otherUserItems != null)
             {
-                this.var_3590.dispose();
-            };
-            if (param1 == this.var_3584)
+                this._otherUserItems.dispose();
+            }
+
+            if (param1 == this._ownUserId)
             {
-                this.var_3585 = param2;
-                this.var_3590 = param4;
+                this._ownUserItems = param2;
+                this._otherUserItems = param4;
             }
             else
             {
-                this.var_3585 = param4;
-                this.var_3590 = param2;
-            };
-            this.var_3586 = false;
-            this.var_3591 = false;
-            this.var_3592.updateItemList(this.var_3584);
-            this.var_3592.updateItemList(this.var_3588);
-            this.var_3592.updateUserInterface();
-            var _loc5_:FurniModel = this._inventory.furniModel;
-            if (_loc5_ != null)
+                this._ownUserItems = param4;
+                this._otherUserItems = param2;
+            }
+
+            this._ownUserAccepts = false;
+            this._otherUserAccepts = false;
+            this._view.updateItemList(this._ownUserId);
+            this._view.updateItemList(this._otherUserId);
+            this._view.updateUserInterface();
+
+            var model: FurniModel = this._inventory.furniModel;
+
+            if (model != null)
             {
-                _loc5_.updateItemLocks();
-            };
+                model.updateItemLocks();
+            }
+
         }
 
-        public function getOwnItemIdsInTrade():Array
+        public function getOwnItemIdsInTrade(): Array
         {
-            var _loc2_:GroupItem;
-            var _loc3_:IItem;
-            var _loc5_:int;
-            var _loc1_:Array = new Array();
-            if (((this.var_3585 == null) || (this.var_3585.disposed)))
+            var groupItem: GroupItem;
+            var item: IItem;
+            var j: int;
+            var ownItems: Array = [];
+
+            if (this._ownUserItems == null || this._ownUserItems.disposed)
             {
-                return (_loc1_);
-            };
-            var _loc4_:int;
-            while (_loc4_ < this.var_3585.length)
+                return ownItems;
+            }
+
+            var i: int;
+
+            while (i < this._ownUserItems.length)
             {
-                _loc2_ = (this.var_3585.getWithIndex(_loc4_) as GroupItem);
-                if (_loc2_ != null)
+                groupItem = (this._ownUserItems.getWithIndex(i) as GroupItem);
+
+                if (groupItem != null)
                 {
-                    _loc5_ = 0;
-                    while (_loc5_ < _loc2_.getTotalCount())
+                    j = 0;
+
+                    while (j < groupItem.getTotalCount())
                     {
-                        _loc3_ = _loc2_.getAt(_loc5_);
-                        if (_loc3_ != null)
+                        item = groupItem.getAt(j);
+
+                        if (item != null)
                         {
-                            _loc1_.push(_loc3_.ref);
-                        };
-                        _loc5_++;
-                    };
-                };
-                _loc4_++;
-            };
-            return (_loc1_);
+                            ownItems.push(item.ref);
+                        }
+
+                        j++;
+                    }
+
+                }
+
+                i++;
+            }
+
+            return ownItems;
         }
 
-        public function getWindowContainer():IWindowContainer
+        public function getWindowContainer(): IWindowContainer
         {
-            return (this.var_3592.getWindowContainer());
+            return this._view.getWindowContainer();
         }
 
-        public function requestInitialization(param1:int=0):void
+        public function requestInitialization(param1: int = 0): void
         {
         }
 
-        public function subCategorySwitch(param1:String):void
+        public function subCategorySwitch(param1: String): void
         {
-            if (this.var_2132)
+            if (this._isTrading)
             {
-                if (this._state != var_1225)
+                if (this._state != TRADING_STATE_INIT)
                 {
                     this.requestCancelTrading();
-                };
-            };
+                }
+
+            }
+
         }
 
-        public function closingInventoryView():void
+        public function closingInventoryView(): void
         {
-            if (this.var_2132)
+            if (this._isTrading)
             {
                 this.close();
-            };
+            }
+
         }
 
-        public function startConfirmCountdown():void
+        public function startConfirmCountdown(): void
         {
-            this.var_3592.startConfirmCountdown();
+            this._view.startConfirmCountdown();
         }
 
-        public function cancelConfirmCountdown():void
+        public function cancelConfirmCountdown(): void
         {
-            this.var_3592.cancelConfirmCountdown();
+            this._view.cancelConfirmCountdown();
         }
 
-        public function confirmCountdownReady():void
+        public function confirmCountdownReady(): void
         {
-            if (this._state == var_1227)
+            if (this._state == TRADING_STATE_COUNTDOWN)
             {
-                this.state = var_1228;
-            };
+                this.state = TRADING_STATE_CONFIRM;
+            }
+
         }
 
-        public function getItemImage(param1:IItem):BitmapData
+        public function getItemImage(item: IItem): BitmapData
         {
-            var _loc2_:ImageResult;
-            if ((param1 is FloorItem))
+            var result: ImageResult;
+
+            if (item is FloorItem)
             {
-                _loc2_ = this._roomEngine.getFurnitureImage(param1.type, new Vector3d(180, 0, 0), 64, this, 0, String(param1.extra));
+                result = this._roomEngine.getFurnitureImage(item.type, new Vector3d(180, 0, 0), 64, this, 0, String(item.extra));
             }
             else
             {
-                _loc2_ = this._roomEngine.getWallItemImage(param1.type, new Vector3d(180, 0, 0), 64, this, 0, param1.stuffData);
-            };
-            return (_loc2_.data as BitmapData);
+                result = this._roomEngine.getWallItemImage(item.type, new Vector3d(180, 0, 0), 64, this, 0, item.stuffData);
+            }
+
+            return result.data as BitmapData;
         }
 
-        public function imageReady(param1:int, param2:BitmapData):void
+        public function imageReady(param1: int, param2: BitmapData): void
         {
-            this.var_3592.updateItemImage(param1, param2);
+            this._view.updateItemImage(param1, param2);
         }
 
-        public function handleMessageEvent(param1:IMessageEvent):void
+        public function handleMessageEvent(event: IMessageEvent): void
         {
-            var _loc2_:TradingCloseEvent;
-            if ((param1 is TradingAlreadyOpenEvent))
+            var tradingCloseEvent: TradingCloseEvent;
+
+            if (event is TradingAlreadyOpenEvent)
             {
                 Logger.log("TRADING::TradingAlreadyOpenEvent");
-                this.var_3592.alertPopup(TradingView.var_1232);
+                this._view.alertPopup(TradingView.TRADING_NOTIFICATION_ALREADY_OPEN);
             }
             else
             {
-                if ((param1 is TradingAcceptEvent))
+                if (event is TradingAcceptEvent)
                 {
                     Logger.log("TRADING::TradingAcceptEvent");
-                    if (TradingAcceptEvent(param1).userID == this.var_3584)
+                    if (TradingAcceptEvent(event).userID == this._ownUserId)
                     {
-                        this.var_3586 = (!(TradingAcceptEvent(param1).userAccepts == 0));
+                        this._ownUserAccepts = TradingAcceptEvent(event).userAccepts != 0;
                     }
                     else
                     {
-                        this.var_3591 = (!(TradingAcceptEvent(param1).userAccepts == 0));
-                    };
-                    this.var_3592.updateUserInterface();
+                        this._otherUserAccepts = TradingAcceptEvent(event).userAccepts != 0;
+                    }
+
+                    this._view.updateUserInterface();
                 }
                 else
                 {
-                    if ((param1 is TradingConfirmationEvent))
+                    if (event is TradingConfirmationEvent)
                     {
                         Logger.log("TRADING::TradingConfirmationEvent");
-                        this.state = var_1227;
+                        this.state = TRADING_STATE_COUNTDOWN;
                     }
                     else
                     {
-                        if ((param1 is TradingCompletedEvent))
+                        if (event is TradingCompletedEvent)
                         {
                             Logger.log("TRADING::TradingCompletedEvent");
-                            this.state = var_1230;
+                            this.state = TRADING_STATE_ACCEPTED;
                         }
                         else
                         {
-                            if ((param1 is TradingCloseEvent))
+                            if (event is TradingCloseEvent)
                             {
                                 Logger.log("TRADING::TradingCloseEvent");
-                                if (!this.var_2132)
+                                if (!this._isTrading)
                                 {
                                     Logger.log("Received TradingCloseEvent, but trading already stopped!!!");
                                     return;
-                                };
-                                _loc2_ = (param1 as TradingCloseEvent);
-                                if (_loc2_.userID != this.var_3584)
+                                }
+
+                                tradingCloseEvent = (event as TradingCloseEvent);
+
+                                if (tradingCloseEvent.userID != this._ownUserId)
                                 {
-                                    this.var_3592.alertPopup(TradingView.var_1233);
-                                };
+                                    this._view.alertPopup(TradingView.TRADING_NOTIFICATION_CLOSED);
+                                }
+
                                 this.close();
                             }
                             else
                             {
-                                if ((param1 is TradingNotOpenEvent))
+                                if (event is TradingNotOpenEvent)
                                 {
                                     Logger.log("TRADING::TradingNotOpenEvent");
                                 }
                                 else
                                 {
-                                    if ((param1 is TradingOtherNotAllowedEvent))
+                                    if (event is TradingOtherNotAllowedEvent)
                                     {
-                                        this.var_3592.showOtherUserNotification("${inventory.trading.warning.others_account_disabled}");
+                                        this._view.showOtherUserNotification("${inventory.trading.warning.others_account_disabled}");
                                     }
                                     else
                                     {
-                                        if ((param1 is TradingYouAreNotAllowedEvent))
+                                        if (event is TradingYouAreNotAllowedEvent)
                                         {
-                                            this.var_3592.showOwnUserNotification("${inventory.trading.warning.own_account_disabled}");
+                                            this._view.showOwnUserNotification("${inventory.trading.warning.own_account_disabled}");
                                         }
                                         else
                                         {
-                                            Logger.log(("TRADING/Unknown message event: " + param1));
-                                        };
-                                    };
-                                };
-                            };
-                        };
-                    };
-                };
-            };
+                                            Logger.log("TRADING/Unknown message event: " + event);
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
         }
 
-        public function requestFurniViewOpen():void
+        public function requestFurniViewOpen(): void
         {
-            this._inventory.toggleInventoryPage(InventoryCategory.var_133);
+            this._inventory.toggleInventoryPage(InventoryCategory.FURNI);
         }
 
-        public function requestOpenTrading(param1:int):void
+        public function requestOpenTrading(param1: int): void
         {
             this._communication.getHabboMainConnection(null).send(new OpenTradingComposer(param1));
         }
 
-        public function requestAddItemToTrading(param1:int, param2:int, param3:int, param4:Boolean, param5:String=""):Boolean
+        public function requestAddItemToTrading(param1: int, param2: int, param3: int, param4: Boolean, param5: String = ""): Boolean
         {
-            var _loc6_:String;
-            if (this.var_3586)
+            var _loc6_: String;
+
+            if (this._ownUserAccepts)
             {
-                return (false);
-            };
-            if (this.var_3585 == null)
+                return false;
+            }
+
+            if (this._ownUserItems == null)
             {
-                return (false);
-            };
-            if (this.var_3585.length < var_1224)
+                return false;
+            }
+
+            if (this._ownUserItems.length < TRADING_MAX_ITEMS)
             {
                 this._communication.getHabboMainConnection(null).send(new AddItemToTradeComposer(param1));
             }
@@ -604,65 +650,73 @@
             {
                 if (!param4)
                 {
-                    return (false);
-                };
+                    return false;
+                }
+
                 _loc6_ = String(param2);
+
                 if (param3 == FurniCategory.var_598)
                 {
-                    _loc6_ = ((String(param2) + "poster") + param5);
-                };
-                if (this.var_3585.getValue(_loc6_) != null)
+                    _loc6_ = String(param2) + "poster" + param5;
+                }
+
+                if (this._ownUserItems.getValue(_loc6_) != null)
                 {
                     this._communication.getHabboMainConnection(null).send(new AddItemToTradeComposer(param1));
                 }
                 else
                 {
-                    return (false);
-                };
-            };
-            return (true);
+                    return false;
+                }
+
+            }
+
+            return true;
         }
 
-        public function requestRemoveItemFromTrading(param1:int):void
+        public function requestRemoveItemFromTrading(param1: int): void
         {
-            var _loc3_:IItem;
-            if (this.var_3586)
+            var _loc3_: IItem;
+            if (this._ownUserAccepts)
             {
                 return;
-            };
-            var _loc2_:GroupItem = this.ownUserItems.getWithIndex(param1);
+            }
+
+            var _loc2_: GroupItem = this.ownUserItems.getWithIndex(param1);
             if (_loc2_)
             {
                 _loc3_ = _loc2_.peek();
                 if (_loc3_)
                 {
                     this._communication.getHabboMainConnection(null).send(new RemoveItemFromTradeComposer(_loc3_.id));
-                };
-            };
+                }
+
+            }
+
         }
 
-        public function requestAcceptTrading():void
+        public function requestAcceptTrading(): void
         {
             this._communication.getHabboMainConnection(null).send(new AcceptTradingComposer());
         }
 
-        public function requestUnacceptTrading():void
+        public function requestUnacceptTrading(): void
         {
             this._communication.getHabboMainConnection(null).send(new UnacceptTradingComposer());
         }
 
-        public function requestConfirmAcceptTrading():void
+        public function requestConfirmAcceptTrading(): void
         {
-            this.state = var_1229;
+            this.state = TRADING_STATE_WAITING;
             this._communication.getHabboMainConnection(null).send(new ConfirmAcceptTradingComposer());
         }
 
-        public function requestConfirmDeclineTrading():void
+        public function requestConfirmDeclineTrading(): void
         {
             this._communication.getHabboMainConnection(null).send(new ConfirmDeclineTradingComposer());
         }
 
-        public function requestCancelTrading():void
+        public function requestCancelTrading(): void
         {
             this._communication.getHabboMainConnection(null).send(new CloseTradingComposer());
         }

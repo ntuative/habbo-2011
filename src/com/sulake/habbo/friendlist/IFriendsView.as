@@ -1,10 +1,12 @@
 ﻿package com.sulake.habbo.friendlist
 {
-    public interface IFriendsView 
+
+    public interface IFriendsView
     {
 
-        function refreshList():void;
-        function setNewMessageArrived():void;
+        function refreshList(): void;
+
+        function setNewMessageArrived(): void;
 
     }
 }

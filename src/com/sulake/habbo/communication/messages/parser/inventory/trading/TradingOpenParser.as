@@ -1,52 +1,55 @@
 ﻿package com.sulake.habbo.communication.messages.parser.inventory.trading
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class TradingOpenParser implements IMessageParser 
+    public class TradingOpenParser implements IMessageParser
     {
 
-        private var _userID:int;
-        private var var_3210:Boolean;
-        private var var_3211:int;
-        private var var_3212:Boolean;
+        private var _userID: int;
+        private var _userCanTrade: Boolean;
+        private var _otherUserId: int;
+        private var _otherUserCanTrade: Boolean;
 
-        public function get userID():int
+        public function get userID(): int
         {
-            return (this._userID);
+            return this._userID;
         }
 
-        public function get userCanTrade():Boolean
+        public function get userCanTrade(): Boolean
         {
-            return (this.var_3210);
+            return this._userCanTrade;
         }
 
-        public function get otherUserID():int
+        public function get otherUserID(): int
         {
-            return (this.var_3211);
+            return this._otherUserId;
         }
 
-        public function get otherUserCanTrade():Boolean
+        public function get otherUserCanTrade(): Boolean
         {
-            return (this.var_3212);
+            return this._otherUserCanTrade;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._userID = -1;
-            this.var_3210 = false;
-            this.var_3211 = -1;
-            this.var_3212 = false;
-            return (true);
+            this._userCanTrade = false;
+            this._otherUserId = -1;
+            this._otherUserCanTrade = false;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this._userID = param1.readInteger();
-            this.var_3210 = (param1.readInteger() == 1);
-            this.var_3211 = param1.readInteger();
-            this.var_3212 = (param1.readInteger() == 1);
-            return (true);
+            this._userID = data.readInteger();
+            this._userCanTrade = data.readInteger() == 1;
+            this._otherUserId = data.readInteger();
+            this._otherUserCanTrade = data.readInteger() == 1;
+            
+            return true;
         }
 
     }

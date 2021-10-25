@@ -1,28 +1,29 @@
 ﻿package com.sulake.habbo.communication.messages.parser.moderation
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class UserBannedMessageParser implements IMessageParser 
+    public class UserBannedMessageParser implements IMessageParser
     {
 
-        private var _message:String;
+        private var _message: String;
 
-        public function get message():String
+        public function get message(): String
         {
-            return (this._message);
+            return this._message;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._message = "";
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(param1: IMessageDataWrapper): Boolean
         {
             this._message = param1.readString();
-            return (true);
+            return true;
         }
 
     }

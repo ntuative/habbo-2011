@@ -1,35 +1,39 @@
 ﻿package com.sulake.habbo.communication.messages.parser.friendlist
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.friendlist.AcceptBuddyFailureData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class AcceptBuddyResultMessageParser implements IMessageParser 
+    public class AcceptBuddyResultMessageParser implements IMessageParser
     {
 
-        private var var_3144:Array;
+        private var _failures: Array;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3144 = new Array();
-            return (true);
+            this._failures = [];
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            var failureCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < failureCount)
             {
-                this.var_3144.push(new AcceptBuddyFailureData(param1));
-                _loc3_++;
-            };
-            return (true);
+                this._failures.push(new AcceptBuddyFailureData(data));
+                i++;
+            }
+
+            return true;
         }
 
-        public function get failures():Array
+        public function get failures(): Array
         {
-            return (this.var_3144);
+            return this._failures;
         }
 
     }

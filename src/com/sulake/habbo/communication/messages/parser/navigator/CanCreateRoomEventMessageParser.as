@@ -1,34 +1,36 @@
 ﻿package com.sulake.habbo.communication.messages.parser.navigator
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class CanCreateRoomEventMessageParser implements IMessageParser 
+    public class CanCreateRoomEventMessageParser implements IMessageParser
     {
 
-        private var var_3249:Boolean;
-        private var var_2102:int;
+        private var _canCreateEvent: Boolean;
+        private var _errorCode: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3249 = param1.readBoolean();
-            this.var_2102 = param1.readInteger();
-            return (true);
+            this._canCreateEvent = data.readBoolean();
+            this._errorCode = data.readInteger();
+            
+            return true;
         }
 
-        public function get canCreateEvent():Boolean
+        public function get canCreateEvent(): Boolean
         {
-            return (this.var_3249);
+            return this._canCreateEvent;
         }
 
-        public function get errorCode():int
+        public function get errorCode(): int
         {
-            return (this.var_2102);
+            return this._errorCode;
         }
 
     }

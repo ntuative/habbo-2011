@@ -1,34 +1,36 @@
 ﻿package com.sulake.habbo.communication.messages.parser.notifications
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class HabboAchievementBonusMessageParser implements IMessageParser 
+    public class HabboAchievementBonusMessageParser implements IMessageParser
     {
 
-        private var var_3261:int;
-        private var var_2912:String;
+        private var _bonusPoints: int;
+        private var _realName: String;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3261 = param1.readInteger();
-            this.var_2912 = param1.readString();
-            return (true);
+            this._bonusPoints = data.readInteger();
+            this._realName = data.readString();
+            
+            return true;
         }
 
-        public function get bonusPoints():int
+        public function get bonusPoints(): int
         {
-            return (this.var_3261);
+            return this._bonusPoints;
         }
 
-        public function get realName():String
+        public function get realName(): String
         {
-            return (this.var_2912);
+            return this._realName;
         }
 
     }

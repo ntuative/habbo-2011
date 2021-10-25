@@ -1,58 +1,64 @@
 ﻿package com.sulake.habbo.catalog.purchase
 {
+
     import com.sulake.habbo.communication.messages.parser.catalog.GiftWrappingConfigurationParser;
     import com.sulake.habbo.communication.messages.incoming.catalog.GiftWrappingConfigurationEvent;
 
-    public class GiftWrappingConfiguration 
+    public class GiftWrappingConfiguration
     {
 
-        private var var_2536:Boolean = false;
-        private var var_2612:int;
-        private var var_2672:Array;
-        private var var_2673:Array;
-        private var var_2674:Array;
+        private var _isEnabled: Boolean = false;
+        private var _price: int;
+        private var _stuffTypes: Array;
+        private var _boxTypes: Array;
+        private var _ribbonTypes: Array;
 
-        public function GiftWrappingConfiguration(param1:GiftWrappingConfigurationEvent)
+        public function GiftWrappingConfiguration(event: GiftWrappingConfigurationEvent)
         {
-            if (param1 == null)
+            if (event == null)
             {
                 return;
-            };
-            var _loc2_:GiftWrappingConfigurationParser = param1.getParser();
-            if (_loc2_ == null)
+            }
+
+
+            var parser: GiftWrappingConfigurationParser = event.getParser();
+
+            if (parser == null)
             {
                 return;
-            };
-            this.var_2536 = _loc2_.isWrappingEnabled;
-            this.var_2612 = _loc2_.wrappingPrice;
-            this.var_2672 = _loc2_.stuffTypes;
-            this.var_2673 = _loc2_.boxTypes;
-            this.var_2674 = _loc2_.ribbonTypes;
+            }
+
+
+            this._isEnabled = parser.isWrappingEnabled;
+            this._price = parser.wrappingPrice;
+            this._stuffTypes = parser.stuffTypes;
+            this._boxTypes = parser.boxTypes;
+            this._ribbonTypes = parser.ribbonTypes;
         }
 
-        public function get isEnabled():Boolean
+        public function get isEnabled(): Boolean
         {
-            return (this.var_2536);
+            return this._isEnabled;
         }
 
-        public function get price():int
+        public function get price(): int
         {
-            return (this.var_2612);
+            return this._price;
         }
 
-        public function get stuffTypes():Array
+        public function get stuffTypes(): Array
         {
-            return (this.var_2672);
+            return this._stuffTypes;
         }
 
-        public function get boxTypes():Array
+        public function get boxTypes(): Array
         {
-            return (this.var_2673);
+            return this._boxTypes;
         }
 
-        public function get ribbonTypes():Array
+        public function get ribbonTypes(): Array
         {
-            return (this.var_2674);
+            return this._ribbonTypes;
         }
 
     }

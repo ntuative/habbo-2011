@@ -1,9 +1,10 @@
 ﻿package com.sulake.habbo.room.object.visualization.room.publicroom
 {
-    public class PublicRoomPoolVisualization extends PublicRoomVisualization 
+
+    public class PublicRoomPoolVisualization extends PublicRoomVisualization
     {
 
-        private var var_4204:Boolean;
+        private var var_4204: Boolean;
 
         public function PublicRoomPoolVisualization()
         {

@@ -1,38 +1,40 @@
 ﻿package com.sulake.habbo.widget.messages
 {
-    public class RoomWidgetChatMessage extends RoomWidgetMessage 
+
+    public class RoomWidgetChatMessage extends RoomWidgetMessage
     {
 
-        public static const var_1352:String = "RWCM_MESSAGE_CHAT";
-        public static const var_530:int = 0;
-        public static const var_533:int = 1;
-        public static const var_534:int = 2;
+        public static const RWCM_MESSAGE_CHAT: String = "RWCM_MESSAGE_CHAT";
+        public static const CHAT_TYPE_NORMAL: int = 0;
+        public static const CHAT_TYPE_WHISPER: int = 1;
+        public static const CHAT_TYPE_SHOUT: int = 2;
 
-        private var var_4404:int = 0;
-        private var _text:String = "";
-        private var var_3096:String = "";
+        private var _chatType: int = 0;
+        private var _text: String = "";
+        private var _recipientName: String = "";
 
-        public function RoomWidgetChatMessage(param1:String, param2:String, param3:int=0, param4:String="")
+        public function RoomWidgetChatMessage(type: String, text: String, chatType: int = 0, recipientName: String = "")
         {
-            super(param1);
-            this._text = param2;
-            this.var_4404 = param3;
-            this.var_3096 = param4;
+            super(type);
+
+            this._text = text;
+            this._chatType = chatType;
+            this._recipientName = recipientName;
         }
 
-        public function get chatType():int
+        public function get chatType(): int
         {
-            return (this.var_4404);
+            return this._chatType;
         }
 
-        public function get text():String
+        public function get text(): String
         {
-            return (this._text);
+            return this._text;
         }
 
-        public function get recipientName():String
+        public function get recipientName(): String
         {
-            return (this.var_3096);
+            return this._recipientName;
         }
 
     }

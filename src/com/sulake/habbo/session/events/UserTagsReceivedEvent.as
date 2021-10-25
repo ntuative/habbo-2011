@@ -1,30 +1,31 @@
 ﻿package com.sulake.habbo.session.events
 {
+
     import flash.events.Event;
 
-    public class UserTagsReceivedEvent extends Event 
+    public class UserTagsReceivedEvent extends Event
     {
 
-        public static const var_1341:String = "UTRE_USER_TAGS_RECEIVED";
+        public static const var_1341: String = "UTRE_USER_TAGS_RECEIVED";
 
-        private var _userId:int;
-        private var var_1029:Array;
+        private var _userId: int;
+        private var var_1029: Array;
 
-        public function UserTagsReceivedEvent(param1:int, param2:Array, param3:Boolean=false, param4:Boolean=false)
+        public function UserTagsReceivedEvent(param1: int, param2: Array, param3: Boolean = false, param4: Boolean = false)
         {
             super(var_1341, param3, param4);
             this._userId = param1;
             this.var_1029 = param2;
         }
 
-        public function get userId():int
+        public function get userId(): int
         {
-            return (this._userId);
+            return this._userId;
         }
 
-        public function get tags():Array
+        public function get tags(): Array
         {
-            return (this.var_1029);
+            return this.var_1029;
         }
 
     }

@@ -1,49 +1,54 @@
 ﻿package com.sulake.habbo.communication.messages.parser.facebook
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class FaceBookAppRequestMessageParser implements IMessageParser 
+    public class FaceBookAppRequestMessageParser implements IMessageParser
     {
 
-        private var var_3141:String;
-        private var _data:String;
-        private var var_3142:String;
-        private var var_3143:int;
+        private var _authToken: String;
+        private var _data: String;
+        private var _userFilter: String;
+        private var _senderReference: int;
 
-        public function get authToken():String
+        public function get authToken(): String
         {
-            return (this.var_3141);
+            return this._authToken;
         }
 
-        public function get data():String
+        public function get data(): String
         {
-            return (this._data);
+            return this._data;
         }
 
-        public function get userFilter():String
+        public function get userFilter(): String
         {
-            return (this.var_3142);
+            return this._userFilter;
         }
 
-        public function get senderReference():int
+        public function get senderReference(): int
         {
-            return (this.var_3143);
+            return this._senderReference;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3141 = (this._data = (this.var_3142 = null));
-            return (true);
+            this._authToken = null;
+            this._data = null;
+            this._userFilter = null;
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3141 = param1.readString();
-            this._data = param1.readString();
-            this.var_3142 = param1.readString();
-            this.var_3143 = param1.readInteger();
-            return (true);
+            this._authToken = data.readString();
+            this._data = data.readString();
+            this._userFilter = data.readString();
+            this._senderReference = data.readInteger();
+            
+            return true;
         }
 
     }

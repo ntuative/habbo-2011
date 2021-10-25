@@ -1,112 +1,121 @@
 ﻿package com.sulake.habbo.avatar.pets
 {
-    public class PetData implements IPetData 
+
+    public class PetData implements IPetData
     {
 
-        private var _name:String;
-        private var var_2509:int;
-        private var _disableHeadTurn:Boolean = false;
-        private var _scale:String;
-        private var _colors:Array;
-        private var _breeds:Array;
-        private var var_2508:Array;
+        private var _name: String;
+        private var _species: int;
+        private var _disableHeadTurn: Boolean = false;
+        private var _scale: String;
+        private var _colors: Array;
+        private var _breeds: Array;
+        private var _sellableBreeds: Array;
 
-        public function PetData(param1:XML)
+        public function PetData(param1: XML)
         {
-            var _loc2_:XML;
-            var _loc3_:XML;
-            var _loc4_:XML;
-            var _loc5_:IBreed;
+            var _loc2_: XML;
+            var _loc3_: XML;
+            var _loc4_: XML;
+            var _loc5_: IBreed;
             super();
             this._name = param1.@name;
-            this.var_2509 = parseInt(param1.@species);
+            this._species = parseInt(param1.@species);
             this._disableHeadTurn = Boolean(parseInt(param1.@disableheadturn));
             this._scale = param1.@scale;
-            this._colors = new Array();
-            this._breeds = new Array();
-            this.var_2508 = new Array();
-            Logger.log(("Found Pet Pack: " + this._name));
+            this._colors = [];
+            this._breeds = [];
+            this._sellableBreeds = [];
+            Logger.log("Found Pet Pack: " + this._name);
             for each (_loc2_ in param1.breeds.breed)
             {
                 _loc5_ = new Breed(_loc2_);
                 this._breeds.push(_loc5_);
                 if (_loc5_.isSellable)
                 {
-                    this.var_2508.push(_loc5_);
-                };
-            };
+                    this._sellableBreeds.push(_loc5_);
+                }
+
+            }
+
             for each (_loc3_ in param1.colors.color)
             {
                 this._colors.push(new PetColor(_loc3_));
-            };
+            }
+
             for each (_loc4_ in param1.joints.joint)
             {
-            };
+            }
+
         }
 
-        public function findColor(param1:uint):PetColor
+        public function findColor(param1: uint): PetColor
         {
-            var _loc2_:PetColor;
-            for each (var _loc5_:* in this._colors)
+            var _loc2_: PetColor;
+            for each (var _loc5_: * in this._colors)
             {
                 _loc2_ = _loc5_;
                 _loc5_;
                 if (_loc2_.rgb == param1)
                 {
-                    return (_loc2_);
-                };
-            };
-            return (null);
+                    return _loc2_;
+                }
+
+            }
+
+            return null;
         }
 
-        public function findBreed(param1:int):Breed
+        public function findBreed(param1: int): Breed
         {
-            var _loc2_:Breed;
-            for each (var _loc5_:* in this._breeds)
+            var _loc2_: Breed;
+            for each (var _loc5_: * in this._breeds)
             {
                 _loc2_ = _loc5_;
                 _loc5_;
                 if (_loc2_.id == param1)
                 {
-                    return (_loc2_);
-                };
-            };
-            return (null);
+                    return _loc2_;
+                }
+
+            }
+
+            return null;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get species():int
+        public function get species(): int
         {
-            return (this.var_2509);
+            return this._species;
         }
 
-        public function get scale():String
+        public function get scale(): String
         {
-            return (this._scale);
+            return this._scale;
         }
 
-        public function get colors():Array
+        public function get colors(): Array
         {
-            return (this._colors);
+            return this._colors;
         }
 
-        public function get breeds():Array
+        public function get breeds(): Array
         {
-            return (this._breeds);
+            return this._breeds;
         }
 
-        public function get sellableBreeds():Array
+        public function get sellableBreeds(): Array
         {
-            return (this.var_2508);
+            return this._sellableBreeds;
         }
 
-        public function get disableHeadTurn():Boolean
+        public function get disableHeadTurn(): Boolean
         {
-            return (this._disableHeadTurn);
+            return this._disableHeadTurn;
         }
 
     }

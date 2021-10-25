@@ -1,32 +1,36 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.chat
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class FloodControlMessageParser implements IMessageParser 
+    public class FloodControlMessageParser implements IMessageParser
     {
 
-        private var var_3295:int = 0;
+        private var _seconds: int = 0;
 
-        public function get seconds():int
+        public function get seconds(): int
         {
-            return (this.var_3295);
+            return this._seconds;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3295 = 0;
-            return (true);
+            this._seconds = 0;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            if (param1 == null)
+            if (data == null)
             {
-                return (false);
-            };
-            this.var_3295 = param1.readInteger();
-            return (true);
+                return false;
+            }
+
+            this._seconds = data.readInteger();
+            
+            return true;
         }
 
     }

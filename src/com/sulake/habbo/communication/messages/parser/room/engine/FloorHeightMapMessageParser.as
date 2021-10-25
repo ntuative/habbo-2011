@@ -1,148 +1,173 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.engine
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.room.object.RoomPlaneParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class FloorHeightMapMessageParser implements IMessageParser 
+    public class FloorHeightMapMessageParser implements IMessageParser
     {
 
-        private var _roomId:int = 0;
-        private var _roomCategory:int = 0;
-        private var _heightMap:Array = [];
-        private var var_2237:int = 0;
-        private var _height:int = 0;
-        private var _scale:Number = 0;
+        private var _roomId: int = 0;
+        private var _roomCategory: int = 0;
+        private var _heightMap: Array = [];
+        private var _width: int = 0;
+        private var _height: int = 0;
+        private var _scale: Number = 0;
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get roomCategory():int
+        public function get roomCategory(): int
         {
-            return (this._roomCategory);
+            return this._roomCategory;
         }
 
-        public function get width():int
+        public function get width(): int
         {
-            return (this.var_2237);
+            return this._width;
         }
 
-        public function get height():int
+        public function get height(): int
         {
-            return (this._height);
+            return this._height;
         }
 
-        public function get scale():Number
+        public function get scale(): Number
         {
-            return (this._scale);
+            return this._scale;
         }
 
-        public function getTileHeight(param1:int, param2:int):int
+        public function getTileHeight(x: int, y: int): int
         {
-            if (((((param1 < 0) || (param1 >= this.width)) || (param2 < 0)) || (param2 >= this.height)))
+            if (x < 0 || x >= this.width || y < 0 || y >= this.height)
             {
-                return (RoomPlaneParser.TILE_BLOCKED);
-            };
-            var _loc3_:Array = (this._heightMap[param2] as Array);
-            return (_loc3_[param1]);
+                return RoomPlaneParser.TILE_BLOCKED;
+            }
+
+            var tiles: Array = this._heightMap[y] as Array;
+
+            return tiles[x];
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._roomId = 0;
             this._roomCategory = 0;
             this._heightMap = [];
-            this.var_2237 = 0;
+            this._width = 0;
             this._height = 0;
-            return (true);
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc13_:String;
-            if (param1 == null)
+            var tileChar: String;
+
+            if (data == null)
             {
-                return (false);
-            };
-            var _loc2_:int;
-            var _loc3_:int;
-            var _loc4_:String = param1.readString();
-            var _loc5_:Array = _loc4_.split("\r");
-            var _loc6_:int;
-            var _loc7_:int;
-            var _loc8_:int;
-            var _loc9_:Array;
-            var _loc10_:int = _loc5_.length;
-            var _loc11_:int;
-            var _loc12_:String;
-            _loc7_ = 0;
-            while (_loc7_ < _loc10_)
+                return false;
+            }
+
+            var unknown1: int;
+            var unknown2: int;
+
+            var heightmapRaw: String = data.readString();
+            var rows: Array = heightmapRaw.split("\r");
+            var j: int = 0;
+            var i: int = 0;
+            var tileState: int;
+            var tiles: Array;
+            var height: int = rows.length;
+            var width: int;
+            var columns: String;
+            i = 0;
+
+            while (i < height)
             {
-                _loc12_ = (_loc5_[_loc7_] as String);
-                if (_loc12_.length > _loc11_)
+                columns = (rows[i] as String);
+                if (columns.length > width)
                 {
-                    _loc11_ = _loc12_.length;
-                };
-                _loc7_++;
-            };
+                    width = columns.length;
+                }
+
+                i++;
+            }
+
             this._heightMap = [];
-            _loc7_ = 0;
-            while (_loc7_ < _loc10_)
+            i = 0;
+
+            while (i < height)
             {
-                _loc9_ = [];
-                _loc6_ = 0;
-                while (_loc6_ < _loc11_)
+                tiles = [];
+                j = 0;
+                
+                while (j < width)
                 {
-                    _loc9_.push(RoomPlaneParser.TILE_BLOCKED);
-                    _loc6_++;
-                };
-                this._heightMap.push(_loc9_);
-                _loc7_++;
-            };
-            this.var_2237 = _loc11_;
-            this._height = _loc10_;
-            _loc7_ = 0;
-            while (_loc7_ < _loc5_.length)
+                    tiles.push(RoomPlaneParser.TILE_BLOCKED);
+                    j++;
+                }
+
+                this._heightMap.push(tiles);
+                i++;
+            }
+
+            this._width = width;
+            this._height = height;
+            
+            i = 0;
+
+            while (i < rows.length)
             {
-                _loc9_ = (this._heightMap[_loc7_] as Array);
-                _loc12_ = (_loc5_[_loc7_] as String);
-                if (_loc12_.length > 0)
+                tiles = (this._heightMap[i] as Array);
+                columns = (rows[i] as String);
+
+                if (columns.length > 0)
                 {
-                    _loc6_ = 0;
-                    while (_loc6_ < _loc12_.length)
+                    j = 0;
+
+                    while (j < columns.length)
                     {
-                        _loc13_ = _loc12_.charAt(_loc6_);
-                        if (((!(_loc13_ == "x")) && (!(_loc13_ == "X"))))
+                        tileChar = columns.charAt(j);
+
+                        if (tileChar != "x" && tileChar != "X")
                         {
-                            _loc8_ = this.getHeightValue(_loc13_);
+                            tileState = this.getHeightValue(tileChar);
                         }
                         else
                         {
-                            _loc8_ = RoomPlaneParser.TILE_BLOCKED;
-                        };
-                        _loc9_[_loc6_] = _loc8_;
-                        _loc6_++;
-                    };
-                };
-                _loc7_++;
-            };
-            if (((this.var_2237 >= 20) || (this._height >= 20)))
+                            tileState = RoomPlaneParser.TILE_BLOCKED;
+                        }
+
+                        tiles[j] = tileState;
+                        j++;
+                    }
+
+                }
+
+                i++;
+            }
+
+            if (this._width >= 20 || this._height >= 20)
             {
                 this._scale = 32;
             }
             else
             {
                 this._scale = 64;
-            };
-            return (true);
+            }
+
+            return true;
         }
 
-        private function getHeightValue(param1:String):int
+        private function getHeightValue(tileChar: String): int
         {
-            var _loc2_:int = parseInt(param1, 16);
-            return (_loc2_ % 10);
+            var tile: int = parseInt(tileChar, 16);
+
+            return tile % 10;
         }
 
     }

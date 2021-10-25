@@ -1,37 +1,40 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.navigator
 {
-    public class RoomThumbnailObjectData 
+
+    public class RoomThumbnailObjectData
     {
 
-        private var var_3018:int;
-        private var var_3019:int;
+        private var _pos: int;
+        private var _imgId: int;
 
-        public function getCopy():RoomThumbnailObjectData
+        public function getCopy(): RoomThumbnailObjectData
         {
-            var _loc1_:RoomThumbnailObjectData = new RoomThumbnailObjectData();
-            _loc1_.var_3018 = this.var_3018;
-            _loc1_.var_3019 = this.var_3019;
-            return (_loc1_);
+            var thumbnailObjectData: RoomThumbnailObjectData = new RoomThumbnailObjectData();
+            
+            thumbnailObjectData._pos = this._pos;
+            thumbnailObjectData._imgId = this._imgId;
+            
+            return thumbnailObjectData;
         }
 
-        public function set pos(param1:int):void
+        public function set pos(param1: int): void
         {
-            this.var_3018 = param1;
+            this._pos = param1;
         }
 
-        public function set imgId(param1:int):void
+        public function set imgId(param1: int): void
         {
-            this.var_3019 = param1;
+            this._imgId = param1;
         }
 
-        public function get pos():int
+        public function get pos(): int
         {
-            return (this.var_3018);
+            return this._pos;
         }
 
-        public function get imgId():int
+        public function get imgId(): int
         {
-            return (this.var_3019);
+            return this._imgId;
         }
 
     }

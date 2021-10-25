@@ -1,95 +1,96 @@
 ﻿package com.sulake.room.events
 {
-    public class RoomSpriteMouseEvent 
+
+    public class RoomSpriteMouseEvent
     {
 
-        private var _type:String = "";
-        private var var_4978:String = "";
-        private var var_4078:String = "";
-        private var var_4983:String = "";
-        private var var_4984:Number = 0;
-        private var var_4985:Number = 0;
-        private var var_3033:Number = 0;
-        private var var_3034:Number = 0;
-        private var var_4980:Boolean = false;
-        private var var_4979:Boolean = false;
-        private var var_4981:Boolean = false;
-        private var var_4982:Boolean = false;
+        private var _type: String = "";
+        private var _eventId: String = "";
+        private var _canvasId: String = "";
+        private var _spriteTag: String = "";
+        private var _screenX: Number = 0;
+        private var _screenY: Number = 0;
+        private var _localX: Number = 0;
+        private var _localY: Number = 0;
+        private var _ctrlKey: Boolean = false;
+        private var _altKey: Boolean = false;
+        private var _shiftKey: Boolean = false;
+        private var _buttonDown: Boolean = false;
 
-        public function RoomSpriteMouseEvent(param1:String, param2:String, param3:String, param4:String, param5:Number, param6:Number, param7:Number=0, param8:Number=0, param9:Boolean=false, param10:Boolean=false, param11:Boolean=false, param12:Boolean=false)
+        public function RoomSpriteMouseEvent(type: String, eventId: String, canvasId: String, spriteTag: String, screenX: Number, screenY: Number, localX: Number = 0, localY: Number = 0, ctrlKey: Boolean = false, altKey: Boolean = false, shiftKey: Boolean = false, buttonDown: Boolean = false)
         {
-            this._type = param1;
-            this.var_4978 = param2;
-            this.var_4078 = param3;
-            this.var_4983 = param4;
-            this.var_4984 = param5;
-            this.var_4985 = param6;
-            this.var_3033 = param7;
-            this.var_3034 = param8;
-            this.var_4980 = param9;
-            this.var_4979 = param10;
-            this.var_4981 = param11;
-            this.var_4982 = param12;
+            this._type = type;
+            this._eventId = eventId;
+            this._canvasId = canvasId;
+            this._spriteTag = spriteTag;
+            this._screenX = screenX;
+            this._screenY = screenY;
+            this._localX = localX;
+            this._localY = localY;
+            this._ctrlKey = ctrlKey;
+            this._altKey = altKey;
+            this._shiftKey = shiftKey;
+            this._buttonDown = buttonDown;
         }
 
-        public function get type():String
+        public function get type(): String
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get eventId():String
+        public function get eventId(): String
         {
-            return (this.var_4978);
+            return this._eventId;
         }
 
-        public function get canvasId():String
+        public function get canvasId(): String
         {
-            return (this.var_4078);
+            return this._canvasId;
         }
 
-        public function get spriteTag():String
+        public function get spriteTag(): String
         {
-            return (this.var_4983);
+            return this._spriteTag;
         }
 
-        public function get screenX():Number
+        public function get screenX(): Number
         {
-            return (this.var_4984);
+            return this._screenX;
         }
 
-        public function get screenY():Number
+        public function get screenY(): Number
         {
-            return (this.var_4985);
+            return this._screenY;
         }
 
-        public function get localX():Number
+        public function get localX(): Number
         {
-            return (this.var_3033);
+            return this._localX;
         }
 
-        public function get localY():Number
+        public function get localY(): Number
         {
-            return (this.var_3034);
+            return this._localY;
         }
 
-        public function get ctrlKey():Boolean
+        public function get ctrlKey(): Boolean
         {
-            return (this.var_4980);
+            return this._ctrlKey;
         }
 
-        public function get altKey():Boolean
+        public function get altKey(): Boolean
         {
-            return (this.var_4979);
+            return this._altKey;
         }
 
-        public function get shiftKey():Boolean
+        public function get shiftKey(): Boolean
         {
-            return (this.var_4981);
+            return this._shiftKey;
         }
 
-        public function get buttonDown():Boolean
+        public function get buttonDown(): Boolean
         {
-            return (this.var_4982);
+            return this._buttonDown;
         }
 
     }

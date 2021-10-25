@@ -1,34 +1,36 @@
 ﻿package com.sulake.habbo.communication.messages.parser.roomsettings
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class FlatControllerRemovedMessageParser implements IMessageParser 
+    public class FlatControllerRemovedMessageParser implements IMessageParser
     {
 
-        private var var_2972:int;
-        private var _userId:int;
+        private var _flatId: int;
+        private var _userId: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2972 = param1.readInteger();
-            this._userId = param1.readInteger();
-            return (true);
+            this._flatId = data.readInteger();
+            this._userId = data.readInteger();
+            
+            return true;
         }
 
-        public function get flatId():int
+        public function get flatId(): int
         {
-            return (this.var_2972);
+            return this._flatId;
         }
 
-        public function get userId():int
+        public function get userId(): int
         {
-            return (this._userId);
+            return this._userId;
         }
 
     }

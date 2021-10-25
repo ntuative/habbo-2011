@@ -1,68 +1,77 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.moderation
 {
+
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class RoomData implements IDisposable 
+    public class RoomData implements IDisposable
     {
 
-        private var var_2971:Boolean;
-        private var _name:String;
-        private var _desc:String;
-        private var var_1029:Array = new Array();
-        private var _disposed:Boolean;
+        private var _exists: Boolean;
+        private var _name: String;
+        private var _desc: String;
+        private var _tags: Array = [];
+        private var _disposed: Boolean;
 
-        public function RoomData(param1:IMessageDataWrapper)
+        public function RoomData(data: IMessageDataWrapper)
         {
-            this.var_2971 = param1.readBoolean();
+            this._exists = data.readBoolean();
+
             if (!this.exists)
             {
                 return;
-            };
-            this._name = param1.readString();
-            this._desc = param1.readString();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            }
+
+
+            this._name = data.readString();
+            this._desc = data.readString();
+
+            var tagCount: int = data.readInteger();
+            var i: int;
+
+            while (i < tagCount)
             {
-                this.var_1029.push(param1.readString());
-                _loc3_++;
-            };
+                this._tags.push(data.readString());
+                i++;
+            }
+
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (this._disposed)
             {
                 return;
-            };
+            }
+
+
             this._disposed = true;
-            this.var_1029 = null;
+            this._tags = null;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get desc():String
+        public function get desc(): String
         {
-            return (this._desc);
+            return this._desc;
         }
 
-        public function get tags():Array
+        public function get tags(): Array
         {
-            return (this.var_1029);
+            return this._tags;
         }
 
-        public function get exists():Boolean
+        public function get exists(): Boolean
         {
-            return (this.var_2971);
+            return this._exists;
         }
 
     }

@@ -1,33 +1,36 @@
 ﻿package com.sulake.habbo.communication.messages.parser.handshake
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class UniqueMachineIDParser implements IMessageParser 
+    public class UniqueMachineIDParser implements IMessageParser
     {
 
-        private var var_3083:String;
+        private var _machineId: String;
 
         public function UniqueMachineIDParser()
         {
-            this.var_3083 = "";
+            this._machineId = "";
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3083 = "";
-            return (true);
+            this._machineId = "";
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3083 = param1.readString();
-            return (true);
+            this._machineId = data.readString();
+
+            return true;
         }
 
-        public function get machineID():String
+        public function get machineID(): String
         {
-            return (this.var_3083);
+            return this._machineId;
         }
 
     }

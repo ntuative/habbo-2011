@@ -1,55 +1,62 @@
 ﻿package com.sulake.core.window.components
 {
+
     import com.sulake.core.window.WindowController;
     import com.sulake.core.window.enum.WindowState;
     import com.sulake.core.window.WindowContext;
+
     import flash.geom.Rectangle;
+
     import com.sulake.core.window.IWindow;
     import com.sulake.core.window.events.WindowEvent;
     import com.sulake.core.window.utils.IIterator;
 
-    public class ScrollableItemListWindow extends WindowController implements IScrollableListWindow 
+    public class ScrollableItemListWindow extends WindowController implements IScrollableListWindow
     {
 
-        private var var_2028:IItemListWindow;
-        private var var_2027:IScrollbarWindow;
-        private var var_2029:Boolean = true;
+        private var var_2028: IItemListWindow;
+        private var var_2027: IScrollbarWindow;
+        private var _autoHideScrollBar: Boolean = true;
 
-        public function ScrollableItemListWindow(param1:String, param2:uint, param3:uint, param4:uint, param5:WindowContext, param6:Rectangle, param7:IWindow, param8:Function=null, param9:Array=null, param10:Array=null, param11:uint=0)
+        public function ScrollableItemListWindow(param1: String, param2: uint, param3: uint, param4: uint, param5: WindowContext, param6: Rectangle, param7: IWindow, param8: Function = null, param9: Array = null, param10: Array = null, param11: uint = 0)
         {
             super(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11);
             this._scrollBar.scrollable = this._itemList;
             if (this._scrollBar.testStateFlag(WindowState.var_1042))
             {
                 this.hideScrollBar();
-            };
+            }
+
         }
 
-        override public function dispose():void
+        override public function dispose(): void
         {
             if (this.var_2027)
             {
                 this.var_2027.removeEventListener(WindowEvent.var_568, this.scrollBarEventProc);
                 this.var_2027.removeEventListener(WindowEvent.var_570, this.scrollBarEventProc);
                 this.var_2027 = null;
-            };
+            }
+
             if (this.var_2028)
             {
                 this.var_2028 = null;
-            };
+            }
+
             super.dispose();
         }
 
-        protected function get _itemList():IItemListWindow
+        protected function get _itemList(): IItemListWindow
         {
             if (!this.var_2028)
             {
                 this.var_2028 = (findChildByTag("_ITEMLIST") as IItemListWindow);
-            };
-            return (this.var_2028);
+            }
+
+            return this.var_2028;
         }
 
-        protected function get _scrollBar():IScrollbarWindow
+        protected function get _scrollBar(): IScrollbarWindow
         {
             if (!this.var_2027)
             {
@@ -58,12 +65,14 @@
                 {
                     this.var_2027.addEventListener(WindowEvent.var_568, this.scrollBarEventProc);
                     this.var_2027.addEventListener(WindowEvent.var_570, this.scrollBarEventProc);
-                };
-            };
-            return (this.var_2027);
+                }
+
+            }
+
+            return this.var_2027;
         }
 
-        private function scrollBarEventProc(param1:WindowEvent):void
+        private function scrollBarEventProc(param1: WindowEvent): void
         {
             if (param1.type == WindowEvent.var_568)
             {
@@ -74,251 +83,259 @@
                 if (param1.type == WindowEvent.var_570)
                 {
                     this.hideScrollBar();
-                };
-            };
+                }
+
+            }
+
         }
 
-        private function hideScrollBar():void
+        private function hideScrollBar(): void
         {
             if (this._scrollBar.visible)
             {
                 this._scrollBar.visible = false;
-                this._itemList.width = var_1018.width;
-            };
+                this._itemList.width = _current.width;
+            }
+
         }
 
-        private function showScrollBar():void
+        private function showScrollBar(): void
         {
-            if (this._scrollBar.visible == false)
+            if (!this._scrollBar.visible)
             {
                 this._scrollBar.visible = true;
-                this._itemList.width = (var_1018.width - this._scrollBar.width);
-            };
+                this._itemList.width = _current.width - this._scrollBar.width;
+            }
+
         }
 
-        private function updateScrollBarVisibility():void
+        private function updateScrollBarVisibility(): void
         {
-            if (this.var_2029)
+            if (this._autoHideScrollBar)
             {
                 if (this._scrollBar.testStateFlag(WindowState.var_1042))
                 {
                     if (this._scrollBar.visible)
                     {
                         this.hideScrollBar();
-                    };
-                };
+                    }
+
+                }
+
             }
             else
             {
                 if (this._scrollBar.visible)
                 {
                     this.showScrollBar();
-                };
-            };
+                }
+
+            }
+
         }
 
-        protected function isConstructionReady():Boolean
+        protected function isConstructionReady(): Boolean
         {
-            return ((this._itemList) && (this._scrollBar));
+            return this._itemList && this._scrollBar;
         }
 
-        public function set autoHideScrollBar(param1:Boolean):void
+        public function set autoHideScrollBar(param1: Boolean): void
         {
-            this.var_2029 = param1;
+            this._autoHideScrollBar = param1;
             this.updateScrollBarVisibility();
         }
 
-        public function get autoHideScrollBar():Boolean
+        public function get autoHideScrollBar(): Boolean
         {
-            return (this.var_2029);
+            return this._autoHideScrollBar;
         }
 
-        public function get iterator():IIterator
+        public function get iterator(): IIterator
         {
-            return ((this.isConstructionReady()) ? this._itemList.iterator : null);
+            return this.isConstructionReady() ? this._itemList.iterator : null;
         }
 
-        public function get scrollH():Number
+        public function get scrollH(): Number
         {
-            return (this._itemList.scrollH);
+            return this._itemList.scrollH;
         }
 
-        public function get scrollV():Number
+        public function get scrollV(): Number
         {
-            return (this._itemList.scrollV);
+            return this._itemList.scrollV;
         }
 
-        public function set scrollH(param1:Number):void
+        public function set scrollH(param1: Number): void
         {
             this._itemList.scrollH = param1;
         }
 
-        public function set scrollV(param1:Number):void
+        public function set scrollV(param1: Number): void
         {
             this._itemList.scrollV = param1;
         }
 
-        public function get maxScrollH():int
+        public function get maxScrollH(): int
         {
-            return (this._itemList.maxScrollH);
+            return this._itemList.maxScrollH;
         }
 
-        public function get maxScrollV():int
+        public function get maxScrollV(): int
         {
-            return (this._itemList.maxScrollV);
+            return this._itemList.maxScrollV;
         }
 
-        public function get visibleRegion():Rectangle
+        public function get visibleRegion(): Rectangle
         {
-            return (this._itemList.visibleRegion);
+            return this._itemList.visibleRegion;
         }
 
-        public function get scrollableRegion():Rectangle
+        public function get scrollableRegion(): Rectangle
         {
-            return (this._itemList.scrollableRegion);
+            return this._itemList.scrollableRegion;
         }
 
-        public function get scrollStepH():Number
+        public function get scrollStepH(): Number
         {
-            return (this._itemList.scrollStepH);
+            return this._itemList.scrollStepH;
         }
 
-        public function get scrollStepV():Number
+        public function get scrollStepV(): Number
         {
-            return (this._itemList.scrollStepV);
+            return this._itemList.scrollStepV;
         }
 
-        public function set scrollStepH(param1:Number):void
+        public function set scrollStepH(param1: Number): void
         {
             this._itemList.scrollStepH = param1;
         }
 
-        public function set scrollStepV(param1:Number):void
+        public function set scrollStepV(param1: Number): void
         {
             this._itemList.scrollStepV = param1;
         }
 
-        public function get spacing():int
+        public function get spacing(): int
         {
-            return (this._itemList.spacing);
+            return this._itemList.spacing;
         }
 
-        public function set spacing(param1:int):void
+        public function set spacing(param1: int): void
         {
             this._itemList.spacing = param1;
         }
 
-        public function get scaleToFitItems():Boolean
+        public function get scaleToFitItems(): Boolean
         {
-            return (this._itemList.scaleToFitItems);
+            return this._itemList.scaleToFitItems;
         }
 
-        public function set scaleToFitItems(param1:Boolean):void
+        public function set scaleToFitItems(param1: Boolean): void
         {
             this._itemList.scaleToFitItems = param1;
         }
 
-        public function get autoArrangeItems():Boolean
+        public function get autoArrangeItems(): Boolean
         {
-            return (this._itemList.autoArrangeItems);
+            return this._itemList.autoArrangeItems;
         }
 
-        public function set autoArrangeItems(param1:Boolean):void
+        public function set autoArrangeItems(param1: Boolean): void
         {
             this._itemList.autoArrangeItems = param1;
         }
 
-        public function set resizeOnItemUpdate(param1:Boolean):void
+        public function set resizeOnItemUpdate(param1: Boolean): void
         {
             this._itemList.resizeOnItemUpdate = param1;
         }
 
-        public function get resizeOnItemUpdate():Boolean
+        public function get resizeOnItemUpdate(): Boolean
         {
-            return (this._itemList.resizeOnItemUpdate);
+            return this._itemList.resizeOnItemUpdate;
         }
 
-        public function get numListItems():int
+        public function get numListItems(): int
         {
-            return (this._itemList.numListItems);
+            return this._itemList.numListItems;
         }
 
-        public function addListItem(param1:IWindow):IWindow
+        public function addListItem(param1: IWindow): IWindow
         {
-            return (this._itemList.addListItem(param1));
+            return this._itemList.addListItem(param1);
         }
 
-        public function addListItemAt(param1:IWindow, param2:uint):IWindow
+        public function addListItemAt(param1: IWindow, param2: uint): IWindow
         {
-            return (this._itemList.addListItemAt(param1, param2));
+            return this._itemList.addListItemAt(param1, param2);
         }
 
-        public function getListItemAt(param1:uint):IWindow
+        public function getListItemAt(param1: uint): IWindow
         {
-            return (this._itemList.getListItemAt(param1));
+            return this._itemList.getListItemAt(param1);
         }
 
-        public function getListItemByID(param1:uint):IWindow
+        public function getListItemByID(param1: uint): IWindow
         {
-            return (this._itemList.getListItemByID(param1));
+            return this._itemList.getListItemByID(param1);
         }
 
-        public function getListItemByName(param1:String):IWindow
+        public function getListItemByName(param1: String): IWindow
         {
-            return (this._itemList.getListItemByName(param1));
+            return this._itemList.getListItemByName(param1);
         }
 
-        public function getListItemIndex(param1:IWindow):int
+        public function getListItemIndex(param1: IWindow): int
         {
-            return (this._itemList.getListItemIndex(param1));
+            return this._itemList.getListItemIndex(param1);
         }
 
-        public function removeListItem(param1:IWindow):IWindow
+        public function removeListItem(param1: IWindow): IWindow
         {
-            return (this._itemList.removeListItem(param1));
+            return this._itemList.removeListItem(param1);
         }
 
-        public function removeListItemAt(param1:int):IWindow
+        public function removeListItemAt(param1: int): IWindow
         {
-            return (this._itemList.removeListItemAt(param1));
+            return this._itemList.removeListItemAt(param1);
         }
 
-        public function setListItemIndex(param1:IWindow, param2:int):void
+        public function setListItemIndex(param1: IWindow, param2: int): void
         {
             this._itemList.setListItemIndex(param1, param2);
         }
 
-        public function swapListItems(param1:IWindow, param2:IWindow):void
+        public function swapListItems(param1: IWindow, param2: IWindow): void
         {
             this._itemList.swapListItems(param1, param2);
         }
 
-        public function swapListItemsAt(param1:int, param2:int):void
+        public function swapListItemsAt(param1: int, param2: int): void
         {
             this._itemList.swapListItemsAt(param1, param2);
         }
 
-        public function groupListItemsWithID(param1:uint, param2:Array, param3:Boolean=false):uint
+        public function groupListItemsWithID(param1: uint, param2: Array, param3: Boolean = false): uint
         {
-            return (this._itemList.groupListItemsWithID(param1, param2, param3));
+            return this._itemList.groupListItemsWithID(param1, param2, param3);
         }
 
-        public function groupListItemsWithTag(param1:String, param2:Array, param3:Boolean=false):uint
+        public function groupListItemsWithTag(param1: String, param2: Array, param3: Boolean = false): uint
         {
-            return (this._itemList.groupListItemsWithTag(param1, param2, param3));
+            return this._itemList.groupListItemsWithTag(param1, param2, param3);
         }
 
-        public function removeListItems():void
+        public function removeListItems(): void
         {
             this._itemList.removeListItems();
         }
 
-        public function destroyListItems():void
+        public function destroyListItems(): void
         {
             this._itemList.destroyListItems();
         }
 
-        public function arrangeListItems():void
+        public function arrangeListItems(): void
         {
             this._itemList.arrangeListItems();
         }

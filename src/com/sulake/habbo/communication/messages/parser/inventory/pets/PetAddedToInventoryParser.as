@@ -1,35 +1,38 @@
 ﻿package com.sulake.habbo.communication.messages.parser.inventory.pets
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PetAddedToInventoryParser implements IMessageParser 
+    public class PetAddedToInventoryParser implements IMessageParser
     {
 
-        private var var_3202:PetData;
-        private var var_3203:Boolean;
+        private var _pet: PetData;
+        private var _purchased: Boolean;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3202 = null;
-            return (true);
+            this._pet = null;
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3202 = new PetData(param1);
-            this.var_3203 = param1.readBoolean();
-            return (true);
+            this._pet = new PetData(data);
+            this._purchased = data.readBoolean();
+
+            return true;
         }
 
-        public function get pet():PetData
+        public function get pet(): PetData
         {
-            return (this.var_3202);
+            return this._pet;
         }
 
-        public function get purchased():Boolean
+        public function get purchased(): Boolean
         {
-            return (this.var_3203);
+            return this._purchased;
         }
 
     }

@@ -1,46 +1,54 @@
 ﻿package com.sulake.habbo.communication.messages.parser.users
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class HabboUserBadgesMessageParser implements IMessageParser 
+    public class HabboUserBadgesMessageParser implements IMessageParser
     {
 
-        private var _userId:int;
-        private var var_3350:Array;
+        private var _userId: int;
+        private var _badges: Array;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._userId = -1;
-            this.var_3350 = [];
-            return (true);
+            this._badges = [];
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc4_:int;
-            var _loc5_:String;
-            this._userId = param1.readInteger();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._userId = data.readInteger();
+            
+            var id: int;
+            var name: String;
+            
+            var badgeCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < badgeCount)
             {
-                _loc4_ = param1.readInteger();
-                _loc5_ = param1.readString();
-                this.var_3350.push(_loc5_);
-                _loc3_++;
-            };
-            return (true);
+                id = data.readInteger();
+                name = data.readString();
+
+                this._badges.push(name);
+                
+                i++;
+            }
+
+            return true;
         }
 
-        public function get badges():Array
+        public function get badges(): Array
         {
-            return (this.var_3350);
+            return this._badges;
         }
 
-        public function get userId():int
+        public function get userId(): int
         {
-            return (this._userId);
+            return this._userId;
         }
 
     }

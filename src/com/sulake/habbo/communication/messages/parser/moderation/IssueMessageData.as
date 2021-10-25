@@ -1,188 +1,189 @@
 ﻿package com.sulake.habbo.communication.messages.parser.moderation
 {
-    public class IssueMessageData 
+
+    public class IssueMessageData
     {
 
-        public static const var_1530:int = 1;
-        public static const var_1531:int = 2;
-        public static const var_1532:int = 3;
+        public static const PRIORITY_HIGH: int = 1;
+        public static const PRIORITY_MEDIUM: int = 2;
+        public static const PRIORITY_LOW: int = 3;
 
-        private var var_3223:int;
-        private var _state:int;
-        private var var_2465:int;
-        private var _reportedCategoryId:int;
-        private var var_3225:int;
-        private var _priority:int;
-        private var var_3226:int = 0;
-        private var var_3227:int;
-        private var var_3228:String;
-        private var var_2953:int;
-        private var var_3229:String;
-        private var var_3230:int;
-        private var var_3231:String;
-        private var _message:String;
-        private var var_2954:int;
-        private var var_2970:String;
-        private var var_3232:int;
-        private var var_3233:String;
-        private var var_2972:int;
-        private var var_3234:String;
-        private var var_3235:String;
-        private var var_3003:int;
-        private var var_3004:int;
+        private var _issueId: int;
+        private var _state: int;
+        private var _categoryId: int;
+        private var _reportedCategoryId: int;
+        private var _timestamp: int;
+        private var _priority: int;
+        private var _temporalPriority: int = 0;
+        private var _reporterUserId: int;
+        private var _reporterUserName: String;
+        private var _reportedUserId: int;
+        private var _reportedUserName: String;
+        private var _pickerUserId: int;
+        private var _pickerUserName: String;
+        private var _message: String;
+        private var _chatRecordId: int;
+        private var _roomName: String;
+        private var _roomType: int;
+        private var _flatType: String;
+        private var _flatId: int;
+        private var _flatOwnerName: String;
+        private var _roomResources: String;
+        private var _unitPort: int;
+        private var _worldId: int;
 
-        public function IssueMessageData(param1:int, param2:int, param3:int, param4:int, param5:int, param6:int, param7:int, param8:String, param9:int, param10:String, param11:int, param12:String, param13:String, param14:int, param15:String, param16:int, param17:String, param18:int, param19:String, param20:String, param21:int, param22:int)
+        public function IssueMessageData(issueId: int, state: int, categoryId: int, reportedCategoryId: int, timestamp: int, priority: int, reporterUserId: int, reporterUserName: String, reportedUserId: int, reportedUserName: String, pickerUserId: int, pickerUserName: String, message: String, chatRecordId: int, roomName: String, roomType: int, flatType: String, flatId: int, flatOwnerName: String, roomResources: String, unitPort: int, worldId: int)
         {
-            this.var_3223 = param1;
-            this._state = param2;
-            this.var_2465 = param3;
-            this._reportedCategoryId = param4;
-            this.var_3225 = param5;
-            this._priority = param6;
-            this.var_3227 = param7;
-            this.var_3228 = param8;
-            this.var_2953 = param9;
-            this.var_3229 = param10;
-            this.var_3230 = param11;
-            this.var_3231 = param12;
-            this._message = param13;
-            this.var_2954 = param14;
-            this.var_2970 = param15;
-            this.var_3232 = param16;
-            this.var_3233 = param17;
-            this.var_2972 = param18;
-            this.var_3234 = param19;
-            this.var_3235 = param20;
-            this.var_3003 = param21;
-            this.var_3004 = param22;
+            this._issueId = issueId;
+            this._state = state;
+            this._categoryId = categoryId;
+            this._reportedCategoryId = reportedCategoryId;
+            this._timestamp = timestamp;
+            this._priority = priority;
+            this._reporterUserId = reporterUserId;
+            this._reporterUserName = reporterUserName;
+            this._reportedUserId = reportedUserId;
+            this._reportedUserName = reportedUserName;
+            this._pickerUserId = pickerUserId;
+            this._pickerUserName = pickerUserName;
+            this._message = message;
+            this._chatRecordId = chatRecordId;
+            this._roomName = roomName;
+            this._roomType = roomType;
+            this._flatType = flatType;
+            this._flatId = flatId;
+            this._flatOwnerName = flatOwnerName;
+            this._roomResources = roomResources;
+            this._unitPort = unitPort;
+            this._worldId = worldId;
         }
 
-        public function get issueId():int
+        public function get issueId(): int
         {
-            return (this.var_3223);
+            return this._issueId;
         }
 
-        public function get state():int
+        public function get state(): int
         {
-            return (this._state);
+            return this._state;
         }
 
-        public function get categoryId():int
+        public function get categoryId(): int
         {
-            return (this.var_2465);
+            return this._categoryId;
         }
 
-        public function get reportedCategoryId():int
+        public function get reportedCategoryId(): int
         {
-            return (this._reportedCategoryId);
+            return this._reportedCategoryId;
         }
 
-        public function get timeStamp():int
+        public function get timeStamp(): int
         {
-            return (this.var_3225);
+            return this._timestamp;
         }
 
-        public function get priority():int
+        public function get priority(): int
         {
-            return (this._priority + this.var_3226);
+            return this._priority + this._temporalPriority;
         }
 
-        public function get reporterUserId():int
+        public function get reporterUserId(): int
         {
-            return (this.var_3227);
+            return this._reporterUserId;
         }
 
-        public function get reporterUserName():String
+        public function get reporterUserName(): String
         {
-            return (this.var_3228);
+            return this._reporterUserName;
         }
 
-        public function get reportedUserId():int
+        public function get reportedUserId(): int
         {
-            return (this.var_2953);
+            return this._reportedUserId;
         }
 
-        public function get reportedUserName():String
+        public function get reportedUserName(): String
         {
-            return (this.var_3229);
+            return this._reportedUserName;
         }
 
-        public function get pickerUserId():int
+        public function get pickerUserId(): int
         {
-            return (this.var_3230);
+            return this._pickerUserId;
         }
 
-        public function get pickerUserName():String
+        public function get pickerUserName(): String
         {
-            return (this.var_3231);
+            return this._pickerUserName;
         }
 
-        public function get message():String
+        public function get message(): String
         {
-            return (this._message);
+            return this._message;
         }
 
-        public function get chatRecordId():int
+        public function get chatRecordId(): int
         {
-            return (this.var_2954);
+            return this._chatRecordId;
         }
 
-        public function get roomName():String
+        public function get roomName(): String
         {
-            return (this.var_2970);
+            return this._roomName;
         }
 
-        public function get roomType():int
+        public function get roomType(): int
         {
-            return (this.var_3232);
+            return this._roomType;
         }
 
-        public function get flatType():String
+        public function get flatType(): String
         {
-            return (this.var_3233);
+            return this._flatType;
         }
 
-        public function get flatId():int
+        public function get flatId(): int
         {
-            return (this.var_2972);
+            return this._flatId;
         }
 
-        public function get flatOwnerName():String
+        public function get flatOwnerName(): String
         {
-            return (this.var_3234);
+            return this._flatOwnerName;
         }
 
-        public function get var_3236():String
+        public function get roomResources(): String
         {
-            return (this.var_3235);
+            return this._roomResources;
         }
 
-        public function get unitPort():int
+        public function get unitPort(): int
         {
-            return (this.var_3003);
+            return this._unitPort;
         }
 
-        public function get worldId():int
+        public function get worldId(): int
         {
-            return (this.var_3004);
+            return this._worldId;
         }
 
-        public function set temporalPriority(param1:int):void
+        public function set temporalPriority(param1: int): void
         {
-            this.var_3226 = param1;
+            this._temporalPriority = param1;
         }
 
-        public function getOpenTime(param1:int):String
+        public function getOpenTime(param1: int): String
         {
-            var _loc2_:int = int(((param1 - this.var_3225) / 1000));
-            var _loc3_:int = (_loc2_ % 60);
-            var _loc4_:int = int((_loc2_ / 60));
-            var _loc5_:int = (_loc4_ % 60);
-            var _loc6_:int = int((_loc4_ / 60));
-            var _loc7_:String = ((_loc3_ < 10) ? ("0" + _loc3_) : ("" + _loc3_));
-            var _loc8_:String = ((_loc5_ < 10) ? ("0" + _loc5_) : ("" + _loc5_));
-            var _loc9_:String = ((_loc6_ < 10) ? ("0" + _loc6_) : ("" + _loc6_));
-            return ((((_loc9_ + ":") + _loc8_) + ":") + _loc7_);
+            var _loc2_: int = int((param1 - this._timestamp) / 1000);
+            var _loc3_: int = _loc2_ % 60;
+            var _loc4_: int = int(_loc2_ / 60);
+            var _loc5_: int = _loc4_ % 60;
+            var _loc6_: int = int(_loc4_ / 60);
+            var _loc7_: String = _loc3_ < 10 ? "0" + _loc3_ : "" + _loc3_;
+            var _loc8_: String = _loc5_ < 10 ? "0" + _loc5_ : "" + _loc5_;
+            var _loc9_: String = _loc6_ < 10 ? "0" + _loc6_ : "" + _loc6_;
+            return _loc9_ + ":" + _loc8_ + ":" + _loc7_;
         }
 
     }

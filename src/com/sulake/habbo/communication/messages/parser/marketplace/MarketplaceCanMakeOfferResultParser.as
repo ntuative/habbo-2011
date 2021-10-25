@@ -1,34 +1,35 @@
 ﻿package com.sulake.habbo.communication.messages.parser.marketplace
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class MarketplaceCanMakeOfferResultParser implements IMessageParser 
+    public class MarketplaceCanMakeOfferResultParser implements IMessageParser
     {
 
-        private var _tokenCount:int;
-        private var _result:int;
+        private var _tokenCount: int;
+        private var _result: int;
 
-        public function get tokenCount():int
+        public function get tokenCount(): int
         {
-            return (this._tokenCount);
+            return this._tokenCount;
         }
 
-        public function get resultCode():int
+        public function get resultCode(): int
         {
-            return (this._result);
+            return this._result;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(param1: IMessageDataWrapper): Boolean
         {
             this._result = param1.readInteger();
             this._tokenCount = param1.readInteger();
-            return (true);
+            return true;
         }
 
     }

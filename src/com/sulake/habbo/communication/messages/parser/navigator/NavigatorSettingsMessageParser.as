@@ -1,27 +1,29 @@
 ﻿package com.sulake.habbo.communication.messages.parser.navigator
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class NavigatorSettingsMessageParser implements IMessageParser 
+    public class NavigatorSettingsMessageParser implements IMessageParser
     {
 
-        private var var_3257:int;
+        private var _homeRoomId: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3257 = param1.readInteger();
-            return (true);
+            this._homeRoomId = data.readInteger();
+            
+            return true;
         }
 
-        public function get homeRoomId():int
+        public function get homeRoomId(): int
         {
-            return (this.var_3257);
+            return this._homeRoomId;
         }
 
     }

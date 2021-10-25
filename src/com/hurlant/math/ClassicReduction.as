@@ -1,46 +1,48 @@
 ﻿package com.hurlant.math
 {
+
     import com.hurlant.math.BigInteger;
     import com.hurlant.math.bi_internal;
 
     use namespace bi_internal;
 
-    internal class ClassicReduction implements IReduction 
+    internal class ClassicReduction implements IReduction
     {
 
-        private var m:BigInteger;
+        private var m: BigInteger;
 
-        public function ClassicReduction(param1:BigInteger)
+        public function ClassicReduction(param1: BigInteger)
         {
             this.m = param1;
         }
 
-        public function convert(param1:BigInteger):BigInteger
+        public function convert(param1: BigInteger): BigInteger
         {
-            if (((param1.s < 0) || (param1.compareTo(this.m) >= 0)))
+            if (param1.s < 0 || param1.compareTo(this.m) >= 0)
             {
-                return (param1.mod(this.m));
-            };
-            return (param1);
+                return param1.mod(this.m);
+            }
+
+            return param1;
         }
 
-        public function revert(param1:BigInteger):BigInteger
+        public function revert(param1: BigInteger): BigInteger
         {
-            return (param1);
+            return param1;
         }
 
-        public function reduce(param1:BigInteger):void
+        public function reduce(param1: BigInteger): void
         {
             param1.divRemTo(this.m, null, param1);
         }
 
-        public function mulTo(param1:BigInteger, param2:BigInteger, param3:BigInteger):void
+        public function mulTo(param1: BigInteger, param2: BigInteger, param3: BigInteger): void
         {
             param1.multiplyTo(param2, param3);
             this.reduce(param3);
         }
 
-        public function sqrTo(param1:BigInteger, param2:BigInteger):void
+        public function sqrTo(param1: BigInteger, param2: BigInteger): void
         {
             param1.squareTo(param2);
             this.reduce(param2);

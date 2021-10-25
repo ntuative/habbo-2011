@@ -1,9 +1,10 @@
 package com.sulake.core.localization
 {
-    public interface ILocalizable 
+
+    public interface ILocalizable
     {
 
-        function set localization(param1:String):void;
+        function set localization(param1: String): void;
 
     }
 }

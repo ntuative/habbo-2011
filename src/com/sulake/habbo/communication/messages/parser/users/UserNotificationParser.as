@@ -1,49 +1,53 @@
 ﻿package com.sulake.habbo.communication.messages.parser.users
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class UserNotificationParser implements IMessageParser 
+    public class UserNotificationParser implements IMessageParser
     {
 
-        private var _title:String = "";
-        private var _message:String = "";
-        private var var_2163:Array;
+        private var _title: String = "";
+        private var _message: String = "";
+        private var _parameters: Array;
 
-        public function get title():String
+        public function get title(): String
         {
-            return (this._title);
+            return this._title;
         }
 
-        public function get message():String
+        public function get message(): String
         {
-            return (this._message);
+            return this._message;
         }
 
-        public function get parameters():Array
+        public function get parameters(): Array
         {
-            return (this.var_2163);
+            return this._parameters;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(param1: IMessageDataWrapper): Boolean
         {
             this._title = param1.readString();
             this._message = param1.readString();
-            this.var_2163 = new Array();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._parameters = [];
+
+            var parameterCount: int = param1.readInteger();
+            var i: int;
+            
+            while (i < parameterCount)
             {
-                this.var_2163.push(param1.readString());
-                this.var_2163.push(param1.readString());
-                _loc3_++;
-            };
-            return (true);
+                this._parameters.push(param1.readString());
+                this._parameters.push(param1.readString());
+                i++;
+            }
+
+            return true;
         }
 
     }

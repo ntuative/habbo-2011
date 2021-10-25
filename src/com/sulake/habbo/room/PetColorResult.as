@@ -1,25 +1,26 @@
 ﻿package com.sulake.habbo.room
 {
-    public class PetColorResult 
+
+    public class PetColorResult
     {
 
-        private var var_4313:int = 0;
-        private var var_4314:int = 0;
+        private var _primaryColor: int = 0;
+        private var _secondaryColor: int = 0;
 
-        public function PetColorResult(param1:int, param2:int)
+        public function PetColorResult(primaryColor: int, secondaryColor: int)
         {
-            this.var_4313 = (param1 & 0xFFFFFF);
-            this.var_4314 = (param2 & 0xFFFFFF);
+            this._primaryColor = primaryColor & 0xFFFFFF;
+            this._secondaryColor = secondaryColor & 0xFFFFFF;
         }
 
-        public function get primaryColor():int
+        public function get primaryColor(): int
         {
-            return (this.var_4313);
+            return this._primaryColor;
         }
 
-        public function get secondaryColor():int
+        public function get secondaryColor(): int
         {
-            return (this.var_4314);
+            return this._secondaryColor;
         }
 
     }

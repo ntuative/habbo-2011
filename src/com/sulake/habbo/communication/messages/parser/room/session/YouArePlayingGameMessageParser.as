@@ -1,42 +1,45 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.session
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class YouArePlayingGameMessageParser implements IMessageParser 
+    public class YouArePlayingGameMessageParser implements IMessageParser
     {
 
-        private var _roomId:int = 0;
-        private var _roomCategory:int = 0;
-        private var var_3335:Boolean = false;
+        private var _roomId: int = 0;
+        private var _roomCategory: int = 0;
+        private var _isPlaying: Boolean = false;
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get roomCategory():int
+        public function get roomCategory(): int
         {
-            return (this._roomCategory);
+            return this._roomCategory;
         }
 
-        public function get isPlaying():Boolean
+        public function get isPlaying(): Boolean
         {
-            return (this.var_3335);
+            return this._isPlaying;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._roomId = 0;
             this._roomCategory = 0;
-            this.var_3335 = false;
-            return (true);
+            this._isPlaying = false;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3335 = param1.readBoolean();
-            return (true);
+            this._isPlaying = data.readBoolean();
+
+            return true;
         }
 
     }

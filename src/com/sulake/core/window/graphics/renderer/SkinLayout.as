@@ -1,85 +1,90 @@
 ﻿package com.sulake.core.window.graphics.renderer
 {
+
     import com.sulake.core.window.utils.ChildEntityArray;
     import com.sulake.core.window.utils.IChildEntityArray;
     import com.sulake.core.window.utils.IChildEntityArrayReader;
+
     import flash.geom.Rectangle;
+
     import com.sulake.core.window.utils.IChildEntity;
 
-    public class SkinLayout extends ChildEntityArray implements ISkinLayout 
+    public class SkinLayout extends ChildEntityArray implements ISkinLayout
     {
 
-        protected var _name:String;
-        protected var var_2237:uint;
-        protected var _height:uint;
-        protected var var_2238:String;
-        protected var var_2239:Boolean;
-        protected var _placeholders:IChildEntityArray;
+        protected var _name: String;
+        protected var _width: uint;
+        protected var _height: uint;
+        protected var _blendMode: String;
+        protected var _transparent: Boolean;
+        protected var _placeholders: IChildEntityArray;
 
-        public function SkinLayout(param1:String, param2:Boolean, param3:String, param4:IChildEntityArray)
+        public function SkinLayout(param1: String, param2: Boolean, param3: String, param4: IChildEntityArray)
         {
             this._name = param1;
-            this.var_2237 = 0;
+            this._width = 0;
             this._height = 0;
-            this.var_2238 = param3;
-            this.var_2239 = param2;
+            this._blendMode = param3;
+            this._transparent = param2;
             this._placeholders = param4;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get width():uint
+        public function get width(): uint
         {
-            return (this.var_2237);
+            return this._width;
         }
 
-        public function get height():uint
+        public function get height(): uint
         {
-            return (this._height);
+            return this._height;
         }
 
-        public function get blendMode():String
+        public function get blendMode(): String
         {
-            return (this.var_2238);
+            return this._blendMode;
         }
 
-        public function get transparent():Boolean
+        public function get transparent(): Boolean
         {
-            return (this.var_2239);
+            return this._transparent;
         }
 
-        public function get placeholders():IChildEntityArrayReader
+        public function get placeholders(): IChildEntityArrayReader
         {
-            return (this._placeholders);
+            return this._placeholders;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            var _loc1_:uint;
-            var _loc3_:String;
-            var _loc2_:uint = numChildren;
+            var _loc1_: uint;
+            var _loc3_: String;
+            var _loc2_: uint = numChildren;
             _loc1_ = 0;
             while (_loc1_ < _loc2_)
             {
                 SkinLayoutEntity(getChildAt(_loc1_)).dispose();
                 _loc1_++;
-            };
+            }
+
             for (_loc3_ in this._placeholders)
             {
                 SkinLayoutEntity(this._placeholders[_loc3_]).dispose();
-                delete this._placeholders[_loc3_];
-            };
+                this._placeholders[_loc3_] = null;
+            }
+
         }
 
-        public function calculateActualRect(param1:Rectangle):void
+        public function calculateActualRect(param1: Rectangle): void
         {
-            var _loc2_:Rectangle;
-            var _loc3_:SkinLayoutEntity;
-            var _loc5_:uint;
-            var _loc4_:uint = numChildren;
+            var _loc2_: Rectangle;
+            var _loc3_: SkinLayoutEntity;
+            var _loc5_: uint;
+            var _loc4_: uint = numChildren;
             param1.x = 0xFFFFFFFF;
             param1.y = 0xFFFFFFFF;
             param1.width = 0;
@@ -92,49 +97,57 @@
                 if (_loc2_.left < param1.left)
                 {
                     param1.left = _loc2_.left;
-                };
+                }
+
                 if (_loc2_.top < param1.top)
                 {
                     param1.top = _loc2_.top;
-                };
+                }
+
                 if (_loc2_.right > param1.right)
                 {
                     param1.right = _loc2_.right;
-                };
+                }
+
                 if (_loc2_.bottom > param1.bottom)
                 {
                     param1.bottom = _loc2_.bottom;
-                };
+                }
+
                 _loc5_++;
-            };
+            }
+
         }
 
-        public function isFixedWidth():Boolean
+        public function isFixedWidth(): Boolean
         {
-            var _loc2_:uint;
-            var _loc1_:uint = numChildren;
+            var _loc2_: uint;
+            var _loc1_: uint = numChildren;
             if (_loc1_ == 0)
             {
-                return (false);
-            };
+                return false;
+            }
+
             _loc2_ = 0;
             while (_loc2_ < _loc1_)
             {
                 if (SkinLayoutEntity(getChildAt(_loc2_)).var_1777 != SkinLayoutEntity.var_1965)
                 {
-                    return (false);
-                };
+                    return false;
+                }
+
                 _loc2_++;
-            };
-            return (true);
+            }
+
+            return true;
         }
 
-        public function calculateWidth():uint
+        public function calculateWidth(): uint
         {
-            var _loc2_:Rectangle;
-            var _loc4_:uint;
-            var _loc1_:uint;
-            var _loc3_:uint = numChildren;
+            var _loc2_: Rectangle;
+            var _loc4_: uint;
+            var _loc1_: uint;
+            var _loc3_: uint = numChildren;
             _loc4_ = 0;
             while (_loc4_ < _loc3_)
             {
@@ -142,38 +155,43 @@
                 if (_loc2_.right > _loc1_)
                 {
                     _loc1_ = _loc2_.right;
-                };
+                }
+
                 _loc4_++;
-            };
-            return (_loc1_);
+            }
+
+            return _loc1_;
         }
 
-        public function isFixedHeight():Boolean
+        public function isFixedHeight(): Boolean
         {
-            var _loc2_:uint;
-            var _loc1_:uint = numChildren;
+            var _loc2_: uint;
+            var _loc1_: uint = numChildren;
             if (_loc1_ == 0)
             {
-                return (false);
-            };
+                return false;
+            }
+
             _loc2_ = 0;
             while (_loc2_ < _loc1_)
             {
                 if (SkinLayoutEntity(getChildAt(_loc2_)).var_1781 != SkinLayoutEntity.var_1965)
                 {
-                    return (false);
-                };
+                    return false;
+                }
+
                 _loc2_++;
-            };
-            return (true);
+            }
+
+            return true;
         }
 
-        public function calculateHeight():uint
+        public function calculateHeight(): uint
         {
-            var _loc2_:Rectangle;
-            var _loc4_:uint;
-            var _loc1_:uint;
-            var _loc3_:uint = numChildren;
+            var _loc2_: Rectangle;
+            var _loc4_: uint;
+            var _loc1_: uint;
+            var _loc3_: uint = numChildren;
             _loc4_ = 0;
             while (_loc4_ < _loc3_)
             {
@@ -181,59 +199,63 @@
                 if (_loc2_.bottom > _loc1_)
                 {
                     _loc1_ = _loc2_.bottom;
-                };
+                }
+
                 _loc4_++;
-            };
-            return (_loc1_);
+            }
+
+            return _loc1_;
         }
 
-        public function getDefaultRegion(param1:String, param2:Rectangle):void
+        public function getDefaultRegion(param1: String, param2: Rectangle): void
         {
-            var _loc3_:SkinLayoutEntity = (getChildByName(param1) as SkinLayoutEntity);
+            var _loc3_: SkinLayoutEntity = getChildByName(param1) as SkinLayoutEntity;
             if (_loc3_ == null)
             {
                 _loc3_ = (this._placeholders.getChildByName(param1) as SkinLayoutEntity);
                 if (_loc3_ == null)
                 {
-                    throw (new Error((("Entity not found: " + param1) + "!")));
-                };
-            };
+                    throw new Error("Entity not found: " + param1 + "!");
+                }
+
+            }
+
             param2.x = _loc3_.region.x;
             param2.y = _loc3_.region.y;
             param2.width = _loc3_.region.width;
             param2.height = _loc3_.region.height;
         }
 
-        override public function addChild(param1:IChildEntity):IChildEntity
+        override public function addChild(param1: IChildEntity): IChildEntity
         {
-            var _loc2_:SkinLayoutEntity = SkinLayoutEntity(param1);
-            this.var_2237 = ((_loc2_.region.right > this.var_2237) ? _loc2_.region.right : this.var_2237);
-            this._height = ((_loc2_.region.bottom > this._height) ? _loc2_.region.bottom : this._height);
-            return (super.addChild(param1));
+            var _loc2_: SkinLayoutEntity = SkinLayoutEntity(param1);
+            this._width = _loc2_.region.right > this._width ? _loc2_.region.right : this._width;
+            this._height = _loc2_.region.bottom > this._height ? _loc2_.region.bottom : this._height;
+            return super.addChild(param1);
         }
 
-        override public function addChildAt(param1:IChildEntity, param2:int):IChildEntity
+        override public function addChildAt(param1: IChildEntity, param2: int): IChildEntity
         {
-            var _loc3_:SkinLayoutEntity = SkinLayoutEntity(param1);
-            this.var_2237 = ((_loc3_.region.right > this.var_2237) ? _loc3_.region.right : this.var_2237);
-            this._height = ((_loc3_.region.bottom > this._height) ? _loc3_.region.bottom : this._height);
-            return (super.addChildAt(param1, param2));
+            var _loc3_: SkinLayoutEntity = SkinLayoutEntity(param1);
+            this._width = _loc3_.region.right > this._width ? _loc3_.region.right : this._width;
+            this._height = _loc3_.region.bottom > this._height ? _loc3_.region.bottom : this._height;
+            return super.addChildAt(param1, param2);
         }
 
-        override public function removeChild(param1:IChildEntity):IChildEntity
+        override public function removeChild(param1: IChildEntity): IChildEntity
         {
             super.removeChild(param1);
-            this.var_2237 = this.calculateWidth();
+            this._width = this.calculateWidth();
             this._height = this.calculateHeight();
-            return (param1);
+            return param1;
         }
 
-        override public function removeChildAt(param1:int):IChildEntity
+        override public function removeChildAt(param1: int): IChildEntity
         {
-            var _loc2_:IChildEntity = super.removeChildAt(param1);
-            this.var_2237 = this.calculateWidth();
+            var _loc2_: IChildEntity = super.removeChildAt(param1);
+            this._width = this.calculateWidth();
             this._height = this.calculateHeight();
-            return (_loc2_);
+            return _loc2_;
         }
 
     }

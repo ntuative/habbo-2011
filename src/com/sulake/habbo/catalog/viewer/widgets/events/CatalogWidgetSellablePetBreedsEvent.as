@@ -1,32 +1,36 @@
 ﻿package com.sulake.habbo.catalog.viewer.widgets.events
 {
+
     import flash.events.Event;
 
-    public class CatalogWidgetSellablePetBreedsEvent extends Event 
+    public class CatalogWidgetSellablePetBreedsEvent extends Event
     {
 
-        private var var_2611:String;
-        private var var_2508:Array;
+        private var _productCode: String;
+        private var _sellableBreeds: Array;
 
-        public function CatalogWidgetSellablePetBreedsEvent(param1:String, param2:Array, param3:Boolean=false, param4:Boolean=false)
+        public function CatalogWidgetSellablePetBreedsEvent(productCode: String, sellableBreeds: Array, param3: Boolean = false, param4: Boolean = false)
         {
             super(WidgetEvent.CWE_SELLABLE_PET_BREEDS, param3, param4);
-            this.var_2611 = param1;
-            this.var_2508 = param2;
+
+            this._productCode = productCode;
+            this._sellableBreeds = sellableBreeds;
         }
 
-        public function get productCode():String
+        public function get productCode(): String
         {
-            return (this.var_2611);
+            return this._productCode;
         }
 
-        public function get sellableBreeds():Array
+        public function get sellableBreeds(): Array
         {
-            if (this.var_2508 != null)
+            if (this._sellableBreeds != null)
             {
-                return (this.var_2508.slice());
-            };
-            return ([]);
+                return this._sellableBreeds.slice();
+            }
+
+
+            return [];
         }
 
     }

@@ -1,42 +1,43 @@
 ﻿package com.sulake.habbo.catalog.recycler
 {
-    public class FurniSlotItem 
+
+    public class FurniSlotItem
     {
 
-        private var _id:int = 0;
-        private var _category:int = 0;
-        private var var_2703:int = 0;
-        private var var_2704:String = null;
+        private var _id: int = 0;
+        private var _category: int = 0;
+        private var _typeId: int = 0;
+        private var _extra: String = null;
 
-        public function FurniSlotItem(param1:int, param2:int, param3:int=0, param4:String=null)
+        public function FurniSlotItem(id: int, category: int, typeId: int = 0, extra: String = null)
         {
-            this._id = param1;
-            this._category = param2;
-            this.var_2703 = param3;
-            this.var_2704 = param4;
+            this._id = id;
+            this._category = category;
+            this._typeId = typeId;
+            this._extra = extra;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get category():int
+        public function get category(): int
         {
-            return (this._category);
+            return this._category;
         }
 
-        public function get typeId():int
+        public function get typeId(): int
         {
-            return (this.var_2703);
+            return this._typeId;
         }
 
-        public function get xxxExtra():String
+        public function get xxxExtra(): String
         {
-            return (this.var_2704);
+            return this._extra;
         }
 
-        public function set id(param1:int):void
+        public function set id(param1: int): void
         {
             this._id = param1;
         }

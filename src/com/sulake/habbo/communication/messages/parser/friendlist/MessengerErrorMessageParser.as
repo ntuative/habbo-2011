@@ -1,34 +1,36 @@
 ﻿package com.sulake.habbo.communication.messages.parser.friendlist
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class MessengerErrorMessageParser implements IMessageParser 
+    public class MessengerErrorMessageParser implements IMessageParser
     {
 
-        private var var_3152:int;
-        private var var_2102:int;
+        private var _clientMessageId: int;
+        private var _errorCode: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3152 = param1.readInteger();
-            this.var_2102 = param1.readInteger();
-            return (true);
+            this._clientMessageId = data.readInteger();
+            this._errorCode = data.readInteger();
+
+            return true;
         }
 
-        public function get clientMessageId():int
+        public function get clientMessageId(): int
         {
-            return (this.var_3152);
+            return this._clientMessageId;
         }
 
-        public function get errorCode():int
+        public function get errorCode(): int
         {
-            return (this.var_2102);
+            return this._errorCode;
         }
 
     }

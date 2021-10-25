@@ -1,65 +1,72 @@
 ﻿package com.sulake.habbo.avatar.structure.figure
 {
-    public class FigurePart implements IFigurePart 
+
+    public class FigurePart implements IFigurePart
     {
 
-        private var _id:int;
-        private var _type:String;
-        private var var_2517:int = -1;
-        private var var_2518:int;
-        private var _index:int;
-        private var var_2519:int = -1;
+        private var _id: int;
+        private var _type: String;
+        private var _breed: int = -1;
+        private var _colorLayerIndex: int;
+        private var _index: int;
+        private var _paletteMap: int = -1;
 
-        public function FigurePart(param1:XML)
+        public function FigurePart(data: XML)
         {
-            this._id = parseInt(param1.@id);
-            this._type = String(param1.@type);
-            this._index = parseInt(param1.@index);
-            this.var_2518 = parseInt(param1.@colorindex);
-            var _loc2_:String = param1.@palettemapid;
-            if (_loc2_ != "")
+            this._id = parseInt(data.@id);
+            this._type = String(data.@type);
+            this._index = parseInt(data.@index);
+            this._colorLayerIndex = parseInt(data.@colorindex);
+
+            var paletteMap: String = data.@palettemapid;
+
+            if (paletteMap != "")
             {
-                this.var_2519 = int(_loc2_);
-            };
-            var _loc3_:String = param1.@breed;
-            if (_loc3_ != "")
+                this._paletteMap = int(paletteMap);
+            }
+
+
+            var breed: String = data.@breed;
+
+            if (breed != "")
             {
-                this.var_2517 = int(_loc3_);
-            };
+                this._breed = int(breed);
+            }
+
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get type():String
+        public function get type(): String
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get breed():int
+        public function get breed(): int
         {
-            return (this.var_2517);
+            return this._breed;
         }
 
-        public function get colorLayerIndex():int
+        public function get colorLayerIndex(): int
         {
-            return (this.var_2518);
+            return this._colorLayerIndex;
         }
 
-        public function get index():int
+        public function get index(): int
         {
-            return (this._index);
+            return this._index;
         }
 
-        public function get paletteMap():int
+        public function get paletteMap(): int
         {
-            return (this.var_2519);
+            return this._paletteMap;
         }
 
     }

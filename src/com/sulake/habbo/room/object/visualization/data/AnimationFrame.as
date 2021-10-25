@@ -1,127 +1,137 @@
 ﻿package com.sulake.habbo.room.object.visualization.data
 {
-    public class AnimationFrame 
+
+    public class AnimationFrame
     {
 
-        public static const var_1462:int = -1;
-        public static const var_1461:int = -1;
-        private static const var_4034:int = 3000;
-        private static const POOL:Array = [];
+        public static const FRAME_REPEAT_FOREVER: int = -1;
+        public static const var_1461: int = -1;
+        private static const POOL_SIZE_MAX: int = 3000;
+        private static const POOL: Array = [];
 
-        private var _id:int = 0;
-        private var _x:int = 0;
-        private var var_2497:int = 0;
-        private var var_4035:int = 1;
-        private var var_4036:int = 1;
-        private var var_4037:int = 1;
-        private var var_4038:int = -1;
-        private var var_4039:int = 0;
-        private var var_4040:Boolean = false;
-        private var _isRecycled:Boolean = false;
+        private var _id: int = 0;
+        private var _x: int = 0;
+        private var _y: int = 0;
+        private var _repeats: int = 1;
+        private var _frameRepeats: int = 1;
+        private var _remainingFrameRepeats: int = 1;
+        private var _activeSequence: int = -1;
+        private var _activeSequenceOffset: int = 0;
+        private var _isLastFrame: Boolean = false;
+        private var _isRecycled: Boolean = false;
 
-        public static function allocate(param1:int, param2:int, param3:int, param4:int, param5:int, param6:Boolean, param7:int=-1, param8:int=0):AnimationFrame
+        public static function allocate(param1: int, param2: int, param3: int, param4: int, param5: int, param6: Boolean, param7: int = -1, param8: int = 0): AnimationFrame
         {
-            var _loc9_:AnimationFrame = ((POOL.length > 0) ? POOL.pop() : new (AnimationFrame)());
+            var _loc9_: AnimationFrame = POOL.length > 0 ? POOL.pop() : new AnimationFrame();
             _loc9_._isRecycled = false;
             _loc9_._id = param1;
             _loc9_._x = param2;
-            _loc9_.var_2497 = param3;
-            _loc9_.var_4040 = param6;
+            _loc9_._y = param3;
+            _loc9_._isLastFrame = param6;
             if (param4 < 1)
             {
                 param4 = 1;
-            };
-            _loc9_.var_4035 = param4;
+            }
+
+            _loc9_._repeats = param4;
             if (param5 < 0)
             {
-                param5 = var_1462;
-            };
-            _loc9_.var_4036 = param5;
-            _loc9_.var_4037 = param5;
+                param5 = FRAME_REPEAT_FOREVER;
+            }
+
+            _loc9_._frameRepeats = param5;
+            _loc9_._remainingFrameRepeats = param5;
             if (param7 >= 0)
             {
-                _loc9_.var_4038 = param7;
-                _loc9_.var_4039 = param8;
-            };
-            return (_loc9_);
+                _loc9_._activeSequence = param7;
+                _loc9_._activeSequenceOffset = param8;
+            }
+
+            return _loc9_;
         }
 
-        public function get id():int
+        public function get id(): int
         {
             if (this._id >= 0)
             {
-                return (this._id);
-            };
-            return (-(this._id) * Math.random());
+                return this._id;
+            }
+
+            return -this._id * Math.random();
         }
 
-        public function get x():int
+        public function get x(): int
         {
-            return (this._x);
+            return this._x;
         }
 
-        public function get y():int
+        public function get y(): int
         {
-            return (this.var_2497);
+            return this._y;
         }
 
-        public function get repeats():int
+        public function get repeats(): int
         {
-            return (this.var_4035);
+            return this._repeats;
         }
 
-        public function get frameRepeats():int
+        public function get frameRepeats(): int
         {
-            return (this.var_4036);
+            return this._frameRepeats;
         }
 
-        public function get isLastFrame():Boolean
+        public function get isLastFrame(): Boolean
         {
-            return (this.var_4040);
+            return this._isLastFrame;
         }
 
-        public function get remainingFrameRepeats():int
+        public function get remainingFrameRepeats(): int
         {
-            if (this.var_4036 < 0)
+            if (this._frameRepeats < 0)
             {
-                return (var_1462);
-            };
-            return (this.var_4037);
+                return FRAME_REPEAT_FOREVER;
+            }
+
+            return this._remainingFrameRepeats;
         }
 
-        public function set remainingFrameRepeats(param1:int):void
+        public function set remainingFrameRepeats(param1: int): void
         {
             if (param1 < 0)
             {
                 param1 = 0;
-            };
-            if (((this.var_4036 > 0) && (param1 > this.var_4036)))
+            }
+
+            if (this._frameRepeats > 0 && param1 > this._frameRepeats)
             {
-                param1 = this.var_4036;
-            };
-            this.var_4037 = param1;
+                param1 = this._frameRepeats;
+            }
+
+            this._remainingFrameRepeats = param1;
         }
 
-        public function get activeSequence():int
+        public function get activeSequence(): int
         {
-            return (this.var_4038);
+            return this._activeSequence;
         }
 
-        public function get activeSequenceOffset():int
+        public function get activeSequenceOffset(): int
         {
-            return (this.var_4039);
+            return this._activeSequenceOffset;
         }
 
-        public function recycle():void
+        public function recycle(): void
         {
             if (!this._isRecycled)
             {
                 this._isRecycled = true;
-                if (POOL.length < var_4034)
+                if (POOL.length < POOL_SIZE_MAX)
                 {
                     POOL.push(this);
-                };
-            };
+                }
+
+            }
+
         }
 
     }

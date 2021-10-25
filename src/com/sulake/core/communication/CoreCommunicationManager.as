@@ -1,8 +1,11 @@
 ﻿package com.sulake.core.communication
 {
+
     import com.sulake.core.runtime.Component;
     import com.sulake.core.runtime.IUpdateReceiver;
+
     import flash.utils.Dictionary;
+
     import com.sulake.core.communication.connection.IConnectionStateListener;
     import com.sulake.core.runtime.IContext;
     import com.sulake.core.communication.connection.IConnection;
@@ -13,204 +16,254 @@
     import com.sulake.core.communication.protocol.IProtocol;
     import com.sulake.iid.*;
 
-    public class CoreCommunicationManager extends Component implements ICoreCommunicationManager, IUpdateReceiver 
+    public class CoreCommunicationManager extends Component implements ICoreCommunicationManager, IUpdateReceiver
     {
 
-        private var _connections:Dictionary;
-        private var var_2153:Dictionary;
-        private var var_2154:Dictionary;
-        private var var_2155:Array;
-        private var var_2156:IConnectionStateListener;
+        private var _connections: Dictionary;
+        private var _protocols: Dictionary;
+        private var _events: Dictionary;
+        private var _parsers: Array;
+        private var _connectionStateListener: IConnectionStateListener;
 
-        public function CoreCommunicationManager(param1:IContext, param2:uint=0)
+        public function CoreCommunicationManager(context: IContext, flags: uint = 0)
         {
-            super(param1, param2);
+            super(context, flags);
+
             this._connections = new Dictionary();
-            this.var_2153 = new Dictionary();
-            this.var_2154 = new Dictionary();
-            this.var_2155 = new Array();
+            this._protocols = new Dictionary();
+            this._events = new Dictionary();
+            this._parsers = [];
+
             registerUpdateReceiver(this, 1);
         }
 
-        public function set connectionStateListener(param1:IConnectionStateListener):void
+        public function set connectionStateListener(listener: IConnectionStateListener): void
         {
-            this.var_2156 = param1;
+            this._connectionStateListener = listener;
         }
 
-        override public function dispose():void
+        override public function dispose(): void
         {
-            var _loc1_:IConnection;
-            var _loc2_:Array;
-            var _loc3_:IMessageParser;
-            var _loc4_:IMessageEvent;
+            var collection: Array;
+            var parser: IMessageParser;
+            var event: IMessageEvent;
             removeUpdateReceiver(this);
-            for each (_loc1_ in this._connections)
+
+            for each (var connection: IConnection in this._connections)
             {
-                _loc1_.dispose();
-            };
+                connection.dispose();
+            }
+
+
             this._connections = null;
-            this.var_2153 = null;
-            this.var_2156 = null;
-            for each (_loc2_ in this.var_2154)
+            this._protocols = null;
+            this._connectionStateListener = null;
+
+            for each (collection in this._events)
             {
                 while (true)
                 {
-                    _loc4_ = (_loc2_.pop() as IMessageEvent);
-                    if (!_loc4_) break;
-                    _loc4_.dispose();
-                };
-            };
-            this.var_2154 = null;
-            for each (_loc3_ in this.var_2155)
+                    event = collection.pop() as IMessageEvent;
+
+                    if (!event)
+                    {
+                        break;
+                    }
+
+                    event.dispose();
+                }
+
+            }
+
+
+            this._events = null;
+
+            for each (parser in this._parsers)
             {
-            };
-            (this.var_2153 = null);
+                // no-op
+            }
+
+
+            this._protocols = null;
+
             super.dispose();
         }
 
-        public function createConnection(param1:String, param2:uint=0):IConnection
+        public function createConnection(id: String, type: uint = 0): IConnection
         {
-            var _loc3_:IConnection;
-            switch (param2)
+            var connection: IConnection;
+
+            switch (type)
             {
-                case ConnectionType.var_312:
-                    (_loc3_ = new SocketConnection(param1, this, this.var_2156));
+                case ConnectionType.TCP_CONNECTION:
+                    connection = new SocketConnection(id, this, this._connectionStateListener);
                     break;
                 default:
-                    Logger.log(("[CoreCommunicationManager] Unknown connectionType, can not create connection: " + param2));
-            };
-            (this._connections[param1] = _loc3_);
-            return (_loc3_);
-        }
-
-        public function queueConnection(param1:String, param2:Function):IConnection
-        {
-            if (((param1 == null) || (this._connections == null)))
-            {
-                return (null);
-            };
-            return (this._connections[param1] as IConnection);
-        }
-
-        public function registerProtocolType(param1:String, param2:Class):Boolean
-        {
-            var _loc3_:Object = new (param2)();
-            if ((_loc3_ is IProtocol))
-            {
-                (this.var_2153[param1] = param2);
-                return (true);
-            };
-            throw (new Error((("[CoreCommunicationManager] Invalid Protocol class defined for protocol type " + param1) + "!")));
-        }
-
-        public function getProtocolInstanceOfType(param1:String):IProtocol
-        {
-            var _loc2_:Class = this.var_2153[param1];
-            var _loc3_:IProtocol;
-            if (_loc2_ != null)
-            {
-                (_loc3_ = (new (_loc2_)() as IProtocol));
+                    Logger.log("[CoreCommunicationManager] Unknown connectionType, can not create connection: " + type);
             }
-            else
-            {
-                throw (new Error((("[CoreCommunicationManager] Could not instantiate Protocol class defined for protocol type " + param1) + "!")));
-            };
-            return (_loc3_);
+
+
+            this._connections[id] = connection;
+
+            return connection;
         }
 
-        public function addConnectionMessageEvent(param1:String, param2:IMessageEvent):void
+        public function queueConnection(id: String, callback: Function): IConnection
         {
-            var _loc3_:Array = this.var_2154[param1];
-            if (_loc3_ == null)
+            if (id == null || this._connections == null)
             {
-                (_loc3_ = new Array());
-                (this.var_2154[param1] = _loc3_);
-            };
-            _loc3_.push(param2);
+                return null;
+            }
+
+
+            return this._connections[id] as IConnection;
         }
 
-        public function removeConnectionMessageEvent(param1:String, param2:IMessageEvent):void
+        public function registerProtocolType(type: String, proto: Class): Boolean
         {
-            var _loc4_:int;
-            var _loc3_:Array = this.var_2154[param1];
-            if (_loc3_ != null)
+            var protocol: Object = new proto();
+
+            if (protocol is IProtocol)
             {
-                _loc4_ = _loc3_.indexOf(param2);
-                if (_loc4_ >= 0)
+                this._protocols[type] = proto;
+
+                return true;
+            }
+
+
+            throw new Error("[CoreCommunicationManager] Invalid Protocol class defined for protocol type " + type + "!");
+        }
+
+        public function getProtocolInstanceOfType(type: String): IProtocol
+        {
+            var proto: Class = this._protocols[type];
+
+            if (proto == null)
+            {
+                throw new Error("[CoreCommunicationManager] Could not instantiate Protocol class defined for protocol type " + type + "!");
+            }
+
+            return new proto() as IProtocol;
+        }
+
+        public function addConnectionMessageEvent(id: String, event: IMessageEvent): void
+        {
+            var collection: Array = this._events[id];
+
+            if (collection == null)
+            {
+                collection = [];
+
+                this._events[id] = collection;
+            }
+
+
+            collection.push(event);
+        }
+
+        public function removeConnectionMessageEvent(id: String, event: IMessageEvent): void
+        {
+            var eventCollection: Array = this._events[id];
+
+            if (eventCollection != null)
+            {
+                var index: int = eventCollection.indexOf(event);
+
+                if (index >= 0)
                 {
-                    _loc3_.splice(_loc4_, 1);
-                };
-            };
+                    eventCollection.splice(index, 1);
+                }
+
+            }
+
         }
 
-        public function getMessageEvents(param1:IConnection, param2:Class):Array
+        public function getMessageEvents(connection: IConnection, messageEventClass: Class): Array
         {
-            var _loc4_:String;
-            var _loc7_:IMessageEvent;
-            var _loc3_:String = "";
-            for (var _loc10_:* in this._connections)
+            var id: String;
+            var event: IMessageEvent;
+            var connectionId: String = "";
+
+            var item: * = null;
+
+            for (item in this._connections)
             {
-                _loc4_ = _loc10_;
-                _loc10_;
-                if (this._connections[_loc4_] == param1)
+                id = item;
+
+                if (this._connections[id] == connection)
                 {
-                    (_loc3_ = _loc4_);
+                    connectionId = id;
+
                     break;
-                };
-            };
-            if (_loc3_ == "")
+                }
+
+            }
+
+
+            if (connectionId == "")
             {
-                throw (new Error((("[CoreCommunicationManager] Could not find registered events for connection " + param1) + "!")));
-            };
-            var _loc5_:Array = this.var_2154[_loc3_];
-            var _loc6_:Array = new Array();
-            for each (_loc10_ in _loc5_)
+                throw new Error("[CoreCommunicationManager] Could not find registered events for connection " + connection + "!");
+            }
+
+
+            var collection: Array = this._events[connectionId];
+
+            var events: Array = [];
+
+            for each (item in collection)
             {
-                _loc7_ = _loc10_;
-                _loc10_;
-                if ((_loc7_ is param2))
+                event = item;
+
+                if (event is messageEventClass)
                 {
-                    _loc6_.push(_loc7_);
-                };
-            };
-            return (_loc6_);
+                    events.push(event);
+                }
+
+            }
+
+
+            return events;
         }
 
-        public function getMessageParser(param1:Class):IMessageParser
+        public function getMessageParser(messageParserClass: Class): IMessageParser
         {
-            var _loc2_:IMessageParser;
-            var _loc3_:IMessageParser;
-            for each (var _loc6_:* in this.var_2155)
+            var messageParser: IMessageParser;
+
+            for each (var parser: IMessageParser in this._parsers)
             {
-                _loc3_ = _loc6_;
-                _loc6_;
-                if ((_loc3_ is param1))
+                if (parser is messageParserClass)
                 {
-                    (_loc2_ = _loc3_);
+                    messageParser = parser;
                     break;
-                };
-            };
-            if (_loc2_ == null)
+                }
+
+            }
+
+
+            if (messageParser == null)
             {
-                (_loc2_ = (new (param1)() as IMessageParser));
-                if (_loc2_ == null)
+                messageParser = new messageParserClass() as IMessageParser;
+
+                if (messageParser == null)
                 {
-                    throw (new Error((("[CoreCommunicationManager] Could not create parser-instance from class: " + param1) + "!")));
-                };
-                this.var_2155.push(_loc2_);
-            };
-            return (_loc2_);
+                    throw new Error("[CoreCommunicationManager] Could not create parser-instance from class: " + messageParserClass + "!");
+                }
+
+
+                this._parsers.push(messageParser);
+            }
+
+
+            return messageParser;
         }
 
-        public function update(param1:uint):void
+        public function update(_: uint): void
         {
-            var _loc2_:IConnection;
-            for each (var _loc5_:* in this._connections)
+            for each (var connection: IConnection in this._connections)
             {
-                _loc2_ = _loc5_;
-                _loc5_;
-                _loc2_.processReceivedData();
-            };
+                connection.processReceivedData();
+            }
+
         }
 
     }

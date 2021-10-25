@@ -1,9 +1,10 @@
 ﻿package com.sulake.habbo.communication.enum
 {
-    public class HabboProtocolType 
+
+    public class HabboProtocolType
     {
 
-        public static const var_310:String = "wedgie";
+        public static const PROTOCOL_TYPE_WEDGIE: String = "wedgie";
 
     }
 }

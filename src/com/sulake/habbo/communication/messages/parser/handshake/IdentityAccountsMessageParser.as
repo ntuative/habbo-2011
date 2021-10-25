@@ -1,35 +1,39 @@
 ﻿package com.sulake.habbo.communication.messages.parser.handshake
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.utils.Map;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class IdentityAccountsMessageParser implements IMessageParser 
+    public class IdentityAccountsMessageParser implements IMessageParser
     {
 
-        private var var_3162:Map;
+        private var _accounts: Map;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3162 = new Map();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._accounts = new Map();
+
+            var accountCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < accountCount)
             {
-                this.var_3162.add(param1.readInteger(), param1.readString());
-                _loc3_++;
-            };
-            return (true);
+                this._accounts.add(data.readInteger(), data.readString());
+                i++;
+            }
+
+            return true;
         }
 
-        public function get accounts():Map
+        public function get accounts(): Map
         {
-            return (this.var_3162);
+            return this._accounts;
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.avatar.head
 {
+
     import com.sulake.habbo.avatar.common.CategoryBaseView;
     import com.sulake.habbo.avatar.common.IAvatarEditorCategoryView;
     import com.sulake.habbo.avatar.common.IAvatarEditorCategoryModel;
@@ -8,34 +9,38 @@
     import com.sulake.core.assets.XmlAsset;
     import com.sulake.habbo.avatar.common.AvatarEditorGridView;
     import com.sulake.core.window.IWindowContainer;
+
     import flash.utils.Dictionary;
+
     import com.sulake.habbo.avatar.figuredata.FigureData;
     import com.sulake.core.window.events.WindowMouseEvent;
     import com.sulake.core.window.events.WindowEvent;
     import com.sulake.core.window.IWindow;
 
-    public class HeadView extends CategoryBaseView implements IAvatarEditorCategoryView 
+    public class HeadView extends CategoryBaseView implements IAvatarEditorCategoryView
     {
 
-        public function HeadView(param1:IAvatarEditorCategoryModel, param2:IHabboWindowManager, param3:IAssetLibrary)
+        public function HeadView(param1: IAvatarEditorCategoryModel, param2: IHabboWindowManager, param3: IAssetLibrary)
         {
             super(param2, param3, param1);
         }
 
-        override public function init():void
+        override public function init(): void
         {
-            var _loc1_:XmlAsset;
-            var _loc2_:AvatarEditorGridView;
+            var _loc1_: XmlAsset;
+            var _loc2_: AvatarEditorGridView;
             if (!_window)
             {
                 _loc1_ = (_assetLibrary.getAssetByName("avatareditor_head_base") as XmlAsset);
                 if (_loc1_)
                 {
-                    _window = IWindowContainer(_windowManager.buildFromXML((_loc1_.content as XML)));
+                    _window = IWindowContainer(_windowManager.buildFromXML(_loc1_.content as XML));
                     _window.visible = false;
                     _window.procedure = this.windowEventProc;
-                };
-            };
+                }
+
+            }
+
             if (!var_2467)
             {
                 var_2467 = new Dictionary();
@@ -50,30 +55,36 @@
                 for each (_loc2_ in var_2467)
                 {
                     _loc2_.initFromList();
-                };
-            };
+                }
+
+            }
+
             var_2067 = true;
             attachImages();
-            if (((var_2446) && (var_2468 == "")))
+            if (var_2446 && var_2468 == "")
             {
                 var_2446.switchCategory(FigureData.var_1640);
-            };
+            }
+
         }
 
-        public function switchCategory(param1:String):void
+        public function switchCategory(param1: String): void
         {
             if (_window == null)
             {
                 return;
-            };
+            }
+
             if (_window.disposed)
             {
                 return;
-            };
+            }
+
             if (var_2468 == param1)
             {
                 return;
-            };
+            }
+
             inactivateTab(var_2469);
             switch (param1)
             {
@@ -93,18 +104,20 @@
                     var_2469 = "tab_masks";
                     break;
                 default:
-                    throw (new Error((('[HeadView] Unknown item category: "' + param1) + '"')));
-            };
+                    throw new Error("[HeadView] Unknown item category: \"" + param1 + "\"");
+            }
+
             var_2468 = param1;
             activateTab(var_2469);
             if (!var_2067)
             {
                 this.init();
-            };
+            }
+
             updateGridView();
         }
 
-        private function windowEventProc(param1:WindowEvent, param2:IWindow):void
+        private function windowEventProc(param1: WindowEvent, param2: IWindow): void
         {
             if (param1.type == WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK)
             {
@@ -125,7 +138,8 @@
                     case "tab_masks":
                         this.switchCategory(FigureData.var_1644);
                         break;
-                };
+                }
+
             }
             else
             {
@@ -140,7 +154,8 @@
                         case "tab_masks":
                             activateTab(param2.name);
                             break;
-                    };
+                    }
+
                 }
                 else
                 {
@@ -156,12 +171,17 @@
                                 if (var_2469 != param2.name)
                                 {
                                     inactivateTab(param2.name);
-                                };
+                                }
+
                                 return;
-                        };
-                    };
-                };
-            };
+                        }
+
+                    }
+
+                }
+
+            }
+
         }
 
     }

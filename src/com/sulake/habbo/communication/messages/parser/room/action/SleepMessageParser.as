@@ -1,53 +1,57 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.action
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class SleepMessageParser implements IMessageParser 
+    public class SleepMessageParser implements IMessageParser
     {
 
-        private var _roomId:int = 0;
-        private var _roomCategory:int = 0;
-        private var _userId:int = 0;
-        private var var_3290:Boolean = false;
+        private var _roomId: int = 0;
+        private var _roomCategory: int = 0;
+        private var _userId: int = 0;
+        private var _sleeping: Boolean = false;
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get roomCategory():int
+        public function get roomCategory(): int
         {
-            return (this._roomCategory);
+            return this._roomCategory;
         }
 
-        public function get userId():int
+        public function get userId(): int
         {
-            return (this._userId);
+            return this._userId;
         }
 
-        public function get sleeping():Boolean
+        public function get sleeping(): Boolean
         {
-            return (this.var_3290);
+            return this._sleeping;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._roomId = 0;
             this._roomCategory = 0;
             this._userId = 0;
-            return (true);
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            if (param1 == null)
+            if (data == null)
             {
-                return (false);
-            };
-            this._userId = param1.readInteger();
-            this.var_3290 = param1.readBoolean();
-            return (true);
+                return false;
+            }
+
+            this._userId = data.readInteger();
+            this._sleeping = data.readBoolean();
+            
+            return true;
         }
 
     }

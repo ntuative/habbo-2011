@@ -1,133 +1,135 @@
 ﻿package com.sulake.habbo.widget.infostand
 {
+
     import flash.display.BitmapData;
+
     import com.sulake.habbo.widget.events.RoomWidgetPetInfoUpdateEvent;
 
-    public class InfoStandPetData 
+    public class InfoStandPetData
     {
 
-        private var var_2924:int;
-        private var var_4424:int;
-        private var var_3324:int;
-        private var var_4425:int;
-        private var _energy:int;
-        private var var_4426:int;
-        private var _nutrition:int;
-        private var var_4427:int;
-        private var _petRespect:int;
-        private var _name:String = "";
-        private var var_3097:int = -1;
-        private var _type:int;
-        private var var_3944:int;
-        private var var_988:BitmapData;
-        private var var_4711:Boolean;
-        private var var_2975:int;
-        private var _ownerName:String;
-        private var _canOwnerBeKicked:Boolean;
-        private var var_4657:int;
-        private var var_3329:int;
+        private var var_2924: int;
+        private var var_4424: int;
+        private var var_3324: int;
+        private var var_4425: int;
+        private var _energy: int;
+        private var var_4426: int;
+        private var _nutrition: int;
+        private var var_4427: int;
+        private var _petRespect: int;
+        private var _name: String = "";
+        private var var_3097: int = -1;
+        private var _type: int;
+        private var var_3944: int;
+        private var var_988: BitmapData;
+        private var var_4711: Boolean;
+        private var var_2975: int;
+        private var _ownerName: String;
+        private var _canOwnerBeKicked: Boolean;
+        private var var_4657: int;
+        private var var_3329: int;
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this.var_3097);
+            return this.var_3097;
         }
 
-        public function get type():int
+        public function get type(): int
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get race():int
+        public function get race(): int
         {
-            return (this.var_3944);
+            return this.var_3944;
         }
 
-        public function get image():BitmapData
+        public function get image(): BitmapData
         {
-            return (this.var_988);
+            return this.var_988;
         }
 
-        public function get isOwnPet():Boolean
+        public function get isOwnPet(): Boolean
         {
-            return (this.var_4711);
+            return this.var_4711;
         }
 
-        public function get ownerId():int
+        public function get ownerId(): int
         {
-            return (this.var_2975);
+            return this.var_2975;
         }
 
-        public function get ownerName():String
+        public function get ownerName(): String
         {
-            return (this._ownerName);
+            return this._ownerName;
         }
 
-        public function get canOwnerBeKicked():Boolean
+        public function get canOwnerBeKicked(): Boolean
         {
-            return (this._canOwnerBeKicked);
+            return this._canOwnerBeKicked;
         }
 
-        public function get age():int
+        public function get age(): int
         {
-            return (this.var_3329);
+            return this.var_3329;
         }
 
-        public function get level():int
+        public function get level(): int
         {
-            return (this.var_2924);
+            return this.var_2924;
         }
 
-        public function get levelMax():int
+        public function get levelMax(): int
         {
-            return (this.var_4424);
+            return this.var_4424;
         }
 
-        public function get experience():int
+        public function get experience(): int
         {
-            return (this.var_3324);
+            return this.var_3324;
         }
 
-        public function get experienceMax():int
+        public function get experienceMax(): int
         {
-            return (this.var_4425);
+            return this.var_4425;
         }
 
-        public function get energy():int
+        public function get energy(): int
         {
-            return (this._energy);
+            return this._energy;
         }
 
-        public function get energyMax():int
+        public function get energyMax(): int
         {
-            return (this.var_4426);
+            return this.var_4426;
         }
 
-        public function get nutrition():int
+        public function get nutrition(): int
         {
-            return (this._nutrition);
+            return this._nutrition;
         }
 
-        public function get nutritionMax():int
+        public function get nutritionMax(): int
         {
-            return (this.var_4427);
+            return this.var_4427;
         }
 
-        public function get petRespect():int
+        public function get petRespect(): int
         {
-            return (this._petRespect);
+            return this._petRespect;
         }
 
-        public function get roomIndex():int
+        public function get roomIndex(): int
         {
-            return (this.var_4657);
+            return this.var_4657;
         }
 
-        public function setData(param1:RoomWidgetPetInfoUpdateEvent):void
+        public function setData(param1: RoomWidgetPetInfoUpdateEvent): void
         {
             this._name = param1.name;
             this.var_3097 = param1.id;

@@ -1,25 +1,26 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.room.engine
 {
-    public class AvatarActionMessageData 
+
+    public class AvatarActionMessageData
     {
 
-        private var var_2386:String;
-        private var _actionParameter:String;
+        private var _actionType: String;
+        private var _actionParameter: String;
 
-        public function AvatarActionMessageData(param1:String, param2:String)
+        public function AvatarActionMessageData(actionType: String, actionParameter: String)
         {
-            this.var_2386 = param1;
-            this._actionParameter = param2;
+            this._actionType = actionType;
+            this._actionParameter = actionParameter;
         }
 
-        public function get actionType():String
+        public function get actionType(): String
         {
-            return (this.var_2386);
+            return this._actionType;
         }
 
-        public function get actionParameter():String
+        public function get actionParameter(): String
         {
-            return (this._actionParameter);
+            return this._actionParameter;
         }
 
     }

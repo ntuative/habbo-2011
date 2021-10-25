@@ -1,25 +1,26 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.notifications
 {
+
     import com.sulake.core.communication.messages.MessageEvent;
     import com.sulake.core.communication.messages.IMessageEvent;
     import com.sulake.habbo.communication.messages.parser.notifications.HabboBroadcastMessageParser;
 
-    public class HabboBroadcastMessageEvent extends MessageEvent implements IMessageEvent 
+    public class HabboBroadcastMessageEvent extends MessageEvent implements IMessageEvent
     {
 
-        public function HabboBroadcastMessageEvent(param1:Function)
+        public function HabboBroadcastMessageEvent(param1: Function)
         {
             super(param1, HabboBroadcastMessageParser);
         }
 
-        public function get messageText():String
+        public function get messageText(): String
         {
-            return ((var_361 as HabboBroadcastMessageParser).messageText);
+            return (_parser as HabboBroadcastMessageParser).messageText;
         }
 
-        public function getParser():HabboBroadcastMessageParser
+        public function getParser(): HabboBroadcastMessageParser
         {
-            return (var_361 as HabboBroadcastMessageParser);
+            return _parser as HabboBroadcastMessageParser;
         }
 
     }

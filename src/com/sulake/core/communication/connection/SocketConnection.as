@@ -1,15 +1,22 @@
 ﻿package com.sulake.core.communication.connection
 {
+
     import flash.events.EventDispatcher;
+
     import com.sulake.core.runtime.IDisposable;
+
     import flash.net.Socket;
     import flash.utils.ByteArray;
+
     import com.sulake.core.communication.encryption.IEncryption;
     import com.sulake.core.communication.protocol.IProtocol;
     import com.sulake.core.communication.messages.IMessageClassManager;
     import com.sulake.core.communication.ICoreCommunicationManager;
+
     import flash.utils.Timer;
+
     import com.sulake.core.communication.messages.MessageClassManager;
+
     import flash.events.TimerEvent;
     import flash.events.Event;
     import flash.events.ProgressEvent;
@@ -17,6 +24,7 @@
     import flash.events.IOErrorEvent;
     import flash.system.Security;
     import flash.utils.getTimer;
+
     import com.sulake.core.communication.messages.IMessageEvent;
     import com.sulake.core.communication.messages.IMessageComposer;
     import com.sulake.core.communication.messages.IMessageConfiguration;
@@ -24,236 +32,281 @@
     import com.sulake.core.communication.messages.IMessageDataWrapper;
     import com.sulake.core.communication.messages.MessageDataWrapper;
     import com.sulake.core.utils.ErrorReportStorage;
+
     import flash.events.*;
 
-    public class SocketConnection extends EventDispatcher implements IConnection, IDisposable 
+    public class SocketConnection extends EventDispatcher implements IConnection, IDisposable
     {
 
-        public static const var_1562:int = 10000;
+        public static const CONNECTION_TIMEOUT_MS: int = 10000;
 
-        private var _disposed:Boolean = false;
-        private var var_2134:Socket;
-        private var var_2135:ByteArray;
-        private var var_2136:IEncryption;
-        private var var_2137:IProtocol;
-        private var _id:String;
-        private var var_2138:IMessageClassManager;
-        private var var_2077:ICoreCommunicationManager;
-        private var var_2139:IConnectionStateListener;
-        private var var_2133:Timer;
-        private var var_2140:int;
-        private var var_2141:Boolean = false;
+        private var _disposed: Boolean = false;
+        private var _socket: Socket;
+        private var _buffer: ByteArray;
+        private var _encryption: IEncryption;
+        private var _protocol: IProtocol;
+        private var _id: String;
+        private var _messageClassManager: IMessageClassManager;
+        private var _coreCommunicationManager: ICoreCommunicationManager;
+        private var _connectionStateListener: IConnectionStateListener;
+        private var _timeoutTimer: Timer;
+        private var _connectedAt: int;
+        private var _connected: Boolean = false;
 
-        public function SocketConnection(param1:String, param2:ICoreCommunicationManager, param3:IConnectionStateListener)
+        public function SocketConnection(id: String, coreCommunicationManager: ICoreCommunicationManager, connectionStateListener: IConnectionStateListener)
         {
-            this._id = param1;
-            this.var_2077 = param2;
-            this.var_2135 = new ByteArray();
-            this.var_2138 = new MessageClassManager();
-            this.var_2134 = new Socket();
-            this.var_2133 = new Timer(var_1562, 1);
-            this.var_2133.addEventListener(TimerEvent.TIMER, this.onTimeOutTimer);
-            this.var_2134.addEventListener(Event.CONNECT, this.onConnect);
-            this.var_2134.addEventListener(Event.COMPLETE, this.onComplete);
-            this.var_2134.addEventListener(Event.CLOSE, this.onClose);
-            this.var_2134.addEventListener(ProgressEvent.SOCKET_DATA, this.onRead);
-            this.var_2134.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this.onSecurityError);
-            this.var_2134.addEventListener(IOErrorEvent.IO_ERROR, this.onIOError);
-            this.var_2139 = param3;
+            this._id = id;
+            this._coreCommunicationManager = coreCommunicationManager;
+            this._buffer = new ByteArray();
+            this._messageClassManager = new MessageClassManager();
+            this._socket = new Socket();
+            this._timeoutTimer = new Timer(CONNECTION_TIMEOUT_MS, 1);
+            this._timeoutTimer.addEventListener(TimerEvent.TIMER, this.onTimeOutTimer);
+            this._socket.addEventListener(Event.CONNECT, this.onConnect);
+            this._socket.addEventListener(Event.COMPLETE, this.onComplete);
+            this._socket.addEventListener(Event.CLOSE, this.onClose);
+            this._socket.addEventListener(ProgressEvent.SOCKET_DATA, this.onRead);
+            this._socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, this.onSecurityError);
+            this._socket.addEventListener(IOErrorEvent.IO_ERROR, this.onIOError);
+            this._connectionStateListener = connectionStateListener;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function set protocol(param1:IProtocol):void
+        public function set protocol(protocol: IProtocol): void
         {
-            this.var_2137 = param1;
+            this._protocol = protocol;
         }
 
-        public function get protocol():IProtocol
+        public function get protocol(): IProtocol
         {
-            return (this.var_2137);
+            return this._protocol;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this._disposed = true;
-            if (this.var_2134)
+
+            if (this._socket != null)
             {
-                this.var_2134.removeEventListener(Event.CONNECT, this.onConnect);
-                this.var_2134.removeEventListener(Event.COMPLETE, this.onComplete);
-                this.var_2134.removeEventListener(Event.CLOSE, this.onClose);
-                this.var_2134.removeEventListener(ProgressEvent.SOCKET_DATA, this.onRead);
-                this.var_2134.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, this.onSecurityError);
-                this.var_2134.removeEventListener(IOErrorEvent.IO_ERROR, this.onIOError);
-                if (this.var_2141)
+                this._socket.removeEventListener(Event.CONNECT, this.onConnect);
+                this._socket.removeEventListener(Event.COMPLETE, this.onComplete);
+                this._socket.removeEventListener(Event.CLOSE, this.onClose);
+                this._socket.removeEventListener(ProgressEvent.SOCKET_DATA, this.onRead);
+                this._socket.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, this.onSecurityError);
+                this._socket.removeEventListener(IOErrorEvent.IO_ERROR, this.onIOError);
+
+                if (this._connected)
                 {
-                    this.var_2134.close();
-                };
-            };
-            this.var_2134 = null;
-            this.var_2135 = null;
-            this.var_2139 = null;
-            this.var_2136 = null;
-            this.var_2137 = null;
+                    this._socket.close();
+                }
+
+            }
+
+
+            this._socket = null;
+            this._buffer = null;
+            this._connectionStateListener = null;
+            this._encryption = null;
+            this._protocol = null;
             this._id = null;
-            this.var_2138 = null;
-            this.var_2077 = null;
-            this.var_2139 = null;
+            this._messageClassManager = null;
+            this._coreCommunicationManager = null;
+            this._connectionStateListener = null;
         }
 
-        public function init(param1:String, param2:uint=0):Boolean
+        public function init(host: String, port: uint = 0): Boolean
         {
-            if (this.var_2139)
+            if (this._connectionStateListener != null)
             {
-                this.var_2139.connectionInit(param1, param2);
-            };
-            Security.loadPolicyFile(((("xmlsocket://" + param1) + ":") + param2));
-            this.var_2133.start();
-            this.var_2140 = getTimer();
-            this.var_2134.connect(param1, param2);
-            return (true);
+                this._connectionStateListener.connectionInit(host, port);
+            }
+
+
+            Security.loadPolicyFile("xmlsocket://" + host + ":" + port);
+
+            this._timeoutTimer.start();
+            this._connectedAt = getTimer();
+            this._socket.connect(host, port);
+
+            return true;
         }
 
-        public function set timeout(param1:int):void
+        public function set timeout(delay: int): void
         {
-            this.var_2133.delay = param1;
+            this._timeoutTimer.delay = delay;
         }
 
-        public function addMessageEvent(param1:IMessageEvent):void
+        public function addMessageEvent(messageEvent: IMessageEvent): void
         {
-            this.var_2077.addConnectionMessageEvent(this._id, param1);
+            this._coreCommunicationManager.addConnectionMessageEvent(this._id, messageEvent);
         }
 
-        public function removeMessageEvent(param1:IMessageEvent):void
+        public function removeMessageEvent(messageEvent: IMessageEvent): void
         {
-            this.var_2077.removeConnectionMessageEvent(this._id, param1);
+            this._coreCommunicationManager.removeConnectionMessageEvent(this._id, messageEvent);
         }
 
-        public function send(param1:IMessageComposer, param2:int=-1):Boolean
+        public function send(composer: IMessageComposer, param2: int = -1): Boolean
         {
             if (this.disposed)
             {
-                return (false);
-            };
-            var _loc3_:ByteArray = new ByteArray();
-            var _loc4_:int = this.var_2138.getMessageComposerID(param1);
-            if (_loc4_ < 0)
+                return false;
+            }
+
+
+            var buffer: ByteArray = new ByteArray();
+            var messageId: int = this._messageClassManager.getMessageComposerID(composer);
+
+            if (messageId < 0)
             {
-                this.logConnection(("Could not find registered message composer for " + param1));
-                return (false);
-            };
-            var _loc5_:ByteArray = this.var_2137.encoder.encode(_loc4_, param1.getMessageArray(), param2);
-            if (this.var_2139)
+                this.logConnection("Could not find registered message composer for " + composer);
+                return false;
+            }
+
+
+            var messageData: ByteArray = this._protocol.encoder.encode(messageId, composer.getMessageArray(), param2);
+
+            if (this._connectionStateListener != null)
             {
-                this.var_2139.messageSent(String(_loc4_), _loc5_.toString());
-            };
-            if (this.var_2136 != null)
+                this._connectionStateListener.messageSent(String(messageId), messageData.toString());
+            }
+
+
+            if (this._encryption != null)
             {
-                _loc3_ = this.var_2136.encipher(_loc5_);
+                buffer = this._encryption.encipher(messageData);
             }
             else
             {
-                _loc3_ = _loc5_;
-            };
-            this.logConnection(("<<[SOCKET OUT]: " + [_loc4_, param1.getMessageArray(), "->", _loc3_]));
-            if (this.var_2134.connected)
+                buffer = messageData;
+            }
+
+
+            this.logConnection("<<[SOCKET OUT]: " + [messageId, composer.getMessageArray(), "->", buffer]);
+
+            if (this._socket.connected)
             {
-                this.var_2134.writeBytes(_loc3_);
-                this.var_2134.flush();
+                this._socket.writeBytes(buffer);
+                this._socket.flush();
             }
             else
             {
                 this.logConnection("[SOCKET] Not connected.");
-                return (false);
-            };
-            return (true);
+                return false;
+            }
+
+
+            return true;
         }
 
-        public function setEncryption(param1:IEncryption):void
+        public function setEncryption(encryption: IEncryption): void
         {
-            this.var_2136 = param1;
+            this._encryption = encryption;
         }
 
-        public function registerMessageClasses(param1:IMessageConfiguration):void
+        public function registerMessageClasses(messageConfiguration: IMessageConfiguration): void
         {
-            this.var_2138.registerMessages(param1);
+            this._messageClassManager.registerMessages(messageConfiguration);
         }
 
-        override public function toString():String
+        override public function toString(): String
         {
-            var _loc1_:String = "";
-            _loc1_ = (_loc1_ + "Socket Connection: \n");
-            _loc1_ = (_loc1_ + (("Protocol Encoder: " + this.var_2137.encoder) + "\n"));
-            _loc1_ = (_loc1_ + (("Protocol Decoder: " + this.var_2137.decoder) + "\n"));
-            return (_loc1_ + (("Encryption: " + this.var_2136) + "\n"));
+            var str: String = "";
+
+            str = str + "Socket Connection: \n";
+            str = str + "Protocol Encoder: " + this._protocol.encoder + "\n";
+            str = str + "Protocol Decoder: " + this._protocol.decoder + "\n";
+            str = str + "Encryption: " + this._encryption + "\n";
+
+            return str;
         }
 
-        public function processReceivedData():void
+        public function processReceivedData(): void
         {
-            var id:int;
-            var parserTypeData:XML;
-            var parserClassName:String;
-            var parseDebugData:String;
-            var accessorData:XML;
-            var accessor:String;
-            var message:Array;
-            var data:ByteArray;
-            var eventClasses:Array;
-            var events:Array;
-            var eventClass:Class;
-            var eventsForClass:Array;
-            var parserInstance:IMessageParser;
-            var parserClassCurrent:Class;
-            var dataClone:ByteArray;
-            var messageEventInstance:IMessageEvent;
-            var parserClass:Class;
-            var dataWrapper:IMessageDataWrapper;
-            var wasParsed:Boolean;
-            var temp:ByteArray;
+            var id: int;
+            var parserTypeData: XML;
+            var parserClassName: String;
+            var parseDebugData: String;
+            var accessorData: XML;
+            var accessor: String;
+            var message: Array;
+            var data: ByteArray;
+            var eventClasses: Array;
+            var events: Array;
+            var eventClass: Class;
+            var eventsForClass: Array;
+            var parserInstance: IMessageParser;
+            var parserClassCurrent: Class;
+            var dataClone: ByteArray;
+            var messageEventInstance: IMessageEvent;
+            var parserClass: Class;
+            var dataWrapper: IMessageDataWrapper;
+            var wasParsed: Boolean;
+            var temp: ByteArray;
+
             if (this.disposed)
             {
                 return;
-            };
-            var receivedMessages:Array = new Array();
-            var offset:uint = this.var_2137.getMessages(this.var_2135, receivedMessages);
+            }
+
+
+            var receivedMessages: Array = [];
+            var offset: uint = this._protocol.getMessages(this._buffer, receivedMessages);
+
             try
             {
                 for each (message in receivedMessages)
                 {
-                    id = (message[0] as int);
-                    data = (message[1] as ByteArray);
-                    if (this.var_2139)
+                    id = message[0] as int;
+                    data = message[1] as ByteArray;
+
+                    if (this._connectionStateListener)
                     {
-                        this.var_2139.messageReceived(String(id), data.toString());
-                    };
-                    eventClasses = this.var_2138.getMessageEventClasses(id);
-                    events = new Array();
+                        this._connectionStateListener.messageReceived(String(id), data.toString());
+                    }
+
+
+                    eventClasses = this._messageClassManager.getMessageEventClasses(id);
+
+                    events = [];
+
                     for each (eventClass in eventClasses)
                     {
-                        eventsForClass = this.var_2077.getMessageEvents(this, eventClass);
+                        eventsForClass = this._coreCommunicationManager.getMessageEvents(this, eventClass);
                         events = events.concat(eventsForClass);
-                    };
+                    }
+
+
                     parserInstance = null;
                     parserClassCurrent = null;
+
                     for each (messageEventInstance in events)
                     {
                         parserClass = messageEventInstance.parserClass;
+
                         if (parserClass != null)
                         {
                             wasParsed = false;
+
                             if (parserClass != parserClassCurrent)
                             {
                                 dataClone = new ByteArray();
                                 dataClone.writeBytes(data);
                                 dataClone.position = data.position;
                                 dataWrapper = new MessageDataWrapper(dataClone, this.protocol.decoder);
-                                parserInstance = this.var_2077.getMessageParser(parserClass);
+                                parserInstance = this._coreCommunicationManager.getMessageParser(parserClass);
+
                                 if (!parserInstance.flush())
                                 {
-                                    this.logConnection((">>[SocketConnection] Message Event Parser wasn't flushed: " + [id, parserClass, parserInstance]));
+                                    this.logConnection(">>[SocketConnection] Message Event Parser wasn't flushed: " + [
+                                        id,
+                                        parserClass,
+                                        parserInstance
+                                    ]);
                                 }
                                 else
                                 {
@@ -261,13 +314,17 @@
                                     {
                                         parserClassCurrent = parserClass;
                                         wasParsed = true;
-                                    };
-                                };
+                                    }
+
+                                }
+
                             }
                             else
                             {
                                 wasParsed = true;
-                            };
+                            }
+
+
                             if (wasParsed)
                             {
                                 messageEventInstance.connection = this;
@@ -278,92 +335,115 @@
                             {
                                 parserClassCurrent = null;
                                 parserInstance = null;
-                            };
-                        };
-                    };
-                };
-                if (offset == this.var_2135.length)
+                            }
+
+                        }
+
+                    }
+
+                }
+
+
+                if (offset == this._buffer.length)
                 {
-                    this.var_2135 = new ByteArray();
+                    this._buffer = new ByteArray();
                 }
                 else
                 {
                     if (offset > 0)
                     {
                         temp = new ByteArray();
-                        temp.writeBytes(this.var_2135, offset);
-                        this.var_2135 = temp;
-                        this.logConnection(((("[SOCKET REST] offset: " + offset) + " rest: ") + this.var_2135.toString()));
-                    };
-                };
+                        temp.writeBytes(this._buffer, offset);
+                        this._buffer = temp;
+                        this.logConnection("[SOCKET REST] offset: " + offset + " rest: " + this._buffer.toString());
+                    }
+
+                }
+
             }
-            catch(e:Error)
+            catch (e: Error)
             {
                 if (!disposed)
                 {
-                    ErrorReportStorage.addDebugData("SocketConnection", (('Crashed while processing incoming message with id="' + id) + '"!'));
-                    throw (e);
-                };
-            };
+                    ErrorReportStorage.addDebugData("SocketConnection", "Crashed while processing incoming message with id=\"" + id + "\"!");
+                    throw e;
+                }
+
+            }
+
         }
 
-        public function get connected():Boolean
+        public function get connected(): Boolean
         {
-            return (this.var_2134.connected);
+            return this._socket.connected;
         }
 
-        private function onRead(param1:ProgressEvent):void
+        private function onRead(event: ProgressEvent): void
         {
-            if (!this.var_2134)
+            if (this._socket == null)
             {
                 return;
-            };
-            while (this.var_2134.bytesAvailable > 0)
+            }
+
+
+            while (this._socket.bytesAvailable > 0)
             {
-                this.var_2135.writeByte(this.var_2134.readUnsignedByte());
-            };
+                this._buffer.writeByte(this._socket.readUnsignedByte());
+            }
+
         }
 
-        private function onConnect(param1:Event):void
+        private function onConnect(event: Event): void
         {
             this.logConnection("[SocketConnection] Connected");
-            this.var_2133.stop();
-            this.var_2141 = true;
-            ErrorReportStorage.addDebugData("ConnectionTimer", ("Connected in " + (getTimer() - this.var_2140)));
-            dispatchEvent(param1);
+            this._timeoutTimer.stop();
+            this._connected = true;
+
+            ErrorReportStorage.addDebugData("ConnectionTimer", "Connected in " + (getTimer() - this._connectedAt));
+
+            dispatchEvent(event);
         }
 
-        private function onClose(param1:Event):void
+        private function onClose(event: Event): void
         {
-            this.var_2133.stop();
             this.logConnection("[SocketConnection] Closed");
-            this.var_2141 = false;
-            ErrorReportStorage.addDebugData("ConnectionTimer", ("Closed in " + (getTimer() - this.var_2140)));
-            dispatchEvent(param1);
+            this._timeoutTimer.stop();
+            this._connected = false;
+
+            ErrorReportStorage.addDebugData("ConnectionTimer", "Closed in " + (getTimer() - this._connectedAt));
+
+            dispatchEvent(event);
         }
 
-        private function onComplete(param1:Event):void
+        private function onComplete(event: Event): void
         {
-            this.var_2133.stop();
             this.logConnection("[SocketConnection] Complete");
-            ErrorReportStorage.addDebugData("ConnectionTimer", ("Completed in " + (getTimer() - this.var_2140)));
-            dispatchEvent(param1);
+            this._timeoutTimer.stop();
+
+            ErrorReportStorage.addDebugData("ConnectionTimer", "Completed in " + (getTimer() - this._connectedAt));
+
+            dispatchEvent(event);
         }
 
-        private function onSecurityError(param1:SecurityErrorEvent):void
+        private function onSecurityError(securityErrorEvent: SecurityErrorEvent): void
         {
-            this.var_2133.stop();
-            this.logConnection(("[SocketConnection] Security Error: " + param1.text));
-            ErrorReportStorage.addDebugData("ConnectionTimer", ("SecurityError in " + (getTimer() - this.var_2140)));
-            dispatchEvent(param1);
+            this.logConnection("[SocketConnection] Security Error: " + securityErrorEvent.text);
+            this._timeoutTimer.stop();
+
+            ErrorReportStorage.addDebugData("ConnectionTimer", "SecurityError in " + (getTimer() - this._connectedAt));
+
+            dispatchEvent(securityErrorEvent);
         }
 
-        private function onIOError(param1:IOErrorEvent):void
+        private function onIOError(ioErrorEvent: IOErrorEvent): void
         {
-            this.var_2133.stop();
-            this.logConnection(("[SocketConnection] IO Error: " + param1.text));
-            ErrorReportStorage.addDebugData("ConnectionTimer", ("IOError in " + (getTimer() - this.var_2140)));
-            switch (param1.type)
+            this.logConnection("[SocketConnection] IO Error: " + ioErrorEvent.text);
+            this._timeoutTimer.stop();
+
+            ErrorReportStorage.addDebugData("ConnectionTimer", "IOError in " + (getTimer() - this._connectedAt));
+
+            // Currently a no-op, potentially specific handling planned for the future
+            switch (ioErrorEvent.type)
             {
                 case IOErrorEvent.IO_ERROR:
                     break;
@@ -373,21 +453,26 @@
                     break;
                 case IOErrorEvent.VERIFY_ERROR:
                     break;
-            };
-            dispatchEvent(param1);
+            }
+
+
+            dispatchEvent(ioErrorEvent);
         }
 
-        private function onTimeOutTimer(param1:TimerEvent):void
+        private function onTimeOutTimer(timerEvent: TimerEvent): void
         {
-            this.var_2133.stop();
             this.logConnection("[SocketConnection] TimeOut Error");
-            ErrorReportStorage.addDebugData("ConnectionTimer", ("TimeOut in " + (getTimer() - this.var_2140)));
-            var _loc2_:IOErrorEvent = new IOErrorEvent(IOErrorEvent.IO_ERROR);
-            _loc2_.text = (("Socket Timeout (" + this.var_2133.delay) + " ms). Possible Firewall.");
-            dispatchEvent(_loc2_);
+            this._timeoutTimer.stop();
+
+            ErrorReportStorage.addDebugData("ConnectionTimer", "TimeOut in " + (getTimer() - this._connectedAt));
+
+            var ioErrorEvent: IOErrorEvent = new IOErrorEvent(IOErrorEvent.IO_ERROR);
+            ioErrorEvent.text = "Socket Timeout (" + this._timeoutTimer.delay + " ms). Possible Firewall.";
+
+            dispatchEvent(ioErrorEvent);
         }
 
-        private function logConnection(param1:String):void
+        private function logConnection(param1: String): void
         {
         }
 

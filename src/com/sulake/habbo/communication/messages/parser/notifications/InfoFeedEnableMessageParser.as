@@ -1,28 +1,31 @@
 ﻿package com.sulake.habbo.communication.messages.parser.notifications
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class InfoFeedEnableMessageParser implements IMessageParser 
+    public class InfoFeedEnableMessageParser implements IMessageParser
     {
 
-        private var var_3268:Boolean;
+        private var _enabled: Boolean;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3268 = false;
-            return (true);
+            this._enabled = false;
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3268 = param1.readBoolean();
-            return (true);
+            this._enabled = data.readBoolean();
+
+            return true;
         }
 
-        public function get enabled():Boolean
+        public function get enabled(): Boolean
         {
-            return (this.var_3268);
+            return this._enabled;
         }
 
     }

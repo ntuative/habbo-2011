@@ -1,181 +1,213 @@
 ﻿package com.sulake.habbo.help.help.data
 {
+
     import com.sulake.core.utils.Map;
 
-    public class FaqIndex 
+    public class FaqIndex
     {
 
-        private var var_3470:FaqCategory;
-        private var var_3471:FaqCategory;
-        private var var_3472:FaqCategory;
-        private var var_3473:Map;
-        private var _lastUpdatedQuestionId:int;
-        private var var_3474:int;
+        private var _categoryUrgent: FaqCategory;
+        private var _categoryNormal: FaqCategory;
+        private var _categorySearchResults: FaqCategory;
+        private var _categories: Map;
+        private var _lastUpdatedQuestionId: int;
+        private var _lastUpdatedCategoryId: int;
 
         public function FaqIndex()
         {
-            this.var_3470 = new FaqCategory(-999, "${help.faq.title.urgent}");
-            this.var_3471 = new FaqCategory(-9999, "${help.faq.title.normal}");
-            this.var_3472 = new FaqCategory(-99999, "${help.faq.title.searchresults}");
-            this.var_3473 = new Map();
+            this._categoryUrgent = new FaqCategory(-999, "${help.faq.title.urgent}");
+            this._categoryNormal = new FaqCategory(-9999, "${help.faq.title.normal}");
+            this._categorySearchResults = new FaqCategory(-99999, "${help.faq.title.searchresults}");
+            this._categories = new Map();
         }
 
-        public function get lastUpdatedQuestionId():int
+        public function get lastUpdatedQuestionId(): int
         {
-            return (this._lastUpdatedQuestionId);
+            return this._lastUpdatedQuestionId;
         }
 
-        public function get lastUpdatedCategoryId():int
+        public function get lastUpdatedCategoryId(): int
         {
-            return (this.var_3474);
+            return this._lastUpdatedCategoryId;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            var _loc1_:int;
-            var _loc2_:FaqCategory;
-            if (this.var_3473 != null)
+            var i: int;
+            var category: FaqCategory;
+
+            if (this._categories != null)
             {
-                _loc1_ = 0;
-                while (_loc1_ < this.var_3473.length)
+                i = 0;
+
+                while (i < this._categories.length)
                 {
-                    _loc2_ = this.var_3473.getWithIndex(_loc1_);
-                    _loc2_.dispose();
-                    _loc1_++;
-                };
-                this.var_3473.dispose();
-                this.var_3473 = null;
-            };
-            this.var_3470.dispose();
-            this.var_3471.dispose();
-            this.var_3472.dispose();
+                    category = this._categories.getWithIndex(i);
+                    category.dispose();
+                    i++;
+                }
+
+                this._categories.dispose();
+                this._categories = null;
+            }
+
+            this._categoryUrgent.dispose();
+            this._categoryNormal.dispose();
+            this._categorySearchResults.dispose();
         }
 
-        public function getCategory(param1:int, param2:String=null, param3:Boolean=false):FaqCategory
+        public function getCategory(id: int, title: String = null, param3: Boolean = false): FaqCategory
         {
-            var _loc4_:FaqCategory = this.var_3473.getValue(param1);
-            if (((!(_loc4_ == null)) || (!(param3))))
+            var category: FaqCategory = this._categories.getValue(id);
+            
+            if (category != null || !param3)
             {
-                return (_loc4_);
-            };
-            _loc4_ = new FaqCategory(param1, param2);
-            this.var_3473.add(param1, _loc4_);
-            return (_loc4_);
+                return category;
+            }
+
+            category = new FaqCategory(id, title);
+            this._categories.add(id, category);
+
+            return category;
         }
 
-        public function getItem(param1:int, param2:int=-1):FaqItem
+        public function getItem(id: int, categoryId: int = -1): FaqItem
         {
-            if (param2 < 0)
+            if (categoryId < 0)
             {
-                return (this.findItem(param1));
-            };
-            var _loc3_:FaqCategory = this.getCategory(param2);
-            if (_loc3_ == null)
+                return this.findItem(id);
+            }
+
+            var category: FaqCategory = this.getCategory(categoryId);
+            
+            if (category == null)
             {
-                return (null);
-            };
-            return (_loc3_.getItem(param1));
+                return null;
+            }
+
+            return category.getItem(id);
         }
 
-        public function storeAnswerText(param1:int, param2:String):void
+        public function storeAnswerText(questionId: int, answer: String): void
         {
-            var _loc4_:FaqCategory;
-            if (this.var_3470.hasItem(param1))
+            var category: FaqCategory;
+
+            if (this._categoryUrgent.hasItem(questionId))
             {
-                this.var_3470.getItem(param1).answerText = param2;
-            };
-            if (this.var_3471.hasItem(param1))
+                this._categoryUrgent.getItem(questionId).answerText = answer;
+            }
+
+            if (this._categoryNormal.hasItem(questionId))
             {
-                this.var_3471.getItem(param1).answerText = param2;
-            };
-            if (this.var_3472.hasItem(param1))
+                this._categoryNormal.getItem(questionId).answerText = answer;
+            }
+
+            if (this._categorySearchResults.hasItem(questionId))
             {
-                this.var_3472.getItem(param1).answerText = param2;
-            };
-            var _loc3_:int;
-            while (_loc3_ < this.var_3473.length)
+                this._categorySearchResults.getItem(questionId).answerText = answer;
+            }
+
+            var i: int;
+
+            while (i < this._categories.length)
             {
-                _loc4_ = this.var_3473.getWithIndex(_loc3_);
-                if (_loc4_.hasItem(param1))
+                category = this._categories.getWithIndex(i);
+
+                if (category.hasItem(questionId))
                 {
-                    _loc4_.getItem(param1).answerText = param2;
-                };
-                _loc3_++;
-            };
+                    category.getItem(questionId).answerText = answer;
+                }
+
+                i++;
+            }
+
         }
 
-        public function getFrontPageUrgentCategory():FaqCategory
+        public function getFrontPageUrgentCategory(): FaqCategory
         {
-            return (this.var_3470);
+            return this._categoryUrgent;
         }
 
-        public function getFrontPageNormalCategory():FaqCategory
+        public function getFrontPageNormalCategory(): FaqCategory
         {
-            return (this.var_3471);
+            return this._categoryNormal;
         }
 
-        public function getSearchResultCategory():FaqCategory
+        public function getSearchResultCategory(): FaqCategory
         {
-            return (this.var_3472);
+            return this._categorySearchResults;
         }
 
-        public function getCategoryCount():int
+        public function getCategoryCount(): int
         {
-            return (this.var_3473.length);
+            return this._categories.length;
         }
 
-        public function getCategoryByIndex(param1:int):FaqCategory
+        public function getCategoryByIndex(index: int): FaqCategory
         {
-            if (param1 >= this.var_3473.length)
+            if (index >= this._categories.length)
             {
-                return (null);
-            };
-            return (this.var_3473.getWithIndex(param1));
+                return null;
+            }
+
+            return this._categories.getWithIndex(index);
         }
 
-        public function getCategoryTitleArray():Array
+        public function getCategoryTitleArray(): Array
         {
-            var _loc2_:FaqCategory;
-            var _loc1_:Array = new Array();
-            var _loc3_:int;
-            while (_loc3_ < this.var_3473.length)
+            var category: FaqCategory;
+            var titles: Array = [];
+            var i: int;
+
+            while (i < this._categories.length)
             {
-                _loc2_ = this.var_3473.getWithIndex(_loc3_);
-                if (_loc2_ != null)
+                category = this._categories.getWithIndex(i);
+
+                if (category != null)
                 {
-                    _loc1_.push(_loc2_.categoryTitle);
-                };
-                _loc3_++;
-            };
-            return (_loc1_);
+                    titles.push(category.categoryTitle);
+                }
+
+                i++;
+            }
+
+            return titles;
         }
 
-        private function findItem(param1:int):FaqItem
+        private function findItem(id: int): FaqItem
         {
-            var _loc3_:FaqCategory;
-            if (this.var_3470.hasItem(param1))
+            var category: FaqCategory;
+
+            if (this._categoryUrgent.hasItem(id))
             {
-                return (this.var_3470.getItem(param1));
-            };
-            if (this.var_3471.hasItem(param1))
+                return this._categoryUrgent.getItem(id);
+            }
+
+            if (this._categoryNormal.hasItem(id))
             {
-                return (this.var_3471.getItem(param1));
-            };
-            if (this.var_3472.hasItem(param1))
+                return this._categoryNormal.getItem(id);
+            }
+
+            if (this._categorySearchResults.hasItem(id))
             {
-                return (this.var_3472.getItem(param1));
-            };
-            var _loc2_:int;
-            while (_loc2_ < this.var_3473.length)
+                return this._categorySearchResults.getItem(id);
+            }
+
+            var i: int;
+
+            while (i < this._categories.length)
             {
-                _loc3_ = this.var_3473.getWithIndex(_loc2_);
-                if (_loc3_.hasItem(param1))
+                category = this._categories.getWithIndex(i);
+                
+                if (category.hasItem(id))
                 {
-                    return (_loc3_.getItem(param1));
-                };
-                _loc2_++;
-            };
-            return (null);
+                    return category.getItem(id);
+                }
+
+                i++;
+            }
+
+            return null;
         }
 
     }

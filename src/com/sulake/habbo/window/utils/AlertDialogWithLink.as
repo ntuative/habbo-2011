@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.window.utils
 {
+
     import com.sulake.habbo.window.IHabboWindowManager;
     import com.sulake.core.window.events.WindowMouseEvent;
     import com.sulake.habbo.utils.HabboWebTools;
@@ -7,55 +8,60 @@
     import com.sulake.core.window.IWindow;
     import com.sulake.core.window.components.IButtonWindow;
 
-    public class AlertDialogWithLink extends AlertDialog implements IAlertDialogWithLink 
+    public class AlertDialogWithLink extends AlertDialog implements IAlertDialogWithLink
     {
 
-        protected var var_4969:String = "";
-        protected var var_4968:String = "";
+        protected var _linkTitle: String = "";
+        protected var _linkUrl: String = "";
 
-        public function AlertDialogWithLink(param1:IHabboWindowManager, param2:XML, param3:String, param4:String, param5:String, param6:String, param7:uint, param8:Function)
+        public function AlertDialogWithLink(windowManager: IHabboWindowManager, layout: XML, title: String, summary: String, linkTitle: String, linkUrl: String, flags: uint, callback: Function)
         {
-            super(param1, param2, param3, param4, param7, param8);
-            this.linkTitle = param5;
-            this.linkUrl = param6;
+            super(windowManager, layout, title, summary, flags, callback);
+
+            this.linkTitle = linkTitle;
+            this.linkUrl = linkUrl;
         }
 
-        override protected function dialogEventProc(param1:WindowEvent, param2:IWindow):void
+        override protected function dialogEventProc(event: WindowEvent, view: IWindow): void
         {
-            if (param1.type == WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK)
+            if (event.type == WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK)
             {
-                switch (param2.name)
+                switch (view.name)
                 {
                     case "_alert_button_link":
-                        HabboWebTools.navigateToURL(this.var_4968, "_empty");
+                        HabboWebTools.navigateToURL(this._linkUrl, "_empty");
                         return;
-                };
-            };
-            super.dialogEventProc(param1, param2);
+                }
+
+            }
+
+            super.dialogEventProc(event, view);
         }
 
-        public function set linkTitle(param1:String):void
+        public function set linkTitle(value: String): void
         {
-            this.var_4969 = param1;
+            this._linkTitle = value;
+
             if (_window)
             {
-                IButtonWindow(_window.findChildByTag("LINK")).caption = this.var_4969;
-            };
+                IButtonWindow(_window.findChildByTag("LINK")).caption = this._linkTitle;
+            }
+
         }
 
-        public function get linkTitle():String
+        public function get linkTitle(): String
         {
-            return (this.var_4969);
+            return this._linkTitle;
         }
 
-        public function set linkUrl(param1:String):void
+        public function set linkUrl(value: String): void
         {
-            this.var_4968 = param1;
+            this._linkUrl = value;
         }
 
-        public function get linkUrl():String
+        public function get linkUrl(): String
         {
-            return (this.var_4968);
+            return this._linkUrl;
         }
 
     }

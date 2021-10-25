@@ -1,32 +1,33 @@
 ﻿package com.sulake.habbo.room.messages
 {
-    public class RoomObjectAvatarFigureUpdateMessage extends RoomObjectUpdateStateMessage 
+
+    public class RoomObjectAvatarFigureUpdateMessage extends RoomObjectUpdateStateMessage
     {
 
-        private var var_2534:String;
-        private var var_3944:String;
-        private var var_2071:String;
+        private var _figure: String;
+        private var _race: String;
+        private var _gender: String;
 
-        public function RoomObjectAvatarFigureUpdateMessage(param1:String, param2:String=null, param3:String=null)
+        public function RoomObjectAvatarFigureUpdateMessage(figure: String, gender: String = null, race: String = null)
         {
-            this.var_2534 = param1;
-            this.var_2071 = param2;
-            this.var_3944 = param3;
+            this._figure = figure;
+            this._gender = gender;
+            this._race = race;
         }
 
-        public function get figure():String
+        public function get figure(): String
         {
-            return (this.var_2534);
+            return this._figure;
         }
 
-        public function get race():String
+        public function get race(): String
         {
-            return (this.var_3944);
+            return this._race;
         }
 
-        public function get gender():String
+        public function get gender(): String
         {
-            return (this.var_2071);
+            return this._gender;
         }
 
     }

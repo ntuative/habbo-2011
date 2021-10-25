@@ -1,61 +1,66 @@
 ﻿package com.sulake.habbo.catalog.recycler
 {
+
     import com.sulake.habbo.session.furniture.IFurnitureData;
     import com.sulake.habbo.room.IRoomEngine;
 
-    public class PrizeContainer extends PrizeGridItem 
+    public class PrizeContainer extends PrizeGridItem
     {
 
-        private var var_2705:String;
-        private var var_2706:int;
-        private var var_2707:int;
-        private var _furnitureData:IFurnitureData;
-        private var var_2708:PrizeGridItem;
+        private var _productItemType: String;
+        private var _productItemTypeId: int;
+        private var _oddsLevelId: int;
+        private var _furnitureData: IFurnitureData;
+        private var _gridItem: PrizeGridItem;
 
-        public function PrizeContainer(param1:String, param2:int, param3:IFurnitureData, param4:int)
+        public function PrizeContainer(productItemType: String, productItemTypeId: int, furnitureData: IFurnitureData, oddsLevelId: int)
         {
-            this.var_2705 = param1;
-            this.var_2706 = param2;
-            this._furnitureData = param3;
-            this.var_2707 = param4;
+            this._productItemType = productItemType;
+            this._productItemTypeId = productItemTypeId;
+            this._furnitureData = furnitureData;
+            this._oddsLevelId = oddsLevelId;
         }
 
-        public function setIcon(param1:IRoomEngine):void
+        public function setIcon(roomEngine: IRoomEngine): void
         {
-            if (((param1 == null) || (this._furnitureData == null)))
+            if (roomEngine == null || this._furnitureData == null)
             {
                 return;
-            };
-            initProductIcon(param1, this._furnitureData.type, this.var_2706);
+            }
+
+
+            initProductIcon(roomEngine, this._furnitureData.type, this._productItemTypeId);
         }
 
-        public function get productItemType():String
+        public function get productItemType(): String
         {
-            return (this.var_2705);
+            return this._productItemType;
         }
 
-        public function get productItemTypeId():int
+        public function get productItemTypeId(): int
         {
-            return (this.var_2706);
+            return this._productItemTypeId;
         }
 
-        public function get gridItem():PrizeGridItem
+        public function get gridItem(): PrizeGridItem
         {
-            return (this.var_2708);
+            return this._gridItem;
         }
 
-        public function get oddsLevelId():int
+        public function get oddsLevelId(): int
         {
-            return (this.var_2707);
+            return this._oddsLevelId;
         }
 
-        public function get title():String
+        public function get title(): String
         {
             if (this._furnitureData == null)
             {
-                return ("");
-            };
-            return (this._furnitureData.title);
+                return "";
+            }
+
+
+            return this._furnitureData.title;
         }
 
     }

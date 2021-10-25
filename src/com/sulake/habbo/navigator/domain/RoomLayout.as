@@ -1,43 +1,44 @@
 ﻿package com.sulake.habbo.navigator.domain
 {
+
     import com.sulake.core.window.IWindowContainer;
 
-    public class RoomLayout 
+    public class RoomLayout
     {
 
-        private var var_2924:int;
-        private var _tileSize:int;
-        private var _name:String;
-        private var _view:IWindowContainer;
+        private var _requiredClubLevel: int;
+        private var _tileSize: int;
+        private var _name: String;
+        private var _view: IWindowContainer;
 
-        public function RoomLayout(param1:int, param2:int, param3:String)
+        public function RoomLayout(param1: int, param2: int, param3: String)
         {
-            this.var_2924 = param1;
+            this._requiredClubLevel = param1;
             this._tileSize = param2;
             this._name = param3;
         }
 
-        public function get requiredClubLevel():int
+        public function get requiredClubLevel(): int
         {
-            return (this.var_2924);
+            return this._requiredClubLevel;
         }
 
-        public function get tileSize():int
+        public function get tileSize(): int
         {
-            return (this._tileSize);
+            return this._tileSize;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get view():IWindowContainer
+        public function get view(): IWindowContainer
         {
-            return (this._view);
+            return this._view;
         }
 
-        public function set view(param1:IWindowContainer):void
+        public function set view(param1: IWindowContainer): void
         {
             this._view = param1;
         }

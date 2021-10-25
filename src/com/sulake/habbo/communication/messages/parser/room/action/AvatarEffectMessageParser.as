@@ -1,60 +1,64 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.action
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class AvatarEffectMessageParser implements IMessageParser 
+    public class AvatarEffectMessageParser implements IMessageParser
     {
 
-        private var _roomId:int = 0;
-        private var _roomCategory:int = 0;
-        private var _userId:int = 0;
-        private var var_3286:int = 0;
-        private var var_3287:int = 0;
+        private var _roomId: int = 0;
+        private var _roomCategory: int = 0;
+        private var _userId: int = 0;
+        private var _effectId: int = 0;
+        private var _delayMilliSeconds: int = 0;
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get roomCategory():int
+        public function get roomCategory(): int
         {
-            return (this._roomCategory);
+            return this._roomCategory;
         }
 
-        public function get userId():int
+        public function get userId(): int
         {
-            return (this._userId);
+            return this._userId;
         }
 
-        public function get effectId():int
+        public function get effectId(): int
         {
-            return (this.var_3286);
+            return this._effectId;
         }
 
-        public function get delayMilliSeconds():int
+        public function get delayMilliSeconds(): int
         {
-            return (this.var_3287);
+            return this._delayMilliSeconds;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._roomId = 0;
             this._roomCategory = 0;
             this._userId = 0;
-            return (true);
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            if (param1 == null)
+            if (data == null)
             {
-                return (false);
-            };
-            this._userId = param1.readInteger();
-            this.var_3286 = param1.readInteger();
-            this.var_3287 = param1.readInteger();
-            return (true);
+                return false;
+            }
+
+            this._userId = data.readInteger();
+            this._effectId = data.readInteger();
+            this._delayMilliSeconds = data.readInteger();
+            
+            return true;
         }
 
     }

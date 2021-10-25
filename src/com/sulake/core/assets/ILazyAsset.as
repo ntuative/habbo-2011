@@ -1,9 +1,10 @@
 ﻿package com.sulake.core.assets
 {
-    public interface ILazyAsset extends IAsset 
+
+    public interface ILazyAsset extends IAsset
     {
 
-        function prepareLazyContent():void;
+        function prepareLazyContent(): void;
 
     }
 }

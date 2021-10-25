@@ -1,129 +1,148 @@
 ﻿package com.sulake.habbo.avatar.structure.figure
 {
-    public class FigurePartSet implements IFigurePartSet 
+
+    public class FigurePartSet implements IFigurePartSet
     {
 
-        private var _type:String;
-        private var _id:int;
-        private var var_2071:String;
-        private var var_2521:int;
-        private var var_2503:Boolean;
-        private var var_2513:Boolean;
-        private var _parts:Array;
-        private var var_2520:Array;
+        private var _type: String;
+        private var _id: int;
+        private var _gender: String;
+        private var _clubLevel: int;
+        private var _isColorable: Boolean;
+        private var _isSelectable: Boolean;
+        private var _parts: Array;
+        private var _hiddenLayers: Array;
 
-        public function FigurePartSet(param1:XML, param2:String)
+        public function FigurePartSet(data: XML, type: String)
         {
-            var _loc3_:XML;
-            var _loc4_:XML;
-            var _loc5_:FigurePart;
-            var _loc6_:int;
             super();
-            this._type = param2;
-            this._id = parseInt(param1.@id);
-            this.var_2071 = String(param1.@gender);
-            this.var_2521 = parseInt(param1.@club);
-            this.var_2503 = Boolean(parseInt(param1.@colorable));
-            this.var_2513 = Boolean(parseInt(param1.@selectable));
-            this._parts = new Array();
-            this.var_2520 = new Array();
-            for each (_loc3_ in param1.part)
+            this._type = type;
+            this._id = parseInt(data.@id);
+            this._gender = String(data.@gender);
+            this._clubLevel = parseInt(data.@club);
+            this._isColorable = Boolean(parseInt(data.@colorable));
+            this._isSelectable = Boolean(parseInt(data.@selectable));
+            this._parts = [];
+            this._hiddenLayers = [];
+
+            var part: XML;
+            var layer: XML;
+            var figurePart: FigurePart;
+            var partTypeIndex: int;
+
+            for each (part in data.part)
             {
-                _loc5_ = new FigurePart(_loc3_);
-                _loc6_ = this.indexOfPartType(_loc5_);
-                if (_loc6_ != -1)
+                figurePart = new FigurePart(part);
+                partTypeIndex = this.indexOfPartType(figurePart);
+                if (partTypeIndex != -1)
                 {
-                    this._parts.splice(_loc6_, 0, _loc5_);
+                    this._parts.splice(partTypeIndex, 0, figurePart);
                 }
                 else
                 {
-                    this._parts.push(_loc5_);
-                };
-            };
-            for each (_loc4_ in param1.hiddenlayers.layer)
+                    this._parts.push(figurePart);
+                }
+
+            }
+
+            for each (layer in data.hiddenlayers.layer)
             {
-                this.var_2520.push(String(_loc4_.@parttype));
-            };
+                this._hiddenLayers.push(String(layer.@parttype));
+            }
+
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            var _loc1_:FigurePart;
-            for each (_loc1_ in this._parts)
+            var part: FigurePart;
+
+            for each (part in this._parts)
             {
-                _loc1_.dispose();
-            };
+                part.dispose();
+            }
+
+
             this._parts = null;
-            this.var_2520 = null;
+            this._hiddenLayers = null;
         }
 
-        private function indexOfPartType(param1:FigurePart):int
+        private function indexOfPartType(figurePart: FigurePart): int
         {
-            var _loc3_:FigurePart;
-            var _loc2_:int;
-            while (_loc2_ < this._parts.length)
+            var part: FigurePart;
+            var i: int;
+
+            while (i < this._parts.length)
             {
-                _loc3_ = this._parts[_loc2_];
-                if (((_loc3_.type == param1.type) && (_loc3_.index < param1.index)))
+                part = this._parts[i];
+
+                if (part.type == figurePart.type && part.index < figurePart.index)
                 {
-                    return (_loc2_);
-                };
-                _loc2_++;
-            };
-            return (-1);
+                    return i;
+                }
+
+
+                i++;
+            }
+
+
+            return -1;
         }
 
-        public function getPart(param1:String, param2:int):IFigurePart
+        public function getPart(type: String, id: int): IFigurePart
         {
-            var _loc3_:FigurePart;
-            for each (_loc3_ in this._parts)
+            var part: FigurePart;
+
+            for each (part in this._parts)
             {
-                if (((_loc3_.type == param1) && (_loc3_.id == param2)))
+                if (part.type == type && part.id == id)
                 {
-                    return (_loc3_);
-                };
-            };
-            return (null);
+                    return part;
+                }
+
+            }
+
+
+            return null;
         }
 
-        public function get type():String
+        public function get type(): String
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get gender():String
+        public function get gender(): String
         {
-            return (this.var_2071);
+            return this._gender;
         }
 
-        public function get clubLevel():int
+        public function get clubLevel(): int
         {
-            return (this.var_2521);
+            return this._clubLevel;
         }
 
-        public function get isColorable():Boolean
+        public function get isColorable(): Boolean
         {
-            return (this.var_2503);
+            return this._isColorable;
         }
 
-        public function get isSelectable():Boolean
+        public function get isSelectable(): Boolean
         {
-            return (this.var_2513);
+            return this._isSelectable;
         }
 
-        public function get parts():Array
+        public function get parts(): Array
         {
-            return (this._parts);
+            return this._parts;
         }
 
-        public function get hiddenLayers():Array
+        public function get hiddenLayers(): Array
         {
-            return (this.var_2520);
+            return this._hiddenLayers;
         }
 
     }

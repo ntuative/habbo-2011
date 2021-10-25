@@ -1,37 +1,41 @@
 ﻿package com.sulake.habbo.communication.messages.parser.inventory.pets
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PetInventoryMessageParser implements IMessageParser 
+    public class PetInventoryMessageParser implements IMessageParser
     {
 
-        private var var_3204:Array;
+        private var _pets: Array;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3204 = [];
-            return (true);
+            this._pets = [];
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc4_:PetData;
-            this.var_3204 = [];
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._pets = [];
+            
+            var petData: PetData;
+            var petCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < petCount)
             {
-                _loc4_ = new PetData(param1);
-                this.var_3204.push(_loc4_);
-                _loc3_++;
-            };
-            return (true);
+                petData = new PetData(data);
+                this._pets.push(petData);
+                i++;
+            }
+
+            return true;
         }
 
-        public function get pets():Array
+        public function get pets(): Array
         {
-            return (this.var_3204);
+            return this._pets;
         }
 
     }

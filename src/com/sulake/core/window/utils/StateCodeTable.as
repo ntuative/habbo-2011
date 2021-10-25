@@ -1,14 +1,16 @@
 ﻿package com.sulake.core.window.utils
 {
+
     import com.sulake.core.window.enum.WindowState;
+
     import flash.utils.Dictionary;
 
-    public class StateCodeTable 
+    public class StateCodeTable
     {
 
-        public static function fillTables(param1:Dictionary, param2:Dictionary=null):void
+        public static function fillTables(param1: Dictionary, param2: Dictionary = null): void
         {
-            var _loc3_:String;
+            var _loc3_: String;
             param1["default"] = WindowState.var_990;
             param1["active"] = WindowState.var_1035;
             param1["focused"] = WindowState.var_1043;
@@ -22,8 +24,10 @@
                 for (_loc3_ in param1)
                 {
                     param2[param1[_loc3_]] = _loc3_;
-                };
-            };
+                }
+
+            }
+
         }
 
     }

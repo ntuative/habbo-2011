@@ -1,21 +1,23 @@
 ﻿package com.sulake.habbo.room.messages
 {
+
     import com.sulake.room.utils.IVector3d;
 
-    public class RoomObjectAvatarUpdateMessage extends RoomObjectMoveUpdateMessage 
+    public class RoomObjectAvatarUpdateMessage extends RoomObjectMoveUpdateMessage
     {
 
-        private var var_3056:int;
+        private var _dirHead: int;
 
-        public function RoomObjectAvatarUpdateMessage(param1:IVector3d, param2:IVector3d, param3:IVector3d, param4:int)
+        public function RoomObjectAvatarUpdateMessage(loc: IVector3d, realTargetLoc: IVector3d, dir: IVector3d, dirHead: int)
         {
-            super(param1, param2, param3);
-            this.var_3056 = param4;
+            super(loc, realTargetLoc, dir);
+            
+            this._dirHead = dirHead;
         }
 
-        public function get dirHead():int
+        public function get dirHead(): int
         {
-            return (this.var_3056);
+            return this._dirHead;
         }
 
     }

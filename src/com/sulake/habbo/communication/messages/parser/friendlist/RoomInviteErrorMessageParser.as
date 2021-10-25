@@ -1,46 +1,49 @@
 ﻿package com.sulake.habbo.communication.messages.parser.friendlist
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class RoomInviteErrorMessageParser implements IMessageParser 
+    public class RoomInviteErrorMessageParser implements IMessageParser
     {
 
-        private var var_2102:int;
-        private var var_3160:Array;
+        private var _errorCode: int;
+        private var _failedRecipients: Array;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3160 = new Array();
-            return (true);
+            this._failedRecipients = [];
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc2_:int;
-            var _loc3_:int;
-            this.var_2102 = param1.readInteger();
-            if (this.var_2102 == 1)
+            this._errorCode = data.readInteger();
+            
+            if (this._errorCode == 1)
             {
-                _loc2_ = param1.readInteger();
-                _loc3_ = 0;
-                while (_loc3_ < _loc2_)
+                var failedRecipientCount: int = data.readInteger();
+                var i: int = 0;
+
+                while (i < failedRecipientCount)
                 {
-                    this.var_3160.push(param1.readInteger());
-                    _loc3_++;
-                };
-            };
-            return (true);
+                    this._failedRecipients.push(data.readInteger());
+                    i++;
+                }
+
+            }
+
+            return true;
         }
 
-        public function get errorCode():int
+        public function get errorCode(): int
         {
-            return (this.var_2102);
+            return this._errorCode;
         }
 
-        public function get failedRecipients():Array
+        public function get failedRecipients(): Array
         {
-            return (this.var_3160);
+            return this._failedRecipients;
         }
 
     }

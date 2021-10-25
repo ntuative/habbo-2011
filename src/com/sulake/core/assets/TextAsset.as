@@ -1,93 +1,109 @@
 ﻿package com.sulake.core.assets
 {
+
     import flash.utils.ByteArray;
 
-    public class TextAsset implements IAsset 
+    public class TextAsset implements IAsset
     {
 
-        private var _disposed:Boolean = false;
-        private var var_1997:String = "";
-        private var var_2128:AssetTypeDeclaration;
-        private var var_2104:String;
+        private var _disposed: Boolean = false;
+        private var _content: String = "";
+        private var _declaration: AssetTypeDeclaration;
+        private var _url: String;
 
-        public function TextAsset(param1:AssetTypeDeclaration, param2:String=null)
+        public function TextAsset(param1: AssetTypeDeclaration, param2: String = null)
         {
-            this.var_2128 = param1;
-            this.var_2104 = param2;
+            this._declaration = param1;
+            this._url = param2;
         }
 
-        public function get url():String
+        public function get url(): String
         {
-            return (this.var_2104);
+            return this._url;
         }
 
-        public function get content():Object
+        public function get content(): Object
         {
-            return (this.var_1997);
+            return this._content;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get declaration():AssetTypeDeclaration
+        public function get declaration(): AssetTypeDeclaration
         {
-            return (this.var_2128);
+            return this._declaration;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (!this._disposed)
             {
                 this._disposed = true;
-                this.var_1997 = null;
-                this.var_2128 = null;
-                this.var_2104 = null;
-            };
+                this._content = null;
+                this._declaration = null;
+                this._url = null;
+            }
+
         }
 
-        public function setUnknownContent(param1:Object):void
+        public function setUnknownContent(content: Object): void
         {
-            var _loc2_:ByteArray;
-            if ((param1 is String))
+            var byteArray: ByteArray;
+
+            if (content is String)
             {
-                this.var_1997 = (param1 as String);
+                this._content = content as String;
+
                 return;
-            };
-            if ((param1 is Class))
+            }
+
+
+            if (content is Class)
             {
-                _loc2_ = (new (param1)() as ByteArray);
-                this.var_1997 = _loc2_.readUTFBytes(_loc2_.length);
+                byteArray = new content() as ByteArray;
+                this._content = byteArray.readUTFBytes(byteArray.length);
+
                 return;
-            };
-            if ((param1 is ByteArray))
+            }
+
+
+            if (content is ByteArray)
             {
-                _loc2_ = (param1 as ByteArray);
-                this.var_1997 = _loc2_.readUTFBytes(_loc2_.length);
+                byteArray = content as ByteArray;
+                this._content = byteArray.readUTFBytes(byteArray.length);
+
                 return;
-            };
-            if ((param1 is TextAsset))
+            }
+
+
+            if (content is TextAsset)
             {
-                this.var_1997 = TextAsset(param1).var_1997;
+                this._content = TextAsset(content)._content;
+
                 return;
-            };
-            this.var_1997 = param1.toString();
+            }
+
+
+            this._content = content.toString();
         }
 
-        public function setFromOtherAsset(param1:IAsset):void
+        public function setFromOtherAsset(asset: IAsset): void
         {
-            if ((param1 is TextAsset))
+            if (asset is TextAsset)
             {
-                this.var_1997 = TextAsset(param1).var_1997;
+                this._content = TextAsset(asset)._content;
             }
             else
             {
-                throw (Error("Provided asset is not of type TextAsset!"));
-            };
+                throw new Error("Provided asset is not of type TextAsset!");
+            }
+
         }
 
-        public function setParamsDesc(param1:XMLList):void
+        public function setParamsDesc(_: XMLList): void
         {
         }
 

@@ -1,96 +1,110 @@
 ﻿package com.sulake.core.assets
 {
+
     import flash.display.DisplayObject;
 
-    public class DisplayAsset implements IAsset 
+    public class DisplayAsset implements IAsset
     {
 
-        protected var var_2104:String;
-        protected var var_1997:DisplayObject;
-        protected var _disposed:Boolean = false;
-        protected var var_2130:AssetTypeDeclaration;
+        protected var _url: String;
+        protected var _content: DisplayObject;
+        protected var _disposed: Boolean = false;
+        protected var _declaration: AssetTypeDeclaration;
 
-        public function DisplayAsset(param1:AssetTypeDeclaration, param2:String=null)
+        public function DisplayAsset(declaration: AssetTypeDeclaration, url: String = null)
         {
-            this.var_2130 = param1;
-            this.var_2104 = param2;
+            this._declaration = declaration;
+            this._url = url;
         }
 
-        public function get url():String
+        public function get url(): String
         {
-            return (this.var_2104);
+            return this._url;
         }
 
-        public function get content():Object
+        public function get content(): Object
         {
-            return (this.var_1997);
+            return this._content;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get declaration():AssetTypeDeclaration
+        public function get declaration(): AssetTypeDeclaration
         {
-            return (this.var_2130);
+            return this._declaration;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (!this._disposed)
             {
-                if (this.var_1997.loaderInfo != null)
+                if (this._content.loaderInfo != null)
                 {
-                    if (this.var_1997.loaderInfo.loader != null)
+                    if (this._content.loaderInfo.loader != null)
                     {
-                        this.var_1997.loaderInfo.loader.unload();
-                    };
-                };
-                this.var_1997 = null;
-                this.var_2130 = null;
+                        this._content.loaderInfo.loader.unload();
+                    }
+
+                }
+
+
+                this._content = null;
+                this._declaration = null;
                 this._disposed = true;
-                this.var_2104 = null;
-            };
+                this._url = null;
+            }
+
         }
 
-        public function setUnknownContent(param1:Object):void
+        public function setUnknownContent(content: Object): void
         {
-            if ((param1 is DisplayObject))
+            if (content is DisplayObject)
             {
-                this.var_1997 = (param1 as DisplayObject);
-                if (this.var_1997 != null)
+                this._content = content as DisplayObject;
+
+                if (this._content != null)
                 {
                     return;
-                };
-                throw (new Error("Failed to convert DisplayObject to DisplayAsset!"));
-            };
-            if ((param1 is DisplayAsset))
+                }
+
+
+                throw new Error("Failed to convert DisplayObject to DisplayAsset!");
+            }
+
+
+            if (content is DisplayAsset)
             {
-                this.var_1997 = DisplayAsset(param1).var_1997;
-                this.var_2130 = DisplayAsset(param1).var_2130;
-                if (this.var_1997 == null)
+                this._content = DisplayAsset(content)._content;
+                this._declaration = DisplayAsset(content)._declaration;
+                if (this._content == null)
                 {
-                    throw (new Error("Failed to read content from DisplayAsset!"));
-                };
-            };
+                    throw new Error("Failed to read content from DisplayAsset!");
+                }
+
+            }
+
         }
 
-        public function setFromOtherAsset(param1:IAsset):void
+        public function setFromOtherAsset(asset: IAsset): void
         {
-            if ((param1 is DisplayAsset))
+            if (asset is DisplayAsset)
             {
-                this.var_1997 = DisplayAsset(param1).var_1997;
-                this.var_2130 = DisplayAsset(param1).var_2130;
+                this._content = DisplayAsset(asset)._content;
+                this._declaration = DisplayAsset(asset)._declaration;
             }
             else
             {
-                throw (new Error("Provided asset should be of type DisplayAsset!"));
-            };
+                throw new Error("Provided asset should be of type DisplayAsset!");
+            }
+
         }
 
-        public function setParamsDesc(param1:XMLList):void
+        public function setParamsDesc(param1: XMLList): void
         {
+            // no-op
         }
 
     }

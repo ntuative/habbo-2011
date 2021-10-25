@@ -1,54 +1,56 @@
 ﻿package com.sulake.core.window.graphics.renderer
 {
+
     import com.sulake.core.window.utils.ChildEntityArray;
     import com.sulake.core.assets.IAsset;
 
-    public class SkinTemplate extends ChildEntityArray implements ISkinTemplate 
+    public class SkinTemplate extends ChildEntityArray implements ISkinTemplate
     {
 
-        protected var _name:String;
-        protected var var_1029:Array;
-        protected var var_2242:IAsset;
+        protected var _name: String;
+        protected var _tags: Array;
+        protected var _asset: IAsset;
 
-        public function SkinTemplate(param1:String, param2:IAsset)
+        public function SkinTemplate(param1: String, param2: IAsset)
         {
             this._name = param1;
-            this.var_1029 = new Array();
-            this.var_2242 = param2;
+            this._tags = [];
+            this._asset = param2;
         }
 
-        public function get id():uint
+        public function get id(): uint
         {
-            return (0);
+            return 0;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get tags():Array
+        public function get tags(): Array
         {
-            return (this.var_1029);
+            return this._tags;
         }
 
-        public function get asset():IAsset
+        public function get asset(): IAsset
         {
-            return (this.var_2242);
+            return this._asset;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            var _loc2_:uint;
-            var _loc1_:uint = this.numChildren;
+            var _loc2_: uint;
+            var _loc1_: uint = this.numChildren;
             _loc2_ = 0;
             while (_loc2_ < _loc1_)
             {
                 this.removeChildAt(0);
                 _loc2_++;
-            };
-            this.var_2242 = null;
-            this.var_1029 = null;
+            }
+
+            this._asset = null;
+            this._tags = null;
             this._name = null;
         }
 

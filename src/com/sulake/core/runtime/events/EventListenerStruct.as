@@ -1,42 +1,51 @@
 ﻿package com.sulake.core.runtime.events
 {
+
     import flash.utils.Dictionary;
 
-    public class EventListenerStruct 
+    public class EventListenerStruct
     {
 
-        private var var_2170:Dictionary;
-        public var var_92:Boolean;
-        public var priority:int;
-        public var var_444:Boolean;
+        private var _callbacks: Dictionary;
+        public var captures: Boolean;
+        public var priority: int;
+        public var useWeakRef: Boolean;
 
-        public function EventListenerStruct(param1:Function, param2:Boolean=false, param3:int=0, param4:Boolean=false)
+        public function EventListenerStruct(callback: Function, captures: Boolean = false, priority: int = 0, useWeakRef: Boolean = false)
         {
-            this.var_2170 = new Dictionary(param4);
-            this.callback = param1;
-            this.var_92 = param2;
-            this.priority = param3;
-            this.var_444 = param4;
+            this._callbacks = new Dictionary(useWeakRef);
+            this.callback = callback;
+            this.captures = captures;
+            this.priority = priority;
+            this.useWeakRef = useWeakRef;
         }
 
-        public function set callback(param1:Function):void
+        public function set callback(cb: Function): void
         {
-            var _loc2_:Object;
-            for (_loc2_ in this.var_2170)
+            var item: Object;
+
+            for (item in this._callbacks)
             {
-                delete this.var_2170[_loc2_];
-            };
-            this.var_2170[param1] = null;
+                this._callbacks[item] = null;
+            }
+
+
+            this._callbacks[cb] = null;
         }
 
-        public function get callback():Function
+        public function get callback(): Function
         {
-            var _loc1_:Object;
-            for (_loc1_ in this.var_2170)
+            var item: Object;
+            for (item in this._callbacks)
             {
-                return (_loc1_ as Function);
-            };
-            return (null);
+                if (item != null)
+                {
+                    return item as Function;
+                }
+            }
+
+
+            return null;
         }
 
     }

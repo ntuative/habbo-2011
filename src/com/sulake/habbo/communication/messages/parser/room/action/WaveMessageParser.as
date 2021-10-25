@@ -1,52 +1,56 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.action
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class WaveMessageParser implements IMessageParser 
+    public class WaveMessageParser implements IMessageParser
     {
 
-        private var _roomId:int = 0;
-        private var _roomCategory:int = 0;
-        private var _userId:int = 0;
-        private var var_3291:Boolean = true;
+        private var _roomId: int = 0;
+        private var _roomCategory: int = 0;
+        private var _userId: int = 0;
+        private var _isWaving: Boolean = true;
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get roomCategory():int
+        public function get roomCategory(): int
         {
-            return (this._roomCategory);
+            return this._roomCategory;
         }
 
-        public function get userId():int
+        public function get userId(): int
         {
-            return (this._userId);
+            return this._userId;
         }
 
-        public function get isWaving():Boolean
+        public function get isWaving(): Boolean
         {
-            return (this.var_3291);
+            return this._isWaving;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._roomId = 0;
             this._roomCategory = 0;
             this._userId = 0;
-            return (true);
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            if (param1 == null)
+            if (data == null)
             {
-                return (false);
-            };
-            this._userId = param1.readInteger();
-            return (true);
+                return false;
+            }
+
+            this._userId = data.readInteger();
+            
+            return true;
         }
 
     }

@@ -1,45 +1,50 @@
 ﻿package com.sulake.core.assets
 {
+
     import com.sulake.core.runtime.events.EventDispatcher;
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.core.assets.loaders.IAssetLoader;
 
-    public class AssetLoaderStruct extends EventDispatcher implements IDisposable 
+    public class AssetLoaderStruct extends EventDispatcher implements IDisposable
     {
 
-        private var var_2121:IAssetLoader;
-        private var var_2120:String;
+        private var _assetLoader: IAssetLoader;
+        private var _assetName: String;
 
-        public function AssetLoaderStruct(param1:String, param2:IAssetLoader)
+        public function AssetLoaderStruct(name: String, loader: IAssetLoader)
         {
-            this.var_2120 = param1;
-            this.var_2121 = param2;
+            this._assetName = name;
+            this._assetLoader = loader;
         }
 
-        public function get assetName():String
+        public function get assetName(): String
         {
-            return (this.var_2120);
+            return this._assetName;
         }
 
-        public function get assetLoader():IAssetLoader
+        public function get assetLoader(): IAssetLoader
         {
-            return (this.var_2121);
+            return this._assetLoader;
         }
 
-        override public function dispose():void
+        override public function dispose(): void
         {
             if (!disposed)
             {
-                if (this.var_2121 != null)
+                if (this._assetLoader != null)
                 {
-                    if (!this.var_2121.disposed)
+                    if (!this._assetLoader.disposed)
                     {
-                        this.var_2121.dispose();
-                        this.var_2121 = null;
-                    };
-                };
+                        this._assetLoader.dispose();
+                        this._assetLoader = null;
+                    }
+
+                }
+
+
                 super.dispose();
-            };
+            }
+
         }
 
     }

@@ -1,36 +1,39 @@
 ﻿package com.sulake.habbo.communication.messages.parser.poll
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PollOfferParser implements IMessageParser 
+    public class PollOfferParser implements IMessageParser
     {
 
-        private var _id:int = -1;
-        private var var_3274:String = "";
+        private var _id: int = -1;
+        private var _summary: String = "";
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get summary():String
+        public function get summary(): String
         {
-            return (this.var_3274);
+            return this._summary;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._id = -1;
-            this.var_3274 = "";
-            return (true);
+            this._summary = "";
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this._id = param1.readInteger();
-            this.var_3274 = param1.readString();
-            return (true);
+            this._id = data.readInteger();
+            this._summary = data.readString();
+
+            return true;
         }
 
     }

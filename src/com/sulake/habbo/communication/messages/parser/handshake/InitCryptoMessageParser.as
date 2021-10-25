@@ -1,41 +1,42 @@
 ﻿package com.sulake.habbo.communication.messages.parser.handshake
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class InitCryptoMessageParser implements IMessageParser 
+    public class InitCryptoMessageParser implements IMessageParser
     {
 
-        protected var var_3163:Boolean;
-        protected var var_3164:Boolean;
-        protected var var_2878:String;
+        protected var _isClientEncrypted: Boolean;
+        protected var _isServerEncrypted: Boolean;
+        protected var _token: String;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2878 = param1.readString();
-            var _loc2_:int = param1.readInteger();
-            this.var_3164 = ((_loc2_ > 0) ? true : false);
-            return (true);
+            this._token = data.readString();
+            this._isServerEncrypted = data.readInteger() > 0;
+
+            return true;
         }
 
-        public function get token():String
+        public function get token(): String
         {
-            return (this.var_2878);
+            return this._token;
         }
 
-        public function get isServerEncrypted():Boolean
+        public function get isServerEncrypted(): Boolean
         {
-            return (this.var_3164);
+            return this._isServerEncrypted;
         }
 
-        public function get isClientEncrypted():Boolean
+        public function get isClientEncrypted(): Boolean
         {
-            return (this.var_3163);
+            return this._isClientEncrypted;
         }
 
     }

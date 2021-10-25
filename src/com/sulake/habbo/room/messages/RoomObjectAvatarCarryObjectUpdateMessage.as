@@ -1,25 +1,26 @@
 ﻿package com.sulake.habbo.room.messages
 {
-    public class RoomObjectAvatarCarryObjectUpdateMessage extends RoomObjectUpdateStateMessage 
+
+    public class RoomObjectAvatarCarryObjectUpdateMessage extends RoomObjectUpdateStateMessage
     {
 
-        private var var_2934:int;
-        private var var_3288:String;
+        private var _itemType: int;
+        private var _itemName: String;
 
-        public function RoomObjectAvatarCarryObjectUpdateMessage(param1:int, param2:String)
+        public function RoomObjectAvatarCarryObjectUpdateMessage(itemType: int, itemName: String)
         {
-            this.var_2934 = param1;
-            this.var_3288 = param2;
+            this._itemType = itemType;
+            this._itemName = itemName;
         }
 
-        public function get itemType():int
+        public function get itemType(): int
         {
-            return (this.var_2934);
+            return this._itemType;
         }
 
-        public function get itemName():String
+        public function get itemName(): String
         {
-            return (this.var_3288);
+            return this._itemName;
         }
 
     }

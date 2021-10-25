@@ -1,36 +1,39 @@
 ﻿package com.sulake.habbo.communication.messages.parser.inventory.avatareffect
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class AvatarEffectAddedMessageParser implements IMessageParser 
+    public class AvatarEffectAddedMessageParser implements IMessageParser
     {
 
-        private var _type:int;
-        private var var_2930:int;
+        private var _type: int;
+        private var _duration: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._type = 0;
-            this.var_2930 = 0;
-            return (true);
+            this._duration = 0;
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this._type = param1.readInteger();
-            this.var_2930 = param1.readInteger();
-            return (true);
+            this._type = data.readInteger();
+            this._duration = data.readInteger();
+
+            return true;
         }
 
-        public function get type():int
+        public function get type(): int
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get duration():int
+        public function get duration(): int
         {
-            return (this.var_2930);
+            return this._duration;
         }
 
     }

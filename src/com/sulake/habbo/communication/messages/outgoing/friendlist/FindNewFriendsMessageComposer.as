@@ -1,16 +1,17 @@
 ﻿package com.sulake.habbo.communication.messages.outgoing.friendlist
 {
+
     import com.sulake.core.communication.messages.IMessageComposer;
 
-    public class FindNewFriendsMessageComposer implements IMessageComposer 
+    public class FindNewFriendsMessageComposer implements IMessageComposer
     {
 
-        public function getMessageArray():Array
+        public function getMessageArray(): Array
         {
-            return ([]);
+            return [];
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
         }
 

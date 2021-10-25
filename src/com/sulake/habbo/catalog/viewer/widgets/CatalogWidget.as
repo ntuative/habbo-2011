@@ -1,66 +1,69 @@
 ﻿package com.sulake.habbo.catalog.viewer.widgets
 {
+
     import com.sulake.core.window.IWindowContainer;
+
     import flash.events.IEventDispatcher;
+
     import com.sulake.habbo.catalog.viewer.ICatalogPage;
 
-    public class CatalogWidget 
+    public class CatalogWidget
     {
 
-        protected var _window:IWindowContainer;
-        private var _events:IEventDispatcher;
-        private var var_2610:ICatalogPage;
-        private var var_978:Boolean;
+        protected var _window: IWindowContainer;
+        private var _events: IEventDispatcher;
+        private var _page: ICatalogPage;
+        private var _disposed: Boolean;
 
-        public function CatalogWidget(param1:IWindowContainer)
+        public function CatalogWidget(window: IWindowContainer)
         {
-            this._window = param1;
+            this._window = window;
         }
 
-        public function set page(param1:ICatalogPage):void
+        public function set page(value: ICatalogPage): void
         {
-            this.var_2610 = param1;
+            this._page = value;
         }
 
-        public function set events(param1:IEventDispatcher):void
+        public function set events(value: IEventDispatcher): void
         {
-            this._events = param1;
+            this._events = value;
         }
 
-        public function get window():IWindowContainer
+        public function get window(): IWindowContainer
         {
-            return (this._window);
+            return this._window;
         }
 
-        public function get events():IEventDispatcher
+        public function get events(): IEventDispatcher
         {
-            return (this._events);
+            return this._events;
         }
 
-        public function get page():ICatalogPage
+        public function get page(): ICatalogPage
         {
-            return (this.var_2610);
+            return this._page;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this._events = null;
-            this.var_2610 = null;
+            this._page = null;
             this._window = null;
-            this.var_978 = true;
+            this._disposed = true;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this.var_978);
+            return this._disposed;
         }
 
-        public function init():Boolean
+        public function init(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function closed():void
+        public function closed(): void
         {
         }
 

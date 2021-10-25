@@ -1,48 +1,52 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.furniture
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class OpenPetPackageResultMessageParser implements IMessageParser 
+    public class OpenPetPackageResultMessageParser implements IMessageParser
     {
 
-        private var var_2358:int = 0;
-        private var var_3311:int = 0;
-        private var var_2715:String = null;
+        private var _objectId: int = 0;
+        private var _nameValidationStatus: int = 0;
+        private var _nameValidationInfo: String = null;
 
-        public function get objectId():int
+        public function get objectId(): int
         {
-            return (this.var_2358);
+            return this._objectId;
         }
 
-        public function get nameValidationStatus():int
+        public function get nameValidationStatus(): int
         {
-            return (this.var_3311);
+            return this._nameValidationStatus;
         }
 
-        public function get nameValidationInfo():String
+        public function get nameValidationInfo(): String
         {
-            return (this.var_2715);
+            return this._nameValidationInfo;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_2358 = 0;
-            this.var_3311 = 0;
-            this.var_2715 = null;
-            return (true);
+            this._objectId = 0;
+            this._nameValidationStatus = 0;
+            this._nameValidationInfo = null;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            if (param1 == null)
+            if (data == null)
             {
-                return (false);
-            };
-            this.var_2358 = param1.readInteger();
-            this.var_3311 = param1.readInteger();
-            this.var_2715 = param1.readString();
-            return (true);
+                return false;
+            }
+
+            this._objectId = data.readInteger();
+            this._nameValidationStatus = data.readInteger();
+            this._nameValidationInfo = data.readString();
+            
+            return true;
         }
 
     }

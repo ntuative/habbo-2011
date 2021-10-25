@@ -1,61 +1,66 @@
 ﻿package com.sulake.habbo.room.events
 {
+
     import com.sulake.room.events.RoomObjectMouseEvent;
     import com.sulake.room.utils.Vector3d;
     import com.sulake.room.utils.IVector3d;
 
-    public class RoomObjectWallMouseEvent extends RoomObjectMouseEvent 
+    public class RoomObjectWallMouseEvent extends RoomObjectMouseEvent
     {
 
-        private var _x:Number;
-        private var var_2497:Number;
-        private var _direction:Number;
-        private var var_3939:Vector3d = null;
-        private var var_3940:Vector3d = null;
-        private var var_3941:Vector3d = null;
+        private var _x: Number;
+        private var _y: Number;
+        private var _direction: Number;
+        private var _wallLocation: Vector3d = null;
+        private var _wallWidth: Vector3d = null;
+        private var _wallHeight: Vector3d = null;
 
-        public function RoomObjectWallMouseEvent(param1:String, param2:String, param3:int, param4:String, param5:IVector3d, param6:IVector3d, param7:IVector3d, param8:Number, param9:Number, param10:Number, param11:Boolean=false, param12:Boolean=false, param13:Boolean=false, param14:Boolean=false, param15:Boolean=false, param16:Boolean=false)
+        public function RoomObjectWallMouseEvent(type: String, eventId: String, objectId: int, objectType: String, wallLocation: IVector3d, wallWidth: IVector3d, wallHeight: IVector3d, x: Number, y: Number, direction: Number, altKey: Boolean = false, ctrlKey: Boolean = false, shiftKey: Boolean = false, buttonDown: Boolean = false, bubbles: Boolean = false, cancelable: Boolean = false)
         {
-            super(param1, param2, param3, param4, param11, param12, param13, param14, param15, param16);
-            this.var_3939 = new Vector3d();
-            this.var_3939.assign(param5);
-            this.var_3940 = new Vector3d();
-            this.var_3940.assign(param6);
-            this.var_3941 = new Vector3d();
-            this.var_3941.assign(param7);
-            this._x = param8;
-            this.var_2497 = param9;
-            this._direction = param10;
+            super(type, eventId, objectId, objectType, altKey, ctrlKey, shiftKey, buttonDown, bubbles, cancelable);
+            
+            this._wallLocation = new Vector3d();
+            this._wallLocation.assign(wallLocation);
+
+            this._wallWidth = new Vector3d();
+            this._wallWidth.assign(wallWidth);
+
+            this._wallHeight = new Vector3d();
+            this._wallHeight.assign(wallHeight);
+
+            this._x = x;
+            this._y = y;
+            this._direction = direction;
         }
 
-        public function get wallLocation():IVector3d
+        public function get wallLocation(): IVector3d
         {
-            return (this.var_3939);
+            return this._wallLocation;
         }
 
-        public function get wallWidth():IVector3d
+        public function get wallWidth(): IVector3d
         {
-            return (this.var_3940);
+            return this._wallWidth;
         }
 
-        public function get wallHeight():IVector3d
+        public function get wallHeight(): IVector3d
         {
-            return (this.var_3941);
+            return this._wallHeight;
         }
 
-        public function get x():Number
+        public function get x(): Number
         {
-            return (this._x);
+            return this._x;
         }
 
-        public function get y():Number
+        public function get y(): Number
         {
-            return (this.var_2497);
+            return this._y;
         }
 
-        public function get direction():Number
+        public function get direction(): Number
         {
-            return (this._direction);
+            return this._direction;
         }
 
     }

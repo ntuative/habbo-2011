@@ -1,31 +1,33 @@
 ﻿package com.sulake.habbo.communication.messages.parser.navigator
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class FlatAccessDeniedMessageParser implements IMessageParser 
+    public class FlatAccessDeniedMessageParser implements IMessageParser
     {
 
-        private var _userName:String = null;
+        private var _userName: String = null;
 
-        public function get userName():String
+        public function get userName(): String
         {
-            return (this._userName);
+            return this._userName;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(param1: IMessageDataWrapper): Boolean
         {
             if (param1 != null)
             {
                 this._userName = param1.readString();
-            };
-            return (true);
+            }
+
+            return true;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._userName = null;
-            return (true);
+            return true;
         }
 
     }

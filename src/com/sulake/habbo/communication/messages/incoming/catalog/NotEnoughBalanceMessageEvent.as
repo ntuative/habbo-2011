@@ -1,20 +1,21 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.catalog
 {
+
     import com.sulake.core.communication.messages.MessageEvent;
     import com.sulake.core.communication.messages.IMessageEvent;
     import com.sulake.habbo.communication.messages.parser.catalog.NotEnoughBalanceMessageParser;
 
-    public class NotEnoughBalanceMessageEvent extends MessageEvent implements IMessageEvent 
+    public class NotEnoughBalanceMessageEvent extends MessageEvent implements IMessageEvent
     {
 
-        public function NotEnoughBalanceMessageEvent(param1:Function)
+        public function NotEnoughBalanceMessageEvent(param1: Function)
         {
             super(param1, NotEnoughBalanceMessageParser);
         }
 
-        public function getParser():NotEnoughBalanceMessageParser
+        public function getParser(): NotEnoughBalanceMessageParser
         {
-            return (this.var_361 as NotEnoughBalanceMessageParser);
+            return this._parser as NotEnoughBalanceMessageParser;
         }
 
     }

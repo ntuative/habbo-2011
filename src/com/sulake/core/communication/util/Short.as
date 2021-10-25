@@ -1,29 +1,34 @@
 ﻿package com.sulake.core.communication.util
 {
+
     import flash.utils.ByteArray;
 
-    public class Short 
+    public class Short
     {
 
-        private var var_2152:ByteArray;
+        private var _buffer: ByteArray;
 
-        public function Short(param1:int)
+        public function Short(value: int)
         {
-            this.var_2152 = new ByteArray();
-            this.var_2152.writeShort(param1);
-            this.var_2152.position = 0;
+            this._buffer = new ByteArray();
+            this._buffer.writeShort(value);
+            this._buffer.position = 0;
         }
 
-        public function get value():int
+        public function get value(): int
         {
-            var _loc1_:int;
-            this.var_2152.position = 0;
-            if (this.var_2152.bytesAvailable)
+            var val: int;
+
+            this._buffer.position = 0;
+
+            if (this._buffer.bytesAvailable)
             {
-                _loc1_ = this.var_2152.readShort();
-                this.var_2152.position = 0;
-            };
-            return (_loc1_);
+                val = this._buffer.readShort();
+                this._buffer.position = 0;
+            }
+
+
+            return val;
         }
 
     }

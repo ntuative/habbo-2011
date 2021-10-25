@@ -1,32 +1,34 @@
 ﻿package com.sulake.habbo.communication.messages.parser.handshake
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class DisconnectReasonParser implements IMessageParser 
+    public class DisconnectReasonParser implements IMessageParser
     {
 
-        private var var_3161:int;
+        private var _reason: int;
 
         public function DisconnectReasonParser()
         {
-            this.var_3161 = -1;
+            this._reason = -1;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3161 = param1.readInteger();
-            return (true);
+            this._reason = data.readInteger();
+            
+            return true;
         }
 
-        public function get reason():int
+        public function get reason(): int
         {
-            return (this.var_3161);
+            return this._reason;
         }
 
     }

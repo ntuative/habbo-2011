@@ -1,11 +1,12 @@
 ﻿package com.sulake.habbo.catalog.viewer
 {
+
     import flash.utils.Dictionary;
 
-    public class ProductImageConfiguration 
+    public class ProductImageConfiguration
     {
 
-        public static const var_1954:Dictionary = new Dictionary();
+        public static const var_1954: Dictionary = new Dictionary();
 
         {
             var_1954["deal01"] = "ctlg_pic_deal01";
@@ -50,9 +51,9 @@
             var_1954["qt_val11_heartlights"] = "ctlg_pic_qt_val11_heartlights";
         }
 
-        public static function hasProductImage(param1:String):Boolean
+        public static function hasProductImage(param1: String): Boolean
         {
-            return (!(var_1954[param1] == null));
+            return var_1954[param1] != null;
         }
 
     }

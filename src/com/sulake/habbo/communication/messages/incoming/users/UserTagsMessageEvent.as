@@ -1,25 +1,26 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.users
 {
+
     import com.sulake.core.communication.messages.MessageEvent;
     import com.sulake.core.communication.messages.IMessageEvent;
     import com.sulake.habbo.communication.messages.parser.users.UserTagsMessageParser;
 
-    public class UserTagsMessageEvent extends MessageEvent implements IMessageEvent 
+    public class UserTagsMessageEvent extends MessageEvent implements IMessageEvent
     {
 
-        public function UserTagsMessageEvent(param1:Function)
+        public function UserTagsMessageEvent(param1: Function)
         {
             super(param1, UserTagsMessageParser);
         }
 
-        public function get tags():Array
+        public function get tags(): Array
         {
-            return ((var_361 as UserTagsMessageParser).tags);
+            return (_parser as UserTagsMessageParser).tags;
         }
 
-        public function get userId():int
+        public function get userId(): int
         {
-            return ((var_361 as UserTagsMessageParser).userId);
+            return (_parser as UserTagsMessageParser).userId;
         }
 
     }

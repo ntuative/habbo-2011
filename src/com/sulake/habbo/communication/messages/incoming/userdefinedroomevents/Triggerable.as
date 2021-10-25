@@ -1,99 +1,104 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.userdefinedroomevents
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class Triggerable 
+    public class Triggerable
     {
 
-        private var var_3073:Boolean;
-        private var _furniLimit:int;
-        private var var_3071:Array = new Array();
-        private var _id:int;
-        private var var_3074:String;
-        private var var_3072:Array = new Array();
-        private var var_3075:int;
-        private var var_3076:int;
+        private var _stuffTypeSelectionEnabled: Boolean;
+        private var _furniLimit: int;
+        private var _stuffIds: Array = [];
+        private var _id: int;
+        private var _stringParam: String;
+        private var _intParams: Array = [];
+        private var _stuffTypeId: int;
+        private var _stuffTypeSelectionCode: int;
 
-        public function Triggerable(param1:IMessageDataWrapper)
+        public function Triggerable(data: IMessageDataWrapper)
         {
-            var _loc5_:int;
             super();
-            this.var_3073 = param1.readBoolean();
-            this._furniLimit = param1.readInteger();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._stuffTypeSelectionEnabled = data.readBoolean();
+            this._furniLimit = data.readInteger();
+            
+            var stuffIdCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < stuffIdCount)
             {
-                _loc5_ = param1.readInteger();
-                this.var_3071.push(_loc5_);
-                _loc3_++;
-            };
-            this.var_3075 = param1.readInteger();
-            this._id = param1.readInteger();
-            this.var_3074 = param1.readString();
-            var _loc4_:int = param1.readInteger();
-            _loc3_ = 0;
-            while (_loc3_ < _loc4_)
+                this._stuffIds.push(data.readInteger());
+                i++;
+            }
+
+            this._stuffTypeId = data.readInteger();
+            this._id = data.readInteger();
+            this._stringParam = data.readString();
+            
+            var intParamsCount: int = data.readInteger();
+            i = 0;
+            
+            while (i < intParamsCount)
             {
-                this.var_3072.push(param1.readInteger());
-                _loc3_++;
-            };
-            this.var_3076 = param1.readInteger();
+                this._intParams.push(data.readInteger());
+                i++;
+            }
+
+            this._stuffTypeSelectionCode = data.readInteger();
         }
 
-        public function get stuffTypeSelectionEnabled():Boolean
+        public function get stuffTypeSelectionEnabled(): Boolean
         {
-            return (this.var_3073);
+            return this._stuffTypeSelectionEnabled;
         }
 
-        public function get stuffTypeSelectionCode():int
+        public function get stuffTypeSelectionCode(): int
         {
-            return (this.var_3076);
+            return this._stuffTypeSelectionCode;
         }
 
-        public function set stuffTypeSelectionCode(param1:int):void
+        public function set stuffTypeSelectionCode(value: int): void
         {
-            this.var_3076 = param1;
+            this._stuffTypeSelectionCode = value;
         }
 
-        public function get furniLimit():int
+        public function get furniLimit(): int
         {
-            return (this._furniLimit);
+            return this._furniLimit;
         }
 
-        public function get stuffIds():Array
+        public function get stuffIds(): Array
         {
-            return (this.var_3071);
+            return this._stuffIds;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get stringParam():String
+        public function get stringParam(): String
         {
-            return (this.var_3074);
+            return this._stringParam;
         }
 
-        public function get intParams():Array
+        public function get intParams(): Array
         {
-            return (this.var_3072);
+            return this._intParams;
         }
 
-        public function get code():int
+        public function get code(): int
         {
-            return (0);
+            return 0;
         }
 
-        public function get stuffTypeId():int
+        public function get stuffTypeId(): int
         {
-            return (this.var_3075);
+            return this._stuffTypeId;
         }
 
-        public function getBoolean(param1:int):Boolean
+        public function getBoolean(value: int): Boolean
         {
-            return (this.var_3072[param1] == 1);
+            return this._intParams[value] == 1;
         }
 
     }

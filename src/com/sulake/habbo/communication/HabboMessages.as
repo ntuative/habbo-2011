@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.communication
 {
+
     import com.sulake.core.communication.messages.IMessageConfiguration;
     import com.sulake.core.utils.Map;
     import com.sulake.habbo.communication.messages.incoming.handshake.HelloMessageEvent;
@@ -541,11 +542,11 @@
     import com.sulake.habbo.communication.messages.outgoing.inventory.achievements.*;
     import com.sulake.habbo.communication.messages.outgoing.inventory.purse.*;
 
-    public class HabboMessages implements IMessageConfiguration 
+    public class HabboMessages implements IMessageConfiguration
     {
 
-        private static const _events:Map = new Map(true);
-        private static const var_1437:Map = new Map(true);
+        private static const _events: Map = new Map(true);
+        private static const var_1437: Map = new Map(true);
 
         {
             _events[0] = HelloMessageEvent;
@@ -1043,17 +1044,16 @@
             var_1437[3311] = FaceBookInitiateAddFriendsMessageComposer;
         }
 
-        public function get events():Map
+        public function get events(): Map
         {
-            return (_events);
+            return _events;
         }
 
-        public function get composers():Map
+        public function get composers(): Map
         {
-            return (var_1437);
+            return var_1437;
         }
 
     }
 }
 2;
-

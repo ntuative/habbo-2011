@@ -1,10 +1,12 @@
 ﻿package com.sulake.habbo.avatar
 {
-    public interface IOutfit 
+
+    public interface IOutfit
     {
 
-        function get figure():String;
-        function get gender():String;
+        function get figure(): String;
+
+        function get gender(): String;
 
     }
 }

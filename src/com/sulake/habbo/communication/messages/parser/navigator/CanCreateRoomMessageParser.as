@@ -1,37 +1,39 @@
 ﻿package com.sulake.habbo.communication.messages.parser.navigator
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class CanCreateRoomMessageParser implements IMessageParser 
+    public class CanCreateRoomMessageParser implements IMessageParser
     {
 
-        public static const var_1685:int = 0;
-        public static const var_1686:int = 1;
+        public static const UNKNOWN_1: int = 0;
+        public static const UNKNOWN_2: int = 1;
 
-        private var var_3129:int;
-        private var var_3250:int;
+        private var _resultCode: int;
+        private var _roomLimit: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3129 = param1.readInteger();
-            this.var_3250 = param1.readInteger();
-            return (true);
+            this._resultCode = data.readInteger();
+            this._roomLimit = data.readInteger();
+
+            return true;
         }
 
-        public function get resultCode():int
+        public function get resultCode(): int
         {
-            return (this.var_3129);
+            return this._resultCode;
         }
 
-        public function get roomLimit():int
+        public function get roomLimit(): int
         {
-            return (this.var_3250);
+            return this._roomLimit;
         }
 
     }

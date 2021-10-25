@@ -1,21 +1,23 @@
 ﻿package com.sulake.habbo.catalog.viewer.widgets.events
 {
+
     import flash.events.Event;
 
-    public class CatalogWidgetPurchaseOverrideEvent extends Event 
+    public class CatalogWidgetPurchaseOverrideEvent extends Event
     {
 
-        private var var_1095:Function;
+        private var _callback: Function;
 
-        public function CatalogWidgetPurchaseOverrideEvent(param1:Function, param2:Boolean=false, param3:Boolean=false)
+        public function CatalogWidgetPurchaseOverrideEvent(callback: Function, param2: Boolean = false, param3: Boolean = false)
         {
             super(WidgetEvent.CWE_PURCHASE_OVERRIDE, param2, param3);
-            this.var_1095 = param1;
+
+            this._callback = callback;
         }
 
-        public function get callback():Function
+        public function get callback(): Function
         {
-            return (this.var_1095);
+            return this._callback;
         }
 
     }

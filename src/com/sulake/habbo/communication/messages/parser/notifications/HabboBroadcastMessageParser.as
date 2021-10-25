@@ -1,27 +1,29 @@
 ﻿package com.sulake.habbo.communication.messages.parser.notifications
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class HabboBroadcastMessageParser implements IMessageParser 
+    public class HabboBroadcastMessageParser implements IMessageParser
     {
 
-        private var var_3159:String = "";
+        private var _messageText: String = "";
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3159 = param1.readString();
-            return (true);
+            this._messageText = data.readString();
+            
+            return true;
         }
 
-        public function get messageText():String
+        public function get messageText(): String
         {
-            return (this.var_3159);
+            return this._messageText;
         }
 
     }

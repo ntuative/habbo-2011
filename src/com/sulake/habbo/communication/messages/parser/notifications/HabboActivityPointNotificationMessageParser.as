@@ -1,41 +1,43 @@
 ﻿package com.sulake.habbo.communication.messages.parser.notifications
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class HabboActivityPointNotificationMessageParser implements IMessageParser 
+    public class HabboActivityPointNotificationMessageParser implements IMessageParser
     {
 
-        private var var_3266:int = 0;
-        private var var_3267:int = 0;
-        private var _type:int;
+        private var _amount: int = 0;
+        private var _change: int = 0;
+        private var _type: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3266 = param1.readInteger();
-            this.var_3267 = param1.readInteger();
-            this._type = param1.readInteger();
-            return (true);
+            this._amount = data.readInteger();
+            this._change = data.readInteger();
+            this._type = data.readInteger();
+            
+            return true;
         }
 
-        public function get amount():int
+        public function get amount(): int
         {
-            return (this.var_3266);
+            return this._amount;
         }
 
-        public function get change():int
+        public function get change(): int
         {
-            return (this.var_3267);
+            return this._change;
         }
 
-        public function get type():int
+        public function get type(): int
         {
-            return (this._type);
+            return this._type;
         }
 
     }

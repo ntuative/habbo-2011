@@ -1,28 +1,31 @@
 ﻿package com.sulake.habbo.communication.messages.parser.availability
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class InfoHotelClosingMessageParser implements IMessageParser 
+    public class InfoHotelClosingMessageParser implements IMessageParser
     {
 
-        private var var_3128:int;
+        private var _minutesUntilClosing: int;
 
-        public function get minutesUntilClosing():int
+        public function get minutesUntilClosing(): int
         {
-            return (this.var_3128);
+            return this._minutesUntilClosing;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3128 = 0;
-            return (true);
+            this._minutesUntilClosing = 0;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3128 = param1.readInteger();
-            return (true);
+            this._minutesUntilClosing = data.readInteger();
+            
+            return true;
         }
 
     }

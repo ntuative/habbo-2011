@@ -1,143 +1,145 @@
 ﻿package com.sulake.habbo.communication.messages.parser.handshake
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class SessionParamsMessageParser implements IMessageParser 
+    public class SessionParamsMessageParser implements IMessageParser
     {
 
-        protected var var_3166:Boolean;
-        protected var var_3167:Boolean;
-        protected var var_3168:String;
-        protected var var_3169:Boolean;
-        protected var var_3170:Boolean;
-        protected var var_3171:Boolean;
-        protected var _confPartnerIntegration:Boolean;
-        protected var var_3172:Boolean;
-        protected var var_3173:String;
-        protected var var_3174:Boolean;
+        protected var _coppa: Boolean;
+        protected var _voucher: Boolean;
+        protected var _date: String;
+        protected var _parentEmailRequired: Boolean;
+        protected var _parentEmailRequiredInReRegistration: Boolean;
+        protected var _allowDirectEmail: Boolean;
+        protected var _confPartnerIntegration: Boolean;
+        protected var _allowProfileEditing: Boolean;
+        protected var _trackingHeader: String;
+        protected var _tutorialEnabled: Boolean;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3166 = false;
-            this.var_3167 = false;
-            this.var_3168 = "";
-            this.var_3169 = false;
-            this.var_3170 = false;
-            this.var_3171 = false;
+            this._coppa = false;
+            this._voucher = false;
+            this._date = "";
+            this._parentEmailRequired = false;
+            this._parentEmailRequiredInReRegistration = false;
+            this._allowDirectEmail = false;
             this._confPartnerIntegration = false;
-            this.var_3172 = false;
-            this.var_3173 = "";
-            this.var_3174 = false;
-            return (true);
+            this._allowProfileEditing = false;
+            this._trackingHeader = "";
+            this._tutorialEnabled = false;
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc4_:int;
-            var _loc5_:int;
-            var _loc6_:String;
-            var _loc7_:String;
-            var _loc2_:int = param1.readInteger();
-            Logger.log((("[Parser.SessionParams] Got " + _loc2_) + " pairs"));
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            var pairId: int;
+            var _loc5_: int;
+            var _loc6_: String;
+            var _loc7_: String;
+            
+            var pairs: int = data.readInteger();
+            var i: int;
+            
+            Logger.log("[Parser.SessionParams] Got " + pairs + " pairs");
+            
+            while (i < pairs)
             {
-                _loc4_ = param1.readInteger();
-                Logger.log(("[Parser.SessionParams] Got id: " + _loc4_));
-                switch (_loc4_)
+                pairId = data.readInteger();
+                Logger.log("[Parser.SessionParams] Got id: " + pairId);
+
+                switch (pairId)
                 {
                     case 0:
-                        _loc5_ = param1.readInteger();
-                        this.var_3166 = (_loc5_ > 0);
+                        this._coppa = data.readInteger() > 0;
                         break;
                     case 1:
-                        _loc5_ = param1.readInteger();
-                        this.var_3167 = (_loc5_ > 0);
+                        this._voucher = data.readInteger() > 0;
                         break;
                     case 2:
-                        _loc5_ = param1.readInteger();
-                        this.var_3169 = (_loc5_ > 0);
+                        this._parentEmailRequired = data.readInteger() > 0;
                         break;
                     case 3:
-                        _loc5_ = param1.readInteger();
-                        this.var_3170 = (_loc5_ > 0);
+                        this._parentEmailRequiredInReRegistration = data.readInteger() > 0;
                         break;
                     case 4:
-                        _loc5_ = param1.readInteger();
-                        this.var_3171 = (_loc5_ > 0);
+                        this._allowDirectEmail = data.readInteger() > 0;
                         break;
                     case 5:
-                        _loc6_ = param1.readString();
+                        this._date = data.readString();
                         break;
                     case 6:
-                        _loc5_ = param1.readInteger();
+                        this._confPartnerIntegration = data.readInteger() > 0;
                         break;
                     case 7:
-                        _loc5_ = param1.readInteger();
+                        this._allowProfileEditing = data.readInteger() > 0;
                         break;
                     case 8:
-                        _loc7_ = param1.readString();
+                        this._trackingHeader = data.readString();
                         break;
                     case 9:
-                        _loc5_ = param1.readInteger();
+                        this._tutorialEnabled = data.readInteger() > 0;
                         break;
                     default:
-                        Logger.log(("Unknown id: " + _loc4_));
-                };
-                _loc3_++;
-            };
-            return (true);
+                        Logger.log("Unknown id: " + pairId);
+                }
+
+                i++;
+            }
+
+            return true;
         }
 
-        public function get coppa():Boolean
+        public function get coppa(): Boolean
         {
-            return (this.var_3166);
+            return this._coppa;
         }
 
-        public function get voucher():Boolean
+        public function get voucher(): Boolean
         {
-            return (this.var_3167);
+            return this._voucher;
         }
 
-        public function get parentEmailRequired():Boolean
+        public function get parentEmailRequired(): Boolean
         {
-            return (this.var_3169);
+            return this._parentEmailRequired;
         }
 
-        public function get parentEmailRequiredInReRegistration():Boolean
+        public function get parentEmailRequiredInReRegistration(): Boolean
         {
-            return (this.var_3170);
+            return this._parentEmailRequiredInReRegistration;
         }
 
-        public function get allowDirectEmail():Boolean
+        public function get allowDirectEmail(): Boolean
         {
-            return (this.var_3171);
+            return this._allowDirectEmail;
         }
 
-        public function get date():String
+        public function get date(): String
         {
-            return (this.var_3168);
+            return this._date;
         }
 
-        public function get confPartnerIntegration():Boolean
+        public function get confPartnerIntegration(): Boolean
         {
-            return (this._confPartnerIntegration);
+            return this._confPartnerIntegration;
         }
 
-        public function get allowProfileEditing():Boolean
+        public function get allowProfileEditing(): Boolean
         {
-            return (this.var_3172);
+            return this._allowProfileEditing;
         }
 
-        public function get tracking_header():String
+        public function get tracking_header(): String
         {
-            return (this.var_3173);
+            return this._trackingHeader;
         }
 
-        public function get tutorialEnabled():Boolean
+        public function get tutorialEnabled(): Boolean
         {
-            return (this.var_3174);
+            return this._tutorialEnabled;
         }
 
     }

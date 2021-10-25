@@ -1,22 +1,23 @@
 ﻿package com.sulake.habbo.communication.messages.outgoing.room.session
 {
+
     import com.sulake.core.communication.messages.IMessageComposer;
 
-    public class QuitMessageComposer implements IMessageComposer 
+    public class QuitMessageComposer implements IMessageComposer
     {
 
-        public function getMessageArray():Array
+        public function getMessageArray(): Array
         {
-            return (new Array());
+            return [];
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (true);
+            return true;
         }
 
     }

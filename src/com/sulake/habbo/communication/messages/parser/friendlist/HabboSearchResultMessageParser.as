@@ -1,49 +1,54 @@
 ﻿package com.sulake.habbo.communication.messages.parser.friendlist
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.friendlist.HabboSearchResultData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class HabboSearchResultMessageParser implements IMessageParser 
+    public class HabboSearchResultMessageParser implements IMessageParser
     {
 
-        private var var_2681:Array;
-        private var var_3151:Array;
+        private var _friends: Array;
+        private var _others: Array;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_2681 = new Array();
-            this.var_3151 = new Array();
-            return (true);
+            this._friends = [];
+            this._others = [];
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            var friendCount: int = data.readInteger();
+            var i: int;
+            while (i < friendCount)
             {
-                this.var_2681.push(new HabboSearchResultData(param1));
-                _loc3_++;
-            };
-            var _loc4_:int = param1.readInteger();
-            _loc3_ = 0;
-            while (_loc3_ < _loc4_)
+                this._friends.push(new HabboSearchResultData(data));
+                i++;
+            }
+
+            var otherCount: int = data.readInteger();
+            i = 0;
+            
+            while (i < otherCount)
             {
-                this.var_3151.push(new HabboSearchResultData(param1));
-                _loc3_++;
-            };
-            return (true);
+                this._others.push(new HabboSearchResultData(data));
+                i++;
+            }
+
+            return true;
         }
 
-        public function get friends():Array
+        public function get friends(): Array
         {
-            return (this.var_2681);
+            return this._friends;
         }
 
-        public function get others():Array
+        public function get others(): Array
         {
-            return (this.var_3151);
+            return this._others;
         }
 
     }

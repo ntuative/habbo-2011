@@ -1,98 +1,99 @@
 ﻿package com.sulake.habbo.catalog.purse
 {
+
     import flash.utils.Dictionary;
 
-    public class Purse implements IPurse 
+    public class Purse implements IPurse
     {
 
-        public static const var_142:int = 0;
+        public static const ACTIVITY_POINTS_TYPE_PIXELS: int = 0;
 
-        private var var_2696:int = 0;
-        private var var_2697:Dictionary = new Dictionary();
-        private var var_2698:int = 0;
-        private var var_2699:int = 0;
-        private var var_2700:Boolean = false;
-        private var var_2701:int = 0;
-        private var var_2702:int = 0;
+        private var _credits: int = 0;
+        private var _activityPoints: Dictionary = new Dictionary();
+        private var _clubDays: int = 0;
+        private var _clubPeriods: int = 0;
+        private var _isVip: Boolean = false;
+        private var _pastClubDays: int = 0;
+        private var _pastVipDays: int = 0;
 
-        public function get credits():int
+        public function get credits(): int
         {
-            return (this.var_2696);
+            return this._credits;
         }
 
-        public function set credits(param1:int):void
+        public function set credits(param1: int): void
         {
-            this.var_2696 = param1;
+            this._credits = param1;
         }
 
-        public function get clubDays():int
+        public function get clubDays(): int
         {
-            return (this.var_2698);
+            return this._clubDays;
         }
 
-        public function set clubDays(param1:int):void
+        public function set clubDays(param1: int): void
         {
-            this.var_2698 = param1;
+            this._clubDays = param1;
         }
 
-        public function get clubPeriods():int
+        public function get clubPeriods(): int
         {
-            return (this.var_2699);
+            return this._clubPeriods;
         }
 
-        public function set clubPeriods(param1:int):void
+        public function set clubPeriods(param1: int): void
         {
-            this.var_2699 = param1;
+            this._clubPeriods = param1;
         }
 
-        public function get hasClubLeft():Boolean
+        public function get hasClubLeft(): Boolean
         {
-            return ((this.var_2698 > 0) || (this.var_2699 > 0));
+            return this._clubDays > 0 || this._clubPeriods > 0;
         }
 
-        public function get isVIP():Boolean
+        public function get isVIP(): Boolean
         {
-            return (this.var_2700);
+            return this._isVip;
         }
 
-        public function set isVIP(param1:Boolean):void
+        public function set isVIP(param1: Boolean): void
         {
-            this.var_2700 = param1;
+            this._isVip = param1;
         }
 
-        public function get pastClubDays():int
+        public function get pastClubDays(): int
         {
-            return (this.var_2701);
+            return this._pastClubDays;
         }
 
-        public function set pastClubDays(param1:int):void
+        public function set pastClubDays(param1: int): void
         {
-            this.var_2701 = param1;
+            this._pastClubDays = param1;
         }
 
-        public function get pastVipDays():int
+        public function get pastVipDays(): int
         {
-            return (this.var_2702);
+            return this._pastVipDays;
         }
 
-        public function set pastVipDays(param1:int):void
+        public function set pastVipDays(param1: int): void
         {
-            this.var_2702 = param1;
+            this._pastVipDays = param1;
         }
 
-        public function get activityPoints():Dictionary
+        public function get activityPoints(): Dictionary
         {
-            return (this.var_2697);
+            return this._activityPoints;
         }
 
-        public function set activityPoints(param1:Dictionary):void
+        public function set activityPoints(param1: Dictionary): void
         {
-            this.var_2697 = param1;
+            this._activityPoints = param1;
         }
 
-        public function getActivityPointsForType(param1:int):int
+        public function getActivityPointsForType(param1: int): int
         {
-            return (this.var_2697[param1]);
+            return this._activityPoints[param1];
         }
 
     }

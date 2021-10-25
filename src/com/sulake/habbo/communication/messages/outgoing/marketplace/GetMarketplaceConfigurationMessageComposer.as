@@ -1,16 +1,17 @@
 ﻿package com.sulake.habbo.communication.messages.outgoing.marketplace
 {
+
     import com.sulake.core.communication.messages.IMessageComposer;
 
-    public class GetMarketplaceConfigurationMessageComposer implements IMessageComposer 
+    public class GetMarketplaceConfigurationMessageComposer implements IMessageComposer
     {
 
-        public function getMessageArray():Array
+        public function getMessageArray(): Array
         {
-            return (new Array());
+            return [];
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
         }
 

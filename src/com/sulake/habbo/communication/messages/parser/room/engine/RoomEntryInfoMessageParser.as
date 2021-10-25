@@ -1,60 +1,64 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.engine
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.navigator.PublicRoomShortData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class RoomEntryInfoMessageParser implements IMessageParser 
+    public class RoomEntryInfoMessageParser implements IMessageParser
     {
 
-        private var var_3302:Boolean;
-        private var var_3303:int;
-        private var var_2197:Boolean;
-        private var var_3304:PublicRoomShortData;
+        private var _guestRoom: Boolean;
+        private var _guestRoomId: int;
+        private var _owner: Boolean;
+        private var _publicSpace: PublicRoomShortData;
 
-        public function get guestRoom():Boolean
+        public function get guestRoom(): Boolean
         {
-            return (this.var_3302);
+            return this._guestRoom;
         }
 
-        public function get guestRoomId():int
+        public function get guestRoomId(): int
         {
-            return (this.var_3303);
+            return this._guestRoomId;
         }
 
-        public function get publicSpace():PublicRoomShortData
+        public function get publicSpace(): PublicRoomShortData
         {
-            return (this.var_3304);
+            return this._publicSpace;
         }
 
-        public function get owner():Boolean
+        public function get owner(): Boolean
         {
-            return (this.var_2197);
+            return this._owner;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            if (this.var_3304 != null)
+            if (this._publicSpace != null)
             {
-                this.var_3304.dispose();
-                this.var_3304 = null;
-            };
-            return (true);
+                this._publicSpace.dispose();
+                this._publicSpace = null;
+            }
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3302 = param1.readBoolean();
-            if (this.var_3302)
+            this._guestRoom = data.readBoolean();
+            
+            if (this._guestRoom)
             {
-                this.var_3303 = param1.readInteger();
-                this.var_2197 = param1.readBoolean();
+                this._guestRoomId = data.readInteger();
+                this._owner = data.readBoolean();
             }
             else
             {
-                this.var_3304 = new PublicRoomShortData(param1);
-            };
-            return (true);
+                this._publicSpace = new PublicRoomShortData(data);
+            }
+
+            return true;
         }
 
     }

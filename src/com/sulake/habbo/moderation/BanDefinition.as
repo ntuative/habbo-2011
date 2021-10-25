@@ -1,25 +1,26 @@
 ﻿package com.sulake.habbo.moderation
 {
-    public class BanDefinition 
+
+    public class BanDefinition
     {
 
-        private var _name:String;
-        private var var_3638:int;
+        private var _name: String;
+        private var _banLengthHours: int;
 
-        public function BanDefinition(param1:String, param2:int)
+        public function BanDefinition(name: String, banLengthHours: int)
         {
-            this._name = param1;
-            this.var_3638 = param2;
+            this._name = name;
+            this._banLengthHours = banLengthHours;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get banLengthHours():int
+        public function get banLengthHours(): int
         {
-            return (this.var_3638);
+            return this._banLengthHours;
         }
 
     }

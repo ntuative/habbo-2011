@@ -1,29 +1,32 @@
 ﻿package com.sulake.habbo.communication.messages.parser.userdefinedroomevents
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.userdefinedroomevents.ConditionDefinition;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class WiredFurniConditionMessageParser implements IMessageParser 
+    public class WiredFurniConditionMessageParser implements IMessageParser
     {
 
-        private var var_3349:ConditionDefinition;
+        private var _def: ConditionDefinition;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3349 = null;
-            return (true);
+            this._def = null;
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3349 = new ConditionDefinition(param1);
-            return (true);
+            this._def = new ConditionDefinition(data);
+
+            return true;
         }
 
-        public function get def():ConditionDefinition
+        public function get def(): ConditionDefinition
         {
-            return (this.var_3349);
+            return this._def;
         }
 
     }

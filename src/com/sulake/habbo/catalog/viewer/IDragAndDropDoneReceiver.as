@@ -1,9 +1,10 @@
 package com.sulake.habbo.catalog.viewer
 {
-    public interface IDragAndDropDoneReceiver 
+
+    public interface IDragAndDropDoneReceiver
     {
 
-        function onDragAndDropDone(param1:Boolean):void;
+        function onDragAndDropDone(param1: Boolean): void;
 
     }
 }

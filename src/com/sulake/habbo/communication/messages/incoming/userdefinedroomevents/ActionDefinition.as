@@ -1,46 +1,51 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.userdefinedroomevents
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ActionDefinition extends Triggerable 
+    public class ActionDefinition extends Triggerable
     {
 
-        private var _type:int;
-        private var var_3070:int;
-        private var var_3069:Array = new Array();
+        private var _type: int;
+        private var _delayInPulses: int;
+        private var _conflictingTriggers: Array = [];
 
-        public function ActionDefinition(param1:IMessageDataWrapper)
+        public function ActionDefinition(data: IMessageDataWrapper)
         {
-            super(param1);
-            this._type = param1.readInteger();
-            this.var_3070 = param1.readInteger();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            super(data);
+
+            this._type = data.readInteger();
+            this._delayInPulses = data.readInteger();
+            
+            var conflictingTriggerCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < conflictingTriggerCount)
             {
-                this.var_3069.push(param1.readInteger());
-                _loc3_++;
-            };
+                this._conflictingTriggers.push(data.readInteger());
+                i++;
+            }
+
         }
 
-        public function get type():int
+        public function get type(): int
         {
-            return (this._type);
+            return this._type;
         }
 
-        override public function get code():int
+        override public function get code(): int
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get delayInPulses():int
+        public function get delayInPulses(): int
         {
-            return (this.var_3070);
+            return this._delayInPulses;
         }
 
-        public function get conflictingTriggers():Array
+        public function get conflictingTriggers(): Array
         {
-            return (this.var_3069);
+            return this._conflictingTriggers;
         }
 
     }

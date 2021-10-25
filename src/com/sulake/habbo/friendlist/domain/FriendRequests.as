@@ -1,145 +1,167 @@
 ﻿package com.sulake.habbo.friendlist.domain
 {
+
     import com.sulake.habbo.friendlist.Util;
 
-    public class FriendRequests 
+    public class FriendRequests
     {
 
-        private var var_3412:IFriendRequestsDeps;
-        private var _requests:Array = new Array();
-        private var var_3193:int;
-        private var var_3424:int;
-        private var var_3425:int;
+        private var _deps: IFriendRequestsDeps;
+        private var _requests: Array = [];
+        private var _limit: int;
+        private var _clubLimit: int;
+        private var _vipLimit: int;
 
-        public function FriendRequests(param1:IFriendRequestsDeps, param2:int, param3:int, param4:int)
+        public function FriendRequests(deps: IFriendRequestsDeps, limit: int, clubLimit: int, vipLimit: int)
         {
-            this.var_3412 = param1;
-            this.var_3193 = param2;
-            this.var_3424 = param3;
-            this.var_3425 = param4;
+            this._deps = deps;
+            this._limit = limit;
+            this._clubLimit = clubLimit;
+            this._vipLimit = vipLimit;
         }
 
-        public function clearAndUpdateView(param1:Boolean):void
+        public function clearAndUpdateView(clearAll: Boolean): void
         {
-            var _loc3_:FriendRequest;
-            var _loc4_:FriendRequest;
-            var _loc2_:Array = new Array();
-            for each (_loc3_ in this._requests)
+            var request: FriendRequest;
+
+            var removal: FriendRequest;
+            var requestsToRemove: Array = [];
+
+            for each (request in this._requests)
             {
-                if (((!(param1)) || (!(_loc3_.state == FriendRequest.var_1530))))
+                if (!clearAll || request.state != FriendRequest.FRIEND_STATE_PENDING)
                 {
-                    _loc2_.push(_loc3_);
-                };
-            };
-            for each (_loc4_ in _loc2_)
+                    requestsToRemove.push(request);
+                }
+
+            }
+
+            for each (removal in requestsToRemove)
             {
-                Util.remove(this._requests, _loc4_);
-                if (this.var_3412.view != null)
+                Util.remove(this._requests, removal);
+
+                if (this._deps.view != null)
                 {
-                    this.var_3412.view.removeRequest(_loc4_);
-                };
-                _loc4_.dispose();
-            };
+                    this._deps.view.removeRequest(removal);
+                }
+
+                removal.dispose();
+            }
+
             this.refreshShading();
         }
 
-        public function acceptFailed(param1:String):void
+        public function acceptFailed(param1: String): void
         {
-            var _loc2_:FriendRequest = this.each(param1);
-            if (_loc2_ == null)
+            var request: FriendRequest = this.each(param1);
+            
+            if (request == null)
             {
-                Logger.log((("No friedrequest found " + param1) + " when error received"));
+                Logger.log("No friedrequest found " + param1 + " when error received");
+                
                 return;
-            };
-            _loc2_.state = FriendRequest.var_1625;
-            this.var_3412.view.refreshRequestEntry(_loc2_);
+            }
+
+            request.state = FriendRequest.FRIEND_STATE_FAILED;
+            this._deps.view.refreshRequestEntry(request);
         }
 
-        public function addRequest(param1:FriendRequest):void
+        public function addRequest(request: FriendRequest): void
         {
-            this._requests.push(param1);
+            this._requests.push(request);
         }
 
-        public function addRequestAndUpdateView(param1:FriendRequest):void
+        public function addRequestAndUpdateView(request: FriendRequest): void
         {
-            this._requests.push(param1);
-            this.var_3412.view.addRequest(param1);
+            this._requests.push(request);
+            this._deps.view.addRequest(request);
         }
 
-        public function getRequest(param1:int):FriendRequest
+        public function getRequest(id: int): FriendRequest
         {
-            var _loc2_:FriendRequest;
-            for each (_loc2_ in this._requests)
+            var request: FriendRequest;
+
+            for each (request in this._requests)
             {
-                if (_loc2_.requestId == param1)
+                if (request.requestId == id)
                 {
-                    return (_loc2_);
-                };
-            };
-            return (null);
+                    return request;
+                }
+
+            }
+
+            return null;
         }
 
-        public function each(param1:String):FriendRequest
+        public function each(name: String): FriendRequest
         {
-            var _loc2_:FriendRequest;
-            for each (_loc2_ in this._requests)
+            var request: FriendRequest;
+
+            for each (request in this._requests)
             {
-                if (_loc2_.requesterName == param1)
+                if (request.requesterName == name)
                 {
-                    return (_loc2_);
-                };
-            };
-            return (null);
+                    return request;
+                }
+
+            }
+
+            return null;
         }
 
-        public function refreshShading():void
+        public function refreshShading(): void
         {
-            var _loc2_:FriendRequest;
-            var _loc1_:Boolean = true;
-            for each (_loc2_ in this._requests)
+            var request: FriendRequest;
+            var shaded: Boolean = true;
+
+            for each (request in this._requests)
             {
-                _loc1_ = (!(_loc1_));
-                this.var_3412.view.refreshShading(_loc2_, _loc1_);
-            };
+                shaded = !shaded;
+                this._deps.view.refreshShading(request, shaded);
+            }
+
         }
 
-        public function getCountOfOpenRequests():int
+        public function getCountOfOpenRequests(): int
         {
-            var _loc2_:FriendRequest;
-            var _loc1_:int;
-            for each (_loc2_ in this.requests)
+            var request: FriendRequest;
+            var total: int;
+
+            for each (request in this.requests)
             {
-                if (_loc2_.state == FriendRequest.var_1530)
+                if (request.state == FriendRequest.FRIEND_STATE_PENDING)
                 {
-                    _loc1_++;
-                };
-            };
-            return (_loc1_);
+                    total++;
+                }
+
+            }
+
+            return total;
         }
 
-        public function get requests():Array
+        public function get requests(): Array
         {
-            return (this._requests);
+            return this._requests;
         }
 
-        public function get limit():int
+        public function get limit(): int
         {
-            return (this.var_3193);
+            return this._limit;
         }
 
-        public function get clubLimit():int
+        public function get clubLimit(): int
         {
-            return (this.var_3424);
+            return this._clubLimit;
         }
 
-        public function get vipLimit():int
+        public function get vipLimit(): int
         {
-            return (this.var_3425);
+            return this._vipLimit;
         }
 
-        public function set limit(param1:int):void
+        public function set limit(value: int): void
         {
-            this.var_3193 = param1;
+            this._limit = value;
         }
 
     }

@@ -1,34 +1,35 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.navigator
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class FlatCategory 
+    public class FlatCategory
     {
 
-        private var var_2979:int;
-        private var var_2980:String;
-        private var var_1023:Boolean;
+        private var _nodeId: int;
+        private var _nodeName: String;
+        private var _visible: Boolean;
 
-        public function FlatCategory(param1:IMessageDataWrapper)
+        public function FlatCategory(data: IMessageDataWrapper)
         {
-            this.var_2979 = param1.readInteger();
-            this.var_2980 = param1.readString();
-            this.var_1023 = param1.readBoolean();
+            this._nodeId = data.readInteger();
+            this._nodeName = data.readString();
+            this._visible = data.readBoolean();
         }
 
-        public function get nodeId():int
+        public function get nodeId(): int
         {
-            return (this.var_2979);
+            return this._nodeId;
         }
 
-        public function get nodeName():String
+        public function get nodeName(): String
         {
-            return (this.var_2980);
+            return this._nodeName;
         }
 
-        public function get visible():Boolean
+        public function get visible(): Boolean
         {
-            return (this.var_1023);
+            return this._visible;
         }
 
     }

@@ -1,18 +1,19 @@
 ﻿package com.sulake.habbo.communication.messages.outgoing.poll
 {
+
     import com.sulake.core.communication.messages.IMessageComposer;
 
-    public class PollAnswerComposer implements IMessageComposer 
+    public class PollAnswerComposer implements IMessageComposer
     {
 
-        private var _data:Array;
+        private var _data: Array;
 
-        public function PollAnswerComposer(param1:int, param2:int, param3:Array)
+        public function PollAnswerComposer(param1: int, param2: int, param3: Array)
         {
-            var _loc4_:int;
+            var _loc4_: int;
             super();
             this._data = [param1, param2];
-            if ((param3[0] is String))
+            if (param3[0] is String)
             {
                 this._data.push(1);
                 this._data.push(param3[0]);
@@ -25,16 +26,18 @@
                 {
                     this._data.push(String(param3[_loc4_]));
                     _loc4_++;
-                };
-            };
+                }
+
+            }
+
         }
 
-        public function getMessageArray():Array
+        public function getMessageArray(): Array
         {
-            return (this._data);
+            return this._data;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this._data = null;
         }

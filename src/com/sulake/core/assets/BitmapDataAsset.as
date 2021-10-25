@@ -1,217 +1,260 @@
 ﻿package com.sulake.core.assets
 {
+
     import flash.display.BitmapData;
     import flash.geom.Point;
     import flash.display.Bitmap;
 
-    public class BitmapDataAsset implements ILazyAsset 
+    public class BitmapDataAsset implements ILazyAsset
     {
 
-        protected static var var_594:uint = 0;
-        protected static var var_595:uint = 0;
+        protected static var _instances: uint = 0;
+        protected static var _allocatedByteCount: uint = 0;
 
-        private var _disposed:Boolean = false;
-        private var var_2129:Object;
-        private var _bitmap:BitmapData;
-        private var _offset:Point = new Point(0, 0);
-        private var var_2126:Boolean = false;
-        private var var_2127:Boolean = false;
-        private var var_2128:AssetTypeDeclaration;
-        private var var_2104:String;
+        private var _disposed: Boolean = false;
+        private var _content: Object;
+        private var _bitmap: BitmapData;
+        private var _offset: Point = new Point(0, 0);
+        private var _flipH: Boolean = false;
+        private var _flipV: Boolean = false;
+        private var _declaration: AssetTypeDeclaration;
+        private var _url: String;
 
-        public function BitmapDataAsset(param1:AssetTypeDeclaration, param2:String=null)
+        public function BitmapDataAsset(param1: AssetTypeDeclaration, param2: String = null)
         {
-            this.var_2128 = param1;
-            this.var_2104 = param2;
-            var_594++;
+            this._declaration = param1;
+            this._url = param2;
+            _instances++;
         }
 
-        public static function get instances():uint
+        public static function get instances(): uint
         {
-            return (var_594);
+            return _instances;
         }
 
-        public static function get allocatedByteCount():uint
+        public static function get allocatedByteCount(): uint
         {
-            return (var_595);
+            return _allocatedByteCount;
         }
 
-        public function get url():String
+        public function get url(): String
         {
-            return (this.var_2104);
+            return this._url;
         }
 
-        public function get flipH():Boolean
+        public function get flipH(): Boolean
         {
-            return (this.var_2126);
+            return this._flipH;
         }
 
-        public function get flipV():Boolean
+        public function get flipV(): Boolean
         {
-            return (this.var_2127);
+            return this._flipV;
         }
 
-        public function get offset():Point
+        public function get offset(): Point
         {
-            return (this._offset);
+            return this._offset;
         }
 
-        public function get content():Object
+        public function get content(): Object
         {
             if (!this._bitmap)
             {
                 this.prepareLazyContent();
-            };
-            return (this._bitmap);
+            }
+
+
+            return this._bitmap;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get declaration():AssetTypeDeclaration
+        public function get declaration(): AssetTypeDeclaration
         {
-            return (this.var_2128);
+            return this._declaration;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (!this._disposed)
             {
-                var_594--;
+                _instances--;
+
                 if (this._bitmap)
                 {
                     try
                     {
-                        var_595 = (var_595 - ((this._bitmap.width * this._bitmap.height) * 4));
+                        _allocatedByteCount = _allocatedByteCount - this._bitmap.width * this._bitmap.height * 4;
                         this._bitmap.dispose();
                     }
-                    catch(e:Error)
+                    catch (e: Error)
                     {
-                    };
-                };
-                this.var_2129 = null;
+                    }
+
+                }
+
+
+                this._content = null;
                 this._bitmap = null;
                 this._offset = null;
-                this.var_2128 = null;
-                this.var_2104 = null;
+                this._declaration = null;
+                this._url = null;
                 this._disposed = true;
-            };
+            }
+
         }
 
-        public function setUnknownContent(param1:Object):void
+        public function setUnknownContent(content: Object): void
         {
-            this.var_2129 = param1;
+            this._content = content;
             this._bitmap = null;
         }
 
-        public function prepareLazyContent():void
+        public function prepareLazyContent(): void
         {
-            var _loc1_:Bitmap;
-            if (this.var_2129 == null)
+            var bitmap: Bitmap;
+
+            if (this._content == null)
             {
                 return;
-            };
-            if ((this.var_2129 is Class))
+            }
+
+
+            if (this._content is Class)
             {
-                _loc1_ = (new this.var_2129() as Bitmap);
-                if (_loc1_ != null)
+                bitmap = new this._content() as Bitmap;
+
+                if (bitmap != null)
                 {
-                    this._bitmap = _loc1_.bitmapData.clone();
-                    _loc1_.bitmapData.dispose();
+                    this._bitmap = bitmap.bitmapData.clone();
+                    bitmap.bitmapData.dispose();
+
                     if (this._bitmap != null)
                     {
-                        var_595 = (var_595 + ((this._bitmap.width * this._bitmap.height) * 4));
-                        this.var_2129 = null;
+                        _allocatedByteCount = _allocatedByteCount + this._bitmap.width * this._bitmap.height * 4;
+                        this._content = null;
+
                         return;
-                    };
-                    throw (new Error("Failed to convert Bitmap Class to BitmapDataAsset!"));
-                };
-                this._bitmap = (new this.var_2129() as BitmapData);
+                    }
+
+
+                    throw new Error("Failed to convert Bitmap Class to BitmapDataAsset!");
+                }
+
+
+                this._bitmap = new this._content() as BitmapData;
+
                 if (this._bitmap != null)
                 {
-                    this.var_2129 = null;
+                    this._content = null;
+
                     return;
-                };
-                throw (new Error("Failed to convert BitmapData Class to BitmapDataAsset!"));
-            };
-            if ((this.var_2129 is Bitmap))
+                }
+
+
+                throw new Error("Failed to convert BitmapData Class to BitmapDataAsset!");
+            }
+
+
+            if (this._content is Bitmap)
             {
-                this._bitmap = Bitmap(this.var_2129).bitmapData;
+                this._bitmap = Bitmap(this._content).bitmapData;
+
                 if (this._bitmap != null)
                 {
-                    this.var_2129 = null;
+                    this._content = null;
                 }
                 else
                 {
-                    throw (new Error("Failed to convert Bitmap to BitmapDataAsset!"));
-                };
-            };
-            if ((this.var_2129 is BitmapData))
+                    throw new Error("Failed to convert Bitmap to BitmapDataAsset!");
+                }
+
+            }
+
+
+            if (this._content is BitmapData)
             {
-                this._bitmap = (this.var_2129 as BitmapData);
+                this._bitmap = this._content as BitmapData;
+
                 if (this._bitmap != null)
                 {
-                    this.var_2129 = null;
+                    this._content = null;
+
                     return;
-                };
-                throw (new Error("Failed to convert BitmapData to BitmapDataAsset!"));
-            };
-            if ((this.var_2129 is BitmapDataAsset))
+                }
+
+
+                throw new Error("Failed to convert BitmapData to BitmapDataAsset!");
+            }
+
+
+            if (this._content is BitmapDataAsset)
             {
-                this._bitmap = BitmapDataAsset(this.var_2129)._bitmap;
-                this._offset = BitmapDataAsset(this.var_2129)._offset;
-                this.var_2126 = BitmapDataAsset(this.var_2129).var_2126;
-                this.var_2127 = BitmapDataAsset(this.var_2129).var_2127;
+                this._bitmap = BitmapDataAsset(this._content)._bitmap;
+                this._offset = BitmapDataAsset(this._content)._offset;
+                this._flipH = BitmapDataAsset(this._content)._flipH;
+                this._flipV = BitmapDataAsset(this._content)._flipV;
+
                 if (this._bitmap != null)
                 {
-                    this.var_2129 = null;
+                    this._content = null;
+
                     return;
-                };
-                throw (new Error("Failed to read content from BitmaDataAsset!"));
-            };
+                }
+
+
+                throw new Error("Failed to read content from BitmaDataAsset!");
+            }
+
         }
 
-        public function setFromOtherAsset(param1:IAsset):void
+        public function setFromOtherAsset(asset: IAsset): void
         {
-            if ((param1 is BitmapDataAsset))
+            if (asset is BitmapDataAsset)
             {
-                this._bitmap = BitmapDataAsset(param1)._bitmap;
-                this._offset = BitmapDataAsset(param1)._offset;
+                this._bitmap = BitmapDataAsset(asset)._bitmap;
+                this._offset = BitmapDataAsset(asset)._offset;
             }
             else
             {
-                throw (new Error("Provided asset should be of type BitmapDataAsset!"));
-            };
+                throw new Error("Provided asset should be of type BitmapDataAsset!");
+            }
+
         }
 
-        public function setParamsDesc(param1:XMLList):void
+        public function setParamsDesc(params: XMLList): void
         {
-            var _loc3_:String;
-            var _loc4_:String;
-            var _loc5_:Array;
-            var _loc2_:uint;
-            while (_loc2_ < param1.length())
+            var key: String;
+            var value: String;
+
+            for (var i: int = 0; i < params.length(); i++)
             {
-                _loc3_ = param1[_loc2_].attribute("key");
-                _loc4_ = param1[_loc2_].attribute("value");
-                switch (_loc3_)
+                key = params[i].attribute("key");
+                value = params[i].attribute("value");
+
+                switch (key)
                 {
                     case "offset":
-                        _loc5_ = _loc4_.split(",");
-                        this._offset.x = parseInt(_loc5_[0]);
-                        this._offset.y = parseInt(_loc5_[1]);
+                        var coords: Array = value.split(",");
+                        this._offset.x = parseInt(coords[0]);
+                        this._offset.y = parseInt(coords[1]);
                         break;
+
                     case "flipH":
-                        this.var_2126 = ((_loc4_ == "1") || (_loc4_ == "true"));
+                        this._flipH = value == "1" || value == "true";
                         break;
+
                     case "flipV":
-                        this.var_2127 = ((_loc4_ == "1") || (_loc4_ == "true"));
+                        this._flipV = value == "1" || value == "true";
                         break;
-                };
-                _loc2_++;
-            };
+                }
+
+            }
+
         }
 
     }

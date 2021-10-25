@@ -1,67 +1,69 @@
 ﻿package com.sulake.core.runtime
 {
+
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.core.runtime.IID;
     import com.sulake.core.runtime.IUnknown;
+
     import flash.utils.getQualifiedClassName;
 
-    internal final class InterfaceStruct implements IDisposable 
+    internal final class InterfaceStruct implements IDisposable
     {
 
-        private var var_2188:IID;
-        private var var_2189:String;
-        private var var_2129:IUnknown;
-        private var var_2174:uint;
+        private var _iid: IID;
+        private var _iis: String;
+        private var _unknown: IUnknown;
+        private var _references: uint;
 
-        public function InterfaceStruct(param1:IID, param2:IUnknown)
+        public function InterfaceStruct(param1: IID, param2: IUnknown)
         {
-            this.var_2188 = param1;
-            this.var_2189 = getQualifiedClassName(this.var_2188);
-            this.var_2129 = param2;
-            this.var_2174 = 0;
+            this._iid = param1;
+            this._iis = getQualifiedClassName(this._iid);
+            this._unknown = param2;
+            this._references = 0;
         }
 
-        public function get iid():IID
+        public function get iid(): IID
         {
-            return (this.var_2188);
+            return this._iid;
         }
 
-        public function get iis():String
+        public function get iis(): String
         {
-            return (this.var_2189);
+            return this._iis;
         }
 
-        public function get unknown():IUnknown
+        public function get unknown(): IUnknown
         {
-            return (this.var_2129);
+            return this._unknown;
         }
 
-        public function get references():uint
+        public function get references(): uint
         {
-            return (this.var_2174);
+            return this._references;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this.var_2129 == null);
+            return this._unknown == null;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            this.var_2188 = null;
-            this.var_2189 = null;
-            this.var_2129 = null;
-            this.var_2174 = 0;
+            this._iid = null;
+            this._iis = null;
+            this._unknown = null;
+            this._references = 0;
         }
 
-        public function reserve():uint
+        public function reserve(): uint
         {
-            return (++this.var_2174);
+            return ++this._references;
         }
 
-        public function release():uint
+        public function release(): uint
         {
-            return ((this.references > 0) ? --this.var_2174 : 0);
+            return this.references > 0 ? --this._references : 0;
         }
 
     }

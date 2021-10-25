@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.quest
 {
+
     import com.sulake.core.runtime.Component;
     import com.sulake.habbo.window.IHabboWindowManager;
     import com.sulake.habbo.communication.IHabboCommunicationManager;
@@ -11,7 +12,9 @@
     import com.sulake.habbo.session.ISessionDataManager;
     import com.sulake.habbo.help.IHabboHelp;
     import com.sulake.iid.IIDHabboCommunicationManager;
+
     import iid.IIDHabboWindowManager;
+
     import com.sulake.iid.IIDRoomEngine;
     import com.sulake.iid.IIDHabboLocalizationManager;
     import com.sulake.iid.IIDHabboConfigurationManager;
@@ -29,33 +32,39 @@
     import com.sulake.habbo.toolbar.events.HabboToolbarEvent;
     import com.sulake.habbo.toolbar.HabboToolbarIconEnum;
     import com.sulake.core.assets.BitmapDataAsset;
+
     import flash.display.BitmapData;
+
     import com.sulake.core.window.components.IBitmapWrapperWindow;
+
     import flash.net.URLRequest;
+
     import com.sulake.core.assets.AssetLoaderStruct;
     import com.sulake.core.assets.loaders.AssetLoaderEvent;
     import com.sulake.core.communication.messages.IMessageComposer;
 
-    public class HabboQuestEngine extends Component implements IHabboQuestEngine 
+    public class HabboQuestEngine extends Component implements IHabboQuestEngine
     {
 
-        private var _windowManager:IHabboWindowManager;
-        private var _communication:IHabboCommunicationManager;
-        private var _localization:IHabboLocalizationManager;
-        private var var_2063:IHabboConfigurationManager;
-        private var var_3509:IncomingMessages;
-        private var _controller:QuestController;
-        private var _roomEngine:IRoomEngine;
-        private var var_2844:IHabboToolbar;
-        private var _catalog:IHabboCatalog;
-        private var var_2847:ISessionDataManager;
-        private var var_3920:String;
-        private var var_3921:IHabboHelp;
+        private var _windowManager: IHabboWindowManager;
+        private var _communication: IHabboCommunicationManager;
+        private var _localization: IHabboLocalizationManager;
+        private var _configuration: IHabboConfigurationManager;
+        private var _incomingMessages: IncomingMessages;
+        private var _controller: QuestController;
+        private var _roomEngine: IRoomEngine;
+        private var _toolbar: IHabboToolbar;
+        private var _catalog: IHabboCatalog;
+        private var _sessionDataManager: ISessionDataManager;
+        private var _defaultCampaignCode: String;
+        private var _help: IHabboHelp;
 
-        public function HabboQuestEngine(param1:IContext, param2:uint=0, param3:IAssetLibrary=null)
+        public function HabboQuestEngine(ctx: IContext, flags: uint = 0, assets: IAssetLibrary = null)
         {
-            super(param1, param2, param3);
+            super(ctx, flags, assets);
+
             this._controller = new QuestController(this);
+
             queueInterface(new IIDHabboCommunicationManager(), this.onCommunicationComponentInit);
             queueInterface(new IIDHabboWindowManager(), this.onWindowManagerReady);
             queueInterface(new IIDRoomEngine(), this.onRoomEngineReady);
@@ -67,260 +76,290 @@
             queueInterface(new IIDSessionDataManager(), this.onSessionDataManagerReady);
         }
 
-        override public function dispose():void
+        override public function dispose(): void
         {
             super.dispose();
-            if (this.var_2844)
+
+            if (this._toolbar)
             {
-                this.var_2844.release(new IIDHabboToolbar());
-                this.var_2844 = null;
-            };
+                this._toolbar.release(new IIDHabboToolbar());
+                this._toolbar = null;
+            }
+
             if (this._catalog != null)
             {
                 this._catalog.release(new IIDHabboCatalog());
                 this._catalog = null;
-            };
+            }
+
             if (this._windowManager != null)
             {
                 this._windowManager.release(new IIDHabboWindowManager());
                 this._windowManager = null;
-            };
+            }
+
             if (this._roomEngine != null)
             {
                 this._roomEngine.release(new IIDRoomEngine());
                 this._roomEngine = null;
-            };
-            if (this.var_2063 != null)
+            }
+
+            if (this._configuration != null)
             {
-                this.var_2063.release(new IIDHabboConfigurationManager());
-                this.var_2063 = null;
-            };
+                this._configuration.release(new IIDHabboConfigurationManager());
+                this._configuration = null;
+            }
+
             if (this._localization != null)
             {
                 this._localization.release(new IIDHabboLocalizationManager());
                 this._localization = null;
-            };
+            }
+
             if (this._communication != null)
             {
                 this._communication.release(new IIDHabboCommunicationManager());
                 this._communication = null;
-            };
-            if (this.var_2847 != null)
+            }
+
+            if (this._sessionDataManager != null)
             {
-                this.var_2847.release(new IIDSessionDataManager());
-                this.var_2847 = null;
-            };
-            if (this.var_3509)
+                this._sessionDataManager.release(new IIDSessionDataManager());
+                this._sessionDataManager = null;
+            }
+
+            if (this._incomingMessages)
             {
-                this.var_3509.dispose();
-            };
-            if (this.var_3921 != null)
+                this._incomingMessages.dispose();
+            }
+
+            if (this._help != null)
             {
-                this.var_3921.release(new IIDHabboHelp());
-                this.var_3921 = null;
-            };
+                this._help.release(new IIDHabboHelp());
+                this._help = null;
+            }
+
         }
 
-        public function getXmlWindow(name:String):IWindow
+        public function getXmlWindow(name: String): IWindow
         {
-            var asset:IAsset;
-            var xmlAsset:XmlAsset;
-            var window:IWindow;
+            var asset: IAsset;
+            var xmlAsset: XmlAsset;
+            var window: IWindow;
+
             try
             {
                 asset = assets.getAssetByName(name);
                 xmlAsset = XmlAsset(asset);
                 window = this._windowManager.buildFromXML(XML(xmlAsset.content));
             }
-            catch(e:Error)
+            catch (e: Error)
             {
-            };
-            return (window);
+            }
+
+            return window;
         }
 
-        private function onCommunicationComponentInit(param1:IID=null, param2:IUnknown=null):void
+        private function onCommunicationComponentInit(iid: IID = null, communication: IUnknown = null): void
         {
-            this._communication = IHabboCommunicationManager(param2);
-            this.var_3509 = new IncomingMessages(this);
+            this._communication = IHabboCommunicationManager(communication);
+            this._incomingMessages = new IncomingMessages(this);
         }
 
-        private function onWindowManagerReady(param1:IID=null, param2:IUnknown=null):void
+        private function onWindowManagerReady(iid: IID = null, windowManager: IUnknown = null): void
         {
-            this._windowManager = IHabboWindowManager(param2);
+            this._windowManager = IHabboWindowManager(windowManager);
         }
 
-        private function onRoomEngineReady(param1:IID=null, param2:IUnknown=null):void
+        private function onRoomEngineReady(iid: IID = null, roomEngine: IUnknown = null): void
         {
-            this._roomEngine = (param2 as IRoomEngine);
+            this._roomEngine = (roomEngine as IRoomEngine);
         }
 
-        public function get roomEngine():IRoomEngine
+        public function get roomEngine(): IRoomEngine
         {
-            return (this._roomEngine);
+            return this._roomEngine;
         }
 
-        private function onLocalizationReady(param1:IID=null, param2:IUnknown=null):void
+        private function onLocalizationReady(iid: IID = null, localization: IUnknown = null): void
         {
-            this._localization = IHabboLocalizationManager(param2);
+            this._localization = IHabboLocalizationManager(localization);
         }
 
-        private function onConfigurationReady(param1:IID, param2:IUnknown):void
+        private function onConfigurationReady(iid: IID, configuration: IUnknown): void
         {
-            if (param2 == null)
+            if (configuration == null)
             {
                 return;
-            };
-            this.var_2063 = (param2 as IHabboConfigurationManager);
+            }
+
+            this._configuration = (configuration as IHabboConfigurationManager);
         }
 
-        private function onCatalogReady(param1:IID=null, param2:IUnknown=null):void
+        private function onCatalogReady(iid: IID = null, catalog: IUnknown = null): void
         {
             if (disposed)
             {
                 return;
-            };
-            this._catalog = (param2 as IHabboCatalog);
+            }
+
+            this._catalog = (catalog as IHabboCatalog);
         }
 
-        private function onSessionDataManagerReady(param1:IID=null, param2:IUnknown=null):void
+        private function onSessionDataManagerReady(iid: IID = null, sessionDataManager: IUnknown = null): void
         {
             if (disposed)
             {
                 return;
-            };
-            this.var_2847 = (param2 as ISessionDataManager);
+            }
+
+            this._sessionDataManager = (sessionDataManager as ISessionDataManager);
         }
 
-        private function onHabboHelpReady(param1:IID=null, param2:IUnknown=null):void
+        private function onHabboHelpReady(iid: IID = null, help: IUnknown = null): void
         {
             if (disposed)
             {
                 return;
-            };
-            this.var_3921 = (param2 as IHabboHelp);
+            }
+
+            this._help = (help as IHabboHelp);
         }
 
-        public function get communication():IHabboCommunicationManager
+        public function get communication(): IHabboCommunicationManager
         {
-            return (this._communication);
+            return this._communication;
         }
 
-        public function get habboHelp():IHabboHelp
+        public function get habboHelp(): IHabboHelp
         {
-            return (this.var_3921);
+            return this._help;
         }
 
-        public function get windowManager():IHabboWindowManager
+        public function get windowManager(): IHabboWindowManager
         {
-            return (this._windowManager);
+            return this._windowManager;
         }
 
-        public function get localization():IHabboLocalizationManager
+        public function get localization(): IHabboLocalizationManager
         {
-            return (this._localization);
+            return this._localization;
         }
 
-        public function get configuration():IHabboConfigurationManager
+        public function get configuration(): IHabboConfigurationManager
         {
-            return (this.var_2063);
+            return this._configuration;
         }
 
-        public function get controller():QuestController
+        public function get controller(): QuestController
         {
-            return (this._controller);
+            return this._controller;
         }
 
-        public function get toolbar():IHabboToolbar
+        public function get toolbar(): IHabboToolbar
         {
-            return (this.var_2844);
+            return this._toolbar;
         }
 
-        public function openCatalog(param1:String):void
+        public function openCatalog(param1: String): void
         {
             this._catalog.openCatalogPage(param1, true);
         }
 
-        private function onToolbarReady(param1:IID=null, param2:IUnknown=null):void
+        private function onToolbarReady(iid: IID = null, toolbar: IUnknown = null): void
         {
-            this.var_2844 = (IHabboToolbar(param2) as IHabboToolbar);
-            this.var_2844.events.addEventListener(HabboToolbarEvent.var_49, this.onHabboToolbarEvent);
+            this._toolbar = (IHabboToolbar(toolbar) as IHabboToolbar);
+
+            this._toolbar.events.addEventListener(HabboToolbarEvent.HTE_TOOLBAR_CLICK, this.onHabboToolbarEvent);
         }
 
-        private function onHabboToolbarEvent(param1:HabboToolbarEvent):void
+        private function onHabboToolbarEvent(event: HabboToolbarEvent): void
         {
-            if (param1.type == HabboToolbarEvent.var_49)
+            if (event.type == HabboToolbarEvent.HTE_TOOLBAR_CLICK)
             {
-                if (param1.iconId == HabboToolbarIconEnum.QUESTS)
+                if (event.iconId == HabboToolbarIconEnum.QUESTS)
                 {
                     this._controller.onToolbarClick();
-                    return;
-                };
-            };
+
+                }
+
+            }
+
         }
 
-        public function setImageFromAsset(param1:IBitmapWrapperWindow, param2:String, param3:Function):void
+        public function setImageFromAsset(wrapper: IBitmapWrapperWindow, assetName: String, callback: Function): void
         {
-            if (((!(param2)) || (!(assets))))
+            if (!assetName || !assets)
             {
                 return;
-            };
-            var _loc4_:BitmapDataAsset = (assets.getAssetByName(param2) as BitmapDataAsset);
-            if (_loc4_ == null)
+            }
+
+            var bitmap: BitmapDataAsset = assets.getAssetByName(assetName) as BitmapDataAsset;
+
+            if (bitmap == null)
             {
-                this.retrievePreviewAsset(param2, param3);
+                this.retrievePreviewAsset(assetName, callback);
                 return;
-            };
-            if (param1)
+            }
+
+            if (wrapper)
             {
-                QuestUtils.setElementImage(param1, (_loc4_.content as BitmapData));
-            };
+                QuestUtils.setElementImage(wrapper, bitmap.content as BitmapData);
+            }
+
         }
 
-        private function retrievePreviewAsset(param1:String, param2:Function):void
+        private function retrievePreviewAsset(assetName: String, callback: Function): void
         {
-            if (((!(param1)) || (!(assets))))
+            if (!assetName || !assets)
             {
                 return;
-            };
-            var _loc3_:String = this.var_2063.getKey("image.library.questing.url");
-            var _loc4_:* = ((_loc3_ + param1) + ".png");
-            Logger.log(("[HabboQuestEngine] Retrieve Product Preview Asset: " + _loc4_));
-            var _loc5_:URLRequest = new URLRequest(_loc4_);
-            var _loc6_:AssetLoaderStruct = assets.loadAssetFromFile(param1, _loc5_, "image/png");
-            if (!_loc6_)
+            }
+
+            var questingUrl: String = this._configuration.getKey("image.library.questing.url");
+            var fullAssetName: * = questingUrl + assetName + ".png";
+
+            Logger.log("[HabboQuestEngine] Retrieve Product Preview Asset: " + fullAssetName);
+
+            var request: URLRequest = new URLRequest(fullAssetName);
+            var loader: AssetLoaderStruct = assets.loadAssetFromFile(assetName, request, "image/png");
+
+            if (!loader)
             {
                 return;
-            };
-            _loc6_.addEventListener(AssetLoaderEvent.var_35, param2);
+            }
+
+            loader.addEventListener(AssetLoaderEvent.ASSET_LOADER_EVENT_COMPLETE, callback);
         }
 
-        public function getActivityPointsForType(param1:int):int
+        public function getActivityPointsForType(id: int): int
         {
             if (!this._catalog)
             {
-                return (0);
-            };
-            return (this._catalog.getPurse().getActivityPointsForType(param1));
+                return 0;
+            }
+
+            return this._catalog.getPurse().getActivityPointsForType(id);
         }
 
-        public function get sessionDataManager():ISessionDataManager
+        public function get sessionDataManager(): ISessionDataManager
         {
-            return (this.var_2847);
+            return this._sessionDataManager;
         }
 
-        public function get defaultCampaignCode():String
+        public function get defaultCampaignCode(): String
         {
-            return (this.var_3920);
+            return this._defaultCampaignCode;
         }
 
-        public function set defaultCampaignCode(param1:String):void
+        public function set defaultCampaignCode(value: String): void
         {
-            this.var_3920 = param1;
+            this._defaultCampaignCode = value;
         }
 
-        public function send(param1:IMessageComposer):void
+        public function send(message: IMessageComposer): void
         {
-            this.communication.getHabboMainConnection(null).send(param1);
+            this.communication.getHabboMainConnection(null).send(message);
         }
 
     }

@@ -1,14 +1,15 @@
 ﻿package com.sulake.habbo.inventory.enum
 {
-    public class InventoryCategory 
+
+    public class InventoryCategory
     {
 
-        public static const var_133:String = "furni";
-        public static const var_132:String = "badges";
-        public static const var_252:String = "effects";
-        public static const var_253:String = "achievements";
-        public static const var_134:String = "pets";
-        public static const var_254:String = "marketplace";
+        public static const FURNI: String = "furni";
+        public static const BADGES: String = "badges";
+        public static const EFFECTS: String = "effects";
+        public static const ACHIEVEMENTS: String = "achievements";
+        public static const PETS: String = "pets";
+        public static const MARKETPLACE: String = "marketplace";
 
     }
 }

@@ -1,192 +1,208 @@
 ﻿package com.sulake.room.object.visualization
 {
+
     import com.sulake.room.object.IRoomObject;
     import com.sulake.room.object.visualization.utils.IGraphicAssetCollection;
     import com.sulake.room.utils.IRoomGeometry;
+
     import flash.display.BitmapData;
     import flash.geom.ColorTransform;
     import flash.geom.Matrix;
     import flash.geom.Rectangle;
     import flash.display.BlendMode;
     import flash.geom.Point;
+
     import com.sulake.core.assets.IAsset;
 
-    public class RoomObjectSpriteVisualization implements IRoomObjectSpriteVisualization 
+    public class RoomObjectSpriteVisualization implements IRoomObjectSpriteVisualization
     {
 
-        private static var var_1454:int = 0;
+        private static var INSTANCE_ID: int = 0;
 
-        private var var_2570:Array;
-        private var var_4986:IRoomObject;
-        private var var_4188:IGraphicAssetCollection;
-        protected var var_1458:int = -1;
-        protected var var_1460:int = -1;
-        protected var var_1459:int = -1;
-        private var _instanceId:int = 0;
-        private var _updateID:int = 0;
+        private var _sprites: Array;
+        private var _object: IRoomObject;
+        private var _assetCollection: IGraphicAssetCollection;
+        protected var var_1458: int = -1;
+        protected var var_1460: int = -1;
+        protected var var_1459: int = -1;
+        private var _instanceId: int = 0;
+        private var _updateID: int = 0;
 
         public function RoomObjectSpriteVisualization()
         {
-            this._instanceId = var_1454++;
-            this.var_2570 = [];
-            this.var_4986 = null;
-            this.var_4188 = null;
+            this._instanceId = INSTANCE_ID++;
+            this._sprites = [];
+            this._object = null;
+            this._assetCollection = null;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            var _loc1_:RoomObjectSprite;
-            if (this.var_2570 != null)
+            var _loc1_: RoomObjectSprite;
+            if (this._sprites != null)
             {
-                while (this.var_2570.length > 0)
+                while (this._sprites.length > 0)
                 {
-                    _loc1_ = (this.var_2570[0] as RoomObjectSprite);
+                    _loc1_ = (this._sprites[0] as RoomObjectSprite);
                     if (_loc1_ != null)
                     {
                         _loc1_.dispose();
-                    };
-                    this.var_2570.pop();
-                };
-                this.var_2570 = null;
-            };
-            this.var_4986 = null;
+                    }
+
+                    this._sprites.pop();
+                }
+
+                this._sprites = null;
+            }
+
+            this._object = null;
             this.assetCollection = null;
         }
 
-        public function set assetCollection(param1:IGraphicAssetCollection):void
+        public function set assetCollection(param1: IGraphicAssetCollection): void
         {
-            if (this.var_4188 != null)
+            if (this._assetCollection != null)
             {
-                this.var_4188.removeReference();
-            };
-            this.var_4188 = param1;
-            if (this.var_4188 != null)
+                this._assetCollection.removeReference();
+            }
+
+            this._assetCollection = param1;
+            if (this._assetCollection != null)
             {
-                this.var_4188.addReference();
-            };
+                this._assetCollection.addReference();
+            }
+
         }
 
-        public function get assetCollection():IGraphicAssetCollection
+        public function get assetCollection(): IGraphicAssetCollection
         {
-            return (this.var_4188);
+            return this._assetCollection;
         }
 
-        public function getUpdateID():int
+        public function getUpdateID(): int
         {
-            return (this._updateID);
+            return this._updateID;
         }
 
-        public function getInstanceId():int
+        public function getInstanceId(): int
         {
-            return (this._instanceId);
+            return this._instanceId;
         }
 
-        protected function createSprites(param1:int):void
+        protected function createSprites(param1: int): void
         {
-            var _loc2_:RoomObjectSprite;
-            while (this.var_2570.length > param1)
+            var _loc2_: RoomObjectSprite;
+            while (this._sprites.length > param1)
             {
-                _loc2_ = (this.var_2570[(this.var_2570.length - 1)] as RoomObjectSprite);
+                _loc2_ = (this._sprites[(this._sprites.length - 1)] as RoomObjectSprite);
                 if (_loc2_ != null)
                 {
                     _loc2_.dispose();
-                };
-                this.var_2570.pop();
-            };
-            while (this.var_2570.length < param1)
+                }
+
+                this._sprites.pop();
+            }
+
+            while (this._sprites.length < param1)
             {
                 _loc2_ = new RoomObjectSprite();
-                this.var_2570.push(_loc2_);
-            };
+                this._sprites.push(_loc2_);
+            }
+
         }
 
-        public function get spriteCount():int
+        public function get spriteCount(): int
         {
-            return (this.var_2570.length);
+            return this._sprites.length;
         }
 
-        public function getSprite(param1:int):IRoomObjectSprite
+        public function getSprite(param1: int): IRoomObjectSprite
         {
-            if (((param1 >= 0) && (param1 < this.var_2570.length)))
+            if (param1 >= 0 && param1 < this._sprites.length)
             {
-                return (this.var_2570[param1]);
-            };
-            return (null);
+                return this._sprites[param1];
+            }
+
+            return null;
         }
 
-        public function get object():IRoomObject
+        public function get object(): IRoomObject
         {
-            return (this.var_4986);
+            return this._object;
         }
 
-        public function set object(param1:IRoomObject):void
+        public function set object(param1: IRoomObject): void
         {
-            this.var_4986 = param1;
+            this._object = param1;
         }
 
-        public function update(param1:IRoomGeometry, param2:int, param3:Boolean, param4:Boolean):void
+        public function update(param1: IRoomGeometry, param2: int, param3: Boolean, param4: Boolean): void
         {
         }
 
-        protected function increaseUpdateId():void
+        protected function increaseUpdateId(): void
         {
             this._updateID++;
         }
 
-        protected function reset():void
+        protected function reset(): void
         {
             this.var_1458 = 0xFFFFFFFF;
             this.var_1460 = 0xFFFFFFFF;
             this.var_1459 = -1;
         }
 
-        public function initialize(param1:IRoomObjectVisualizationData):Boolean
+        public function initialize(param1: IRoomObjectVisualizationData): Boolean
         {
-            return (false);
+            return false;
         }
 
-        public function get image():BitmapData
+        public function get image(): BitmapData
         {
-            return (this.getImage(0));
+            return this.getImage(0);
         }
 
-        public function getImage(param1:int):BitmapData
+        public function getImage(param1: int): BitmapData
         {
-            var _loc9_:Number;
-            var _loc10_:Number;
-            var _loc11_:Number;
-            var _loc12_:int;
-            var _loc13_:int;
-            var _loc14_:int;
-            var _loc15_:int;
-            var _loc16_:ColorTransform;
-            var _loc17_:Matrix;
-            var _loc2_:Rectangle = this.boundingRectangle;
-            if ((_loc2_.width * _loc2_.height) == 0)
+            var _loc9_: Number;
+            var _loc10_: Number;
+            var _loc11_: Number;
+            var _loc12_: int;
+            var _loc13_: int;
+            var _loc14_: int;
+            var _loc15_: int;
+            var _loc16_: ColorTransform;
+            var _loc17_: Matrix;
+            var _loc2_: Rectangle = this.boundingRectangle;
+            if (_loc2_.width * _loc2_.height == 0)
             {
-                return (null);
-            };
-            var _loc3_:int = this.spriteCount;
-            var _loc4_:IRoomObjectSprite;
-            var _loc5_:Array = [];
-            var _loc6_:int;
-            var _loc7_:BitmapData;
+                return null;
+            }
+
+            var _loc3_: int = this.spriteCount;
+            var _loc4_: IRoomObjectSprite;
+            var _loc5_: Array = [];
+            var _loc6_: int;
+            var _loc7_: BitmapData;
             _loc6_ = 0;
             while (_loc6_ < _loc3_)
             {
                 _loc4_ = this.getSprite(_loc6_);
-                if (((!(_loc4_ == null)) && (_loc4_.visible)))
+                if (_loc4_ != null && _loc4_.visible)
                 {
                     _loc7_ = _loc4_.asset;
                     if (_loc7_ != null)
                     {
                         _loc5_.push(_loc4_);
-                    };
-                };
+                    }
+
+                }
+
                 _loc6_++;
-            };
-            _loc5_.sortOn("relativeDepth", (Array.DESCENDING | Array.NUMERIC));
-            var _loc8_:BitmapData = new BitmapData(_loc2_.width, _loc2_.height, true, param1);
+            }
+
+            _loc5_.sortOn("relativeDepth", Array.DESCENDING | Array.NUMERIC);
+            var _loc8_: BitmapData = new BitmapData(_loc2_.width, _loc2_.height, true, param1);
             _loc6_ = 0;
             while (_loc6_ < _loc5_.length)
             {
@@ -195,24 +211,26 @@
                 if (_loc7_ != null)
                 {
                     _loc12_ = _loc4_.color;
-                    _loc13_ = (_loc12_ >> 16);
-                    _loc14_ = ((_loc12_ >> 8) & 0xFF);
-                    _loc15_ = (_loc12_ & 0xFF);
+                    _loc13_ = _loc12_ >> 16;
+                    _loc14_ = _loc12_ >> 8 & 0xFF;
+                    _loc15_ = _loc12_ & 0xFF;
                     _loc16_ = null;
-                    if ((((_loc13_ < 0xFF) || (_loc14_ < 0xFF)) || (_loc15_ < 0xFF)))
+                    if (_loc13_ < 0xFF || _loc14_ < 0xFF || _loc15_ < 0xFF)
                     {
-                        _loc9_ = (_loc13_ / 0xFF);
-                        _loc10_ = (_loc14_ / 0xFF);
-                        _loc11_ = (_loc15_ / 0xFF);
-                        _loc16_ = new ColorTransform(_loc9_, _loc10_, _loc11_, (_loc4_.alpha / 0xFF));
+                        _loc9_ = _loc13_ / 0xFF;
+                        _loc10_ = _loc14_ / 0xFF;
+                        _loc11_ = _loc15_ / 0xFF;
+                        _loc16_ = new ColorTransform(_loc9_, _loc10_, _loc11_, _loc4_.alpha / 0xFF);
                     }
                     else
                     {
                         if (_loc4_.alpha < 0xFF)
                         {
-                            _loc16_ = new ColorTransform(1, 1, 1, (_loc4_.alpha / 0xFF));
-                        };
-                    };
+                            _loc16_ = new ColorTransform(1, 1, 1, _loc4_.alpha / 0xFF);
+                        }
+
+                    }
+
                     if (param1 == 0)
                     {
                         if (_loc4_.blendMode == BlendMode.ADD)
@@ -224,37 +242,43 @@
                             else
                             {
                                 _loc16_.alphaMultiplier = 0;
-                            };
-                        };
-                    };
+                            }
+
+                        }
+
+                    }
+
                     _loc17_ = new Matrix();
                     if (_loc4_.flipH)
                     {
                         _loc17_.scale(-1, 1);
                         _loc17_.translate(_loc7_.width, 0);
-                    };
-                    _loc17_.translate((_loc4_.offsetX - _loc2_.left), (_loc4_.offsetY - _loc2_.top));
+                    }
+
+                    _loc17_.translate(_loc4_.offsetX - _loc2_.left, _loc4_.offsetY - _loc2_.top);
                     _loc8_.draw(_loc7_, _loc17_, _loc16_, _loc4_.blendMode, null, false);
-                };
+                }
+
                 _loc6_++;
-            };
-            return (_loc8_);
+            }
+
+            return _loc8_;
         }
 
-        public function get boundingRectangle():Rectangle
+        public function get boundingRectangle(): Rectangle
         {
-            var _loc7_:Point;
-            var _loc1_:int = this.spriteCount;
-            var _loc2_:IRoomObjectSprite;
-            var _loc3_:Rectangle = new Rectangle();
-            var _loc4_:int;
-            var _loc5_:IAsset;
-            var _loc6_:BitmapData;
+            var _loc7_: Point;
+            var _loc1_: int = this.spriteCount;
+            var _loc2_: IRoomObjectSprite;
+            var _loc3_: Rectangle = new Rectangle();
+            var _loc4_: int;
+            var _loc5_: IAsset;
+            var _loc6_: BitmapData;
             _loc4_ = 0;
             while (_loc4_ < _loc1_)
             {
                 _loc2_ = this.getSprite(_loc4_);
-                if (((!(_loc2_ == null)) && (_loc2_.visible)))
+                if (_loc2_ != null && _loc2_.visible)
                 {
                     _loc6_ = _loc2_.asset;
                     if (_loc6_ != null)
@@ -264,33 +288,41 @@
                         {
                             _loc3_.left = _loc7_.x;
                             _loc3_.top = _loc7_.y;
-                            _loc3_.right = (_loc7_.x + _loc2_.width);
-                            _loc3_.bottom = (_loc7_.y + _loc2_.height);
+                            _loc3_.right = _loc7_.x + _loc2_.width;
+                            _loc3_.bottom = _loc7_.y + _loc2_.height;
                         }
                         else
                         {
                             if (_loc7_.x < _loc3_.left)
                             {
                                 _loc3_.left = _loc7_.x;
-                            };
+                            }
+
                             if (_loc7_.y < _loc3_.top)
                             {
                                 _loc3_.top = _loc7_.y;
-                            };
-                            if ((_loc7_.x + _loc2_.width) > _loc3_.right)
+                            }
+
+                            if (_loc7_.x + _loc2_.width > _loc3_.right)
                             {
-                                _loc3_.right = (_loc7_.x + _loc2_.width);
-                            };
-                            if ((_loc7_.y + _loc2_.height) > _loc3_.bottom)
+                                _loc3_.right = _loc7_.x + _loc2_.width;
+                            }
+
+                            if (_loc7_.y + _loc2_.height > _loc3_.bottom)
                             {
-                                _loc3_.bottom = (_loc7_.y + _loc2_.height);
-                            };
-                        };
-                    };
-                };
+                                _loc3_.bottom = _loc7_.y + _loc2_.height;
+                            }
+
+                        }
+
+                    }
+
+                }
+
                 _loc4_++;
-            };
-            return (_loc3_);
+            }
+
+            return _loc3_;
         }
 
     }

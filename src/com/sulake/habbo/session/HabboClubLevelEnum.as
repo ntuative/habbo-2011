@@ -1,11 +1,12 @@
 ﻿package com.sulake.habbo.session
 {
-    public class HabboClubLevelEnum 
+
+    public class HabboClubLevelEnum
     {
 
-        public static const var_255:int = 0;
-        public static const var_256:int = 1;
-        public static const var_122:int = 2;
+        public static const HC_LEVEL_NONE: int = 0;
+        public static const HC_LEVEL_HABBO_CLUB: int = 1;
+        public static const HC_LEVEL_VIP: int = 2;
 
     }
 }

@@ -1,62 +1,64 @@
 ﻿package com.sulake.habbo.communication.messages.parser.notifications
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PetLevelNotificationParser implements IMessageParser 
+    public class PetLevelNotificationParser implements IMessageParser
     {
 
-        private var var_3097:int;
-        private var var_3100:String;
-        private var var_2924:int;
-        private var var_2603:int;
-        private var var_2517:int;
-        private var _color:String;
+        private var _petId: int;
+        private var _petName: String;
+        private var _level: int;
+        private var _petType: int;
+        private var _breed: int;
+        private var _color: String;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3097 = param1.readInteger();
-            this.var_3100 = param1.readString();
-            this.var_2924 = param1.readInteger();
-            this.var_2603 = param1.readInteger();
-            this.var_2517 = param1.readInteger();
-            this._color = param1.readString();
-            return (true);
+            this._petId = data.readInteger();
+            this._petName = data.readString();
+            this._level = data.readInteger();
+            this._petType = data.readInteger();
+            this._breed = data.readInteger();
+            this._color = data.readString();
+
+            return true;
         }
 
-        public function get petId():int
+        public function get petId(): int
         {
-            return (this.var_3097);
+            return this._petId;
         }
 
-        public function get petName():String
+        public function get petName(): String
         {
-            return (this.var_3100);
+            return this._petName;
         }
 
-        public function get level():int
+        public function get level(): int
         {
-            return (this.var_2924);
+            return this._level;
         }
 
-        public function get petType():int
+        public function get petType(): int
         {
-            return (this.var_2603);
+            return this._petType;
         }
 
-        public function get breed():int
+        public function get breed(): int
         {
-            return (this.var_2517);
+            return this._breed;
         }
 
-        public function get color():String
+        public function get color(): String
         {
-            return (this._color);
+            return this._color;
         }
 
     }

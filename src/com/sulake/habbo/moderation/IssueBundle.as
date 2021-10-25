@@ -1,184 +1,210 @@
 ﻿package com.sulake.habbo.moderation
 {
+
     import com.sulake.core.utils.Map;
     import com.sulake.habbo.communication.messages.parser.moderation.IssueMessageData;
 
-    public class IssueBundle 
+    public class IssueBundle
     {
 
-        private var _id:int;
-        private var _issues:Map;
-        private var _state:int;
-        private var var_3230:int = 0;
-        private var var_3658:String = "";
-        private var var_2953:int;
-        private var var_3659:int = 0;
-        private var var_3660:int = 0;
-        private var var_3661:IssueMessageData = null;
-        private var var_3662:IssueMessageData = null;
+        private var _id: int;
+        private var _issues: Map;
+        private var _state: int;
+        private var _pickerUserId: int = 0;
+        private var _pickerName: String = "";
+        private var _reportedUserId: int;
+        private var _prioritySum: int = 0;
+        private var _messageCount: int = 0;
+        private var _active: IssueMessageData = null;
+        private var _highestPriority: IssueMessageData = null;
 
-        public function IssueBundle(param1:int, param2:IssueMessageData)
+        public function IssueBundle(id: int, issue: IssueMessageData)
         {
-            this._id = param1;
+            this._id = id;
             this._issues = new Map();
-            this._state = param2.state;
-            this.var_3230 = param2.pickerUserId;
-            this.var_3658 = param2.pickerUserName;
-            this.var_2953 = param2.reportedUserId;
-            this.addIssue(param2);
+            this._state = issue.state;
+            this._pickerUserId = issue.pickerUserId;
+            this._pickerName = issue.pickerUserName;
+            this._reportedUserId = issue.reportedUserId;
+
+            this.addIssue(issue);
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get issues():Array
+        public function get issues(): Array
         {
-            return (this._issues.getValues());
+            return this._issues.getValues();
         }
 
-        public function get state():int
+        public function get state(): int
         {
-            return (this._state);
+            return this._state;
         }
 
-        public function get pickerUserId():int
+        public function get pickerUserId(): int
         {
-            return (this.var_3230);
+            return this._pickerUserId;
         }
 
-        public function get pickerName():String
+        public function get pickerName(): String
         {
-            return (this.var_3658);
+            return this._pickerName;
         }
 
-        public function updateIssue(param1:IssueMessageData):void
+        public function updateIssue(issue: IssueMessageData): void
         {
-            this.removeIssue(param1.issueId);
-            this.addIssue(param1);
+            this.removeIssue(issue.issueId);
+            this.addIssue(issue);
         }
 
-        private function addIssue(param1:IssueMessageData):void
+        private function addIssue(issue: IssueMessageData): void
         {
-            this._issues.add(param1.issueId, param1);
-            this.var_3659 = (this.var_3659 + param1.priority);
-            if (((!(param1.message == null)) && (!(param1.message == ""))))
+            this._issues.add(issue.issueId, issue);
+            this._prioritySum = this._prioritySum + issue.priority;
+
+            if (issue.message != null && issue.message != "")
             {
-                this.var_3660++;
-            };
-            if (((this.var_3661 == null) || (param1.timeStamp < this.var_3661.timeStamp)))
+                this._messageCount++;
+            }
+
+            if (this._active == null || issue.timeStamp < this._active.timeStamp)
             {
-                this.var_3661 = param1;
-            };
-            if (((this.var_3662 == null) || (param1.priority > this.var_3662.timeStamp)))
+                this._active = issue;
+            }
+
+            if (this._highestPriority == null || issue.priority > this._highestPriority.timeStamp)
             {
-                this.var_3662 = param1;
-            };
+                this._highestPriority = issue;
+            }
+
         }
 
-        public function removeIssue(param1:int):IssueMessageData
+        public function removeIssue(id: int): IssueMessageData
         {
-            var _loc2_:IssueMessageData = (this._issues.remove(param1) as IssueMessageData);
-            if (_loc2_ != null)
+            var issue: IssueMessageData = this._issues.remove(id) as IssueMessageData;
+            
+            if (issue != null)
             {
-                this.var_3659 = (this.var_3659 - _loc2_.priority);
-                if (((!(_loc2_.message == null)) && (!(_loc2_.message == ""))))
+                this._prioritySum = this._prioritySum - issue.priority;
+                
+                if (issue.message != null && issue.message != "")
                 {
-                    this.var_3660--;
-                };
-                if (this.var_3661 == _loc2_)
+                    this._messageCount--;
+                }
+
+                if (this._active == issue)
                 {
-                    this.var_3661 = null;
-                };
-                if (this.var_3662 == _loc2_)
+                    this._active = null;
+                }
+
+                if (this._highestPriority == issue)
                 {
-                    this.var_3662 = null;
-                };
-            };
-            return (_loc2_);
+                    this._highestPriority = null;
+                }
+
+            }
+
+            return issue;
         }
 
-        public function get prioritySum():int
+        public function get prioritySum(): int
         {
-            return (this.var_3659);
+            return this._prioritySum;
         }
 
-        public function getHighestPriorityIssue():IssueMessageData
+        public function getHighestPriorityIssue(): IssueMessageData
         {
-            var _loc2_:IssueMessageData;
-            var _loc3_:int;
-            var _loc1_:IssueMessageData = this.var_3662;
-            if (_loc1_ == null)
+            var issue: IssueMessageData;
+            var i: int;
+            var highestPriority: IssueMessageData = this._highestPriority;
+
+            if (highestPriority == null)
             {
-                if (((this._issues == null) || (this._issues.length < 1)))
+                if (this._issues == null || this._issues.length < 1)
                 {
-                    return (null);
-                };
-                _loc1_ = this._issues.getWithIndex(0);
-                _loc3_ = 1;
-                while (_loc3_ < this._issues.length)
+                    return null;
+                }
+
+                highestPriority = this._issues.getWithIndex(0);
+                i = 1;
+
+                while (i < this._issues.length)
                 {
-                    _loc2_ = this._issues.getWithIndex(_loc3_);
-                    if (((!(_loc2_ == null)) && (_loc2_.priority > _loc1_.priority)))
+                    issue = this._issues.getWithIndex(i);
+
+                    if (issue != null && issue.priority > highestPriority.priority)
                     {
-                        _loc1_ = _loc2_;
-                    };
-                    _loc3_++;
-                };
-                this.var_3662 = _loc1_;
-            };
-            return (_loc1_);
+                        highestPriority = issue;
+                    }
+
+                    i++;
+                }
+
+                this._highestPriority = highestPriority;
+            }
+
+            return highestPriority;
         }
 
-        public function getIssueCount():int
+        public function getIssueCount(): int
         {
             if (this._issues == null)
             {
-                return (0);
-            };
-            return (this._issues.length);
+                return 0;
+            }
+
+            return this._issues.length;
         }
 
-        public function getIssueIds():Array
+        public function getIssueIds(): Array
         {
             if (this._issues == null)
             {
-                return ([]);
-            };
-            return (this._issues.getKeys());
+                return [];
+            }
+
+            return this._issues.getKeys();
         }
 
-        public function get reportedUserId():int
+        public function get reportedUserId(): int
         {
-            return (this.var_2953);
+            return this._reportedUserId;
         }
 
-        public function getMessageCount():int
+        public function getMessageCount(): int
         {
-            return (this.var_3660);
+            return this._messageCount;
         }
 
-        public function getOpenTime(param1:int):String
+        public function getOpenTime(id: int): String
         {
-            var _loc3_:IssueMessageData;
-            var _loc2_:IssueMessageData = this.var_3661;
-            if (_loc2_ == null)
+            var issue: IssueMessageData;
+            var active: IssueMessageData = this._active;
+
+            if (active == null)
             {
-                for each (_loc3_ in this._issues)
+                for each (issue in this._issues)
                 {
-                    if (((_loc2_ == null) || (_loc3_.timeStamp < _loc2_.timeStamp)))
+                    if (active == null || issue.timeStamp < active.timeStamp)
                     {
-                        _loc2_ = _loc3_;
-                    };
-                };
-                this.var_3661 = _loc2_;
-            };
-            if (_loc2_ != null)
+                        active = issue;
+                    }
+
+                }
+
+                this._active = active;
+            }
+
+            if (active != null)
             {
-                return (_loc2_.getOpenTime(param1));
-            };
-            return ("");
+                return active.getOpenTime(id);
+            }
+
+            return "";
         }
 
     }

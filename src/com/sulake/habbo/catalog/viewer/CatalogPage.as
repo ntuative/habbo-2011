@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.catalog.viewer
 {
+
     import com.sulake.core.window.IWindowContainer;
     import com.sulake.core.runtime.events.EventDispatcher;
     import com.sulake.habbo.catalog.HabboCatalog;
@@ -39,51 +40,53 @@
     import com.sulake.habbo.catalog.viewer.widgets.MadMoneyCatalogWidget;
     import com.sulake.habbo.catalog.viewer.widgets.events.CatalogWidgetsInitializedEvent;
     import com.sulake.habbo.catalog.viewer.widgets.LocalizationCatalogWidget;
+
     import flash.events.Event;
 
-    public class CatalogPage implements ICatalogPage 
+    public class CatalogPage implements ICatalogPage
     {
 
-        protected static const var_2819:String = "ctlg_";
+        protected static const ASSET_PREFIX: String = "ctlg_";
 
-        protected var var_2820:XML;
-        protected var _window:IWindowContainer;
-        private var _viewer:ICatalogViewer;
-        private var var_2608:int;
-        private var var_2821:String;
-        private var _offers:Array;
-        private var _localization:IPageLocalization;
-        private var var_2822:Array = [];
-        private var var_2823:EventDispatcher;
-        private var _catalog:HabboCatalog;
-        private var var_2824:ItemGridCatalogWidget;
+        protected var _layout: XML;
+        protected var _window: IWindowContainer;
+        private var _viewer: ICatalogViewer;
+        private var _pageId: int;
+        private var _layoutCode: String;
+        private var _offers: Array;
+        private var _localization: IPageLocalization;
+        private var _widgets: Array = [];
+        private var _eventDispatcher: EventDispatcher;
+        private var _catalog: HabboCatalog;
+        private var _widget: ItemGridCatalogWidget;
 
-        public function CatalogPage(param1:ICatalogViewer, param2:int, param3:String, param4:IPageLocalization, param5:Array, param6:HabboCatalog)
+        public function CatalogPage(param1: ICatalogViewer, param2: int, param3: String, param4: IPageLocalization, param5: Array, param6: HabboCatalog)
         {
-            var _loc7_:CatalogPageMessageOfferData;
-            var _loc8_:Array;
-            var _loc9_:IProductData;
-            var _loc10_:CatalogPageMessageProductData;
-            var _loc11_:Offer;
-            var _loc12_:IFurnitureData;
-            var _loc13_:Product;
+            var _loc7_: CatalogPageMessageOfferData;
+            var _loc8_: Array;
+            var _loc9_: IProductData;
+            var _loc10_: CatalogPageMessageProductData;
+            var _loc11_: Offer;
+            var _loc12_: IFurnitureData;
+            var _loc13_: Product;
             super();
             this._viewer = param1;
-            this.var_2608 = param2;
-            this.var_2821 = param3;
+            this._pageId = param2;
+            this._layoutCode = param3;
             this._localization = param4;
-            this._offers = new Array();
+            this._offers = [];
             this._catalog = param6;
             for each (_loc7_ in param5)
             {
-                _loc8_ = new Array();
+                _loc8_ = [];
                 _loc9_ = this._viewer.catalog.getProductData(_loc7_.localizationId);
                 for each (_loc10_ in _loc7_.products)
                 {
                     _loc12_ = this._viewer.catalog.getFurnitureData(_loc10_.furniClassId, _loc10_.productType);
                     _loc13_ = new Product(_loc10_.productType, _loc10_.furniClassId, _loc10_.extraParam, _loc10_.productCount, _loc10_.expiration, _loc9_, _loc12_);
                     _loc8_.push(_loc13_);
-                };
+                }
+
                 _loc11_ = new Offer(_loc7_.offerId, _loc7_.localizationId, _loc7_.priceInCredits, _loc7_.priceInActivityPoints, _loc7_.activityPointType, _loc8_, this);
                 if (_loc11_.productContainer != null)
                 {
@@ -92,304 +95,350 @@
                 else
                 {
                     _loc11_.dispose();
-                };
-            };
-            this.var_2823 = new EventDispatcher();
-            this.var_2822 = new Array();
+                }
+
+            }
+
+            this._eventDispatcher = new EventDispatcher();
+            this._widgets = [];
             this.init();
         }
 
-        public function get window():IWindowContainer
+        public function get window(): IWindowContainer
         {
-            return (this._window);
+            return this._window;
         }
 
-        public function get viewer():ICatalogViewer
+        public function get viewer(): ICatalogViewer
         {
-            return (this._viewer);
+            return this._viewer;
         }
 
-        public function get pageId():int
+        public function get pageId(): int
         {
-            return (this.var_2608);
+            return this._pageId;
         }
 
-        public function get layoutCode():String
+        public function get layoutCode(): String
         {
-            return (this.var_2821);
+            return this._layoutCode;
         }
 
-        public function get offers():Array
+        public function get offers(): Array
         {
-            return (this._offers);
+            return this._offers;
         }
 
-        public function get localization():IPageLocalization
+        public function get localization(): IPageLocalization
         {
-            return (this._localization);
+            return this._localization;
         }
 
-        public function get links():Array
+        public function get links(): Array
         {
-            return (this._localization.getLinks(this.var_2821));
+            return this._localization.getLinks(this._layoutCode);
         }
 
-        public function get hasLinks():Boolean
+        public function get hasLinks(): Boolean
         {
-            return (this._localization.hasLinks(this.var_2821));
+            return this._localization.hasLinks(this._layoutCode);
         }
 
-        public function selectOffer(param1:int):void
+        public function selectOffer(offerId: int): void
         {
-            var _loc2_:Offer;
-            var _loc3_:IGridItem;
-            if (this.var_2824 != null)
+            var offer: Offer;
+            var gridItem: IGridItem;
+
+            if (this._widget != null)
             {
-                Logger.log(("selecting offer " + param1));
-                for each (_loc2_ in this._offers)
+                Logger.log("selecting offer " + offerId);
+
+                for each (offer in this._offers)
                 {
-                    if (_loc2_.offerId == param1)
+                    if (offer.offerId == offerId)
                     {
-                        _loc3_ = (_loc2_.productContainer as IGridItem);
-                        this.var_2824.select(_loc3_);
-                    };
-                };
-            };
+                        gridItem = (offer.productContainer as IGridItem);
+
+                        this._widget.select(gridItem);
+                    }
+
+                }
+
+            }
+
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            var _loc1_:ICatalogWidget;
-            var _loc2_:Offer;
-            for each (_loc1_ in this.var_2822)
+            var widget: ICatalogWidget;
+            var offer: Offer;
+
+            for each (widget in this._widgets)
             {
-                _loc1_.dispose();
-            };
-            this.var_2822 = null;
+                widget.dispose();
+            }
+
+
+            this._widgets = null;
             this._localization.dispose();
-            for each (_loc2_ in this._offers)
+
+            for each (offer in this._offers)
             {
-                _loc2_.dispose();
-            };
+                offer.dispose();
+            }
+
+
             this._offers = [];
+
             if (this._window != null)
             {
                 this._window.dispose();
                 this._window = null;
-            };
-            if (this.var_2823 != null)
+            }
+
+
+            if (this._eventDispatcher != null)
             {
-                this.var_2823.dispose();
-                this.var_2823 = null;
-            };
+                this._eventDispatcher.dispose();
+                this._eventDispatcher = null;
+            }
+
+
             this._viewer = null;
-            this.var_2820 = null;
-            this.var_2608 = 0;
-            this.var_2821 = "";
+            this._layout = null;
+            this._pageId = 0;
+            this._layoutCode = "";
         }
 
-        public function init():void
+        public function init(): void
         {
             if (this.createWindow(this.layoutCode))
             {
                 this.createWidgets();
-            };
+            }
+
         }
 
-        public function closed():void
+        public function closed(): void
         {
-            var _loc1_:ICatalogWidget;
-            if (this.var_2822 != null)
+            var widget: ICatalogWidget;
+
+            if (this._widgets != null)
             {
-                for each (_loc1_ in this.var_2822)
+                for each (widget in this._widgets)
                 {
-                    _loc1_.closed();
-                };
-            };
+                    widget.closed();
+                }
+
+            }
+
         }
 
-        protected function createWindow(param1:String):Boolean
+        protected function createWindow(layoutId: String): Boolean
         {
-            var _loc2_:String = (var_2819 + param1);
-            var _loc3_:XmlAsset = (this.viewer.catalog.assets.getAssetByName(_loc2_) as XmlAsset);
-            if (_loc3_ == null)
+            var layoutName: String = ASSET_PREFIX + layoutId;
+            var layout: XmlAsset = this.viewer.catalog.assets.getAssetByName(layoutName) as XmlAsset;
+
+            if (layout == null)
             {
-                Logger.log(("Could not find asset for layout " + _loc2_));
-                return (false);
-            };
-            this.var_2820 = (_loc3_.content as XML);
-            this._window = (this.viewer.catalog.windowManager.buildFromXML(this.var_2820) as IWindowContainer);
+                Logger.log("Could not find asset for layout " + layoutName);
+                return false;
+            }
+
+
+            this._layout = (layout.content as XML);
+            this._window = (this.viewer.catalog.windowManager.buildFromXML(this._layout) as IWindowContainer);
+
             if (this._window == null)
             {
-                Logger.log(("Could not create layout " + param1));
-                return (false);
-            };
-            return (true);
+                Logger.log("Could not create layout " + layoutId);
+                return false;
+            }
+
+
+            return true;
         }
 
-        private function localize():void
+        private function localize(): void
         {
         }
 
-        private function createWidgets():void
+        private function createWidgets(): void
         {
             this.createWidgetsRecursion(this._window);
             this.initializeWidgets();
         }
 
-        private function createWidgetsRecursion(param1:IWindowContainer):void
+        private function createWidgetsRecursion(window: IWindowContainer): void
         {
-            var _loc2_:int;
-            var _loc3_:IWindowContainer;
-            if (param1 != null)
+            var i: int = 0;
+            var child: IWindowContainer;
+
+            if (window != null)
             {
-                _loc2_ = 0;
-                while (_loc2_ < param1.numChildren)
+                while (i < window.numChildren)
                 {
-                    _loc3_ = (param1.getChildAt(_loc2_) as IWindowContainer);
-                    if (_loc3_ != null)
+                    child = (window.getChildAt(i) as IWindowContainer);
+
+                    if (child != null)
                     {
-                        this.createWidget(_loc3_);
-                        this.createWidgetsRecursion(_loc3_);
-                    };
-                    _loc2_++;
-                };
-            };
+                        this.createWidget(child);
+                        this.createWidgetsRecursion(child);
+                    }
+
+
+                    i++;
+                }
+
+            }
+
         }
 
-        private function createWidget(param1:IWindowContainer):void
+        private function createWidget(container: IWindowContainer): void
         {
-            if (param1 == null)
+            if (container == null)
             {
                 return;
-            };
-            switch (param1.name)
+            }
+
+            switch (container.name)
             {
                 case CatalogWidgetEnum.var_1658:
-                    if (this.var_2824 == null)
+                    if (this._widget == null)
                     {
-                        this.var_2824 = new ItemGridCatalogWidget(param1);
-                        this.var_2822.push(this.var_2824);
-                    };
+                        this._widget = new ItemGridCatalogWidget(container);
+                        this._widgets.push(this._widget);
+                    }
+
                     return;
                 case CatalogWidgetEnum.var_1659:
-                    this.var_2822.push(new ItemGroupCatalogWidget(param1));
+                    this._widgets.push(new ItemGroupCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1660:
-                    this.var_2822.push(new ProductViewCatalogWidget(param1));
+                    this._widgets.push(new ProductViewCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1661:
-                    this.var_2822.push(new SongDiskProductViewCatalogWidget(param1, this._catalog.soundManager));
+                    this._widgets.push(new SongDiskProductViewCatalogWidget(container, this._catalog.soundManager));
                     return;
                 case CatalogWidgetEnum.var_1662:
-                    this.var_2822.push(new SingleViewCatalogWidget(param1));
+                    this._widgets.push(new SingleViewCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1663:
-                    this.var_2822.push(new PurchaseCatalogWidget(param1));
+                    this._widgets.push(new PurchaseCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1664:
-                    this.var_2822.push(new PurseCatalogWidget(param1));
+                    this._widgets.push(new PurseCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1665:
-                    this.var_2822.push(new ColourGridCatalogWidget(param1));
+                    this._widgets.push(new ColourGridCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1666:
-                    this.var_2822.push(new TraxPreviewCatalogWidget(param1, this._catalog.soundManager));
+                    this._widgets.push(new TraxPreviewCatalogWidget(container, this._catalog.soundManager));
                     return;
                 case CatalogWidgetEnum.var_1667:
-                    this.var_2822.push(new RedeemItemCodeCatalogWidget(param1));
+                    this._widgets.push(new RedeemItemCodeCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1668:
-                    this.var_2822.push(new SpacesCatalogWidget(param1));
+                    this._widgets.push(new SpacesCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1669:
-                    this.var_2822.push(new SpacesNewCatalogWidget(param1));
+                    this._widgets.push(new SpacesNewCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1670:
-                    this.var_2822.push(new RoomPreviewCatalogWidget(param1));
+                    this._widgets.push(new RoomPreviewCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1671:
-                    this.var_2822.push(new TrophyCatalogWidget(param1));
+                    this._widgets.push(new TrophyCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1672:
-                    this.var_2822.push(new PetsCatalogWidget(param1));
+                    this._widgets.push(new PetsCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1673:
-                    this.var_2822.push(new NewPetsCatalogWidget(param1));
+                    this._widgets.push(new NewPetsCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1674:
-                    this.var_2822.push(new TextInputCatalogWidget(param1));
+                    this._widgets.push(new TextInputCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1675:
-                    this.var_2822.push(new SpecialInfoWidget(param1));
+                    this._widgets.push(new SpecialInfoWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1676:
-                    this.var_2822.push(new RecyclerCatalogWidget(param1));
+                    this._widgets.push(new RecyclerCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1677:
-                    this.var_2822.push(new RecyclerPrizesCatalogWidget(param1));
+                    this._widgets.push(new RecyclerPrizesCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1678:
-                    this.var_2822.push(new BotCatalogWidget(param1));
+                    this._widgets.push(new BotCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1679:
-                    this.var_2822.push(new MarketPlaceCatalogWidget(param1));
+                    this._widgets.push(new MarketPlaceCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1680:
-                    this.var_2822.push(new MarketPlaceOwnItemsCatalogWidget(param1));
+                    this._widgets.push(new MarketPlaceOwnItemsCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1681:
-                    this.var_2822.push(new ClubGiftWidget(param1, this._catalog.getClubGiftController()));
+                    this._widgets.push(new ClubGiftWidget(container, this._catalog.getClubGiftController()));
                     return;
                 case CatalogWidgetEnum.var_1682:
-                    this.var_2822.push(new ClubBuyCatalogWidget(param1));
+                    this._widgets.push(new ClubBuyCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1683:
-                    this.var_2822.push(new ActivityPointDisplayCatalogWidget(param1));
+                    this._widgets.push(new ActivityPointDisplayCatalogWidget(container));
                     return;
                 case CatalogWidgetEnum.var_1684:
-                    this.var_2822.push(new MadMoneyCatalogWidget(param1));
+                    this._widgets.push(new MadMoneyCatalogWidget(container));
                     return;
-            };
+            }
+
         }
 
-        private function initializeWidgets():void
+        private function initializeWidgets(): void
         {
-            var _loc1_:ICatalogWidget;
-            var _loc2_:Array = [];
-            for each (_loc1_ in this.var_2822)
+            var widget: ICatalogWidget;
+            var widgets: Array = [];
+
+            for each (widget in this._widgets)
             {
-                _loc1_.page = this;
-                _loc1_.events = this.var_2823;
-                if (!_loc1_.init())
+                widget.page = this;
+                widget.events = this._eventDispatcher;
+
+                if (!widget.init())
                 {
-                    _loc2_.push(_loc1_);
-                };
-            };
-            this.removeWidgets(_loc2_);
+                    widgets.push(widget);
+                }
+
+            }
+
+
+            this.removeWidgets(widgets);
             this.initializeLocalizations();
-            this.var_2823.dispatchEvent(new CatalogWidgetsInitializedEvent());
+            this._eventDispatcher.dispatchEvent(new CatalogWidgetsInitializedEvent());
         }
 
-        private function initializeLocalizations():void
+        private function initializeLocalizations(): void
         {
-            var _loc1_:ICatalogWidget = new LocalizationCatalogWidget(this._window);
-            this.var_2822.push(_loc1_);
-            _loc1_.page = this;
-            _loc1_.events = this.var_2823;
-            _loc1_.init();
+            var widget: ICatalogWidget = new LocalizationCatalogWidget(this._window);
+
+            this._widgets.push(widget);
+
+            widget.page = this;
+            widget.events = this._eventDispatcher;
+
+            widget.init();
         }
 
-        private function removeWidgets(param1:Array):void
+        private function removeWidgets(param1: Array): void
         {
-            var _loc2_:ICatalogWidget;
-            var _loc3_:ICatalogWidget;
-            var _loc4_:int;
-            if (((param1 == null) || (param1.length == 0)))
+            var _loc2_: ICatalogWidget;
+            var _loc3_: ICatalogWidget;
+            var _loc4_: int;
+            if (param1 == null || param1.length == 0)
             {
                 return;
-            };
-            for each (_loc2_ in this.var_2822)
+            }
+
+            for each (_loc2_ in this._widgets)
             {
                 if (_loc2_.window != null)
                 {
@@ -402,48 +451,60 @@
                                 if (param1.indexOf(_loc2_) < 0)
                                 {
                                     param1.push(_loc2_);
-                                };
+                                }
+
                                 break;
-                            };
-                        };
-                    };
-                };
-            };
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
             for each (_loc3_ in param1)
             {
                 if (_loc3_.window != null)
                 {
                     this._window.removeChild(_loc3_.window);
                     _loc3_.window.dispose();
-                };
-                _loc4_ = this.var_2822.indexOf(_loc3_);
+                }
+
+                _loc4_ = this._widgets.indexOf(_loc3_);
                 if (_loc4_ >= 0)
                 {
-                    this.var_2822.splice(_loc4_, 1);
-                };
+                    this._widgets.splice(_loc4_, 1);
+                }
+
                 _loc3_.dispose();
-            };
+            }
+
         }
 
-        public function dispatchWidgetEvent(param1:Event):Boolean
+        public function dispatchWidgetEvent(param1: Event): Boolean
         {
-            if (this.var_2823 != null)
+            if (this._eventDispatcher != null)
             {
-                return (this.var_2823.dispatchEvent(param1));
-            };
-            return (false);
+                return this._eventDispatcher.dispatchEvent(param1);
+            }
+
+            return false;
         }
 
-        public function replaceOffers(param1:Array, param2:Boolean=false):void
+        public function replaceOffers(param1: Array, param2: Boolean = false): void
         {
-            var _loc3_:Offer;
+            var _loc3_: Offer;
             if (param2)
             {
                 for each (_loc3_ in this._offers)
                 {
                     _loc3_.dispose();
-                };
-            };
+                }
+
+            }
+
             this._offers = param1;
         }
 

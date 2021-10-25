@@ -1,54 +1,57 @@
 ﻿package com.sulake.habbo.roomevents.userdefinedroomevents.actiontypes
 {
+
     import com.sulake.habbo.roomevents.HabboUserDefinedRoomEvents;
     import com.sulake.habbo.roomevents.userdefinedroomevents.common.SliderWindowController;
     import com.sulake.habbo.roomevents.userdefinedroomevents.UserDefinedRoomEventsCtrl;
     import com.sulake.core.window.IWindowContainer;
+
     import flash.events.Event;
+
     import com.sulake.habbo.communication.messages.incoming.userdefinedroomevents.Triggerable;
     import com.sulake.core.window.components.IRadioButtonWindow;
     import com.sulake.core.window.components.ISelectorWindow;
 
-    public class MoveFurniTo implements ActionType 
+    public class MoveFurniTo implements ActionType
     {
 
-        private var var_4378:HabboUserDefinedRoomEvents;
-        private var _slider:SliderWindowController;
+        private var var_4378: HabboUserDefinedRoomEvents;
+        private var _slider: SliderWindowController;
 
-        public function get code():int
+        public function get code(): int
         {
-            return (ActionTypeCodes.var_1938);
+            return ActionTypeCodes.var_1938;
         }
 
-        public function get allowDelaying():Boolean
+        public function get allowDelaying(): Boolean
         {
-            return (false);
+            return false;
         }
 
-        public function get requiresFurni():int
+        public function get requiresFurni(): int
         {
-            return (UserDefinedRoomEventsCtrl.var_624);
+            return UserDefinedRoomEventsCtrl.var_624;
         }
 
-        public function get hasStateSnapshot():Boolean
+        public function get hasStateSnapshot(): Boolean
         {
-            return (false);
+            return false;
         }
 
-        public function readIntParamsFromForm(param1:IWindowContainer):Array
+        public function readIntParamsFromForm(param1: IWindowContainer): Array
         {
-            var _loc2_:Array = new Array();
+            var _loc2_: Array = [];
             _loc2_.push(this.getDirectionSelector(param1).getSelected().id);
             _loc2_.push(int(this._slider.getValue()));
-            return (_loc2_);
+            return _loc2_;
         }
 
-        public function readStringParamFromForm(param1:IWindowContainer):String
+        public function readStringParamFromForm(param1: IWindowContainer): String
         {
-            return ("");
+            return "";
         }
 
-        public function onInit(param1:IWindowContainer, param2:HabboUserDefinedRoomEvents):void
+        public function onInit(param1: IWindowContainer, param2: HabboUserDefinedRoomEvents): void
         {
             this.var_4378 = param2;
             this._slider = new SliderWindowController(param2, this.getInput(param1), param2.assets, 1, 5, 1);
@@ -60,28 +63,28 @@
             param2.refreshButton(param1, "move_6", true, null, 0);
         }
 
-        public function onEditStart(param1:IWindowContainer, param2:Triggerable):void
+        public function onEditStart(param1: IWindowContainer, param2: Triggerable): void
         {
-            var _loc3_:int = param2.intParams[0];
+            var _loc3_: int = param2.intParams[0];
             this.getDirectionSelector(param1).setSelected(this.getDirectionRadio(param1, _loc3_));
             this._slider.setValue(param2.intParams[1]);
         }
 
-        public function get hasSpecialInputs():Boolean
+        public function get hasSpecialInputs(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        private function getInput(param1:IWindowContainer):IWindowContainer
+        private function getInput(param1: IWindowContainer): IWindowContainer
         {
-            return (param1.findChildByName("slider_container") as IWindowContainer);
+            return param1.findChildByName("slider_container") as IWindowContainer;
         }
 
-        private function onSliderChange(param1:Event):void
+        private function onSliderChange(param1: Event): void
         {
-            var _loc2_:SliderWindowController;
-            var _loc3_:Number;
-            var _loc4_:int;
+            var _loc2_: SliderWindowController;
+            var _loc3_: Number;
+            var _loc4_: int;
             if (param1.type == Event.CHANGE)
             {
                 _loc2_ = (param1.target as SliderWindowController);
@@ -89,19 +92,21 @@
                 {
                     _loc3_ = _loc2_.getValue();
                     _loc4_ = int(_loc3_);
-                    this.var_4378.localization.registerParameter("wiredfurni.params.emptytiles", "tiles", ("" + _loc4_));
-                };
-            };
+                    this.var_4378.localization.registerParameter("wiredfurni.params.emptytiles", "tiles", "" + _loc4_);
+                }
+
+            }
+
         }
 
-        private function getDirectionRadio(param1:IWindowContainer, param2:int):IRadioButtonWindow
+        private function getDirectionRadio(param1: IWindowContainer, param2: int): IRadioButtonWindow
         {
-            return (IRadioButtonWindow(param1.findChildByName((("direction_" + param2) + "_radio"))));
+            return IRadioButtonWindow(param1.findChildByName("direction_" + param2 + "_radio"));
         }
 
-        private function getDirectionSelector(param1:IWindowContainer):ISelectorWindow
+        private function getDirectionSelector(param1: IWindowContainer): ISelectorWindow
         {
-            return (ISelectorWindow(param1.findChildByName("direction_selector")));
+            return ISelectorWindow(param1.findChildByName("direction_selector"));
         }
 
     }

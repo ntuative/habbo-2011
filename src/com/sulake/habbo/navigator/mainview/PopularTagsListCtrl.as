@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.navigator.mainview
 {
+
     import com.sulake.habbo.navigator.IViewCtrl;
     import com.sulake.habbo.navigator.HabboNavigator;
     import com.sulake.core.window.IWindowContainer;
@@ -14,74 +15,81 @@
     import com.sulake.core.window.*;
     import com.sulake.core.window.enum.*;
 
-    public class PopularTagsListCtrl implements IViewCtrl 
+    public class PopularTagsListCtrl implements IViewCtrl
     {
 
-        private var _navigator:HabboNavigator;
-        private var var_1997:IWindowContainer;
-        private var var_2190:IItemListWindow;
-        private var var_3812:int;
-        private var var_3757:TagRenderer;
+        private var _navigator: HabboNavigator;
+        private var _content: IWindowContainer;
+        private var _itemList: IItemListWindow;
+        private var _unknown1: int;
+        private var _tagRenderer: TagRenderer;
 
-        public function PopularTagsListCtrl(param1:HabboNavigator):void
+        public function PopularTagsListCtrl(navigator: HabboNavigator): void
         {
-            this._navigator = param1;
-            this.var_3757 = new TagRenderer(this._navigator);
+            this._navigator = navigator;
+            this._tagRenderer = new TagRenderer(this._navigator);
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            if (this.var_3757)
+            if (this._tagRenderer)
             {
-                this.var_3757.dispose();
-                this.var_3757 = null;
-            };
+                this._tagRenderer.dispose();
+                this._tagRenderer = null;
+            }
+
         }
 
-        public function set content(param1:IWindowContainer):void
+        public function set content(value: IWindowContainer): void
         {
-            this.var_1997 = param1;
-            this.var_2190 = IItemListWindow(this.var_1997.findChildByName("item_list"));
+            this._content = value;
+            this._itemList = IItemListWindow(this._content.findChildByName("item_list"));
         }
 
-        public function get content():IWindowContainer
+        public function get content(): IWindowContainer
         {
-            return (this.var_1997);
+            return this._content;
         }
 
-        public function refresh():void
+        public function refresh(): void
         {
-            var _loc4_:PopularTagData;
-            var _loc1_:Array = this._navigator.data.popularTags.tags;
-            var _loc2_:IWindowContainer = IWindowContainer(this.var_2190.getListItemAt(0));
-            if (_loc2_ == null)
+            var tagData: PopularTagData;
+            var tags: Array = this._navigator.data.popularTags.tags;
+            var item: IWindowContainer = IWindowContainer(this._itemList.getListItemAt(0));
+            
+            if (item == null)
             {
-                _loc2_ = IWindowContainer(this._navigator.getXmlWindow("grs_popular_tag_row"));
-                this.var_2190.addListItem(_loc2_);
-            };
-            Util.hideChildren(_loc2_);
-            var _loc3_:int;
-            while (_loc3_ < this._navigator.data.popularTags.tags.length)
+                item = IWindowContainer(this._navigator.getXmlWindow("grs_popular_tag_row"));
+                this._itemList.addListItem(item);
+            }
+
+            Util.hideChildren(item);
+            var i: int;
+
+            while (i < this._navigator.data.popularTags.tags.length)
             {
-                _loc4_ = this._navigator.data.popularTags.tags[_loc3_];
-                this.var_3757.refreshTag(_loc2_, _loc3_, _loc4_.tagName);
-                _loc3_++;
-            };
-            Util.layoutChildrenInArea(_loc2_, _loc2_.width, 18, 3);
-            _loc2_.height = Util.getLowestPoint(_loc2_);
-            this.var_1997.findChildByName("no_tags_found").visible = (_loc1_.length < 1);
+                tagData = this._navigator.data.popularTags.tags[i];
+                this._tagRenderer.refreshTag(item, i, tagData.tagName);
+                i++;
+            }
+
+            Util.layoutChildrenInArea(item, item.width, 18, 3);
+            item.height = Util.getLowestPoint(item);
+            this._content.findChildByName("no_tags_found").visible = tags.length < 1;
         }
 
-        private function refreshTagName(param1:IWindowContainer, param2:PopularTagData):void
+        private function refreshTagName(container: IWindowContainer, data: PopularTagData): void
         {
-            var _loc3_:String = "txt";
-            var _loc4_:ITextWindow = ITextWindow(param1.findChildByName(_loc3_));
-            if (param2 == null)
+            var childName: String = "txt";
+            var textWindow: ITextWindow = ITextWindow(container.findChildByName(childName));
+            
+            if (data == null)
             {
                 return;
-            };
-            _loc4_.visible = true;
-            _loc4_.text = param2.tagName;
+            }
+
+            textWindow.visible = true;
+            textWindow.text = data.tagName;
         }
 
     }

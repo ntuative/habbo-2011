@@ -1,9 +1,10 @@
 ﻿package com.sulake.habbo.inventory.common
 {
-    public interface IThumbListDataProvider 
+
+    public interface IThumbListDataProvider
     {
 
-        function getDrawableList():Array;
+        function getDrawableList(): Array;
 
     }
 }

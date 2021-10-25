@@ -1,125 +1,134 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.room.engine
 {
-    public class PublicRoomObjectMessageData 
+
+    public class PublicRoomObjectMessageData
     {
 
-        private var _name:String = "";
-        private var _type:String = "";
-        private var _x:Number = 0;
-        private var var_2497:Number = 0;
-        private var var_2498:Number = 0;
-        private var var_3035:int = 0;
-        private var var_3038:int = 0;
-        private var var_3039:int = 0;
-        private var var_3037:Boolean = false;
+        private var _name: String = "";
+        private var _type: String = "";
+        private var _x: Number = 0;
+        private var _id: Number = 0;
+        private var _z: Number = 0;
+        private var _dir: int = 0;
+        private var _sizeX: int = 0;
+        private var _sizeY: int = 0;
+        private var _readonly: Boolean = false;
 
-        public function setReadOnly():void
+        public function setReadOnly(): void
         {
-            this.var_3037 = true;
+            this._readonly = true;
         }
 
-        public function get type():String
+        public function get type(): String
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function set type(param1:String):void
+        public function set type(param1: String): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
                 this._type = param1;
-            };
+            }
+
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function set name(param1:String):void
+        public function set name(param1: String): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
                 this._name = param1;
-            };
+            }
+
         }
 
-        public function get x():Number
+        public function get x(): Number
         {
-            return (this._x);
+            return this._x;
         }
 
-        public function set x(param1:Number):void
+        public function set x(param1: Number): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
                 this._x = param1;
-            };
+            }
+
         }
 
-        public function get y():Number
+        public function get y(): Number
         {
-            return (this.var_2497);
+            return this._id;
         }
 
-        public function set y(param1:Number):void
+        public function set y(param1: Number): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
-                this.var_2497 = param1;
-            };
+                this._id = param1;
+            }
+
         }
 
-        public function get z():Number
+        public function get z(): Number
         {
-            return (this.var_2498);
+            return this._z;
         }
 
-        public function set z(param1:Number):void
+        public function set z(param1: Number): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
-                this.var_2498 = param1;
-            };
+                this._z = param1;
+            }
+
         }
 
-        public function get dir():int
+        public function get dir(): int
         {
-            return (this.var_3035);
+            return this._dir;
         }
 
-        public function set dir(param1:int):void
+        public function set dir(param1: int): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
-                this.var_3035 = param1;
-            };
+                this._dir = param1;
+            }
+
         }
 
-        public function get sizeX():int
+        public function get sizeX(): int
         {
-            return (this.var_3038);
+            return this._sizeX;
         }
 
-        public function set sizeX(param1:int):void
+        public function set sizeX(param1: int): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
-                this.var_3038 = param1;
-            };
+                this._sizeX = param1;
+            }
+
         }
 
-        public function get sizeY():int
+        public function get sizeY(): int
         {
-            return (this.var_3039);
+            return this._sizeY;
         }
 
-        public function set sizeY(param1:int):void
+        public function set sizeY(param1: int): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
-                this.var_3039 = param1;
-            };
+                this._sizeY = param1;
+            }
+
         }
 
     }

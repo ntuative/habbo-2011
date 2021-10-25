@@ -1,38 +1,40 @@
 ﻿package com.sulake.habbo.avatar.structure.animation
 {
+
     import flash.utils.Dictionary;
 
-    public class AnimationAction 
+    public class AnimationAction
     {
 
-        private var _id:String;
-        private var var_2516:Dictionary;
+        private var _id: String;
+        private var _parts: Dictionary;
 
-        public function AnimationAction(param1:XML)
+        public function AnimationAction(data: XML)
         {
-            var _loc2_:XML;
             super();
-            this._id = String(param1.@id);
-            this.var_2516 = new Dictionary();
-            for each (_loc2_ in param1.part)
+            this._id = String(data.@id);
+            this._parts = new Dictionary();
+
+            for each (var part: XML in data.part)
             {
-                this.var_2516[String(_loc2_.@["set-type"])] = new ActionPart(_loc2_);
-            };
+                this._parts[String(part.@["set-type"])] = new ActionPart(part);
+            }
+
         }
 
-        public function getPart(param1:String):ActionPart
+        public function getPart(param1: String): ActionPart
         {
-            return (this.var_2516[param1] as ActionPart);
+            return this._parts[param1] as ActionPart;
         }
 
-        public function get id():String
+        public function get id(): String
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get parts():Dictionary
+        public function get parts(): Dictionary
         {
-            return (this.var_2516);
+            return this._parts;
         }
 
     }

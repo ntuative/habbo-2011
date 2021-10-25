@@ -1,62 +1,64 @@
 ﻿package com.sulake.habbo.room.object
 {
+
     import com.sulake.room.utils.Vector3d;
     import com.sulake.room.utils.IVector3d;
 
-    public class RoomPlaneBitmapMaskData 
+    public class RoomPlaneBitmapMaskData
     {
 
-        public static const var_1196:String = "window";
-        public static const var_472:String = "hole";
+        public static const WINDOW: String = "window";
+        public static const HOLE: String = "hole";
 
-        private var var_3041:Vector3d = null;
-        private var _type:String = null;
-        private var _category:String = null;
+        private var _loc: Vector3d = null;
+        private var _type: String = null;
+        private var _category: String = null;
 
-        public function RoomPlaneBitmapMaskData(param1:String, param2:IVector3d, param3:String)
+        public function RoomPlaneBitmapMaskData(type: String, loc: IVector3d, category: String)
         {
-            this.type = param1;
-            this.loc = param2;
-            this.category = param3;
+            this.type = type;
+            this.loc = loc;
+            this.category = category;
         }
 
-        public function get loc():IVector3d
+        public function get loc(): IVector3d
         {
-            return (this.var_3041);
+            return this._loc;
         }
 
-        public function set loc(param1:IVector3d):void
+        public function set loc(value: IVector3d): void
         {
-            if (this.var_3041 == null)
+            if (this._loc == null)
             {
-                this.var_3041 = new Vector3d();
-            };
-            this.var_3041.assign(param1);
+                this._loc = new Vector3d();
+            }
+
+            this._loc.assign(value);
         }
 
-        public function get type():String
+        public function get type(): String
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function set type(param1:String):void
+        public function set type(value: String): void
         {
-            this._type = param1;
+            this._type = value;
         }
 
-        public function get category():String
+        public function get category(): String
         {
-            return (this._category);
+            return this._category;
         }
 
-        public function set category(param1:String):void
+        public function set category(value: String): void
         {
-            this._category = param1;
+            this._category = value;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            this.var_3041 = null;
+            this._loc = null;
         }
 
     }

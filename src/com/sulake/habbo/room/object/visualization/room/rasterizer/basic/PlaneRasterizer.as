@@ -1,31 +1,36 @@
 ﻿package com.sulake.habbo.room.object.visualization.room.rasterizer.basic
 {
+
     import com.sulake.habbo.room.object.visualization.room.rasterizer.IPlaneRasterizer;
     import com.sulake.room.object.visualization.utils.IGraphicAssetCollection;
     import com.sulake.core.utils.Map;
     import com.sulake.room.utils.RoomGeometry;
     import com.sulake.room.object.visualization.utils.IGraphicAsset;
     import com.sulake.core.assets.BitmapDataAsset;
+
     import flash.display.BitmapData;
+
     import com.sulake.room.utils.XMLValidator;
     import com.sulake.room.utils.Rasterizer;
+
     import flash.geom.Point;
+
     import com.sulake.room.utils.IRoomGeometry;
     import com.sulake.room.utils.Vector3d;
     import com.sulake.room.utils.IVector3d;
     import com.sulake.habbo.room.object.visualization.room.utils.PlaneBitmapData;
 
-    public class PlaneRasterizer implements IPlaneRasterizer 
+    public class PlaneRasterizer implements IPlaneRasterizer
     {
 
-        protected static const var_4210:String = "default";
+        protected static const var_4210: String = "default";
 
-        private var var_4188:IGraphicAssetCollection = null;
-        private var var_4224:Map = null;
-        private var var_4121:Map = null;
-        private var var_4068:Map = null;
-        private var var_4225:Map = null;
-        private var _data:XML = null;
+        private var var_4188: IGraphicAssetCollection = null;
+        private var var_4224: Map = null;
+        private var var_4121: Map = null;
+        private var var_4068: Map = null;
+        private var var_4225: Map = null;
+        private var _data: XML = null;
 
         public function PlaneRasterizer()
         {
@@ -35,26 +40,26 @@
             this.var_4225 = new Map();
         }
 
-        protected function get data():XML
+        protected function get data(): XML
         {
-            return (this._data);
+            return this._data;
         }
 
-        protected function get assetCollection():IGraphicAssetCollection
+        protected function get assetCollection(): IGraphicAssetCollection
         {
-            return (this.var_4188);
+            return this.var_4188;
         }
 
-        public function initializeDimensions(param1:int, param2:int):Boolean
+        public function initializeDimensions(param1: int, param2: int): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            var _loc2_:Plane;
-            var _loc3_:RoomGeometry;
-            var _loc1_:int;
+            var _loc2_: Plane;
+            var _loc3_: RoomGeometry;
+            var _loc1_: int;
             if (this.var_4068 != null)
             {
                 _loc1_ = 0;
@@ -64,24 +69,29 @@
                     if (_loc2_ != null)
                     {
                         _loc2_.dispose();
-                    };
+                    }
+
                     _loc1_++;
-                };
+                }
+
                 this.var_4068.dispose();
                 this.var_4068 = null;
-            };
+            }
+
             if (this.var_4224 != null)
             {
                 this.resetMaterials();
                 this.var_4224.dispose();
                 this.var_4224 = null;
-            };
+            }
+
             if (this.var_4121 != null)
             {
                 this.resetTextures();
                 this.var_4121.dispose();
                 this.var_4121 = null;
-            };
+            }
+
             if (this.var_4225 != null)
             {
                 _loc1_ = 0;
@@ -91,21 +101,24 @@
                     if (_loc3_ != null)
                     {
                         _loc3_.dispose();
-                    };
+                    }
+
                     _loc1_++;
-                };
+                }
+
                 this.var_4225.dispose();
                 this.var_4225 = null;
-            };
+            }
+
             this._data = null;
             this.var_4188 = null;
         }
 
-        public function clearCache():void
+        public function clearCache(): void
         {
-            var _loc2_:Plane;
-            var _loc3_:PlaneMaterial;
-            var _loc1_:int;
+            var _loc2_: Plane;
+            var _loc3_: PlaneMaterial;
+            var _loc1_: int;
             _loc1_ = 0;
             while (_loc1_ < this.var_4068.length)
             {
@@ -113,9 +126,11 @@
                 if (_loc2_ != null)
                 {
                     _loc2_.clearCache();
-                };
+                }
+
                 _loc1_++;
-            };
+            }
+
             _loc1_ = 0;
             while (_loc1_ < this.var_4224.length)
             {
@@ -123,144 +138,157 @@
                 if (_loc3_ != null)
                 {
                     _loc3_.clearCache();
-                };
+                }
+
                 _loc1_++;
-            };
+            }
+
         }
 
-        public function initialize(param1:XML):void
+        public function initialize(param1: XML): void
         {
             this._data = param1;
         }
 
-        public function reinitialize():void
+        public function reinitialize(): void
         {
             this.resetTextures();
             this.resetMaterials();
             this.initializeAll();
         }
 
-        private function resetMaterials():void
+        private function resetMaterials(): void
         {
-            var _loc2_:PlaneMaterial;
-            var _loc1_:int;
+            var _loc2_: PlaneMaterial;
+            var _loc1_: int;
             while (_loc1_ < this.var_4224.length)
             {
                 _loc2_ = (this.var_4224.getWithIndex(_loc1_) as PlaneMaterial);
                 if (_loc2_ != null)
                 {
                     _loc2_.dispose();
-                };
+                }
+
                 _loc1_++;
-            };
+            }
+
             this.var_4224.reset();
         }
 
-        private function resetTextures():void
+        private function resetTextures(): void
         {
-            var _loc2_:PlaneTexture;
-            var _loc1_:int;
+            var _loc2_: PlaneTexture;
+            var _loc1_: int;
             while (_loc1_ < this.var_4121.length)
             {
                 _loc2_ = (this.var_4121.getWithIndex(_loc1_) as PlaneTexture);
                 if (_loc2_ != null)
                 {
                     _loc2_.dispose();
-                };
+                }
+
                 _loc1_++;
-            };
+            }
+
             this.var_4121.reset();
         }
 
-        protected function getTexture(param1:String):PlaneTexture
+        protected function getTexture(param1: String): PlaneTexture
         {
-            return (this.var_4121.getValue(param1) as PlaneTexture);
+            return this.var_4121.getValue(param1) as PlaneTexture;
         }
 
-        protected function getMaterial(param1:String):PlaneMaterial
+        protected function getMaterial(param1: String): PlaneMaterial
         {
-            return (this.var_4224.getValue(param1) as PlaneMaterial);
+            return this.var_4224.getValue(param1) as PlaneMaterial;
         }
 
-        protected function getPlane(param1:String):Plane
+        protected function getPlane(param1: String): Plane
         {
-            return (this.var_4068.getValue(param1));
+            return this.var_4068.getValue(param1);
         }
 
-        protected function addPlane(param1:String, param2:Plane):Boolean
+        protected function addPlane(param1: String, param2: Plane): Boolean
         {
             if (param2 == null)
             {
-                return (false);
-            };
+                return false;
+            }
+
             if (this.var_4068.getValue(param1) == null)
             {
                 this.var_4068.add(param1, param2);
-                return (true);
-            };
-            return (false);
+                return true;
+            }
+
+            return false;
         }
 
-        public function initializeAssetCollection(param1:IGraphicAssetCollection):void
+        public function initializeAssetCollection(param1: IGraphicAssetCollection): void
         {
             if (this.data == null)
             {
                 return;
-            };
+            }
+
             this.var_4188 = param1;
             this.initializeAll();
         }
 
-        private function initializeAll():void
+        private function initializeAll(): void
         {
             if (this.data == null)
             {
                 return;
-            };
+            }
+
             this.initializeTexturesAndMaterials();
             this.initializePlanes();
         }
 
-        private function initializeTexturesAndMaterials():void
+        private function initializeTexturesAndMaterials(): void
         {
-            var _loc1_:XMLList = this.data.textures;
+            var _loc1_: XMLList = this.data.textures;
             if (_loc1_.length() > 0)
             {
                 this.parseTextures(_loc1_[0], this.assetCollection);
-            };
-            var _loc2_:XMLList = this.data.materials;
+            }
+
+            var _loc2_: XMLList = this.data.materials;
             if (_loc2_.length() > 0)
             {
                 this.parsePlaneMaterials(_loc2_[0]);
-            };
+            }
+
         }
 
-        protected function initializePlanes():void
+        protected function initializePlanes(): void
         {
         }
 
-        private function parseTextures(param1:XML, param2:IGraphicAssetCollection):void
+        private function parseTextures(param1: XML, param2: IGraphicAssetCollection): void
         {
-            var _loc5_:XML;
-            var _loc6_:String;
-            var _loc7_:PlaneTexture;
-            var _loc8_:XMLList;
-            var _loc9_:int;
-            var _loc10_:XML;
-            var _loc11_:Number;
-            var _loc12_:Number;
-            var _loc13_:Number;
-            var _loc14_:Number;
-            var _loc15_:String;
-            var _loc16_:IGraphicAsset;
-            var _loc17_:BitmapDataAsset;
-            var _loc18_:BitmapData;
-            if (((param1 == null) || (param2 == null)))
+            var _loc5_: XML;
+            var _loc6_: String;
+            var _loc7_: PlaneTexture;
+            var _loc8_: XMLList;
+            var _loc9_: int;
+            var _loc10_: XML;
+            var _loc11_: Number;
+            var _loc12_: Number;
+            var _loc13_: Number;
+            var _loc14_: Number;
+            var _loc15_: String;
+            var _loc16_: IGraphicAsset;
+            var _loc17_: BitmapDataAsset;
+            var _loc18_: BitmapData;
+            if (param1 == null || param2 == null)
             {
                 return;
-            };
-            var _loc3_:XMLList = param1.texture;
-            var _loc4_:int;
+            }
+
+            var _loc3_: XMLList = param1.texture;
+            var _loc4_: int;
             while (_loc4_ < _loc3_.length())
             {
                 _loc5_ = _loc3_[_loc4_];
@@ -284,19 +312,23 @@
                                 if (String(_loc10_.@normalMinX) != "")
                                 {
                                     _loc11_ = parseFloat(_loc10_.@normalMinX);
-                                };
+                                }
+
                                 if (String(_loc10_.@normalMaxX) != "")
                                 {
                                     _loc12_ = parseFloat(_loc10_.@normalMaxX);
-                                };
+                                }
+
                                 if (String(_loc10_.@normalMinY) != "")
                                 {
                                     _loc13_ = parseFloat(_loc10_.@normalMinY);
-                                };
+                                }
+
                                 if (String(_loc10_.@normalMaxY) != "")
                                 {
                                     _loc14_ = parseFloat(_loc10_.@normalMaxY);
-                                };
+                                }
+
                                 _loc15_ = _loc10_.@assetName;
                                 _loc16_ = param2.getAsset(_loc15_);
                                 if (_loc16_ != null)
@@ -314,47 +346,57 @@
                                             else
                                             {
                                                 _loc18_ = _loc18_.clone();
-                                            };
+                                            }
+
                                             _loc7_.addBitmap(_loc18_, _loc11_, _loc12_, _loc13_, _loc14_);
-                                        };
-                                    };
-                                };
-                            };
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
                             _loc9_++;
-                        };
+                        }
+
                         this.var_4121.add(_loc6_, _loc7_);
-                    };
-                };
+                    }
+
+                }
+
                 _loc4_++;
-            };
+            }
+
         }
 
-        private function parsePlaneMaterials(param1:XML):void
+        private function parsePlaneMaterials(param1: XML): void
         {
-            var _loc4_:XML;
-            var _loc5_:String;
-            var _loc6_:PlaneMaterial;
-            var _loc7_:XMLList;
-            var _loc8_:int;
-            var _loc9_:XML;
-            var _loc10_:String;
-            var _loc11_:String;
-            var _loc12_:int;
-            var _loc13_:int;
-            var _loc14_:Number;
-            var _loc15_:Number;
-            var _loc16_:Number;
-            var _loc17_:Number;
-            var _loc18_:XMLList;
-            var _loc19_:PlaneMaterialCellMatrix;
-            var _loc20_:int;
-            var _loc21_:XML;
+            var _loc4_: XML;
+            var _loc5_: String;
+            var _loc6_: PlaneMaterial;
+            var _loc7_: XMLList;
+            var _loc8_: int;
+            var _loc9_: XML;
+            var _loc10_: String;
+            var _loc11_: String;
+            var _loc12_: int;
+            var _loc13_: int;
+            var _loc14_: Number;
+            var _loc15_: Number;
+            var _loc16_: Number;
+            var _loc17_: Number;
+            var _loc18_: XMLList;
+            var _loc19_: PlaneMaterialCellMatrix;
+            var _loc20_: int;
+            var _loc21_: XML;
             if (param1 == null)
             {
                 return;
-            };
-            var _loc2_:XMLList = param1.material;
-            var _loc3_:int;
+            }
+
+            var _loc2_: XMLList = param1.material;
+            var _loc3_: int;
             while (_loc3_ < _loc2_.length())
             {
                 _loc4_ = _loc2_[_loc3_];
@@ -387,7 +429,8 @@
                             case "random":
                                 _loc12_ = PlaneMaterialCellMatrix.var_1879;
                                 break;
-                        };
+                        }
+
                         _loc13_ = PlaneMaterialCellMatrix.ALIGN_DEFAULT;
                         switch (_loc11_)
                         {
@@ -397,7 +440,8 @@
                             case "bottom":
                                 _loc13_ = PlaneMaterialCellMatrix.var_1881;
                                 break;
-                        };
+                        }
+
                         _loc14_ = PlaneMaterialCellMatrix.var_1873;
                         _loc15_ = PlaneMaterialCellMatrix.MAX_NORMAL_COORDINATE_VALUE;
                         _loc16_ = PlaneMaterialCellMatrix.var_1873;
@@ -405,19 +449,23 @@
                         if (String(_loc9_.@normalMinX) != "")
                         {
                             _loc14_ = parseFloat(_loc9_.@normalMinX);
-                        };
+                        }
+
                         if (String(_loc9_.@normalMaxX) != "")
                         {
                             _loc15_ = parseFloat(_loc9_.@normalMaxX);
-                        };
+                        }
+
                         if (String(_loc9_.@normalMinY) != "")
                         {
                             _loc16_ = parseFloat(_loc9_.@normalMinY);
-                        };
+                        }
+
                         if (String(_loc9_.@normalMaxY) != "")
                         {
                             _loc17_ = parseFloat(_loc9_.@normalMaxY);
-                        };
+                        }
+
                         _loc18_ = _loc9_.materialCellColumn;
                         if (_loc18_.length() > 0)
                         {
@@ -429,25 +477,31 @@
                                 _loc21_ = _loc18_[_loc20_];
                                 this.parsePlaneMaterialCellColumn(_loc21_, _loc19_, _loc20_);
                                 _loc20_++;
-                            };
-                        };
+                            }
+
+                        }
+
                         this.var_4224.add(_loc5_, _loc6_);
                         _loc8_++;
-                    };
-                };
+                    }
+
+                }
+
                 _loc3_++;
-            };
+            }
+
         }
 
-        private function parsePlaneMaterialCellColumn(param1:XML, param2:PlaneMaterialCellMatrix, param3:int):void
+        private function parsePlaneMaterialCellColumn(param1: XML, param2: PlaneMaterialCellMatrix, param3: int): void
         {
-            if (((param1 == null) || (param2 == null)))
+            if (param1 == null || param2 == null)
             {
                 return;
-            };
-            var _loc4_:String = param1.@repeatMode;
-            var _loc5_:int = parseInt(param1.@width);
-            var _loc6_:int = PlaneMaterialCellColumn.var_1882;
+            }
+
+            var _loc4_: String = param1.@repeatMode;
+            var _loc5_: int = parseInt(param1.@width);
+            var _loc6_: int = PlaneMaterialCellColumn.var_1882;
             switch (_loc4_)
             {
                 case "borders":
@@ -464,37 +518,39 @@
                     break;
                 case "none":
                     _loc6_ = PlaneMaterialCellColumn.var_1883;
-            };
-            var _loc7_:Array = this.parsePlaneMaterialCells(param1);
+            }
+
+            var _loc7_: Array = this.parsePlaneMaterialCells(param1);
             param2.createColumn(param3, _loc5_, _loc7_, _loc6_);
         }
 
-        private function parsePlaneMaterialCells(param1:XML):Array
+        private function parsePlaneMaterialCells(param1: XML): Array
         {
-            var _loc5_:XML;
-            var _loc6_:String;
-            var _loc7_:Array;
-            var _loc8_:Array;
-            var _loc9_:Array;
-            var _loc10_:int;
-            var _loc11_:XMLList;
-            var _loc12_:PlaneTexture;
-            var _loc13_:PlaneMaterialCell;
-            var _loc14_:XML;
-            var _loc15_:XMLList;
-            var _loc16_:XMLList;
-            var _loc17_:XML;
-            var _loc18_:XML;
-            var _loc19_:int;
-            var _loc20_:String;
-            var _loc21_:IGraphicAsset;
+            var _loc5_: XML;
+            var _loc6_: String;
+            var _loc7_: Array;
+            var _loc8_: Array;
+            var _loc9_: Array;
+            var _loc10_: int;
+            var _loc11_: XMLList;
+            var _loc12_: PlaneTexture;
+            var _loc13_: PlaneMaterialCell;
+            var _loc14_: XML;
+            var _loc15_: XMLList;
+            var _loc16_: XMLList;
+            var _loc17_: XML;
+            var _loc18_: XML;
+            var _loc19_: int;
+            var _loc20_: String;
+            var _loc21_: IGraphicAsset;
             if (param1 == null)
             {
-                return (null);
-            };
-            var _loc2_:Array = [];
-            var _loc3_:XMLList = param1.materialCell;
-            var _loc4_:int;
+                return null;
+            }
+
+            var _loc2_: Array = [];
+            var _loc3_: XMLList = param1.materialCell;
+            var _loc4_: int;
             while (_loc4_ < _loc3_.length())
             {
                 _loc5_ = _loc3_[_loc4_];
@@ -509,7 +565,7 @@
                     _loc14_ = _loc11_[0];
                     _loc15_ = _loc14_.extraItemTypes;
                     _loc16_ = _loc14_.offsets;
-                    if (((_loc15_.length() > 0) && (_loc16_.length() > 0)))
+                    if (_loc15_.length() > 0 && _loc16_.length() > 0)
                     {
                         _loc17_ = _loc15_[0];
                         _loc18_ = _loc16_[0];
@@ -519,9 +575,12 @@
                         if (String(_loc14_.@limitMax) != "")
                         {
                             _loc10_ = parseInt(_loc14_.@limitMax);
-                        };
-                    };
-                };
+                        }
+
+                    }
+
+                }
+
                 if (_loc7_ != null)
                 {
                     _loc8_ = [];
@@ -533,30 +592,35 @@
                         if (_loc21_ != null)
                         {
                             _loc8_.push(_loc21_);
-                        };
+                        }
+
                         _loc19_++;
-                    };
-                };
+                    }
+
+                }
+
                 _loc12_ = this.getTexture(_loc6_);
                 _loc13_ = new PlaneMaterialCell(_loc12_, _loc8_, _loc9_, _loc10_);
                 _loc2_.push(_loc13_);
                 _loc4_++;
-            };
+            }
+
             if (_loc2_.length == 0)
             {
                 _loc2_ = null;
-            };
-            return (_loc2_);
+            }
+
+            return _loc2_;
         }
 
-        private function parseExtraItemTypes(param1:XML):Array
+        private function parseExtraItemTypes(param1: XML): Array
         {
-            var _loc4_:XMLList;
-            var _loc5_:int;
-            var _loc6_:XML;
-            var _loc7_:String;
-            var _loc2_:Array = [];
-            var _loc3_:Array = ["assetName"];
+            var _loc4_: XMLList;
+            var _loc5_: int;
+            var _loc6_: XML;
+            var _loc7_: String;
+            var _loc2_: Array = [];
+            var _loc3_: Array = ["assetName"];
             if (param1 != null)
             {
                 _loc4_ = param1.extraItemType;
@@ -568,22 +632,25 @@
                     {
                         _loc7_ = _loc6_.@assetName;
                         _loc2_.push(_loc7_);
-                    };
+                    }
+
                     _loc5_++;
-                };
-            };
-            return (_loc2_);
+                }
+
+            }
+
+            return _loc2_;
         }
 
-        private function parseExtraItemOffsets(param1:XML):Array
+        private function parseExtraItemOffsets(param1: XML): Array
         {
-            var _loc4_:XMLList;
-            var _loc5_:int;
-            var _loc6_:XML;
-            var _loc7_:int;
-            var _loc8_:int;
-            var _loc2_:Array = [];
-            var _loc3_:Array = ["x", "y"];
+            var _loc4_: XMLList;
+            var _loc5_: int;
+            var _loc6_: XML;
+            var _loc7_: int;
+            var _loc8_: int;
+            var _loc2_: Array = [];
+            var _loc3_: Array = ["x", "y"];
             if (param1 != null)
             {
                 _loc4_ = param1.offset;
@@ -596,60 +663,67 @@
                         _loc7_ = parseInt(_loc6_.@x);
                         _loc8_ = parseInt(_loc6_.@y);
                         _loc2_.push(new Point(_loc7_, _loc8_));
-                    };
+                    }
+
                     _loc5_++;
-                };
-            };
-            return (_loc2_);
+                }
+
+            }
+
+            return _loc2_;
         }
 
-        protected function getGeometry(param1:int, param2:Number, param3:Number):IRoomGeometry
+        protected function getGeometry(param1: int, param2: Number, param3: Number): IRoomGeometry
         {
             param2 = Math.abs(param2);
             if (param2 > 90)
             {
                 param2 = 90;
-            };
+            }
+
             param3 = Math.abs(param3);
             if (param3 > 90)
             {
                 param3 = 90;
-            };
-            var _loc4_:String = ((((param1 + "_") + Math.round(param2)) + "_") + Math.round(param3));
-            var _loc5_:IRoomGeometry = this.var_4225.getValue(_loc4_);
+            }
+
+            var _loc4_: String = param1 + "_" + Math.round(param2) + "_" + Math.round(param3);
+            var _loc5_: IRoomGeometry = this.var_4225.getValue(_loc4_);
             if (_loc5_ == null)
             {
                 _loc5_ = new RoomGeometry(param1, new Vector3d(param2, param3), new Vector3d(-10, 0, 0));
                 this.var_4225.add(_loc4_, _loc5_);
-            };
-            return (_loc5_);
+            }
+
+            return _loc5_;
         }
 
-        protected function parseVisualizations(param1:Plane, param2:XMLList):void
+        protected function parseVisualizations(param1: Plane, param2: XMLList): void
         {
-            var _loc4_:XML;
-            var _loc5_:int;
-            var _loc6_:String;
-            var _loc7_:String;
-            var _loc8_:Number;
-            var _loc9_:Number;
-            var _loc10_:XMLList;
-            var _loc11_:PlaneVisualization;
-            var _loc12_:int;
-            var _loc13_:XML;
-            var _loc14_:PlaneMaterial;
-            var _loc15_:int;
-            var _loc16_:String;
-            var _loc17_:int;
-            var _loc18_:String;
-            var _loc19_:uint;
-            var _loc20_:String;
-            var _loc21_:String;
-            if (((param1 == null) || (param2 == null)))
+            var _loc4_: XML;
+            var _loc5_: int;
+            var _loc6_: String;
+            var _loc7_: String;
+            var _loc8_: Number;
+            var _loc9_: Number;
+            var _loc10_: XMLList;
+            var _loc11_: PlaneVisualization;
+            var _loc12_: int;
+            var _loc13_: XML;
+            var _loc14_: PlaneMaterial;
+            var _loc15_: int;
+            var _loc16_: String;
+            var _loc17_: int;
+            var _loc18_: String;
+            var _loc19_: uint;
+            var _loc20_: String;
+            var _loc21_: String;
+            if (param1 == null || param2 == null)
             {
                 return;
-            };
-            var _loc3_:int;
+            }
+
+            var _loc3_: int;
             while (_loc3_ < param2.length())
             {
                 _loc4_ = param2[_loc3_];
@@ -662,12 +736,14 @@
                     if (_loc6_ != "")
                     {
                         _loc8_ = parseFloat(_loc6_);
-                    };
+                    }
+
                     _loc9_ = FloorPlane.var_1885;
                     if (_loc7_ != "")
                     {
                         _loc9_ = parseFloat(_loc7_);
-                    };
+                    }
+
                     _loc10_ = _loc4_.visualizationLayer;
                     _loc11_ = param1.createPlaneVisualization(_loc5_, _loc10_.length(), this.getGeometry(_loc5_, _loc8_, _loc9_));
                     if (_loc11_ != null)
@@ -682,19 +758,22 @@
                             {
                                 _loc21_ = _loc13_.@materialId;
                                 _loc14_ = this.getMaterial(_loc21_);
-                            };
+                            }
+
                             _loc16_ = _loc13_.@offset;
                             _loc17_ = PlaneVisualizationLayer.var_1886;
                             if (_loc16_.length > 0)
                             {
                                 _loc17_ = parseInt(_loc16_);
-                            };
+                            }
+
                             _loc18_ = _loc13_.@color;
                             _loc19_ = FloorPlane.var_1449;
                             if (_loc18_.length > 0)
                             {
                                 _loc19_ = parseInt(_loc18_);
-                            };
+                            }
+
                             _loc20_ = _loc13_.@align;
                             if (_loc20_ == "bottom")
                             {
@@ -705,25 +784,31 @@
                                 if (_loc20_ == "top")
                                 {
                                     _loc15_ = PlaneVisualizationLayer.var_1880;
-                                };
-                            };
+                                }
+
+                            }
+
                             _loc11_.setLayer(_loc12_, _loc14_, _loc19_, _loc15_, _loc17_);
                             _loc12_++;
-                        };
-                    };
-                };
+                        }
+
+                    }
+
+                }
+
                 _loc3_++;
-            };
+            }
+
         }
 
-        public function render(param1:BitmapData, param2:String, param3:Number, param4:Number, param5:Number, param6:IVector3d, param7:Boolean, param8:Number=0, param9:Number=0, param10:Number=0, param11:Number=0, param12:int=0):PlaneBitmapData
+        public function render(param1: BitmapData, param2: String, param3: Number, param4: Number, param5: Number, param6: IVector3d, param7: Boolean, param8: Number = 0, param9: Number = 0, param10: Number = 0, param11: Number = 0, param12: int = 0): PlaneBitmapData
         {
-            return (null);
+            return null;
         }
 
-        public function getTextureIdentifier(param1:Number, param2:IVector3d):String
+        public function getTextureIdentifier(param1: Number, param2: IVector3d): String
         {
-            return (String(param1));
+            return String(param1);
         }
 
     }

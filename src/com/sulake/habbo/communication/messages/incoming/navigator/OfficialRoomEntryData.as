@@ -1,175 +1,185 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.navigator
 {
+
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class OfficialRoomEntryData implements IDisposable 
+    public class OfficialRoomEntryData implements IDisposable
     {
 
-        public static const var_1703:int = 1;
-        public static const var_910:int = 2;
-        public static const var_911:int = 3;
-        public static const var_909:int = 4;
+        public static const UNKNOWN1: int = 1;
+        public static const GUEST_ROOM: int = 2;
+        public static const PUBLIC_ROOM: int = 3;
+        public static const UNKNOWN2: int = 4;
 
-        private var _index:int;
-        private var var_2991:String;
-        private var var_2992:String;
-        private var var_2993:Boolean;
-        private var var_2994:String;
-        private var var_2995:String;
-        private var var_2996:int;
-        private var var_2973:int;
-        private var _type:int;
-        private var var_2997:String;
-        private var var_2998:GuestRoomData;
-        private var var_2999:PublicRoomData;
-        private var _open:Boolean;
-        private var _disposed:Boolean;
+        private var _index: int;
+        private var _popupCaption: String;
+        private var _popupDesc: String;
+        private var _showDetails: Boolean;
+        private var _picText: String;
+        private var _picRef: String;
+        private var _folderId: int;
+        private var _userCount: int;
+        private var _type: int;
+        private var _tag: String;
+        private var _guestRoomData: GuestRoomData;
+        private var _publicRoomData: PublicRoomData;
+        private var _open: Boolean;
+        private var _disposed: Boolean;
 
-        public function OfficialRoomEntryData(param1:IMessageDataWrapper)
+        public function OfficialRoomEntryData(data: IMessageDataWrapper)
         {
-            this._index = param1.readInteger();
-            this.var_2991 = param1.readString();
-            this.var_2992 = param1.readString();
-            this.var_2993 = (param1.readInteger() == 1);
-            this.var_2994 = param1.readString();
-            this.var_2995 = param1.readString();
-            this.var_2996 = param1.readInteger();
-            this.var_2973 = param1.readInteger();
-            this._type = param1.readInteger();
-            if (this._type == var_1703)
+            this._index = data.readInteger();
+            this._popupCaption = data.readString();
+            this._popupDesc = data.readString();
+            this._showDetails = data.readInteger() == 1;
+            this._picText = data.readString();
+            this._picRef = data.readString();
+            this._folderId = data.readInteger();
+            this._userCount = data.readInteger();
+            this._type = data.readInteger();
+
+            if (this._type == UNKNOWN1)
             {
-                this.var_2997 = param1.readString();
+                this._tag = data.readString();
+            }
+            else if (this._type == PUBLIC_ROOM)
+            {
+                this._publicRoomData = new PublicRoomData(data);
+            }
+            else if (this._type == GUEST_ROOM)
+            {
+                this._guestRoomData = new GuestRoomData(data);
             }
             else
             {
-                if (this._type == var_911)
-                {
-                    this.var_2999 = new PublicRoomData(param1);
-                }
-                else
-                {
-                    if (this._type == var_910)
-                    {
-                        this.var_2998 = new GuestRoomData(param1);
-                    }
-                    else
-                    {
-                        this._open = param1.readBoolean();
-                    };
-                };
-            };
+                this._open = data.readBoolean();
+            }
+
+
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (this._disposed)
             {
                 return;
-            };
+            }
+
+
             this._disposed = true;
-            if (this.var_2998 != null)
+
+            if (this._guestRoomData != null)
             {
-                this.var_2998.dispose();
-                this.var_2998 = null;
-            };
-            if (this.var_2999 != null)
+                this._guestRoomData.dispose();
+                this._guestRoomData = null;
+            }
+
+
+            if (this._publicRoomData != null)
             {
-                this.var_2999.dispose();
-                this.var_2999 = null;
-            };
+                this._publicRoomData.dispose();
+                this._publicRoomData = null;
+            }
+
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get type():int
+        public function get type(): int
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get index():int
+        public function get index(): int
         {
-            return (this._index);
+            return this._index;
         }
 
-        public function get popupCaption():String
+        public function get popupCaption(): String
         {
-            return (this.var_2991);
+            return this._popupCaption;
         }
 
-        public function get popupDesc():String
+        public function get popupDesc(): String
         {
-            return (this.var_2992);
+            return this._popupDesc;
         }
 
-        public function get showDetails():Boolean
+        public function get showDetails(): Boolean
         {
-            return (this.var_2993);
+            return this._showDetails;
         }
 
-        public function get picText():String
+        public function get picText(): String
         {
-            return (this.var_2994);
+            return this._picText;
         }
 
-        public function get picRef():String
+        public function get picRef(): String
         {
-            return (this.var_2995);
+            return this._picRef;
         }
 
-        public function get folderId():int
+        public function get folderId(): int
         {
-            return (this.var_2996);
+            return this._folderId;
         }
 
-        public function get tag():String
+        public function get tag(): String
         {
-            return (this.var_2997);
+            return this._tag;
         }
 
-        public function get userCount():int
+        public function get userCount(): int
         {
-            return (this.var_2973);
+            return this._userCount;
         }
 
-        public function get guestRoomData():GuestRoomData
+        public function get guestRoomData(): GuestRoomData
         {
-            return (this.var_2998);
+            return this._guestRoomData;
         }
 
-        public function get publicRoomData():PublicRoomData
+        public function get publicRoomData(): PublicRoomData
         {
-            return (this.var_2999);
+            return this._publicRoomData;
         }
 
-        public function get open():Boolean
+        public function get open(): Boolean
         {
-            return (this._open);
+            return this._open;
         }
 
-        public function toggleOpen():void
+        public function toggleOpen(): void
         {
-            this._open = (!(this._open));
+            this._open = !this._open;
         }
 
-        public function get maxUsers():int
+        public function get maxUsers(): int
         {
-            if (this.type == var_1703)
+            if (this.type == UNKNOWN1)
             {
-                return (0);
-            };
-            if (this.type == var_910)
+                return 0;
+            }
+
+
+            if (this.type == GUEST_ROOM)
             {
-                return (this.var_2998.maxUserCount);
-            };
-            if (this.type == var_911)
+                return this._guestRoomData.maxUserCount;
+            }
+
+
+            if (this.type == PUBLIC_ROOM)
             {
-                return (this.var_2999.maxUsers);
-            };
-            return (0);
+                return this._publicRoomData.maxUsers;
+            }
+
+
+            return 0;
         }
 
     }

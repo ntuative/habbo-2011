@@ -1,18 +1,19 @@
 ﻿package com.sulake.habbo.room.messages
 {
-    public class RoomObjectAvatarUseObjectUpdateMessage extends RoomObjectUpdateStateMessage 
+
+    public class RoomObjectAvatarUseObjectUpdateMessage extends RoomObjectUpdateStateMessage
     {
 
-        private var var_2934:int;
+        private var _itemType: int;
 
-        public function RoomObjectAvatarUseObjectUpdateMessage(param1:int)
+        public function RoomObjectAvatarUseObjectUpdateMessage(itemType: int)
         {
-            this.var_2934 = param1;
+            this._itemType = itemType;
         }
 
-        public function get itemType():int
+        public function get itemType(): int
         {
-            return (this.var_2934);
+            return this._itemType;
         }
 
     }

@@ -1,45 +1,51 @@
 ﻿package com.sulake.habbo.communication.messages.parser.help
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class CallForHelpPendingCallsMessageParser implements IMessageParser 
+    public class CallForHelpPendingCallsMessageParser implements IMessageParser
     {
 
-        private var var_3183:Array = new Array();
+        private var _callArray: Array = [];
 
-        public function get callArray():Array
+        public function get callArray(): Array
         {
-            return (this.var_3183);
+            return this._callArray;
         }
 
-        public function get callCount():int
+        public function get callCount(): int
         {
-            return (this.var_3183.length);
+            return this._callArray.length;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3183 = new Array();
-            return (true);
+            this._callArray = [];
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(param1: IMessageDataWrapper): Boolean
         {
-            var _loc3_:int;
-            var _loc4_:Object;
-            this.var_3183 = new Array();
-            var _loc2_:int = param1.readInteger();
-            while (_loc3_ < _loc2_)
+            this._callArray = [];
+            
+            var call: Object;
+            var callCount: int = param1.readInteger();
+            var i: int;
+
+            while (i < callCount)
             {
-                _loc4_ = new Object();
-                _loc4_.callId = param1.readString();
-                _loc4_.timeStamp = param1.readString();
-                _loc4_.message = param1.readString();
-                this.var_3183.push(_loc4_);
-                _loc3_++;
-            };
-            return (true);
+                call = {};
+                call.callId = param1.readString();
+                call.timeStamp = param1.readString();
+                call.message = param1.readString();
+
+                this._callArray.push(call);
+                i++;
+            }
+
+            return true;
         }
 
     }

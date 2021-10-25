@@ -1,35 +1,37 @@
 ﻿package com.sulake.habbo.room.events
 {
-    public class RoomEngineRoomColorEvent extends RoomEngineEvent 
+
+    public class RoomEngineRoomColorEvent extends RoomEngineEvent
     {
 
-        public static const var_401:String = "REE_ROOM_COLOR";
+        public static const REE_ROOM_COLOR: String = "REE_ROOM_COLOR";
 
-        private var _color:uint;
-        private var var_3934:uint;
-        private var var_3935:Boolean;
+        private var _color: uint;
+        private var _brightness: uint;
+        private var _bgOnly: Boolean;
 
-        public function RoomEngineRoomColorEvent(param1:int, param2:int, param3:uint, param4:uint, param5:Boolean, param6:Boolean=false, param7:Boolean=false)
+        public function RoomEngineRoomColorEvent(roomId: int, roomCategory: int, color: uint, brightness: uint, bgOnly: Boolean, bubbles: Boolean = false, cancelable: Boolean = false)
         {
-            super(var_401, param1, param2, param6, param7);
-            this._color = param3;
-            this.var_3934 = param4;
-            this.var_3935 = param5;
+            super(REE_ROOM_COLOR, roomId, roomCategory, bubbles, cancelable);
+            
+            this._color = color;
+            this._brightness = brightness;
+            this._bgOnly = bgOnly;
         }
 
-        public function get color():uint
+        public function get color(): uint
         {
-            return (this._color);
+            return this._color;
         }
 
-        public function get brightness():uint
+        public function get brightness(): uint
         {
-            return (this.var_3934);
+            return this._brightness;
         }
 
-        public function get bgOnly():Boolean
+        public function get bgOnly(): Boolean
         {
-            return (this.var_3935);
+            return this._bgOnly;
         }
 
     }

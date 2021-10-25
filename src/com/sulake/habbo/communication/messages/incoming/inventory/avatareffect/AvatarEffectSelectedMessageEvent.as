@@ -1,19 +1,20 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.inventory.avatareffect
 {
+
     import com.sulake.core.communication.messages.MessageEvent;
     import com.sulake.habbo.communication.messages.parser.inventory.avatareffect.AvatarEffectSelectedMessageParser;
 
-    public class AvatarEffectSelectedMessageEvent extends MessageEvent 
+    public class AvatarEffectSelectedMessageEvent extends MessageEvent
     {
 
-        public function AvatarEffectSelectedMessageEvent(param1:Function)
+        public function AvatarEffectSelectedMessageEvent(callback: Function)
         {
-            super(param1, AvatarEffectSelectedMessageParser);
+            super(callback, AvatarEffectSelectedMessageParser);
         }
 
-        public function getParser():AvatarEffectSelectedMessageParser
+        public function getParser(): AvatarEffectSelectedMessageParser
         {
-            return (var_361 as AvatarEffectSelectedMessageParser);
+            return _parser as AvatarEffectSelectedMessageParser;
         }
 
     }

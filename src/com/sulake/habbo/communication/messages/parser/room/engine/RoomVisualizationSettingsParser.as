@@ -1,46 +1,50 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.engine
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class RoomVisualizationSettingsParser implements IMessageParser 
+    public class RoomVisualizationSettingsParser implements IMessageParser
     {
 
-        private var _roomId:int = 0;
-        private var _roomCategory:int = 0;
-        private var var_3306:Boolean = false;
+        private var _roomId: int = 0;
+        private var _roomCategory: int = 0;
+        private var _wallsHidden: Boolean = false;
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get roomCategory():int
+        public function get roomCategory(): int
         {
-            return (this._roomCategory);
+            return this._roomCategory;
         }
 
-        public function get wallsHidden():Boolean
+        public function get wallsHidden(): Boolean
         {
-            return (this.var_3306);
+            return this._wallsHidden;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._roomId = 0;
             this._roomCategory = 0;
-            this.var_3306 = false;
-            return (true);
+            this._wallsHidden = false;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            if (param1 == null)
+            if (data == null)
             {
-                return (false);
-            };
-            this.var_3306 = param1.readBoolean();
-            return (true);
+                return false;
+            }
+
+            this._wallsHidden = data.readBoolean();
+            
+            return true;
         }
 
     }

@@ -1,44 +1,45 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.session
 {
+
     import com.sulake.core.utils.Map;
 
-    public class RoomQueueSet 
+    public class RoomQueueSet
     {
 
-        private var _name:String;
-        private var _target:int;
-        private var var_3332:Map;
+        private var _name: String;
+        private var _target: int;
+        private var _queues: Map;
 
-        public function RoomQueueSet(param1:String, param2:int)
+        public function RoomQueueSet(name: String, target: int)
         {
-            this._name = param1;
-            this._target = param2;
-            this.var_3332 = new Map();
+            this._name = name;
+            this._target = target;
+            this._queues = new Map();
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get target():int
+        public function get target(): int
         {
-            return (this._target);
+            return this._target;
         }
 
-        public function get queueTypes():Array
+        public function get queueTypes(): Array
         {
-            return (this.var_3332.getKeys());
+            return this._queues.getKeys();
         }
 
-        public function getQueueSize(param1:String):int
+        public function getQueueSize(param1: String): int
         {
-            return (this.var_3332.getValue(param1));
+            return this._queues.getValue(param1);
         }
 
-        public function addQueue(param1:String, param2:int):void
+        public function addQueue(param1: String, param2: int): void
         {
-            this.var_3332.add(param1, param2);
+            this._queues.add(param1, param2);
         }
 
     }

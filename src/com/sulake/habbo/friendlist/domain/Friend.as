@@ -1,199 +1,206 @@
 ﻿package com.sulake.habbo.friendlist.domain
 {
+
     import com.sulake.habbo.friendlist.IFriend;
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.core.window.IWindowContainer;
+
     import flash.display.BitmapData;
+
     import com.sulake.habbo.communication.messages.incoming.friendlist.FriendData;
 
-    public class Friend implements IFriend, IDisposable 
+    public class Friend implements IFriend, IDisposable
     {
 
-        public static const var_1627:int = "F".charCodeAt(0);
-        public static const var_1628:int = "M".charCodeAt(0);
+        public static const FEMALE: int = "F".charCodeAt(0);
+        public static const MALE: int = "M".charCodeAt(0);
 
-        private var _id:int;
-        private var _name:String;
-        private var var_2071:int;
-        private var var_2908:Boolean;
-        private var var_2909:Boolean;
-        private var var_2534:String;
-        private var var_2910:String;
-        private var var_2911:String;
-        private var var_2465:int;
-        private var _selected:Boolean;
-        private var _disposed:Boolean;
-        private var _view:IWindowContainer;
-        private var var_3414:BitmapData;
-        private var var_2912:String;
+        private var _id: int;
+        private var _name: String;
+        private var _gender: int;
+        private var _online: Boolean;
+        private var _followingAllowed: Boolean;
+        private var _figure: String;
+        private var _motto: String;
+        private var _lastAccess: String;
+        private var _categoryId: int;
+        private var _selected: Boolean;
+        private var _disposed: Boolean;
+        private var _view: IWindowContainer;
+        private var _face: BitmapData;
+        private var _realName: String;
 
-        public function Friend(param1:FriendData)
+        public function Friend(data: FriendData)
         {
-            if (param1 == null)
+            if (data == null)
             {
                 return;
-            };
-            this._id = param1.id;
-            this._name = param1.name;
-            this.var_2071 = param1.gender;
-            this.var_2908 = param1.online;
-            this.var_2909 = ((param1.followingAllowed) && (param1.online));
-            this.var_2534 = param1.figure;
-            this.var_2910 = param1.motto;
-            this.var_2911 = param1.lastAccess;
-            this.var_2465 = param1.categoryId;
-            this.var_2912 = param1.realName;
-            Logger.log(((((((((((((("Creating friend: " + this.id) + ", ") + this.name) + ", ") + this.gender) + ", ") + this.online) + ", ") + this.followingAllowed) + ", ") + this.figure) + ", ") + this.categoryId));
+            }
+
+            this._id = data.id;
+            this._name = data.name;
+            this._gender = data.gender;
+            this._online = data.online;
+            this._followingAllowed = data.followingAllowed && data.online;
+            this._figure = data.figure;
+            this._motto = data.motto;
+            this._lastAccess = data.lastAccess;
+            this._categoryId = data.categoryId;
+            this._realName = data.realName;
+
+            Logger.log("Creating friend: " + this.id + ", " + this.name + ", " + this.gender + ", " + this.online + ", " + this.followingAllowed + ", " + this.figure + ", " + this.categoryId);
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (this._disposed)
             {
                 return;
-            };
-            if (this.var_3414 != null)
+            }
+
+            if (this._face != null)
             {
-                this.var_3414.dispose();
-                this.var_3414 = null;
-            };
+                this._face.dispose();
+                this._face = null;
+            }
+
             this._disposed = true;
             this._view = null;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get gender():int
+        public function get gender(): int
         {
-            return (this.var_2071);
+            return this._gender;
         }
 
-        public function get online():Boolean
+        public function get online(): Boolean
         {
-            return (this.var_2908);
+            return this._online;
         }
 
-        public function get followingAllowed():Boolean
+        public function get followingAllowed(): Boolean
         {
-            return (this.var_2909);
+            return this._followingAllowed;
         }
 
-        public function get figure():String
+        public function get figure(): String
         {
-            return (this.var_2534);
+            return this._figure;
         }
 
-        public function get motto():String
+        public function get motto(): String
         {
-            return (this.var_2910);
+            return this._motto;
         }
 
-        public function get lastAccess():String
+        public function get lastAccess(): String
         {
-            return (this.var_2911);
+            return this._lastAccess;
         }
 
-        public function get categoryId():int
+        public function get categoryId(): int
         {
-            return (this.var_2465);
+            return this._categoryId;
         }
 
-        public function get selected():Boolean
+        public function get selected(): Boolean
         {
-            return (this._selected);
+            return this._selected;
         }
 
-        public function get view():IWindowContainer
+        public function get view(): IWindowContainer
         {
-            return (this._view);
+            return this._view;
         }
 
-        public function get face():BitmapData
+        public function get face(): BitmapData
         {
-            return (this.var_3414);
+            return this._face;
         }
 
-        public function get realName():String
+        public function get realName(): String
         {
-            return (this.var_2912);
+            return this._realName;
         }
 
-        public function set id(param1:int):void
+        public function set id(value: int): void
         {
-            this._id = param1;
+            this._id = value;
         }
 
-        public function set name(param1:String):void
+        public function set name(value: String): void
         {
-            this._name = param1;
+            this._name = value;
         }
 
-        public function set gender(param1:int):void
+        public function set gender(value: int): void
         {
-            this.var_2071 = param1;
+            this._gender = value;
         }
 
-        public function set online(param1:Boolean):void
+        public function set online(value: Boolean): void
         {
-            this.var_2908 = param1;
+            this._online = value;
         }
 
-        public function set followingAllowed(param1:Boolean):void
+        public function set followingAllowed(value: Boolean): void
         {
-            this.var_2909 = param1;
+            this._followingAllowed = value;
         }
 
-        public function set figure(param1:String):void
+        public function set figure(value: String): void
         {
-            this.var_2534 = param1;
+            this._figure = value;
         }
 
-        public function set motto(param1:String):void
+        public function set motto(value: String): void
         {
-            this.var_2910 = param1;
+            this._motto = value;
         }
 
-        public function set lastAccess(param1:String):void
+        public function set lastAccess(value: String): void
         {
-            this.var_2911 = param1;
+            this._lastAccess = value;
         }
 
-        public function set categoryId(param1:int):void
+        public function set categoryId(value: int): void
         {
-            this.var_2465 = param1;
+            this._categoryId = value;
         }
 
-        public function set selected(param1:Boolean):void
+        public function set selected(value: Boolean): void
         {
-            this._selected = param1;
+            this._selected = value;
         }
 
-        public function set view(param1:IWindowContainer):void
+        public function set view(value: IWindowContainer): void
         {
-            this._view = param1;
+            this._view = value;
         }
 
-        public function set face(param1:BitmapData):void
+        public function set face(value: BitmapData): void
         {
-            this.var_3414 = param1;
+            this._face = value;
         }
 
-        public function set realName(param1:String):void
+        public function set realName(value: String): void
         {
-            this.var_2912 = param1;
+            this._realName = value;
         }
 
     }

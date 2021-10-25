@@ -1,14 +1,15 @@
 ﻿package com.sulake.habbo.roomevents.userdefinedroomevents.conditions
 {
+
     import com.sulake.habbo.roomevents.userdefinedroomevents.ElementTypeHolder;
     import com.sulake.habbo.roomevents.userdefinedroomevents.Element;
     import com.sulake.habbo.communication.messages.incoming.userdefinedroomevents.ConditionDefinition;
     import com.sulake.habbo.communication.messages.incoming.userdefinedroomevents.Triggerable;
 
-    public class ConditionTypes implements ElementTypeHolder 
+    public class ConditionTypes implements ElementTypeHolder
     {
 
-        private var var_2374:Array = new Array();
+        private var var_2374: Array = [];
 
         public function ConditionTypes()
         {
@@ -24,37 +25,39 @@
             this.var_2374.push(new StuffsInFormation());
         }
 
-        public function get types():Array
+        public function get types(): Array
         {
-            return (this.var_2374);
+            return this.var_2374;
         }
 
-        public function getByCode(param1:int):ConditionType
+        public function getByCode(param1: int): ConditionType
         {
-            var _loc2_:ConditionType;
+            var _loc2_: ConditionType;
             for each (_loc2_ in this.var_2374)
             {
                 if (_loc2_.code == param1)
                 {
-                    return (_loc2_);
-                };
-            };
-            return (null);
+                    return _loc2_;
+                }
+
+            }
+
+            return null;
         }
 
-        public function getElementByCode(param1:int):Element
+        public function getElementByCode(param1: int): Element
         {
-            return (this.getByCode(param1));
+            return this.getByCode(param1);
         }
 
-        public function acceptTriggerable(param1:Triggerable):Boolean
+        public function acceptTriggerable(param1: Triggerable): Boolean
         {
-            return (!((param1 as ConditionDefinition) == null));
+            return (param1 as ConditionDefinition) != null;
         }
 
-        public function getKey():String
+        public function getKey(): String
         {
-            return ("condition");
+            return "condition";
         }
 
     }

@@ -1,48 +1,52 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.session
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class CantConnectMessageParser implements IMessageParser 
+    public class CantConnectMessageParser implements IMessageParser
     {
 
-        public static const var_898:int = 1;
-        public static const var_1689:int = 2;
-        public static const var_899:int = 3;
-        public static const var_900:int = 4;
+        public static const CANT_CONNECT_ROOM_FULL: int = 1;
+        public static const CANT_CONNECT_UNKNOWN_1: int = 2;
+        public static const CANT_CONNECT_ROOM_QUEUE: int = 3;
+        public static const CANT_CONNECT_ROOM_BANNED: int = 4;
 
-        private var var_3161:int = 0;
-        private var var_2724:String = "";
+        private var _reason: int = 0;
+        private var _parameter: String = "";
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3161 = 0;
-            this.var_2724 = "";
-            return (true);
+            this._reason = 0;
+            this._parameter = "";
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3161 = param1.readInteger();
-            if (this.var_3161 == 3)
+            this._reason = data.readInteger();
+
+            if (this._reason == 3)
             {
-                this.var_2724 = param1.readString();
+                this._parameter = data.readString();
             }
             else
             {
-                this.var_2724 = "";
-            };
-            return (true);
+                this._parameter = "";
+            }
+
+            return true;
         }
 
-        public function get reason():int
+        public function get reason(): int
         {
-            return (this.var_3161);
+            return this._reason;
         }
 
-        public function get parameter():String
+        public function get parameter(): String
         {
-            return (this.var_2724);
+            return this._parameter;
         }
 
     }

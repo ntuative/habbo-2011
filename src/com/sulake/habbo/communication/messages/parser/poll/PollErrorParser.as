@@ -1,19 +1,20 @@
 ﻿package com.sulake.habbo.communication.messages.parser.poll
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PollErrorParser implements IMessageParser 
+    public class PollErrorParser implements IMessageParser
     {
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (false);
+            return false;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(param1: IMessageDataWrapper): Boolean
         {
-            return (false);
+            return false;
         }
 
     }

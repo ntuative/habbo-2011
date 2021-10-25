@@ -1,34 +1,35 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.furniture
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ViralFurniGiftReceivedMessageParser implements IMessageParser 
+    public class ViralFurniGiftReceivedMessageParser implements IMessageParser
     {
 
-        private var var_3312:String;
-        private var var_3313:Boolean;
+        private var _firstClickUserName: String;
+        private var _giftWasReceived: Boolean;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(param1: IMessageDataWrapper): Boolean
         {
-            this.var_3312 = param1.readString();
-            this.var_3313 = param1.readBoolean();
-            return (true);
+            this._firstClickUserName = param1.readString();
+            this._giftWasReceived = param1.readBoolean();
+            return true;
         }
 
-        public function get firstClickUserName():String
+        public function get firstClickUserName(): String
         {
-            return (this.var_3312);
+            return this._firstClickUserName;
         }
 
-        public function get giftWasReceived():Boolean
+        public function get giftWasReceived(): Boolean
         {
-            return (this.var_3313);
+            return this._giftWasReceived;
         }
 
     }

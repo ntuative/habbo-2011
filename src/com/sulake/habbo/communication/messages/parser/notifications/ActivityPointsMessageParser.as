@@ -1,39 +1,47 @@
 ﻿package com.sulake.habbo.communication.messages.parser.notifications
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
+
     import flash.utils.Dictionary;
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ActivityPointsMessageParser implements IMessageParser 
+    public class ActivityPointsMessageParser implements IMessageParser
     {
 
-        private var var_3259:Dictionary;
+        private var _points: Dictionary;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3259 = new Dictionary();
-            return (true);
+            this._points = new Dictionary();
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc4_:int;
-            var _loc5_:int;
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            var id: int;
+            var balance: int;
+            
+            var activityPointCount: int = data.readInteger();
+            var i: int;
+
+            while (i < activityPointCount)
             {
-                _loc4_ = param1.readInteger();
-                _loc5_ = param1.readInteger();
-                this.var_3259[_loc4_] = _loc5_;
-                _loc3_++;
-            };
-            return (true);
+                id = data.readInteger();
+                balance = data.readInteger();
+                
+                this._points[id] = balance;
+                i++;
+            }
+
+            return true;
         }
 
-        public function get points():Dictionary
+        public function get points(): Dictionary
         {
-            return (this.var_3259);
+            return this._points;
         }
 
     }

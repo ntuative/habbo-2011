@@ -1,41 +1,47 @@
 ﻿package com.sulake.habbo.localization
 {
-    public class BadgeBaseAndLevel 
+
+    public class BadgeBaseAndLevel
     {
 
-        private var _base:String = "";
-        private var var_2924:int = 1;
+        private var _base: String = "";
+        private var _level: int = 1;
 
-        public function BadgeBaseAndLevel(param1:String)
+        public function BadgeBaseAndLevel(id: String)
         {
-            var _loc2_:int = (param1.length - 1);
-            while (((_loc2_ > 0) && (this.isNumber(param1.charAt(_loc2_)))))
+            var offset: int = id.length - 1;
+
+            while (offset > 0 && this.isNumber(id.charAt(offset)))
             {
-                _loc2_--;
-            };
-            this._base = param1.substring(0, (_loc2_ + 1));
-            var _loc3_:String = param1.substring((_loc2_ + 1), param1.length);
-            if (((!(_loc3_ == null)) && (!(_loc3_ == ""))))
+                offset--;
+            }
+
+            this._base = id.substring(0, offset + 1);
+
+            var level: String = id.substring(offset + 1, id.length);
+            if (level != null && level != "")
             {
-                this.var_2924 = int(_loc3_);
-            };
-            Logger.log(((((("Split badgeId " + param1) + " into ") + this._base) + " and ") + this.var_2924));
+                this._level = int(level);
+            }
+
+            Logger.log("Split badgeId " + id + " into " + this._base + " and " + this._level);
         }
 
-        private function isNumber(param1:String):Boolean
+        private function isNumber(value: String): Boolean
         {
-            var _loc2_:int = param1.charCodeAt(0);
-            return ((_loc2_ >= 48) && (_loc2_ <= 57));
+            var charCode: int = value.charCodeAt(0);
+            
+            return charCode >= 48 && charCode <= 57;
         }
 
-        public function get base():String
+        public function get base(): String
         {
-            return (this._base);
+            return this._base;
         }
 
-        public function get level():int
+        public function get level(): int
         {
-            return (this.var_2924);
+            return this._level;
         }
 
     }

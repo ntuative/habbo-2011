@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.navigator.mainview
 {
+
     import com.sulake.habbo.navigator.IViewCtrl;
     import com.sulake.habbo.navigator.HabboNavigator;
     import com.sulake.core.window.IWindowContainer;
@@ -11,95 +12,109 @@
     import com.sulake.core.window.*;
     import com.sulake.core.window.enum.*;
 
-    public class OfficialRoomListCtrl implements IViewCtrl 
+    public class OfficialRoomListCtrl implements IViewCtrl
     {
 
-        private var _navigator:HabboNavigator;
-        private var var_1997:IWindowContainer;
-        private var var_2190:IItemListWindow;
+        private var _navigator: HabboNavigator;
+        private var _content: IWindowContainer;
+        private var _itemList: IItemListWindow;
 
-        public function OfficialRoomListCtrl(param1:HabboNavigator):void
+        public function OfficialRoomListCtrl(navigator: HabboNavigator): void
         {
-            this._navigator = param1;
+            this._navigator = navigator;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
         }
 
-        public function set content(param1:IWindowContainer):void
+        public function set content(value: IWindowContainer): void
         {
-            this.var_1997 = param1;
-            this.var_2190 = IItemListWindow(this.var_1997.findChildByName("item_list"));
+            this._content = value;
+            this._itemList = IItemListWindow(this._content.findChildByName("item_list"));
         }
 
-        public function get content():IWindowContainer
+        public function get content(): IWindowContainer
         {
-            return (this.var_1997);
+            return this._content;
         }
 
-        public function refresh():void
+        public function refresh(): void
         {
-            var _loc3_:Boolean;
-            var _loc1_:Array = this.getVisibleEntries();
-            this.var_2190.autoArrangeItems = false;
-            var _loc2_:int;
+            this._itemList.autoArrangeItems = false;
+            
+            var refreshed: Boolean;
+            var entries: Array = this.getVisibleEntries();
+            var i: int;
+            
             while (true)
             {
-                if (_loc2_ < _loc1_.length)
+                if (i < entries.length)
                 {
-                    this.refreshEntry(true, _loc2_, _loc1_[_loc2_]);
+                    this.refreshEntry(true, i, entries[i]);
                 }
                 else
                 {
-                    _loc3_ = this.refreshEntry(false, _loc2_, null);
-                    if (_loc3_) break;
-                };
-                _loc2_++;
-            };
-            this.var_2190.autoArrangeItems = true;
-        }
-
-        private function getVisibleEntries():Array
-        {
-            var _loc4_:OfficialRoomEntryData;
-            var _loc1_:Array = this._navigator.data.officialRooms.entries;
-            var _loc2_:Array = new Array();
-            var _loc3_:int;
-            for each (_loc4_ in _loc1_)
-            {
-                if (_loc4_.folderId > 0)
-                {
-                    if (_loc4_.folderId == _loc3_)
+                    refreshed = this.refreshEntry(false, i, null);
+                    
+                    if (refreshed)
                     {
-                        _loc2_.push(_loc4_);
-                    };
+                        break;
+                    }
+                }
+
+                i++;
+            }
+
+            this._itemList.autoArrangeItems = true;
+        }
+
+        private function getVisibleEntries(): Array
+        {
+            var entry: OfficialRoomEntryData;
+            var entries: Array = this._navigator.data.officialRooms.entries;
+            var visibleEntries: Array = [];
+            var visibleIndex: int;
+
+            for each (entry in entries)
+            {
+                if (entry.folderId > 0)
+                {
+                    if (entry.folderId == visibleIndex)
+                    {
+                        visibleEntries.push(entry);
+                    }
+
                 }
                 else
                 {
-                    _loc3_ = ((_loc4_.open) ? _loc4_.index : 0);
-                    _loc2_.push(_loc4_);
-                };
-            };
-            return (_loc2_);
+                    visibleIndex = entry.open ? entry.index : 0;
+                    visibleEntries.push(entry);
+                }
+
+            }
+
+            return visibleEntries;
         }
 
-        private function refreshEntry(param1:Boolean, param2:int, param3:OfficialRoomEntryData):Boolean
+        private function refreshEntry(visible: Boolean, id: int, data: OfficialRoomEntryData): Boolean
         {
-            var _loc4_:IWindowContainer = IWindowContainer(this.var_2190.getListItemAt(param2));
-            var _loc5_:Boolean;
-            if (_loc4_ == null)
+            var container: IWindowContainer = IWindowContainer(this._itemList.getListItemAt(id));
+            
+            if (container == null)
             {
-                if (!param1)
+                if (!visible)
                 {
-                    return (true);
-                };
-                _loc4_ = this._navigator.officialRoomEntryManager.createEntry(param2);
-                this.var_2190.addListItem(_loc4_);
-                _loc5_ = true;
-            };
-            this._navigator.officialRoomEntryManager.refreshEntry(_loc4_, param1, param2, param3);
-            return (false);
+                    return true;
+                }
+
+                container = this._navigator.officialRoomEntryManager.createEntry(id);
+                this._itemList.addListItem(container);
+            }
+
+            this._navigator.officialRoomEntryManager.refreshEntry(container, visible, id, data);
+            
+            return false;
         }
 
     }

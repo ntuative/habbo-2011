@@ -1,34 +1,36 @@
 ﻿package com.sulake.habbo.communication.messages.parser.notifications
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class HabboAchievementShareIdMessageParser implements IMessageParser 
+    public class HabboAchievementShareIdMessageParser implements IMessageParser
     {
 
-        private var var_3262:String = "";
-        private var var_3265:String = "";
+        private var _badgeId: String = "";
+        private var _shareId: String = "";
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3262 = param1.readString();
-            this.var_3265 = param1.readString();
-            return (true);
+            this._badgeId = data.readString();
+            this._shareId = data.readString();
+            
+            return true;
         }
 
-        public function get badgeID():String
+        public function get badgeID(): String
         {
-            return (this.var_3262);
+            return this._badgeId;
         }
 
-        public function get shareID():String
+        public function get shareID(): String
         {
-            return (this.var_3265);
+            return this._shareId;
         }
 
     }

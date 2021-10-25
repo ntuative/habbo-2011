@@ -1,29 +1,31 @@
 ﻿package com.sulake.habbo.communication.messages.parser.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.catalog.NodeData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class CatalogIndexMessageParser implements IMessageParser 
+    public class CatalogIndexMessageParser implements IMessageParser
     {
 
-        private var var_2274:NodeData;
+        private var _root: NodeData;
 
-        public function get root():NodeData
+        public function get root(): NodeData
         {
-            return (this.var_2274);
+            return this._root;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_2274 = null;
-            return (true);
+            this._root = null;
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(param1: IMessageDataWrapper): Boolean
         {
-            this.var_2274 = new NodeData(param1);
-            return (true);
+            this._root = new NodeData(param1);
+            
+            return true;
         }
 
     }

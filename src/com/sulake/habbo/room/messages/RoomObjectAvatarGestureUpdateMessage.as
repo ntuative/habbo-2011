@@ -1,18 +1,19 @@
 ﻿package com.sulake.habbo.room.messages
 {
-    public class RoomObjectAvatarGestureUpdateMessage extends RoomObjectUpdateStateMessage 
+
+    public class RoomObjectAvatarGestureUpdateMessage extends RoomObjectUpdateStateMessage
     {
 
-        private var var_3293:int = 0;
+        private var _gesture: int = 0;
 
-        public function RoomObjectAvatarGestureUpdateMessage(param1:int)
+        public function RoomObjectAvatarGestureUpdateMessage(gesture: int)
         {
-            this.var_3293 = param1;
+            this._gesture = gesture;
         }
 
-        public function get gesture():int
+        public function get gesture(): int
         {
-            return (this.var_3293);
+            return this._gesture;
         }
 
     }

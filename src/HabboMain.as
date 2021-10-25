@@ -1,269 +1,328 @@
-﻿package 
+﻿package
 {
+
     import flash.display.Sprite;
+
     import com.sulake.core.runtime.ICore;
+
     import flash.display.DisplayObjectContainer;
+
     import com.sulake.habbo.tracking.HabboTracking;
+
     import flash.events.Event;
     import flash.events.ProgressEvent;
+
     import com.sulake.core.Core;
+
     import flash.external.ExternalInterface;
+
     import com.sulake.core.runtime.Component;
+
     import flash.net.URLRequest;
+
     import com.sulake.core.assets.AssetLoaderStruct;
     import com.sulake.core.assets.loaders.AssetLoaderEvent;
     import com.sulake.core.assets.XmlAsset;
     import com.sulake.core.runtime.events.LibraryProgressEvent;
 
-    public class HabboMain extends Sprite 
+    public class HabboMain extends Sprite
     {
 
-        private static const var_38:Number = 0.71;
+        private static const UNKNOWN_MAGIC_NUMBER: Number = 0.71;
 
-        private var var_2288:ICore;
-        private var var_5077:Boolean = false;
-        private var var_4:DisplayObjectContainer;
-        private var var_4613:HabboTracking;
+        private var _core: ICore;
+        private var _container: DisplayObjectContainer;
+        private var _loaded: Boolean = false;
+        private var _habboTracking: HabboTracking;
 
-        public function HabboMain(param1:DisplayObjectContainer)
+        public function HabboMain(container: DisplayObjectContainer)
         {
-            this.var_4 = param1;
-            this.var_4.addEventListener(Event.COMPLETE, this.onCompleteEvent);
-            this.var_4.addEventListener(ProgressEvent.PROGRESS, this.onProgressEvent);
-            addEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage);
-            addEventListener(Event.ENTER_FRAME, this.onEnterFrame);
-            Logger.log(("Core version: " + Core.version));
+            this._container = container;
+
+            this._container.addEventListener(Event.COMPLETE, this.onCompleteEvent);
+            this._container.addEventListener(ProgressEvent.PROGRESS, this.onProgressEvent);
+
+            this.addEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage);
+            this.addEventListener(Event.ENTER_FRAME, this.onEnterFrame);
+
+            Logger.log("Core version: " + Core.version);
         }
 
-        private function dispose():void
+        private function dispose(): void
         {
-            removeEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage);
-            removeEventListener(Event.ENTER_FRAME, this.onEnterFrame);
-            if (this.var_4)
+            this.removeEventListener(Event.ADDED_TO_STAGE, this.onAddedToStage);
+            this.removeEventListener(Event.ENTER_FRAME, this.onEnterFrame);
+
+            if (this._container != null)
             {
-                this.var_4.removeEventListener(Event.COMPLETE, this.onCompleteEvent);
-                this.var_4.removeEventListener(ProgressEvent.PROGRESS, this.onProgressEvent);
-                this.var_4 = null;
-            };
-            if (parent)
+                this._container.removeEventListener(Event.COMPLETE, this.onCompleteEvent);
+                this._container.removeEventListener(ProgressEvent.PROGRESS, this.onProgressEvent);
+
+                this._container = null;
+            }
+
+
+            if (this.parent != null)
             {
-                parent.removeChild(this);
-            };
+                this.parent.removeChild(this);
+            }
+
         }
 
-        private function initializeCore():void
+        private function initializeCore(): void
         {
             try
             {
-                this.var_2288.initialize();
+                this._core.initialize();
+
                 if (ExternalInterface.available)
                 {
                     ExternalInterface.addCallback("unloading", this.unloading);
-                };
+                }
+
             }
-            catch(error:Error)
+            catch (error: Error)
             {
-                Habbo.trackLoginStep(Habbo.var_9);
-                Core.crash(("Failed to initialize the core: " + error.message), Core.var_33, error);
-            };
+                Habbo.trackLoginStep(Habbo.CLIENT_INIT_CORE_FAIL);
+
+                Core.crash("Failed to initialize the core: " + error.message, Core.ERROR_CATEGORY_PREPARE_CORE, error);
+            }
+
         }
 
-        public function unloading():void
+        public function unloading(): void
         {
-            if (((this.var_2288) && (!(this.var_2288.disposed))))
+            if (this._core != null && !this._core.disposed)
             {
-                this.var_2288.events.dispatchEvent(new Event(Event.UNLOAD));
-            };
+                this._core.events.dispatchEvent(new Event(Event.UNLOAD));
+            }
+
         }
 
-        protected function onAddedToStage(event:Event=null):void
+        protected function onAddedToStage(event: Event = null): void
         {
             try
             {
                 this.prepareCore();
             }
-            catch(error:Error)
+            catch (error: Error)
             {
-                Habbo.trackLoginStep(Habbo.var_9);
-                Habbo.reportCrash(("Failed to prepare the core: " + error.message), Core.var_33, error);
+                Habbo.trackLoginStep(Habbo.CLIENT_INIT_CORE_FAIL);
+                Habbo.reportCrash("Failed to prepare the core: " + error.message, Core.ERROR_CATEGORY_PREPARE_CORE, error);
+
                 Core.dispose();
-            };
+            }
+
         }
 
-        private function prepareCore():void
+        private function prepareCore(): void
         {
-            Habbo.trackLoginStep(Habbo.var_8);
-            this.var_2288 = Core.instantiate(stage, Core.var_34);
-            this.var_2288.events.addEventListener(Component.COMPONENT_EVENT_ERROR, this.onCoreError);
-            this.var_2288.prepareComponent(CoreCommunicationFrameworkLib);
-            this.var_2288.prepareComponent(HabboRoomObjectLogicLib);
-            this.var_2288.prepareComponent(HabboRoomObjectVisualizationLib);
-            this.var_2288.prepareComponent(RoomManagerLib);
-            this.var_2288.prepareComponent(RoomSpriteRendererLib);
-            this.var_2288.prepareComponent(HabboRoomSessionManagerLib);
-            this.var_2288.prepareComponent(HabboAvatarRenderLib);
-            this.var_2288.prepareComponent(HabboRoomWidgetLib);
-            this.var_2288.prepareComponent(HabboSessionDataManagerLib);
-            this.var_2288.prepareComponent(HabboTrackingLib);
-            this.var_2288.prepareComponent(HabboConfigurationCom);
-            this.var_2288.prepareComponent(HabboLocalizationCom);
-            this.var_2288.prepareComponent(HabboWindowManagerCom);
-            this.var_2288.prepareComponent(HabboCommunicationCom);
-            this.var_2288.prepareComponent(HabboCommunicationDemoCom);
-            this.var_2288.prepareComponent(HabboNavigatorCom);
-            this.var_2288.prepareComponent(HabboFriendListCom);
-            this.var_2288.prepareComponent(HabboMessengerCom);
-            this.var_2288.prepareComponent(HabboInventoryCom);
-            this.var_2288.prepareComponent(HabboToolbarCom);
-            this.var_2288.prepareComponent(HabboCatalogCom);
-            this.var_2288.prepareComponent(HabboRoomEngineCom);
-            this.var_2288.prepareComponent(HabboRoomUICom);
-            this.var_2288.prepareComponent(HabboAvatarEditorCom);
-            this.var_2288.prepareComponent(HabboNotificationsCom);
-            this.var_2288.prepareComponent(HabboHelpCom);
-            this.var_2288.prepareComponent(HabboAdManagerCom);
-            this.var_2288.prepareComponent(HabboModerationCom);
-            this.var_2288.prepareComponent(HabboUserDefinedRoomEventsCom);
-            this.var_2288.prepareComponent(HabboSoundManagerFlash10Com);
-            this.var_2288.prepareComponent(HabboQuestEngineCom);
-            this.var_2288.prepareComponent(HabboFriendBarCom);
-            this.var_4613 = HabboTracking.getInstance();
-            var _loc1_:AssetLoaderStruct = this.var_2288.assets.loadAssetFromFile("config.xml", new URLRequest("config_habbo.xml"));
-            if (_loc1_.assetLoader.ready)
+            Habbo.trackLoginStep(Habbo.CLIENT_INIT_CORE_INIT);
+
+            this._core = Core.instantiate(stage, Core.CORE_SETUP_FRAME_UPDATE_COMPLEX);
+
+            this._core.events.addEventListener(Component.COMPONENT_EVENT_ERROR, this.onCoreError);
+
+            this._core.prepareComponent(CoreCommunicationFrameworkLib);
+            this._core.prepareComponent(HabboRoomObjectLogicLib);
+            this._core.prepareComponent(HabboRoomObjectVisualizationLib);
+            this._core.prepareComponent(RoomManagerLib);
+            this._core.prepareComponent(RoomSpriteRendererLib);
+            this._core.prepareComponent(HabboRoomSessionManagerLib);
+            this._core.prepareComponent(HabboAvatarRenderLib);
+            this._core.prepareComponent(HabboRoomWidgetLib);
+            this._core.prepareComponent(HabboSessionDataManagerLib);
+            this._core.prepareComponent(HabboTrackingLib);
+            this._core.prepareComponent(HabboConfigurationCom);
+            this._core.prepareComponent(HabboLocalizationCom);
+            this._core.prepareComponent(HabboWindowManagerCom);
+            this._core.prepareComponent(HabboCommunicationCom);
+            this._core.prepareComponent(HabboCommunicationDemoCom);
+            this._core.prepareComponent(HabboNavigatorCom);
+            this._core.prepareComponent(HabboFriendListCom);
+            this._core.prepareComponent(HabboMessengerCom);
+            this._core.prepareComponent(HabboInventoryCom);
+            this._core.prepareComponent(HabboToolbarCom);
+            this._core.prepareComponent(HabboCatalogCom);
+            this._core.prepareComponent(HabboRoomEngineCom);
+            this._core.prepareComponent(HabboRoomUICom);
+            this._core.prepareComponent(HabboAvatarEditorCom);
+            this._core.prepareComponent(HabboNotificationsCom);
+            this._core.prepareComponent(HabboHelpCom);
+            this._core.prepareComponent(HabboAdManagerCom);
+            this._core.prepareComponent(HabboModerationCom);
+            this._core.prepareComponent(HabboUserDefinedRoomEventsCom);
+            this._core.prepareComponent(HabboSoundManagerFlash10Com);
+            this._core.prepareComponent(HabboQuestEngineCom);
+            this._core.prepareComponent(HabboFriendBarCom);
+
+            this._habboTracking = HabboTracking.getInstance();
+
+            var configXmlAsset: AssetLoaderStruct = this._core.assets.loadAssetFromFile("config.xml", new URLRequest("config_habbo.xml"));
+
+            if (configXmlAsset.assetLoader.ready)
             {
-                this.setupCoreConfigFromLoader(_loc1_);
+                this.setupCoreConfigFromLoader(configXmlAsset);
             }
             else
             {
-                _loc1_.addEventListener(AssetLoaderEvent.var_35, this.configLoadedHandler);
-                _loc1_.addEventListener(AssetLoaderEvent.var_36, this.configLoadedHandler);
-            };
+                configXmlAsset.addEventListener(AssetLoaderEvent.ASSET_LOADER_EVENT_COMPLETE, this.configLoadedHandler);
+                configXmlAsset.addEventListener(AssetLoaderEvent.ASSET_LOADER_EVENT_ERROR, this.configLoadedHandler);
+            }
+
         }
 
-        private function configLoadedHandler(param1:AssetLoaderEvent):void
+        private function configLoadedHandler(assetLoaderEvent: AssetLoaderEvent): void
         {
-            var _loc2_:AssetLoaderStruct;
-            _loc2_ = (param1.target as AssetLoaderStruct);
-            _loc2_.removeEventListener(AssetLoaderEvent.var_35, this.configLoadedHandler);
-            _loc2_.removeEventListener(AssetLoaderEvent.var_36, this.configLoadedHandler);
-            if (param1.type == AssetLoaderEvent.var_35)
+            var configXmlAsset: AssetLoaderStruct = assetLoaderEvent.target as AssetLoaderStruct;
+
+            configXmlAsset.removeEventListener(AssetLoaderEvent.ASSET_LOADER_EVENT_COMPLETE, this.configLoadedHandler);
+            configXmlAsset.removeEventListener(AssetLoaderEvent.ASSET_LOADER_EVENT_ERROR, this.configLoadedHandler);
+
+            if (assetLoaderEvent.type == AssetLoaderEvent.ASSET_LOADER_EVENT_COMPLETE)
             {
-                this.setupCoreConfigFromLoader(_loc2_);
+                this.setupCoreConfigFromLoader(configXmlAsset);
             }
             else
             {
-                Habbo.reportCrash((("Failed to download external configuration document " + _loc2_.assetLoader.url) + "!"), Core.var_37, null);
-            };
+                Habbo.reportCrash("Failed to download external configuration document " + configXmlAsset.assetLoader.url + "!", Core.ERROR_CATEGORY_DOWNLOAD_CONFIG, null);
+            }
+
         }
 
-        private function setupCoreConfigFromLoader(param1:AssetLoaderStruct):void
+        private function setupCoreConfigFromLoader(configXmlAsset: AssetLoaderStruct): void
         {
-            var _loc2_:XmlAsset = (this.var_2288.assets.getAssetByName(param1.assetName) as XmlAsset);
-            if (((!(_loc2_)) || (!(_loc2_.content))))
+            var asset: XmlAsset = this._core.assets.getAssetByName(configXmlAsset.assetName) as XmlAsset;
+
+            if (asset == null || asset.content == null)
             {
-                Habbo.reportCrash("Download external configuration document is null!", Core.var_37, null);
-            };
-            if (this.var_2288)
+                Habbo.reportCrash("Download external configuration document is null!", Core.ERROR_CATEGORY_DOWNLOAD_CONFIG, null);
+            }
+
+
+            if (this._core != null)
             {
-                this.var_2288.readConfigDocument(XML(_loc2_.content), this.var_4);
+                this._core.readConfigDocument(XML(asset.content), this._container);
             }
             else
             {
-                Habbo.reportCrash("Core vanished while downloading config document!", Core.var_37, null);
-            };
+                Habbo.reportCrash("Core vanished while downloading config document!", Core.ERROR_CATEGORY_DOWNLOAD_CONFIG, null);
+            }
+
         }
 
-        private function onEnterFrame(param1:Event):void
+        private function onEnterFrame(event: Event): void
         {
-            var _loc2_:Sprite;
-            if (this.var_4)
+            if (this._container != null)
             {
-                _loc2_ = (this.var_4.getChildByName("background") as Sprite);
-                if (_loc2_)
+                var background: Sprite = this._container.getChildByName("background") as Sprite;
+
+                if (background != null)
                 {
-                    _loc2_.alpha = (_loc2_.alpha - 0.01);
-                    if (_loc2_.alpha <= 0)
+                    background.alpha = background.alpha - 0.01;
+                    if (background.alpha <= 0)
                     {
-                    };
-                };
-                if (this.var_5077)
+                        // no-op
+                    }
+
+                }
+
+
+                if (this._loaded)
                 {
-                    if (this.var_4.alpha <= 0)
+                    if (this._container.alpha <= 0)
                     {
                         this.dispose();
-                        this.var_5077 = false;
+
+                        this._loaded = false;
                     }
                     else
                     {
-                        this.var_4.alpha = (this.var_4.alpha - 0.1);
-                    };
-                };
-            };
+                        this._container.alpha = this._container.alpha - 0.1;
+                    }
+
+                }
+
+            }
+
         }
 
-        private function onCompleteEvent(param1:Event):void
+        private function onCompleteEvent(param1: Event): void
         {
-            this.updateLoadingBar(this.var_4, 1);
+            this.updateLoadingBar(this._container, 1);
             this.initializeCore();
-            this.var_5077 = true;
+            this._loaded = true;
         }
 
-        private function onProgressEvent(param1:ProgressEvent):void
+        private function onProgressEvent(progressEvent: ProgressEvent): void
         {
-            var _loc2_:Number;
-            var _loc3_:Sprite;
-            var _loc4_:LibraryProgressEvent;
-            if (this.var_4)
+            if (this._container)
             {
-                _loc2_ = (param1.bytesLoaded / param1.bytesTotal);
-                this.updateLoadingBar(this.var_4, _loc2_);
-                _loc3_ = (this.var_4.getChildByName("background") as Sprite);
-                if (_loc3_)
+                var percentageComplete: Number = progressEvent.bytesLoaded / progressEvent.bytesTotal;
+
+                this.updateLoadingBar(this._container, percentageComplete);
+
+                var background: Sprite = this._container.getChildByName("background") as Sprite;
+
+                if (background != null)
                 {
-                    _loc3_.alpha = Math.min((1 - _loc2_), _loc3_.alpha);
-                };
-                if ((param1 is LibraryProgressEvent))
+                    background.alpha = Math.min(1 - percentageComplete, background.alpha);
+                }
+
+
+                if (progressEvent is LibraryProgressEvent)
                 {
-                    _loc4_ = (param1 as LibraryProgressEvent);
-                    if (((_loc4_.fileName == "hh_human_fx.swf") || (_loc4_.fileName == "hh_human_body.swf")))
+                    var libraryProgressEvent: LibraryProgressEvent = progressEvent as LibraryProgressEvent;
+
+                    if (libraryProgressEvent.fileName == "hh_human_fx.swf" || libraryProgressEvent.fileName == "hh_human_body.swf")
                     {
-                        if (((this.var_4613) && (!(this.var_4613.disposed))))
+                        if (this._habboTracking != null && !this._habboTracking.disposed)
                         {
-                            this.var_4613.track("libraryLoaded", _loc4_.fileName, _loc4_.elapsedTime);
-                        };
-                    };
-                };
-            };
+                            this._habboTracking.track("libraryLoaded", libraryProgressEvent.fileName, libraryProgressEvent.elapsedTime);
+                        }
+
+                    }
+
+                }
+
+            }
+
         }
 
-        private function updateLoadingBar(param1:DisplayObjectContainer, param2:Number):void
+        private function updateLoadingBar(container: DisplayObjectContainer, percentageComplete: Number): void
         {
-            var _loc9_:int;
-            var _loc10_:int;
-            var _loc3_:* = 200;
-            var _loc4_:int = 20;
-            var _loc5_:int = 1;
-            var _loc6_:int = 1;
-            var _loc7_:Sprite = (param1.getChildByName(Habbo.var_19) as Sprite);
-            var _loc8_:Sprite = (_loc7_.getChildByName(Habbo.var_20) as Sprite);
-            var _loc11_:int = (this.var_2288.getNumberOfFilesPending() + this.var_2288.getNumberOfFilesLoaded());
-            var _loc12_:Number = ((1 - var_38) + ((this.var_2288.getNumberOfFilesLoaded() / _loc11_) * var_38));
-            _loc8_.x = (_loc5_ + _loc6_);
-            _loc8_.y = (_loc5_ + _loc6_);
-            _loc8_.graphics.clear();
-            _loc9_ = ((_loc4_ - (_loc5_ * 2)) - (_loc6_ * 2));
-            _loc10_ = (((_loc3_ - (_loc5_ * 2)) - (_loc6_ * 2)) * _loc12_);
-            _loc8_.graphics.beginFill(12241619);
-            _loc8_.graphics.drawRect(0, 0, _loc10_, (_loc9_ / 2));
-            _loc8_.graphics.endFill();
-            _loc8_.graphics.beginFill(9216429);
-            _loc8_.graphics.drawRect(0, (_loc9_ / 2), _loc10_, ((_loc9_ / 2) + 1));
-            _loc8_.graphics.endFill();
+            var fileLoadingBar: Sprite = container.getChildByName(Habbo.FILE_LOADING_BAR) as Sprite;
+            var fileBarSprite: Sprite = fileLoadingBar.getChildByName(Habbo.FILE_BAR_SPRITE) as Sprite;
+
+            var rectWidth: int;
+            var rectHeight: int;
+            var maxRectWidth: int = 200;
+            var maxRectHeight: int = 20;
+
+            var unknown1: int = 1;
+            var unknown2: int = 1;
+
+            var totalFiles: int = this._core.getNumberOfFilesPending() + this._core.getNumberOfFilesLoaded();
+            var remainingFiles: Number = ((1 - UNKNOWN_MAGIC_NUMBER) + this._core.getNumberOfFilesLoaded() / totalFiles) * UNKNOWN_MAGIC_NUMBER;
+
+            fileBarSprite.x = unknown1 + unknown2;
+            fileBarSprite.y = unknown1 + unknown2;
+            fileBarSprite.graphics.clear();
+
+            rectWidth = maxRectHeight - unknown1 * 2 - unknown2 * 2;
+            rectHeight = (maxRectWidth - unknown1 * 2 - unknown2 * 2) * remainingFiles;
+
+            fileBarSprite.graphics.beginFill(12241619);
+            fileBarSprite.graphics.drawRect(0, 0, rectHeight, rectWidth / 2);
+            fileBarSprite.graphics.endFill();
+            fileBarSprite.graphics.beginFill(9216429);
+            fileBarSprite.graphics.drawRect(0, rectWidth / 2, rectHeight, rectWidth / 2 + 1);
+            fileBarSprite.graphics.endFill();
         }
 
-        public function onCoreError(param1:Event):void
+        public function onCoreError(param1: Event): void
         {
-            Habbo.trackLoginStep(Habbo.var_9);
+            Habbo.trackLoginStep(Habbo.CLIENT_INIT_CORE_FAIL);
         }
 
     }

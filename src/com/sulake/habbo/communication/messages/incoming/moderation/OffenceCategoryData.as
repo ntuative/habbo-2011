@@ -1,51 +1,58 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.moderation
 {
+
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class OffenceCategoryData implements INamed, IDisposable 
+    public class OffenceCategoryData implements INamed, IDisposable
     {
 
-        private var _name:String;
-        private var var_2967:Array = new Array();
-        private var _disposed:Boolean;
+        private var _name: String;
+        private var _offences: Array = [];
+        private var _disposed: Boolean;
 
-        public function OffenceCategoryData(param1:IMessageDataWrapper)
+        public function OffenceCategoryData(data: IMessageDataWrapper)
         {
-            this._name = param1.readString();
-            Logger.log(("READ CAT: " + this._name));
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._name = data.readString();
+
+            Logger.log("READ CAT: " + this._name);
+
+            var offenceCount: int = data.readInteger();
+            var i: int;
+
+            while (i < offenceCount)
             {
-                this.var_2967.push(new OffenceData(param1));
-                _loc3_++;
-            };
+                this._offences.push(new OffenceData(data));
+                i++;
+            }
+
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (this._disposed)
             {
                 return;
-            };
+            }
+
+
             this._disposed = true;
-            this.var_2967 = null;
+            this._offences = null;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get offences():Array
+        public function get offences(): Array
         {
-            return (this.var_2967);
+            return this._offences;
         }
 
     }

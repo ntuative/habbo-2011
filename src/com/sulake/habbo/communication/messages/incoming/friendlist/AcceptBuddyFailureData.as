@@ -1,27 +1,28 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.friendlist
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class AcceptBuddyFailureData 
+    public class AcceptBuddyFailureData
     {
 
-        private var var_2907:String;
-        private var var_2102:int;
+        private var _senderName: String;
+        private var _errorCode: int;
 
-        public function AcceptBuddyFailureData(param1:IMessageDataWrapper)
+        public function AcceptBuddyFailureData(data: IMessageDataWrapper)
         {
-            this.var_2907 = param1.readString();
-            this.var_2102 = param1.readInteger();
+            this._senderName = data.readString();
+            this._errorCode = data.readInteger();
         }
 
-        public function get senderName():String
+        public function get senderName(): String
         {
-            return (this.var_2907);
+            return this._senderName;
         }
 
-        public function get errorCode():int
+        public function get errorCode(): int
         {
-            return (this.var_2102);
+            return this._errorCode;
         }
 
     }

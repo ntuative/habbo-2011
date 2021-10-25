@@ -1,52 +1,53 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class CatalogPageMessageProductData 
+    public class CatalogPageMessageProductData
     {
 
-        public static const var_113:String = "i";
-        public static const var_112:String = "s";
-        public static const var_118:String = "e";
+        public static const WALL_ITEM: String = "i";
+        public static const FLOOR_ITEM: String = "s";
+        public static const EFFECT_ITEM: String = "e";
 
-        private var var_2835:String;
-        private var var_2899:int;
-        private var var_2836:String;
-        private var var_2837:int;
-        private var var_2838:int;
+        private var _productType: String;
+        private var _furniClassId: int;
+        private var _extraParam: String;
+        private var _productCount: int;
+        private var _expiration: int;
 
-        public function CatalogPageMessageProductData(param1:IMessageDataWrapper)
+        public function CatalogPageMessageProductData(data: IMessageDataWrapper)
         {
-            this.var_2835 = param1.readString();
-            this.var_2899 = param1.readInteger();
-            this.var_2836 = param1.readString();
-            this.var_2837 = param1.readInteger();
-            this.var_2838 = param1.readInteger();
+            this._productType = data.readString();
+            this._furniClassId = data.readInteger();
+            this._extraParam = data.readString();
+            this._productCount = data.readInteger();
+            this._expiration = data.readInteger();
         }
 
-        public function get productType():String
+        public function get productType(): String
         {
-            return (this.var_2835);
+            return this._productType;
         }
 
-        public function get furniClassId():int
+        public function get furniClassId(): int
         {
-            return (this.var_2899);
+            return this._furniClassId;
         }
 
-        public function get extraParam():String
+        public function get extraParam(): String
         {
-            return (this.var_2836);
+            return this._extraParam;
         }
 
-        public function get productCount():int
+        public function get productCount(): int
         {
-            return (this.var_2837);
+            return this._productCount;
         }
 
-        public function get expiration():int
+        public function get expiration(): int
         {
-            return (this.var_2838);
+            return this._expiration;
         }
 
     }

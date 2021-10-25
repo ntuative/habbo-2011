@@ -1,22 +1,25 @@
 ﻿package com.sulake.habbo.catalog.viewer.widgets.events
 {
+
     import flash.events.Event;
+
     import com.sulake.core.utils.Map;
 
-    public class RentableBotDefinitionWidgetEvent extends Event 
+    public class RentableBotDefinitionWidgetEvent extends Event
     {
 
-        private var var_2723:Map;
+        private var _botFigureData: Map;
 
-        public function RentableBotDefinitionWidgetEvent(param1:Map, param2:Boolean=false, param3:Boolean=false)
+        public function RentableBotDefinitionWidgetEvent(botFigureData: Map, param2: Boolean = false, param3: Boolean = false)
         {
             super(WidgetEvent.CWE_RENTABLE_BOT_DEFINITIONS, param2, param3);
-            this.var_2723 = param1;
+
+            this._botFigureData = botFigureData;
         }
 
-        public function get botFigureData():Map
+        public function get botFigureData(): Map
         {
-            return (this.var_2723);
+            return this._botFigureData;
         }
 
     }

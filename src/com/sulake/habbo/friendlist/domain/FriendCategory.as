@@ -1,215 +1,244 @@
 ﻿package com.sulake.habbo.friendlist.domain
 {
+
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.core.window.IWindowContainer;
     import com.sulake.habbo.friendlist.Util;
 
-    public class FriendCategory implements IDisposable 
+    public class FriendCategory implements IDisposable
     {
 
-        public static const var_1626:int = 100;
-        public static const var_513:int = 0;
-        public static const var_514:int = -1;
+        public static const FRIENDS_PER_PAGE: int = 100;
+        public static const FRIENDS_ONLINE: int = 0;
+        public static const FRIENDS_OFFLINE: int = -1;
 
-        private var _id:int;
-        private var _name:String;
-        private var _open:Boolean;
-        private var var_2681:Array = [];
-        private var var_3415:Boolean;
-        private var _disposed:Boolean;
-        private var _view:IWindowContainer;
-        private var var_3416:int;
+        private var _id: int;
+        private var _name: String;
+        private var _open: Boolean;
+        private var _friends: Array = [];
+        private var _recieved: Boolean;
+        private var _disposed: Boolean;
+        private var _view: IWindowContainer;
+        private var _pageIndex: int;
 
-        public function FriendCategory(param1:int, param2:String)
+        public function FriendCategory(id: int, name: String)
         {
-            this._id = param1;
-            this._name = param2;
-            this._open = (!(this._id == var_514));
+            this._id = id;
+            this._name = name;
+            this._open = this._id != FRIENDS_OFFLINE;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (this._disposed)
             {
                 return;
-            };
+            }
+
             this._disposed = true;
             this._view = null;
         }
 
-        public function addFriend(param1:Friend):void
+        public function addFriend(friend: Friend): void
         {
-            var _loc4_:Friend;
-            if (this.var_2681.indexOf(param1) >= 0)
+            var item: Friend;
+
+            if (this._friends.indexOf(friend) >= 0)
             {
                 return;
-            };
-            var _loc2_:String = param1.name.toLowerCase();
-            var _loc3_:int;
-            while (_loc3_ < this.var_2681.length)
+            }
+
+            var lname: String = friend.name.toLowerCase();
+
+            var i: int;
+            
+            while (i < this._friends.length)
             {
-                _loc4_ = this.var_2681[_loc3_];
-                if (_loc2_ < _loc4_.name.toLowerCase())
+                item = this._friends[i];
+
+                if (lname < item.name.toLowerCase())
                 {
-                    this.var_2681.splice(_loc3_, 0, param1);
+                    this._friends.splice(i, 0, friend);
+                    
                     return;
-                };
-                _loc3_++;
-            };
-            this.var_2681.push(param1);
+                }
+
+                i++;
+            }
+
+            this._friends.push(friend);
         }
 
-        public function getSelectedFriends(param1:Array):void
+        public function getSelectedFriends(friends: Array): void
         {
-            var _loc2_:Friend;
-            for each (_loc2_ in this.var_2681)
+            var friend: Friend;
+
+            for each (friend in this._friends)
             {
-                if (_loc2_.selected)
+                if (friend.selected)
                 {
-                    param1.push(_loc2_);
-                };
-            };
+                    friends.push(friend);
+                }
+
+            }
+
         }
 
-        public function getFriend(param1:int):Friend
+        public function getFriend(id: int): Friend
         {
-            var _loc2_:Friend;
-            for each (_loc2_ in this.var_2681)
+            var friend: Friend;
+
+            for each (friend in this._friends)
             {
-                if (_loc2_.id == param1)
+                if (friend.id == id)
                 {
-                    return (_loc2_);
-                };
-            };
-            return (null);
+                    return friend;
+                }
+
+            }
+
+            return null;
         }
 
-        public function getFriendCount(param1:Boolean, param2:Boolean=false):int
+        public function getFriendCount(includeOffline: Boolean, includeNoFollow: Boolean = false): int
         {
-            var _loc4_:Friend;
-            var _loc3_:int;
-            for each (_loc4_ in this.var_2681)
+            var friend: Friend;
+            var total: int;
+
+            for each (friend in this._friends)
             {
-                if ((((!(param1)) || (_loc4_.online)) && ((!(param2)) || (_loc4_.followingAllowed))))
+                if ((!includeOffline || friend.online) && (!includeNoFollow || friend.followingAllowed))
                 {
-                    _loc3_ = (_loc3_ + 1);
-                };
-            };
-            return (_loc3_);
+                    total = total + 1;
+                }
+
+            }
+
+            return total;
         }
 
-        public function removeFriend(param1:int):Friend
+        public function removeFriend(id: int): Friend
         {
-            var _loc2_:Friend = this.getFriend(param1);
-            if (_loc2_ != null)
+            var friend: Friend = this.getFriend(id);
+            
+            if (friend != null)
             {
-                Util.remove(this.var_2681, _loc2_);
-                return (_loc2_);
-            };
-            return (null);
+                Util.remove(this._friends, friend);
+                
+                return friend;
+            }
+
+            return null;
         }
 
-        private function checkPageIndex():void
+        private function checkPageIndex(): void
         {
-            if (this.var_3416 >= this.getPageCount())
+            if (this._pageIndex >= this.getPageCount())
             {
-                this.var_3416 = Math.max(0, (this.getPageCount() - 1));
-            };
+                this._pageIndex = Math.max(0, this.getPageCount() - 1);
+            }
+
         }
 
-        public function getPageCount():int
+        public function getPageCount(): int
         {
-            return (Math.ceil((this.var_2681.length / var_1626)));
+            return Math.ceil(this._friends.length / FRIENDS_PER_PAGE);
         }
 
-        public function getStartFriendIndex():int
+        public function getStartFriendIndex(): int
         {
             this.checkPageIndex();
-            return (this.var_3416 * var_1626);
+
+            return this._pageIndex * FRIENDS_PER_PAGE;
         }
 
-        public function getEndFriendIndex():int
+        public function getEndFriendIndex(): int
         {
             this.checkPageIndex();
-            return (Math.min(((this.var_3416 + 1) * var_1626), this.var_2681.length));
+
+            return Math.min((this._pageIndex + 1) * FRIENDS_PER_PAGE, this._friends.length);
         }
 
-        public function setOpen(param1:Boolean):void
+        public function setOpen(open: Boolean): void
         {
-            var _loc2_:Friend;
-            this._open = param1;
-            if (!param1)
+            var friend: Friend;
+
+            this._open = open;
+
+            if (!open)
             {
-                for each (_loc2_ in this.var_2681)
+                for each (friend in this._friends)
                 {
-                    _loc2_.selected = false;
-                };
-            };
+                    friend.selected = false;
+                }
+
+            }
+
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get received():Boolean
+        public function get received(): Boolean
         {
-            return (this.var_3415);
+            return this._recieved;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get friends():Array
+        public function get friends(): Array
         {
-            return (this.var_2681);
+            return this._friends;
         }
 
-        public function get view():IWindowContainer
+        public function get view(): IWindowContainer
         {
-            return (this._view);
+            return this._view;
         }
 
-        public function get open():Boolean
+        public function get open(): Boolean
         {
-            return (this._open);
+            return this._open;
         }
 
-        public function get pageIndex():int
+        public function get pageIndex(): int
         {
-            return (this.var_3416);
+            return this._pageIndex;
         }
 
-        public function set id(param1:int):void
+        public function set id(value: int): void
         {
-            this._id = param1;
+            this._id = value;
         }
 
-        public function set name(param1:String):void
+        public function set name(value: String): void
         {
-            this._name = param1;
+            this._name = value;
         }
 
-        public function set view(param1:IWindowContainer):void
+        public function set view(value: IWindowContainer): void
         {
-            this._view = param1;
+            this._view = value;
         }
 
-        public function set received(param1:Boolean):void
+        public function set received(value: Boolean): void
         {
-            this.var_3415 = param1;
+            this._recieved = value;
         }
 
-        public function set pageIndex(param1:int):void
+        public function set pageIndex(value: int): void
         {
-            this.var_3416 = param1;
+            this._pageIndex = value;
         }
 
     }

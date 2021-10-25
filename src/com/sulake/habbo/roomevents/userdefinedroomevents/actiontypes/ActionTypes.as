@@ -1,14 +1,15 @@
 ﻿package com.sulake.habbo.roomevents.userdefinedroomevents.actiontypes
 {
+
     import com.sulake.habbo.roomevents.userdefinedroomevents.ElementTypeHolder;
     import com.sulake.habbo.roomevents.userdefinedroomevents.Element;
     import com.sulake.habbo.communication.messages.incoming.userdefinedroomevents.ActionDefinition;
     import com.sulake.habbo.communication.messages.incoming.userdefinedroomevents.Triggerable;
 
-    public class ActionTypes implements ElementTypeHolder 
+    public class ActionTypes implements ElementTypeHolder
     {
 
-        private var var_2374:Array = new Array();
+        private var var_2374: Array = [];
 
         public function ActionTypes()
         {
@@ -29,37 +30,39 @@
             this.var_2374.push(new MoveFurniTo());
         }
 
-        public function get types():Array
+        public function get types(): Array
         {
-            return (this.var_2374);
+            return this.var_2374;
         }
 
-        public function getByCode(param1:int):ActionType
+        public function getByCode(param1: int): ActionType
         {
-            var _loc2_:ActionType;
+            var _loc2_: ActionType;
             for each (_loc2_ in this.var_2374)
             {
                 if (_loc2_.code == param1)
                 {
-                    return (_loc2_);
-                };
-            };
-            return (null);
+                    return _loc2_;
+                }
+
+            }
+
+            return null;
         }
 
-        public function getElementByCode(param1:int):Element
+        public function getElementByCode(param1: int): Element
         {
-            return (this.getByCode(param1));
+            return this.getByCode(param1);
         }
 
-        public function acceptTriggerable(param1:Triggerable):Boolean
+        public function acceptTriggerable(param1: Triggerable): Boolean
         {
-            return (!((param1 as ActionDefinition) == null));
+            return (param1 as ActionDefinition) != null;
         }
 
-        public function getKey():String
+        public function getKey(): String
         {
-            return ("action");
+            return "action";
         }
 
     }

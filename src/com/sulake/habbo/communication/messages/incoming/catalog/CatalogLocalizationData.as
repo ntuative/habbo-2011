@@ -1,41 +1,48 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class CatalogLocalizationData 
+    public class CatalogLocalizationData
     {
 
-        private var _images:Array;
-        private var var_2834:Array;
+        private var _images: Array;
+        private var _texts: Array;
 
-        public function CatalogLocalizationData(param1:IMessageDataWrapper)
+        public function CatalogLocalizationData(data: IMessageDataWrapper)
         {
-            this._images = new Array();
-            this.var_2834 = new Array();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._images = [];
+            this._texts = [];
+
+            var imageCount: int = data.readInteger();
+            var i: int;
+
+            while (i < imageCount)
             {
-                this._images.push(param1.readString());
-                _loc3_++;
-            };
-            var _loc4_:int = param1.readInteger();
-            var _loc5_:int;
-            while (_loc5_ < _loc4_)
+                this._images.push(data.readString());
+                i++;
+            }
+
+
+            var textsCount: int = data.readInteger();
+            var j: int;
+
+            while (j < textsCount)
             {
-                this.var_2834.push(param1.readString());
-                _loc5_++;
-            };
+                this._texts.push(data.readString());
+                j++;
+            }
+
         }
 
-        public function get images():Array
+        public function get images(): Array
         {
-            return (this._images);
+            return this._images;
         }
 
-        public function get texts():Array
+        public function get texts(): Array
         {
-            return (this.var_2834);
+            return this._texts;
         }
 
     }

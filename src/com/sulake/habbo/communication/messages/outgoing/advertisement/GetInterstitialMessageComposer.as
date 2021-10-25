@@ -1,20 +1,21 @@
 ﻿package com.sulake.habbo.communication.messages.outgoing.advertisement
 {
+
     import com.sulake.core.communication.messages.IMessageComposer;
 
-    public class GetInterstitialMessageComposer implements IMessageComposer 
+    public class GetInterstitialMessageComposer implements IMessageComposer
     {
 
-        private var _data:Array = [];
+        private var _data: Array = [];
 
-        public function dispose():void
+        public function dispose(): void
         {
             this._data = null;
         }
 
-        public function getMessageArray():Array
+        public function getMessageArray(): Array
         {
-            return (this._data);
+            return this._data;
         }
 
     }

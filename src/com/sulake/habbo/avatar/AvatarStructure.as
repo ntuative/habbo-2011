@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.avatar
 {
+
     import com.sulake.core.runtime.events.EventDispatcher;
     import com.sulake.habbo.avatar.geometry.AvatarModelGeometry;
     import com.sulake.habbo.avatar.actions.AvatarActionManager;
@@ -9,7 +10,9 @@
     import com.sulake.habbo.avatar.animation.AnimationManager;
     import com.sulake.habbo.avatar.actions.ActionDefinition;
     import com.sulake.habbo.avatar.structure.parts.PartOffsetData;
+
     import flash.utils.Dictionary;
+
     import com.sulake.core.assets.IAssetLibrary;
     import com.sulake.habbo.avatar.enum.AvatarType;
     import com.sulake.core.assets.AssetLibraryCollection;
@@ -30,244 +33,263 @@
     import com.sulake.habbo.avatar.structure.figure.IFigurePart;
     import com.sulake.habbo.avatar.actions.IActionDefinition;
     import com.sulake.habbo.avatar.structure.animation.AnimationAction;
+
     import flash.geom.Point;
+
     import com.sulake.habbo.avatar.structure.IFigureData;
+
     import flash.display.Shape;
     import flash.display.BitmapData;
     import flash.display.Bitmap;
     import flash.text.TextField;
     import flash.geom.Matrix;
     import flash.display.Stage;
+
     import com.sulake.habbo.avatar.structure.*;
 
-    public class AvatarStructure extends EventDispatcher 
+    public class AvatarStructure extends EventDispatcher
     {
 
-        private var var_2458:AvatarRenderManager;
-        private var _geometry:AvatarModelGeometry;
-        private var var_2597:AvatarActionManager;
-        private var var_2598:FigureData;
-        private var var_2599:PartSetsData;
-        private var _animationData:AnimationData;
-        private var var_2600:AnimationManager;
-        private var var_2392:ActionDefinition;
-        private var var_2391:String;
-        private var var_2601:PartOffsetData;
-        private var var_2602:Dictionary;
+        private var _renderManager: AvatarRenderManager;
+        private var _geometry: AvatarModelGeometry;
+        private var var_2597: AvatarActionManager;
+        private var _figureData: FigureData;
+        private var var_2599: PartSetsData;
+        private var _animationData: AnimationData;
+        private var _actionManager: AnimationManager;
+        private var var_2392: ActionDefinition;
+        private var _avatarType: String;
+        private var var_2601: PartOffsetData;
+        private var var_2602: Dictionary;
 
-        public function AvatarStructure(param1:AvatarRenderManager, param2:String, param3:PartOffsetData)
+        public function AvatarStructure(param1: AvatarRenderManager, param2: String, param3: PartOffsetData)
         {
-            this.var_2458 = param1;
-            this.var_2598 = new FigureData();
+            this._renderManager = param1;
+            this._figureData = new FigureData();
             this.var_2599 = new PartSetsData();
             this._animationData = new AnimationData();
-            this.var_2600 = new AnimationManager();
-            this.var_2391 = param2;
+            this._actionManager = new AnimationManager();
+            this._avatarType = param2;
             this.var_2602 = new Dictionary();
             this.var_2601 = param3;
         }
 
-        override public function dispose():void
+        override public function dispose(): void
         {
             if (!disposed)
             {
                 super.dispose();
-                this.var_2458 = null;
-                this.var_2598 = null;
+                this._renderManager = null;
+                this._figureData = null;
                 this.var_2599 = null;
                 this._animationData = null;
                 this.var_2602 = null;
                 this.var_2601 = null;
-            };
+            }
+
         }
 
-        public function resetPartOffsets(param1:IAssetLibrary):void
+        public function resetPartOffsets(param1: IAssetLibrary): void
         {
             this.var_2601.loadOffsets(param1);
         }
 
-        public function initGeometry(param1:XML):void
+        public function initGeometry(param1: XML): void
         {
             if (!param1)
             {
-                Logger.log(("[AvatarStructure] Could not init Geometry for structure: " + this.var_2391));
+                Logger.log("[AvatarStructure] Could not init Geometry for structure: " + this._avatarType);
                 return;
-            };
+            }
+
             this._geometry = new AvatarModelGeometry(param1);
         }
 
-        public function initActions(param1:IAssetLibrary, param2:XML):void
+        public function initActions(param1: IAssetLibrary, param2: XML): void
         {
             if (!param2)
             {
-                Logger.log(("[AvatarStructure] Could not init Actions for structure: " + this.var_2391));
+                Logger.log("[AvatarStructure] Could not init Actions for structure: " + this._avatarType);
                 return;
-            };
-            this.var_2597 = new AvatarActionManager(param1, this.var_2391, param2);
+            }
+
+            this.var_2597 = new AvatarActionManager(param1, this._avatarType, param2);
             this.var_2392 = this.var_2597.getDefaultAction();
         }
 
-        public function initPartSets(param1:XML):Boolean
+        public function initPartSets(param1: XML): Boolean
         {
             if (!param1)
             {
-                Logger.log(("[AvatarStructure] Could not init Part Sets for structure: " + this.var_2391));
-                return (false);
-            };
+                Logger.log("[AvatarStructure] Could not init Part Sets for structure: " + this._avatarType);
+                return false;
+            }
+
             if (this.var_2599.parse(param1))
             {
-                if (this.var_2391 == AvatarType.var_179)
+                if (this._avatarType == AvatarType.var_179)
                 {
                     this.var_2599.getPartDefinition("ri").appendToFigure = true;
                     this.var_2599.getPartDefinition("li").appendToFigure = true;
-                };
-                return (true);
-            };
-            return (false);
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
-        public function initAnimation(param1:XML):Boolean
+        public function initAnimation(param1: XML): Boolean
         {
             if (!param1)
             {
-                Logger.log(("[AvatarStructure] Could not init Animations for structure: " + this.var_2391));
-                return (false);
-            };
-            return (this._animationData.parse(param1));
+                Logger.log("[AvatarStructure] Could not init Animations for structure: " + this._avatarType);
+                return false;
+            }
+
+            return this._animationData.parse(param1);
         }
 
-        public function initFigureData(param1:XML):Boolean
+        public function initFigureData(param1: XML): Boolean
         {
             if (!param1)
             {
-                Logger.log(("[AvatarStructure] Could not init Figure Data for structure: " + this.var_2391));
-                return (false);
-            };
-            return (this.var_2598.parse(param1));
+                Logger.log("[AvatarStructure] Could not init Figure Data for structure: " + this._avatarType);
+                return false;
+            }
+
+            return this._figureData.parse(param1);
         }
 
-        public function injectFigureData(param1:XML):void
+        public function injectFigureData(param1: XML): void
         {
-            this.var_2598.injectXML(param1);
+            this._figureData.injectXML(param1);
         }
 
-        public function registerAnimations(param1:AssetLibraryCollection, param2:String="fx", param3:int=200):void
+        public function registerAnimations(param1: AssetLibraryCollection, param2: String = "fx", param3: int = 200): void
         {
-            var _loc4_:XML;
-            var _loc5_:int;
+            var _loc4_: XML;
+            var _loc5_: int;
             while (_loc5_ < param3)
             {
-                if (param1.hasAsset((param2 + _loc5_)))
+                if (param1.hasAsset(param2 + _loc5_))
                 {
-                    _loc4_ = (param1.getAssetByName((param2 + _loc5_)).content as XML);
-                    this.var_2600.registerAnimation(this, _loc4_);
-                };
+                    _loc4_ = (param1.getAssetByName(param2 + _loc5_).content as XML);
+                    this._actionManager.registerAnimation(this, _loc4_);
+                }
+
                 _loc5_++;
-            };
+            }
+
         }
 
-        public function getPartColor(param1:IAvatarFigureContainer, param2:String, param3:int=0):IPartColor
+        public function getPartColor(param1: IAvatarFigureContainer, param2: String, param3: int = 0): IPartColor
         {
-            var _loc4_:Array = param1.getPartColorIds(param2);
-            if (((!(_loc4_)) || (_loc4_.length < param3)))
+            var _loc4_: Array = param1.getPartColorIds(param2);
+            if (!_loc4_ || _loc4_.length < param3)
             {
-                return (null);
-            };
-            var _loc5_:ISetType = this.var_2598.getSetType(param2);
+                return null;
+            }
+
+            var _loc5_: ISetType = this._figureData.getSetType(param2);
             if (_loc5_ == null)
             {
-                return (null);
-            };
-            var _loc6_:IPalette = this.var_2598.getPalette(_loc5_.paletteID);
+                return null;
+            }
+
+            var _loc6_: IPalette = this._figureData.getPalette(_loc5_.paletteID);
             if (!_loc6_)
             {
-                return (null);
-            };
-            return (_loc6_.getColor(_loc4_[param3]));
+                return null;
+            }
+
+            return _loc6_.getColor(_loc4_[param3]);
         }
 
-        public function getBodyPartData(param1:String, param2:int, param3:String):AnimationLayerData
+        public function getBodyPartData(param1: String, param2: int, param3: String): AnimationLayerData
         {
-            return (this.var_2600.getLayerData(param1, param2, param3) as AnimationLayerData);
+            return this._actionManager.getLayerData(param1, param2, param3) as AnimationLayerData;
         }
 
-        public function getAnimation(param1:String):Animation
+        public function getAnimation(param1: String): Animation
         {
-            return (this.var_2600.getAnimation(param1) as Animation);
+            return this._actionManager.getAnimation(param1) as Animation;
         }
 
-        public function getActionDefinition(param1:String):ActionDefinition
+        public function getActionDefinition(param1: String): ActionDefinition
         {
-            return (this.var_2597.getActionDefinition(param1));
+            return this.var_2597.getActionDefinition(param1);
         }
 
-        public function getActionDefinitionWithState(param1:String):ActionDefinition
+        public function getActionDefinitionWithState(param1: String): ActionDefinition
         {
-            return (this.var_2597.getActionDefinitionWithState(param1));
+            return this.var_2597.getActionDefinitionWithState(param1);
         }
 
-        public function isMainAvatarSet(param1:String):Boolean
+        public function isMainAvatarSet(param1: String): Boolean
         {
-            return (this._geometry.isMainAvatarSet(param1));
+            return this._geometry.isMainAvatarSet(param1);
         }
 
-        public function sortActions(param1:Array):Array
+        public function sortActions(param1: Array): Array
         {
-            return (this.var_2597.sortActions(param1));
+            return this.var_2597.sortActions(param1);
         }
 
-        public function getMandatorySetTypeIds(param1:String, param2:int):Array
+        public function getMandatorySetTypeIds(param1: String, param2: int): Array
         {
             if (!this.var_2602[param1])
             {
                 this.var_2602[param1] = new Dictionary();
-            };
+            }
+
             if (this.var_2602[param1][param2])
             {
-                return (this.var_2602[param1][param2]);
-            };
-            this.var_2602[param1][param2] = this.var_2598.getMandatorySetTypeIds(param1, param2);
-            return (this.var_2602[param1][param2]);
+                return this.var_2602[param1][param2];
+            }
+
+            this.var_2602[param1][param2] = this._figureData.getMandatorySetTypeIds(param1, param2);
+            return this.var_2602[param1][param2];
         }
 
-        public function getDefaultPartSet(param1:String, param2:String):IFigurePartSet
+        public function getDefaultPartSet(param1: String, param2: String): IFigurePartSet
         {
-            return (this.var_2598.getDefaultPartSet(param1, param2));
+            return this._figureData.getDefaultPartSet(param1, param2);
         }
 
-        public function getCanvasOffsets(param1:Array, param2:String, param3:int):Array
+        public function getCanvasOffsets(param1: Array, param2: String, param3: int): Array
         {
-            return (this.var_2597.getCanvasOffsets(param1, param2, param3));
+            return this.var_2597.getCanvasOffsets(param1, param2, param3);
         }
 
-        public function getCanvas(param1:String, param2:String):AvatarCanvas
+        public function getCanvas(param1: String, param2: String): AvatarCanvas
         {
-            return (this._geometry.getCanvas(param1, param2));
+            return this._geometry.getCanvas(param1, param2);
         }
 
-        public function removeDynamicItems():void
+        public function removeDynamicItems(): void
         {
             this._geometry.removeDynamicItems();
         }
 
-        public function getActiveBodyPartIds(param1:IActiveActionData):Array
+        public function getActiveBodyPartIds(param1: IActiveActionData): Array
         {
-            var _loc5_:GeometryBodyPart;
-            var _loc6_:String;
-            var _loc7_:Animation;
-            var _loc8_:String;
-            var _loc9_:PartDefinition;
-            var _loc10_:XML;
-            var _loc11_:XML;
-            var _loc12_:AddDataContainer;
-            var _loc13_:String;
-            var _loc2_:Array = [];
-            var _loc3_:Array = new Array();
-            var _loc4_:String = param1.definition.geometryType;
+            var _loc5_: GeometryBodyPart;
+            var _loc6_: String;
+            var _loc7_: Animation;
+            var _loc8_: String;
+            var _loc9_: PartDefinition;
+            var _loc10_: XML;
+            var _loc11_: XML;
+            var _loc12_: AddDataContainer;
+            var _loc13_: String;
+            var _loc2_: Array = [];
+            var _loc3_: Array = [];
+            var _loc4_: String = param1.definition.geometryType;
             if (param1.definition.isAnimation)
             {
-                _loc6_ = ((param1.definition.state + ".") + param1.actionParameter);
-                _loc7_ = (this.var_2600.getAnimation(_loc6_) as Animation);
+                _loc6_ = param1.definition.state + "." + param1.actionParameter;
+                _loc7_ = (this._actionManager.getAnimation(_loc6_) as Animation);
                 if (_loc7_ != null)
                 {
                     _loc2_ = _loc7_.getAnimatedBodyPartIds(0, param1.overridingAction);
@@ -290,15 +312,21 @@
                                 if (_loc12_.base == "")
                                 {
                                     _loc9_.staticId = 1;
-                                };
+                                }
+
                                 if (_loc3_.indexOf(_loc5_.id) == -1)
                                 {
                                     _loc3_.push(_loc5_.id);
-                                };
-                            };
-                        };
-                    };
-                };
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
                 for each (_loc8_ in _loc2_)
                 {
                     _loc5_ = this._geometry.getBodyPart(_loc4_, _loc8_);
@@ -307,9 +335,12 @@
                         if (_loc3_.indexOf(_loc5_.id) == -1)
                         {
                             _loc3_.push(_loc5_.id);
-                        };
-                    };
-                };
+                        }
+
+                    }
+
+                }
+
             }
             else
             {
@@ -322,71 +353,76 @@
                         if (_loc3_.indexOf(_loc5_.id) == -1)
                         {
                             _loc3_.push(_loc5_.id);
-                        };
-                    };
-                };
-            };
-            return (_loc3_);
+                        }
+
+                    }
+
+                }
+
+            }
+
+            return _loc3_;
         }
 
-        public function getBodyPartsUnordered(param1:String):Array
+        public function getBodyPartsUnordered(param1: String): Array
         {
-            return (this._geometry.getBodyPartIdsInAvatarSet(param1));
+            return this._geometry.getBodyPartIdsInAvatarSet(param1);
         }
 
-        public function getBodyParts(param1:String, param2:String, param3:int):Array
+        public function getBodyParts(param1: String, param2: String, param3: int): Array
         {
-            var _loc4_:Number = AvatarDirectionAngle.var_989[param3];
-            return (this._geometry.getBodyPartsAtAngle(param1, _loc4_, param2));
+            var _loc4_: Number = AvatarDirectionAngle.var_989[param3];
+            return this._geometry.getBodyPartsAtAngle(param1, _loc4_, param2);
         }
 
-        public function getParts(param1:String, param2:IAvatarFigureContainer, param3:IActiveActionData, param4:String, param5:int, param6:Array, param7:Dictionary=null):Array
+        public function getParts(param1: String, param2: IAvatarFigureContainer, param3: IActiveActionData, param4: String, param5: int, param6: Array, param7: Dictionary = null): Array
         {
-            var _loc9_:Animation;
-            var _loc11_:String;
-            var _loc12_:PartDefinition;
-            var _loc16_:String;
-            var _loc17_:AvatarImagePartContainer;
-            var _loc18_:ActionPart;
-            var _loc19_:Array;
-            var _loc21_:Array;
-            var _loc22_:AvatarImagePartContainer;
-            var _loc23_:String;
-            var _loc24_:String;
-            var _loc25_:GeometryBodyPart;
-            var _loc26_:GeometryItem;
-            var _loc27_:int;
-            var _loc28_:Array;
-            var _loc29_:ISetType;
-            var _loc30_:IPalette;
-            var _loc31_:IFigurePartSet;
-            var _loc32_:IFigurePart;
-            var _loc33_:IActionDefinition;
-            var _loc34_:String;
-            var _loc35_:IPartColor;
-            var _loc36_:Boolean;
-            var _loc37_:Boolean;
-            var _loc38_:String;
-            var _loc39_:int;
-            var _loc40_:int;
-            var _loc41_:GeometryBodyPart;
-            var _loc42_:Boolean;
-            var _loc43_:Number;
-            var _loc44_:String;
-            var _loc45_:AddDataContainer;
+            var _loc9_: Animation;
+            var _loc11_: String;
+            var _loc12_: PartDefinition;
+            var _loc16_: String;
+            var _loc17_: AvatarImagePartContainer;
+            var _loc18_: ActionPart;
+            var _loc19_: Array;
+            var _loc21_: Array;
+            var _loc22_: AvatarImagePartContainer;
+            var _loc23_: String;
+            var _loc24_: String;
+            var _loc25_: GeometryBodyPart;
+            var _loc26_: GeometryItem;
+            var _loc27_: int;
+            var _loc28_: Array;
+            var _loc29_: ISetType;
+            var _loc30_: IPalette;
+            var _loc31_: IFigurePartSet;
+            var _loc32_: IFigurePart;
+            var _loc33_: IActionDefinition;
+            var _loc34_: String;
+            var _loc35_: IPartColor;
+            var _loc36_: Boolean;
+            var _loc37_: Boolean;
+            var _loc38_: String;
+            var _loc39_: int;
+            var _loc40_: int;
+            var _loc41_: GeometryBodyPart;
+            var _loc42_: Boolean;
+            var _loc43_: Number;
+            var _loc44_: String;
+            var _loc45_: AddDataContainer;
             if (param3 == null)
             {
-                Logger.log(("[AvatarStructure] getParts action == NULL!! bodyPartId: " + param1));
-                return ([]);
-            };
-            var _loc8_:Array = this.var_2599.getActiveParts(param3.definition);
-            var _loc10_:Array = new Array();
-            var _loc13_:Array = [0];
-            var _loc14_:AnimationAction = this._animationData.getAction(param3.definition);
+                Logger.log("[AvatarStructure] getParts action == NULL!! bodyPartId: " + param1);
+                return [];
+            }
+
+            var _loc8_: Array = this.var_2599.getActiveParts(param3.definition);
+            var _loc10_: Array = [];
+            var _loc13_: Array = [0];
+            var _loc14_: AnimationAction = this._animationData.getAction(param3.definition);
             if (param3.definition.isAnimation)
             {
-                _loc23_ = ((param3.definition.state + ".") + param3.actionParameter);
-                _loc9_ = (this.var_2600.getAnimation(_loc23_) as Animation);
+                _loc23_ = param3.definition.state + "." + param3.actionParameter;
+                _loc9_ = (this._actionManager.getAnimation(_loc23_) as Animation);
                 if (_loc9_ != null)
                 {
                     _loc13_ = this.getPopulatedArray(_loc9_.frameCount(param3.overridingAction));
@@ -400,26 +436,36 @@
                                 for each (_loc26_ in _loc25_.getDynamicParts())
                                 {
                                     _loc8_.push(_loc26_.id);
-                                };
-                            };
-                        };
-                    };
-                };
-            };
-            var _loc15_:Array = this._geometry.getParts(param4, param1, param5, _loc8_);
-            var _loc20_:Array = param2.getPartTypeIds();
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            var _loc15_: Array = this._geometry.getParts(param4, param1, param5, _loc8_);
+            var _loc20_: Array = param2.getPartTypeIds();
             for each (_loc16_ in _loc20_)
             {
                 if (param7 != null)
                 {
-                    if (param7[_loc16_] != null) continue;
-                };
+                    if (param7[_loc16_] != null)
+                    {
+                        continue;
+                    }
+                }
+
                 _loc27_ = param2.getPartSetId(_loc16_);
                 _loc28_ = param2.getPartColorIds(_loc16_);
-                _loc29_ = this.var_2598.getSetType(_loc16_);
+                _loc29_ = this._figureData.getSetType(_loc16_);
                 if (_loc29_)
                 {
-                    _loc30_ = this.var_2598.getPalette(_loc29_.paletteID);
+                    _loc30_ = this._figureData.getPalette(_loc29_.paletteID);
                     if (_loc30_)
                     {
                         _loc31_ = _loc29_.getPartSet(_loc27_);
@@ -440,37 +486,48 @@
                                         else
                                         {
                                             _loc19_ = _loc13_;
-                                        };
+                                        }
+
                                     }
                                     else
                                     {
                                         _loc19_ = _loc13_;
-                                    };
+                                    }
+
                                     _loc33_ = param3.definition;
                                     if (_loc8_.indexOf(_loc32_.type) == -1)
                                     {
                                         _loc33_ = this.var_2392;
-                                    };
+                                    }
+
                                     _loc12_ = this.var_2599.getPartDefinition(_loc32_.type);
-                                    _loc34_ = ((_loc12_ == null) ? _loc32_.type : _loc12_.flippedSetType);
+                                    _loc34_ = _loc12_ == null ? _loc32_.type : _loc12_.flippedSetType;
                                     if (_loc34_ == "")
                                     {
                                         _loc34_ = _loc32_.type;
-                                    };
-                                    if (((_loc28_) && (_loc28_.length > (_loc32_.colorLayerIndex - 1))))
+                                    }
+
+                                    if (_loc28_ && _loc28_.length > _loc32_.colorLayerIndex - 1)
                                     {
                                         _loc35_ = _loc30_.getColor(_loc28_[(_loc32_.colorLayerIndex - 1)]);
-                                    };
-                                    _loc36_ = (_loc32_.colorLayerIndex > 0);
+                                    }
+
+                                    _loc36_ = _loc32_.colorLayerIndex > 0;
                                     _loc17_ = new AvatarImagePartContainer(param1, _loc32_.type, _loc32_.id.toString(), _loc35_, _loc19_, _loc33_, _loc36_, _loc32_.paletteMap, _loc34_);
                                     _loc10_.push(_loc17_);
-                                };
-                            };
-                        };
-                    };
-                };
-            };
-            _loc21_ = new Array();
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            _loc21_ = [];
             for each (_loc11_ in _loc15_)
             {
                 _loc37_ = false;
@@ -482,21 +539,25 @@
                         if (param6.indexOf(_loc11_) == -1)
                         {
                             _loc21_.push(_loc22_);
-                        };
-                    };
-                };
+                        }
+
+                    }
+
+                }
+
                 if (!_loc37_)
                 {
-                    if (((param7) && (param7[_loc11_])))
+                    if (param7 && param7[_loc11_])
                     {
                         _loc38_ = param7[_loc11_];
                         _loc39_ = 0;
                         _loc40_ = 0;
                         while (_loc40_ < _loc38_.length)
                         {
-                            _loc39_ = (_loc39_ + _loc38_.charCodeAt(_loc40_));
+                            _loc39_ = _loc39_ + _loc38_.charCodeAt(_loc40_);
                             _loc40_++;
-                        };
+                        }
+
                         if (_loc14_ != null)
                         {
                             _loc18_ = _loc14_.getPart(_loc11_);
@@ -507,21 +568,24 @@
                             else
                             {
                                 _loc19_ = _loc13_;
-                            };
+                            }
+
                         }
                         else
                         {
                             _loc19_ = _loc13_;
-                        };
+                        }
+
                         _loc17_ = new AvatarImagePartContainer(param1, _loc11_, _loc38_, null, _loc19_, param3.definition, false, -1, _loc11_, false, 1);
                         _loc21_.push(_loc17_);
-                    };
+                    }
+
                     if (_loc8_.indexOf(_loc11_) > -1)
                     {
                         _loc41_ = this._geometry.getBodyPartOfItem(param4, _loc11_);
                         if (param1 != _loc41_.id)
                         {
-                            Logger.log(((("BodypartId mismatch:" + param1) + " ") + _loc41_.id));
+                            Logger.log("BodypartId mismatch:" + param1 + " " + _loc41_.id);
                         }
                         else
                         {
@@ -530,16 +594,18 @@
                             _loc43_ = 1;
                             if (_loc12_.appendToFigure)
                             {
-                                Logger.log(("PART NOT FOUND, ALTHOUGH IT SHOULD HAVE BEEN! Add now?" + _loc11_));
+                                Logger.log("PART NOT FOUND, ALTHOUGH IT SHOULD HAVE BEEN! Add now?" + _loc11_);
                                 _loc44_ = "1";
                                 if (param3.actionParameter != "")
                                 {
                                     _loc44_ = param3.actionParameter;
-                                };
+                                }
+
                                 if (_loc12_.hasStaticId())
                                 {
                                     _loc44_ = _loc12_.staticId.toString();
-                                };
+                                }
+
                                 if (_loc9_ != null)
                                 {
                                     _loc45_ = _loc9_.getAddData(_loc11_);
@@ -547,8 +613,10 @@
                                     {
                                         _loc42_ = _loc45_.isBlended;
                                         _loc43_ = _loc45_.blend;
-                                    };
-                                };
+                                    }
+
+                                }
+
                                 if (_loc14_ != null)
                                 {
                                     _loc18_ = _loc14_.getPart(_loc11_);
@@ -559,100 +627,110 @@
                                     else
                                     {
                                         _loc19_ = _loc13_;
-                                    };
+                                    }
+
                                 }
                                 else
                                 {
                                     _loc19_ = _loc13_;
-                                };
+                                }
+
                                 _loc17_ = new AvatarImagePartContainer(param1, _loc11_, _loc44_, null, _loc19_, param3.definition, false, -1, _loc11_, _loc42_, _loc43_);
                                 _loc21_.push(_loc17_);
-                            };
-                        };
-                    };
-                };
-            };
-            return (_loc21_);
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            return _loc21_;
         }
 
-        public function getPartActionOffset(param1:int, param2:String, param3:String, param4:String, param5:int, param6:int):Point
+        public function getPartActionOffset(param1: int, param2: String, param3: String, param4: String, param5: int, param6: int): Point
         {
-            return (this.var_2601.getOffset(param1, param2, param3, param4, param5, param6));
+            return this.var_2601.getOffset(param1, param2, param3, param4, param5, param6);
         }
 
-        public function get figureData():IFigureData
+        public function get figureData(): IFigureData
         {
-            return (this.var_2598);
+            return this._figureData;
         }
 
-        public function get renderManager():AvatarRenderManager
+        public function get renderManager(): AvatarRenderManager
         {
-            return (this.var_2458);
+            return this._renderManager;
         }
 
-        public function get avatarType():String
+        public function get avatarType(): String
         {
-            return (this.var_2391);
+            return this._avatarType;
         }
 
-        public function get animationManager():AnimationManager
+        public function get animationManager(): AnimationManager
         {
-            return (this.var_2600);
+            return this._actionManager;
         }
 
-        private function getPopulatedArray(param1:int):Array
+        private function getPopulatedArray(param1: int): Array
         {
-            var _loc2_:Array = new Array();
-            var _loc3_:int;
+            var _loc2_: Array = [];
+            var _loc3_: int;
             while (_loc3_ < param1)
             {
                 _loc2_.push(_loc3_);
                 _loc3_++;
-            };
-            return (_loc2_);
+            }
+
+            return _loc2_;
         }
 
-        public function displayGeometry(param1:Stage):void
+        public function displayGeometry(param1: Stage): void
         {
-            var _loc9_:String;
-            var _loc10_:GeometryBodyPart;
-            var _loc11_:Number;
-            var _loc12_:Number;
-            var _loc13_:Number;
-            var _loc14_:Shape;
-            var _loc2_:BitmapData = new BitmapData(960, 540, false, 0xFFFFFFFF);
-            var _loc3_:Bitmap = new Bitmap(_loc2_);
+            var _loc9_: String;
+            var _loc10_: GeometryBodyPart;
+            var _loc11_: Number;
+            var _loc12_: Number;
+            var _loc13_: Number;
+            var _loc14_: Shape;
+            var _loc2_: BitmapData = new BitmapData(960, 540, false, 0xFFFFFFFF);
+            var _loc3_: Bitmap = new Bitmap(_loc2_);
             param1.addChild(_loc3_);
-            var _loc4_:Number = (_loc2_.width / 2);
-            var _loc5_:Number = (_loc2_.height / 2);
-            var _loc6_:Number = 200;
-            var _loc7_:TextField = new TextField();
-            var _loc8_:Matrix = new Matrix();
+            var _loc4_: Number = _loc2_.width / 2;
+            var _loc5_: Number = _loc2_.height / 2;
+            var _loc6_: Number = 200;
+            var _loc7_: TextField = new TextField();
+            var _loc8_: Matrix = new Matrix();
             for each (_loc9_ in this._geometry.getBodyPartIdsInAvatarSet("full"))
             {
                 _loc10_ = this._geometry.getBodyPart("vertical", _loc9_);
-                Logger.log(("Drawing bodypart : " + _loc9_));
+                Logger.log("Drawing bodypart : " + _loc9_);
                 if (_loc10_ != null)
                 {
-                    _loc11_ = (_loc10_.location.x * _loc6_);
-                    _loc12_ = (_loc10_.location.z * _loc6_);
-                    _loc13_ = (_loc10_.radius * _loc6_);
+                    _loc11_ = _loc10_.location.x * _loc6_;
+                    _loc12_ = _loc10_.location.z * _loc6_;
+                    _loc13_ = _loc10_.radius * _loc6_;
                     _loc14_ = new Shape();
                     _loc14_.graphics.lineStyle(1, 0xFFFF0000, 1);
-                    _loc14_.graphics.drawCircle((_loc4_ + _loc11_), (_loc5_ + _loc12_), _loc13_);
+                    _loc14_.graphics.drawCircle(_loc4_ + _loc11_, _loc5_ + _loc12_, _loc13_);
                     _loc2_.draw(_loc14_);
                     _loc7_.text = _loc9_;
                     _loc7_.textColor = 0xFFFF0000;
                     _loc8_.identity();
-                    _loc8_.tx = ((((_loc4_ + _loc11_) + _loc13_) - _loc7_.textWidth) - 5);
-                    _loc8_.ty = ((_loc5_ + _loc12_) - 5);
+                    _loc8_.tx = (_loc4_ + _loc11_ + _loc13_) - _loc7_.textWidth - 5;
+                    _loc8_.ty = (_loc5_ + _loc12_) - 5;
                     _loc2_.draw(_loc7_, _loc8_);
                 }
                 else
                 {
-                    Logger.log(("Could not draw bodypart : " + _loc9_));
-                };
-            };
+                    Logger.log("Could not draw bodypart : " + _loc9_);
+                }
+
+            }
+
         }
 
     }

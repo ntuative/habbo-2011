@@ -1,27 +1,29 @@
 ﻿package com.sulake.habbo.communication.messages.parser.notifications
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ClubGiftNotificationParser implements IMessageParser 
+    public class ClubGiftNotificationParser implements IMessageParser
     {
 
-        private var var_3260:int;
+        private var _numGifts: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3260 = param1.readInteger();
-            return (true);
+            this._numGifts = data.readInteger();
+            
+            return true;
         }
 
-        public function get numGifts():int
+        public function get numGifts(): int
         {
-            return (this.var_3260);
+            return this._numGifts;
         }
 
     }

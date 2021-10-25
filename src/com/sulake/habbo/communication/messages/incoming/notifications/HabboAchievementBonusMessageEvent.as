@@ -1,25 +1,26 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.notifications
 {
+
     import com.sulake.core.communication.messages.MessageEvent;
     import com.sulake.core.communication.messages.IMessageEvent;
     import com.sulake.habbo.communication.messages.parser.notifications.HabboAchievementBonusMessageParser;
 
-    public class HabboAchievementBonusMessageEvent extends MessageEvent implements IMessageEvent 
+    public class HabboAchievementBonusMessageEvent extends MessageEvent implements IMessageEvent
     {
 
-        public function HabboAchievementBonusMessageEvent(param1:Function)
+        public function HabboAchievementBonusMessageEvent(param1: Function)
         {
             super(param1, HabboAchievementBonusMessageParser);
         }
 
-        public function get bonusPoints():int
+        public function get bonusPoints(): int
         {
-            return ((var_361 as HabboAchievementBonusMessageParser).bonusPoints);
+            return (_parser as HabboAchievementBonusMessageParser).bonusPoints;
         }
 
-        public function get realName():String
+        public function get realName(): String
         {
-            return ((var_361 as HabboAchievementBonusMessageParser).realName);
+            return (_parser as HabboAchievementBonusMessageParser).realName;
         }
 
     }

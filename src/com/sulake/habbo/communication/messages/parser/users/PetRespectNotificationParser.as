@@ -1,43 +1,46 @@
 ﻿package com.sulake.habbo.communication.messages.parser.users
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.parser.inventory.pets.PetData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PetRespectNotificationParser implements IMessageParser 
+    public class PetRespectNotificationParser implements IMessageParser
     {
 
-        private var var_3328:int;
-        private var var_3352:int;
-        private var _petData:PetData;
+        private var _respect: int;
+        private var _petOwnerId: int;
+        private var _petData: PetData;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._petData = null;
-            return (true);
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3328 = param1.readInteger();
-            this.var_3352 = param1.readInteger();
-            this._petData = new PetData(param1);
-            return (true);
+            this._respect = data.readInteger();
+            this._petOwnerId = data.readInteger();
+            this._petData = new PetData(data);
+
+            return true;
         }
 
-        public function get petOwnerId():int
+        public function get petOwnerId(): int
         {
-            return (this.var_3352);
+            return this._petOwnerId;
         }
 
-        public function get respect():int
+        public function get respect(): int
         {
-            return (this.var_3328);
+            return this._respect;
         }
 
-        public function get petData():PetData
+        public function get petData(): PetData
         {
-            return (this._petData);
+            return this._petData;
         }
 
     }

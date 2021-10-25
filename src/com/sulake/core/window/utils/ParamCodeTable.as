@@ -1,14 +1,16 @@
 ﻿package com.sulake.core.window.utils
 {
+
     import com.sulake.core.window.enum.WindowParam;
+
     import flash.utils.Dictionary;
 
-    public class ParamCodeTable extends WindowParam 
+    public class ParamCodeTable extends WindowParam
     {
 
-        public static function fillTables(param1:Dictionary, param2:Dictionary=null):void
+        public static function fillTables(param1: Dictionary, param2: Dictionary = null): void
         {
-            var _loc3_:String;
+            var _loc3_: String;
             param1["null"] = var_694;
             param1["bound_to_parent_rect"] = var_691;
             param1["child_window"] = var_712;
@@ -63,8 +65,10 @@
                 for (_loc3_ in param1)
                 {
                     param2[param1[_loc3_]] = _loc3_;
-                };
-            };
+                }
+
+            }
+
         }
 
     }

@@ -1,62 +1,63 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.inventory.achievements
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class AchievementData 
+    public class AchievementData
     {
 
-        private var _type:int;
-        private var var_2924:int;
-        private var var_2925:String;
-        private var var_2926:int;
-        private var var_2927:int;
-        private var var_2928:int;
-        private var var_2929:int;
+        private var _type: int;
+        private var _level: int;
+        private var _badgeId: String;
+        private var _scoreLimit: int;
+        private var _levelRewardPoints: int;
+        private var _levelRewardPointType: int;
+        private var _currentPoints: int;
 
-        public function AchievementData(param1:IMessageDataWrapper)
+        public function AchievementData(data: IMessageDataWrapper)
         {
-            this._type = param1.readInteger();
-            this.var_2924 = param1.readInteger();
-            this.var_2925 = param1.readString();
-            this.var_2926 = param1.readInteger();
-            this.var_2927 = param1.readInteger();
-            this.var_2928 = param1.readInteger();
-            this.var_2929 = param1.readInteger();
+            this._type = data.readInteger();
+            this._level = data.readInteger();
+            this._badgeId = data.readString();
+            this._scoreLimit = data.readInteger();
+            this._levelRewardPoints = data.readInteger();
+            this._levelRewardPointType = data.readInteger();
+            this._currentPoints = data.readInteger();
         }
 
-        public function get type():int
+        public function get type(): int
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get badgeId():String
+        public function get badgeId(): String
         {
-            return (this.var_2925);
+            return this._badgeId;
         }
 
-        public function get level():int
+        public function get level(): int
         {
-            return (this.var_2924);
+            return this._level;
         }
 
-        public function get scoreLimit():int
+        public function get scoreLimit(): int
         {
-            return (this.var_2926);
+            return this._scoreLimit;
         }
 
-        public function get levelRewardPoints():int
+        public function get levelRewardPoints(): int
         {
-            return (this.var_2927);
+            return this._levelRewardPoints;
         }
 
-        public function get levelRewardPointType():int
+        public function get levelRewardPointType(): int
         {
-            return (this.var_2928);
+            return this._levelRewardPointType;
         }
 
-        public function get currentPoints():int
+        public function get currentPoints(): int
         {
-            return (this.var_2929);
+            return this._currentPoints;
         }
 
     }

@@ -1,6 +1,7 @@
 ﻿package com.sulake.core.window.components
 {
-    public interface IRadioButtonWindow extends ISelectableWindow 
+
+    public interface IRadioButtonWindow extends ISelectableWindow
     {
 
     }

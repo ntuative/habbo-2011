@@ -1,36 +1,39 @@
 ﻿package com.sulake.habbo.communication.messages.parser.availability
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class AvailabilityTimeMessageParser implements IMessageParser 
+    public class AvailabilityTimeMessageParser implements IMessageParser
     {
 
-        private var var_2667:Boolean;
-        private var var_3125:int;
+        private var _isOpen: Boolean;
+        private var _minutesUntilChange: int;
 
-        public function get isOpen():Boolean
+        public function get isOpen(): Boolean
         {
-            return (this.var_2667);
+            return this._isOpen;
         }
 
-        public function get minutesUntilChange():int
+        public function get minutesUntilChange(): int
         {
-            return (this.var_3125);
+            return this._minutesUntilChange;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_2667 = false;
-            this.var_3125 = 0;
-            return (true);
+            this._isOpen = false;
+            this._minutesUntilChange = 0;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2667 = (param1.readInteger() > 0);
-            this.var_3125 = param1.readInteger();
-            return (true);
+            this._isOpen = data.readInteger() > 0;
+            this._minutesUntilChange = data.readInteger();
+            
+            return true;
         }
 
     }

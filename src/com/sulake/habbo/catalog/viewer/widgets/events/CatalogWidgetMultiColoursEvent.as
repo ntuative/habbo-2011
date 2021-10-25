@@ -1,42 +1,43 @@
 ﻿package com.sulake.habbo.catalog.viewer.widgets.events
 {
+
     import flash.events.Event;
 
-    public class CatalogWidgetMultiColoursEvent extends Event 
+    public class CatalogWidgetMultiColoursEvent extends Event
     {
 
-        private var var_2716:Array;
-        private var var_2717:String;
-        private var var_2718:String;
-        private var var_2719:String;
+        private var _colours: Array;
+        private var _backgroundAssetName: String;
+        private var _colourAssetName: String;
+        private var _chosenColourAssetName: String;
 
-        public function CatalogWidgetMultiColoursEvent(param1:Array, param2:String, param3:String, param4:String, param5:Boolean=false, param6:Boolean=false)
+        public function CatalogWidgetMultiColoursEvent(colours: Array, backgroundAssetName: String, colourAssetName: String, chosenColourAssetName: String, param5: Boolean = false, param6: Boolean = false)
         {
             super(WidgetEvent.CWE_MULTI_COLOUR_ARRAY, param5, param6);
-            this.var_2716 = param1;
-            this.var_2717 = param2;
-            this.var_2718 = param3;
-            this.var_2719 = param4;
+            this._colours = colours;
+            this._backgroundAssetName = backgroundAssetName;
+            this._colourAssetName = colourAssetName;
+            this._chosenColourAssetName = chosenColourAssetName;
         }
 
-        public function get colours():Array
+        public function get colours(): Array
         {
-            return (this.var_2716);
+            return this._colours;
         }
 
-        public function get backgroundAssetName():String
+        public function get backgroundAssetName(): String
         {
-            return (this.var_2717);
+            return this._backgroundAssetName;
         }
 
-        public function get colourAssetName():String
+        public function get colourAssetName(): String
         {
-            return (this.var_2718);
+            return this._colourAssetName;
         }
 
-        public function get chosenColourAssetName():String
+        public function get chosenColourAssetName(): String
         {
-            return (this.var_2719);
+            return this._chosenColourAssetName;
         }
 
     }

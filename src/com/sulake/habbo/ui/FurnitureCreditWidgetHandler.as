@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.ui
 {
+
     import com.sulake.habbo.widget.enums.RoomWidgetEnum;
     import com.sulake.habbo.widget.messages.RoomWidgetFurniToWidgetMessage;
     import com.sulake.habbo.widget.messages.RoomWidgetCreditFurniRedeemMessage;
@@ -9,53 +10,55 @@
     import com.sulake.habbo.room.object.RoomObjectVariableEnum;
     import com.sulake.habbo.widget.messages.RoomWidgetMessage;
     import com.sulake.habbo.widget.events.RoomWidgetUpdateEvent;
+
     import flash.events.Event;
 
-    public class FurnitureCreditWidgetHandler implements IRoomWidgetHandler 
+    public class FurnitureCreditWidgetHandler implements IRoomWidgetHandler
     {
 
-        private var var_978:Boolean = false;
-        private var _container:IRoomWidgetHandlerContainer = null;
+        private var var_978: Boolean = false;
+        private var _container: IRoomWidgetHandlerContainer = null;
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this.var_978);
+            return this.var_978;
         }
 
-        public function get type():String
+        public function get type(): String
         {
-            return (RoomWidgetEnum.var_262);
+            return RoomWidgetEnum.var_262;
         }
 
-        public function set container(param1:IRoomWidgetHandlerContainer):void
+        public function set container(param1: IRoomWidgetHandlerContainer): void
         {
             this._container = param1;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this.var_978 = true;
             this._container = null;
         }
 
-        public function getWidgetMessages():Array
+        public function getWidgetMessages(): Array
         {
-            return ([RoomWidgetFurniToWidgetMessage.var_1535, RoomWidgetCreditFurniRedeemMessage.var_1360]);
+            return [RoomWidgetFurniToWidgetMessage.var_1535, RoomWidgetCreditFurniRedeemMessage.var_1360];
         }
 
-        public function processWidgetMessage(param1:RoomWidgetMessage):RoomWidgetUpdateEvent
+        public function processWidgetMessage(param1: RoomWidgetMessage): RoomWidgetUpdateEvent
         {
-            var _loc3_:RoomWidgetFurniToWidgetMessage;
-            var _loc4_:IRoomObject;
-            var _loc5_:RoomWidgetCreditFurniRedeemMessage;
-            var _loc6_:IRoomObjectModel;
-            var _loc7_:Number;
-            var _loc8_:RoomWidgetCreditFurniUpdateEvent;
-            var _loc2_:Boolean = ((this._container.roomSession.isRoomOwner) || (this._container.sessionDataManager.isAnyRoomController));
+            var _loc3_: RoomWidgetFurniToWidgetMessage;
+            var _loc4_: IRoomObject;
+            var _loc5_: RoomWidgetCreditFurniRedeemMessage;
+            var _loc6_: IRoomObjectModel;
+            var _loc7_: Number;
+            var _loc8_: RoomWidgetCreditFurniUpdateEvent;
+            var _loc2_: Boolean = this._container.roomSession.isRoomOwner || this._container.sessionDataManager.isAnyRoomController;
             if (!_loc2_)
             {
-                return (null);
-            };
+                return null;
+            }
+
             switch (param1.type)
             {
                 case RoomWidgetFurniToWidgetMessage.var_1535:
@@ -69,34 +72,39 @@
                             _loc7_ = _loc6_.getNumber(RoomObjectVariableEnum.var_747);
                             _loc8_ = new RoomWidgetCreditFurniUpdateEvent(RoomWidgetCreditFurniUpdateEvent.var_1358, _loc3_.id, _loc7_);
                             this._container.events.dispatchEvent(_loc8_);
-                        };
-                    };
+                        }
+
+                    }
+
                     break;
                 case RoomWidgetCreditFurniRedeemMessage.var_1360:
                     _loc5_ = (param1 as RoomWidgetCreditFurniRedeemMessage);
-                    if (((!(this._container == null)) && (!(this._container.roomSession == null))))
+                    if (this._container != null && this._container.roomSession != null)
                     {
                         this._container.roomSession.sendCreditFurniRedeemMessage(_loc5_.objectId);
-                    };
-            };
-            return (null);
+                    }
+
+            }
+
+            return null;
         }
 
-        public function getProcessedEvents():Array
+        public function getProcessedEvents(): Array
         {
-            return ([]);
+            return [];
         }
 
-        public function processEvent(param1:Event):void
+        public function processEvent(param1: Event): void
         {
-            var _loc2_:Event;
-            if ((((!(this._container == null)) && (!(this._container.events == null))) && (!(_loc2_ == null))))
+            var _loc2_: Event;
+            if (this._container != null && this._container.events != null && _loc2_ != null)
             {
                 this._container.events.dispatchEvent(_loc2_);
-            };
+            }
+
         }
 
-        public function update():void
+        public function update(): void
         {
         }
 

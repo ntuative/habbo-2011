@@ -1,57 +1,60 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.pets
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PetExperienceParser implements IMessageParser 
+    public class PetExperienceParser implements IMessageParser
     {
 
-        private var var_3097:int = -1;
-        private var _petRoomIndex:int = -1;
-        private var var_3322:int = 0;
-        private var _roomId:int = 0;
-        private var _roomCategory:int = 0;
+        private var _petId: int = -1;
+        private var _petRoomIndex: int = -1;
+        private var _gainedExperience: int = 0;
+        private var _roomId: int = 0;
+        private var _roomCategory: int = 0;
 
-        public function get petId():int
+        public function get petId(): int
         {
-            return (this.var_3097);
+            return this._petId;
         }
 
-        public function get petRoomIndex():int
+        public function get petRoomIndex(): int
         {
-            return (this._petRoomIndex);
+            return this._petRoomIndex;
         }
 
-        public function get gainedExperience():int
+        public function get gainedExperience(): int
         {
-            return (this.var_3322);
+            return this._gainedExperience;
         }
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get roomCategory():int
+        public function get roomCategory(): int
         {
-            return (this._roomCategory);
+            return this._roomCategory;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            if (param1 == null)
+            if (data == null)
             {
-                return (false);
-            };
-            this.var_3097 = param1.readInteger();
-            this._petRoomIndex = param1.readInteger();
-            this.var_3322 = param1.readInteger();
-            return (true);
+                return false;
+            }
+
+            this._petId = data.readInteger();
+            this._petRoomIndex = data.readInteger();
+            this._gainedExperience = data.readInteger();
+            
+            return true;
         }
 
     }

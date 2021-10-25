@@ -1,153 +1,169 @@
 ﻿package com.sulake.habbo.help.help
 {
+
     import com.sulake.habbo.window.IHabboWindowManager;
     import com.sulake.core.assets.IAssetLibrary;
     import com.sulake.core.window.IWindowContainer;
+
     import flash.utils.Dictionary;
+
     import com.sulake.core.assets.XmlAsset;
     import com.sulake.core.window.IWindow;
     import com.sulake.core.window.components.ITextWindow;
     import com.sulake.core.window.enum.WindowParam;
     import com.sulake.core.window.events.WindowMouseEvent;
 
-    public class HelpViewController implements IHelpViewController 
+    public class HelpViewController implements IHelpViewController
     {
 
-        private var var_3486:HelpUI;
-        private var _windowManager:IHabboWindowManager;
-        private var _assetLibrary:IAssetLibrary;
-        private var _container:IWindowContainer;
-        private var var_3487:Boolean = false;
-        private var _disposed:Boolean = true;
+        private var _main: HelpUI;
+        private var _windowManager: IHabboWindowManager;
+        private var _assetLibrary: IAssetLibrary;
+        private var _container: IWindowContainer;
+        private var _roomSessionActive: Boolean = false;
+        private var _disposed: Boolean = true;
 
-        public function HelpViewController(param1:HelpUI, param2:IHabboWindowManager, param3:IAssetLibrary)
+        public function HelpViewController(main: HelpUI, windowManager: IHabboWindowManager, assetLibrary: IAssetLibrary)
         {
-            this.var_3486 = param1;
-            this._windowManager = param2;
-            this._assetLibrary = param3;
+            this._main = main;
+            this._windowManager = windowManager;
+            this._assetLibrary = assetLibrary;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (this._container != null)
             {
                 this._container.dispose();
                 this._container = null;
-            };
+            }
+
             this._disposed = true;
         }
 
-        public function render():void
+        public function render(): void
         {
             this._disposed = false;
         }
 
-        public function update(param1:*=null):void
+        public function update(param1: * = null): void
         {
         }
 
-        public function get container():IWindowContainer
+        public function get container(): IWindowContainer
         {
-            return (this._container);
+            return this._container;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get main():HelpUI
+        public function get main(): HelpUI
         {
-            return (this.var_3486);
+            return this._main;
         }
 
-        public function get windowManager():IHabboWindowManager
+        public function get windowManager(): IHabboWindowManager
         {
-            return (this._windowManager);
+            return this._windowManager;
         }
 
-        public function get assetLibrary():IAssetLibrary
+        public function get assetLibrary(): IAssetLibrary
         {
-            return (this._assetLibrary);
+            return this._assetLibrary;
         }
 
-        public function get roomSessionActive():Boolean
+        public function get roomSessionActive(): Boolean
         {
-            return (this.var_3487);
+            return this._roomSessionActive;
         }
 
-        public function set container(param1:IWindowContainer):void
+        public function set container(value: IWindowContainer): void
         {
-            this._container = param1;
+            this._container = value;
         }
 
-        public function set disposed(param1:Boolean):void
+        public function set disposed(value: Boolean): void
         {
-            this._disposed = param1;
+            this._disposed = value;
         }
 
-        public function set roomSessionActive(param1:Boolean):void
+        public function set roomSessionActive(value: Boolean): void
         {
-            this.var_3487 = param1;
+            this._roomSessionActive = value;
         }
 
-        public function getWindowContainer():IWindowContainer
+        public function getWindowContainer(): IWindowContainer
         {
-            return (this._container);
+            return this._container;
         }
 
-        public function getText(param1:String):String
+        public function getText(key: String): String
         {
-            if (this.var_3486 == null)
+            if (this._main == null)
             {
-                return (null);
-            };
-            return (this.var_3486.getText(param1));
+                return null;
+            }
+
+            return this._main.getText(key);
         }
 
-        public function getConfigurationKey(param1:String, param2:String=null, param3:Dictionary=null):String
+        public function getConfigurationKey(param1: String, param2: String = null, param3: Dictionary = null): String
         {
-            if (this.var_3486 == null)
+            if (this._main == null)
             {
-                return (null);
-            };
-            return (this.var_3486.getConfigurationKey(param1, param2, param3));
+                return null;
+            }
+
+            return this._main.getConfigurationKey(param1, param2, param3);
         }
 
-        public function buildXmlWindow(param1:String):IWindow
+        public function buildXmlWindow(layoutName: String): IWindow
         {
-            var _loc2_:XmlAsset = XmlAsset(this._assetLibrary.getAssetByName((param1 + "_xml")));
-            if (((_loc2_ == null) || (this._windowManager == null)))
+            var layout: XmlAsset = XmlAsset(this._assetLibrary.getAssetByName(layoutName + "_xml"));
+            
+            if (layout == null || this._windowManager == null)
             {
-                return (null);
-            };
-            return (this._windowManager.buildFromXML(XML(_loc2_.content)));
+                return null;
+            }
+
+            return this._windowManager.buildFromXML(XML(layout.content));
         }
 
-        protected function buildHelpCategoryListEntryItem(param1:String, param2:String, param3:Function=null):IWindowContainer
+        protected function buildHelpCategoryListEntryItem(name: String, layoutName: String, callback: Function = null): IWindowContainer
         {
-            var _loc6_:IWindow;
-            var _loc4_:IWindowContainer = (this.buildXmlWindow(param2) as IWindowContainer);
-            if (_loc4_ == null)
+            var window: IWindow;
+            var container: IWindowContainer = this.buildXmlWindow(layoutName) as IWindowContainer;
+            
+            if (container == null)
             {
-                return (null);
-            };
-            var _loc5_:ITextWindow = (_loc4_.findChildByTag("text") as ITextWindow);
-            if (_loc5_ == null)
+                return null;
+            }
+
+            var textView: ITextWindow = container.findChildByTag("text") as ITextWindow;
+            
+            if (textView == null)
             {
-                return (null);
-            };
-            _loc5_.text = param1;
-            if (param3 != null)
+                return null;
+            }
+
+            textView.text = name;
+            
+            if (callback != null)
             {
-                _loc6_ = (_loc4_.findChildByName("item_bg") as IWindow);
-                if (_loc6_ != null)
+                window = (container.findChildByName("item_bg") as IWindow);
+                
+                if (window != null)
                 {
-                    _loc6_.setParamFlag(WindowParam.var_593);
-                    _loc6_.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, param3);
-                };
-            };
-            return (_loc4_);
+                    window.setParamFlag(WindowParam.var_593);
+                    window.addEventListener(WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK, callback);
+                }
+
+            }
+
+            return container;
         }
 
     }

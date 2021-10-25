@@ -1,28 +1,31 @@
 ﻿package com.sulake.habbo.communication.messages.parser.tracking
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class LatencyPingResponseMessageParser implements IMessageParser 
+    public class LatencyPingResponseMessageParser implements IMessageParser
     {
 
-        private var var_2913:int;
+        private var _requestId: int;
 
-        public function get requestId():int
+        public function get requestId(): int
         {
-            return (this.var_2913);
+            return this._requestId;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_2913 = -1;
-            return (true);
+            this._requestId = -1;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2913 = param1.readInteger();
-            return (true);
+            this._requestId = data.readInteger();
+            
+            return true;
         }
 
     }

@@ -1,151 +1,158 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.navigator
 {
+
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class GuestRoomData implements IDisposable 
+    public class GuestRoomData implements IDisposable
     {
 
-        private var var_2972:int;
-        private var var_2227:Boolean;
-        private var var_2970:String;
-        private var _ownerName:String;
-        private var var_2981:int;
-        private var var_2973:int;
-        private var var_2982:int;
-        private var var_2400:String;
-        private var var_2983:int;
-        private var var_2984:Boolean;
-        private var var_2985:int;
-        private var var_2465:int;
-        private var var_2986:String;
-        private var var_1029:Array = new Array();
-        private var var_2987:RoomThumbnailData;
-        private var var_2988:Boolean;
-        private var _disposed:Boolean;
+        private var _flatId: int;
+        private var _event: Boolean;
+        private var _roomName: String;
+        private var _ownerName: String;
+        private var _doorMode: int;
+        private var _userCount: int;
+        private var _maxUserCount: int;
+        private var _description: String;
+        private var _srchSpecPrm: int;
+        private var _allowTrading: Boolean;
+        private var _score: int;
+        private var _categoryId: int;
+        private var _eventCreationTime: String;
+        private var _tags: Array = [];
+        private var _thumbnail: RoomThumbnailData;
+        private var _allowPets: Boolean;
+        private var _disposed: Boolean;
 
-        public function GuestRoomData(param1:IMessageDataWrapper)
+        public function GuestRoomData(data: IMessageDataWrapper)
         {
-            var _loc4_:String;
             super();
-            this.var_2972 = param1.readInteger();
-            this.var_2227 = param1.readBoolean();
-            this.var_2970 = param1.readString();
-            this._ownerName = param1.readString();
-            this.var_2981 = param1.readInteger();
-            this.var_2973 = param1.readInteger();
-            this.var_2982 = param1.readInteger();
-            this.var_2400 = param1.readString();
-            this.var_2983 = param1.readInteger();
-            this.var_2984 = param1.readBoolean();
-            this.var_2985 = param1.readInteger();
-            this.var_2465 = param1.readInteger();
-            this.var_2986 = param1.readString();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._flatId = data.readInteger();
+            this._event = data.readBoolean();
+            this._roomName = data.readString();
+            this._ownerName = data.readString();
+            this._doorMode = data.readInteger();
+            this._userCount = data.readInteger();
+            this._maxUserCount = data.readInteger();
+            this._description = data.readString();
+            this._srchSpecPrm = data.readInteger();
+            this._allowTrading = data.readBoolean();
+            this._score = data.readInteger();
+            this._categoryId = data.readInteger();
+            this._eventCreationTime = data.readString();
+
+            var tag: String;
+            var tagCount: int = data.readInteger();
+            var i: int;
+
+            while (i < tagCount)
             {
-                _loc4_ = param1.readString();
-                this.var_1029.push(_loc4_);
-                _loc3_++;
-            };
-            this.var_2987 = new RoomThumbnailData(param1);
-            this.var_2988 = param1.readBoolean();
+                tag = data.readString();
+                this._tags.push(tag);
+                i++;
+            }
+
+
+            this._thumbnail = new RoomThumbnailData(data);
+            this._allowPets = data.readBoolean();
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (this._disposed)
             {
                 return;
-            };
+            }
+
+
             this._disposed = true;
-            this.var_1029 = null;
+            this._tags = null;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get flatId():int
+        public function get flatId(): int
         {
-            return (this.var_2972);
+            return this._flatId;
         }
 
-        public function get event():Boolean
+        public function get event(): Boolean
         {
-            return (this.var_2227);
+            return this._event;
         }
 
-        public function get roomName():String
+        public function get roomName(): String
         {
-            return (this.var_2970);
+            return this._roomName;
         }
 
-        public function get ownerName():String
+        public function get ownerName(): String
         {
-            return (this._ownerName);
+            return this._ownerName;
         }
 
-        public function get doorMode():int
+        public function get doorMode(): int
         {
-            return (this.var_2981);
+            return this._doorMode;
         }
 
-        public function get userCount():int
+        public function get userCount(): int
         {
-            return (this.var_2973);
+            return this._userCount;
         }
 
-        public function get maxUserCount():int
+        public function get maxUserCount(): int
         {
-            return (this.var_2982);
+            return this._maxUserCount;
         }
 
-        public function get description():String
+        public function get description(): String
         {
-            return (this.var_2400);
+            return this._description;
         }
 
-        public function get srchSpecPrm():int
+        public function get srchSpecPrm(): int
         {
-            return (this.var_2983);
+            return this._srchSpecPrm;
         }
 
-        public function get allowTrading():Boolean
+        public function get allowTrading(): Boolean
         {
-            return (this.var_2984);
+            return this._allowTrading;
         }
 
-        public function get score():int
+        public function get score(): int
         {
-            return (this.var_2985);
+            return this._score;
         }
 
-        public function get categoryId():int
+        public function get categoryId(): int
         {
-            return (this.var_2465);
+            return this._categoryId;
         }
 
-        public function get eventCreationTime():String
+        public function get eventCreationTime(): String
         {
-            return (this.var_2986);
+            return this._eventCreationTime;
         }
 
-        public function get tags():Array
+        public function get tags(): Array
         {
-            return (this.var_1029);
+            return this._tags;
         }
 
-        public function get thumbnail():RoomThumbnailData
+        public function get thumbnail(): RoomThumbnailData
         {
-            return (this.var_2987);
+            return this._thumbnail;
         }
 
-        public function get allowPets():Boolean
+        public function get allowPets(): Boolean
         {
-            return (this.var_2988);
+            return this._allowPets;
         }
 
     }

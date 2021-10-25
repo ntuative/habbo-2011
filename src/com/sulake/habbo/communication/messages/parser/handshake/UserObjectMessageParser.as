@@ -1,118 +1,120 @@
 ﻿package com.sulake.habbo.communication.messages.parser.handshake
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class UserObjectMessageParser implements IMessageParser 
+    public class UserObjectMessageParser implements IMessageParser
     {
 
-        private var _id:int;
-        private var _name:String;
-        private var var_2534:String;
-        private var var_3044:String;
-        private var var_3175:String;
-        private var var_2912:String;
-        private var var_3176:int;
-        private var var_3177:String;
-        private var var_3178:int;
-        private var var_3179:int;
-        private var var_3180:int;
-        private var _respectLeft:int;
-        private var var_3181:int;
-        private var var_3182:int;
+        private var _id: int;
+        private var _name: String;
+        private var _figure: String;
+        private var _sex: String;
+        private var _customData: String;
+        private var _realName: String;
+        private var _tickets: int;
+        private var _poolFigure: String;
+        private var _photoFilm: int;
+        private var _directMail: int;
+        private var _respectTotal: int;
+        private var _respectLeft: int;
+        private var _petRespectLeft: int;
+        private var _identityId: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this._id = int(param1.readString());
-            this._name = param1.readString();
-            this.var_2534 = param1.readString();
-            this.var_3044 = param1.readString();
-            this.var_3175 = param1.readString();
-            this.var_2912 = param1.readString();
-            this.var_3176 = param1.readInteger();
-            this.var_3177 = param1.readString();
-            this.var_3178 = param1.readInteger();
-            this.var_3179 = param1.readInteger();
-            this.var_3180 = param1.readInteger();
-            this._respectLeft = param1.readInteger();
-            this.var_3181 = param1.readInteger();
-            this.var_3182 = param1.readInteger();
-            return (true);
+            this._id = int(data.readString());
+            this._name = data.readString();
+            this._figure = data.readString();
+            this._sex = data.readString();
+            this._customData = data.readString();
+            this._realName = data.readString();
+            this._tickets = data.readInteger();
+            this._poolFigure = data.readString();
+            this._photoFilm = data.readInteger();
+            this._directMail = data.readInteger();
+            this._respectTotal = data.readInteger();
+            this._respectLeft = data.readInteger();
+            this._petRespectLeft = data.readInteger();
+            this._identityId = data.readInteger();
+
+            return true;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get figure():String
+        public function get figure(): String
         {
-            return (this.var_2534);
+            return this._figure;
         }
 
-        public function get sex():String
+        public function get sex(): String
         {
-            return (this.var_3044);
+            return this._sex;
         }
 
-        public function get customData():String
+        public function get customData(): String
         {
-            return (this.var_3175);
+            return this._customData;
         }
 
-        public function get realName():String
+        public function get realName(): String
         {
-            return (this.var_2912);
+            return this._realName;
         }
 
-        public function get tickets():int
+        public function get tickets(): int
         {
-            return (this.var_3176);
+            return this._tickets;
         }
 
-        public function get poolFigure():String
+        public function get poolFigure(): String
         {
-            return (this.var_3177);
+            return this._poolFigure;
         }
 
-        public function get photoFilm():int
+        public function get photoFilm(): int
         {
-            return (this.var_3178);
+            return this._photoFilm;
         }
 
-        public function get directMail():int
+        public function get directMail(): int
         {
-            return (this.var_3179);
+            return this._directMail;
         }
 
-        public function get respectTotal():int
+        public function get respectTotal(): int
         {
-            return (this.var_3180);
+            return this._respectTotal;
         }
 
-        public function get respectLeft():int
+        public function get respectLeft(): int
         {
-            return (this._respectLeft);
+            return this._respectLeft;
         }
 
-        public function get petRespectLeft():int
+        public function get petRespectLeft(): int
         {
-            return (this.var_3181);
+            return this._petRespectLeft;
         }
 
-        public function get identityId():int
+        public function get identityId(): int
         {
-            return (this.var_3182);
+            return this._identityId;
         }
 
     }

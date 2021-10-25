@@ -1,123 +1,147 @@
 ﻿package com.sulake.habbo.navigator.roomthumbnails
 {
+
     import com.sulake.habbo.communication.messages.incoming.navigator.RoomThumbnailObjectData;
     import com.sulake.habbo.communication.messages.incoming.navigator.RoomThumbnailData;
     import com.sulake.habbo.navigator.Util;
+
     import flash.utils.Dictionary;
 
-    public class ThumbnailEditorModel 
+    public class ThumbnailEditorModel
     {
 
-        public static const var_904:int = 1;
-        public static const var_905:int = 2;
-        public static const var_908:int = 3;
+        public static const MODE_IMAGE_BACKGROUND: int = 1;
+        public static const MODE_IMAGE_FOREGROUND: int = 2;
+        public static const MODE_IMAGE_DEFAULT: int = 3; // TODO: Come back to this one
 
-        private var var_2590:int = 1;
-        private var _selected:RoomThumbnailObjectData;
-        private var _data:RoomThumbnailData;
+        private var _mode: int = 1;
+        private var _selected: RoomThumbnailObjectData;
+        private var _data: RoomThumbnailData;
 
-        private function removeSelected():void
+        private function removeSelected(): void
         {
-            var _loc1_:Array = this._data.objects;
+            var objects: Array = this._data.objects;
+
             if (this._selected == null)
             {
                 return;
-            };
-            var _loc2_:int = Util.remove(_loc1_, this._selected);
+            }
+
+            var removed: int = Util.remove(objects, this._selected);
             this._selected = null;
-            if (_loc1_.length > 0)
+
+            if (objects.length > 0)
             {
-                this._selected = _loc1_[Math.min(_loc2_, (_loc1_.length - 1))];
-            };
+                this._selected = objects[Math.min(removed, objects.length - 1)];
+            }
+
         }
 
-        private function addObject(param1:int):void
+        private function addObject(id: int): void
         {
-            Logger.log(("New object pos: " + param1));
-            var _loc2_:RoomThumbnailObjectData = new RoomThumbnailObjectData();
-            _loc2_.pos = param1;
-            _loc2_.imgId = 0;
-            this._data.objects.push(_loc2_);
-            this._selected = _loc2_;
-            Logger.log(("Object count after insert: " + this._data.objects.length));
+            Logger.log("New object pos: " + id);
+
+            var thumbnail: RoomThumbnailObjectData = new RoomThumbnailObjectData();
+            
+            thumbnail.pos = id;
+            thumbnail.imgId = 0;
+            this._data.objects.push(thumbnail);
+            this._selected = thumbnail;
+            
+            Logger.log("Object count after insert: " + this._data.objects.length);
         }
 
-        public function setPos(param1:int):void
+        public function setPos(id: int): void
         {
-            this._selected = this.findByPos(param1);
+            this._selected = this.findByPos(id);
+
             if (this._selected == null)
             {
-                this.addObject(param1);
-            };
+                this.addObject(id);
+            }
+
         }
 
-        public function setImg(param1:int):void
+        public function setImg(id: int): void
         {
-            if (this.var_2590 == var_904)
+            if (this._mode == MODE_IMAGE_BACKGROUND)
             {
-                this._data.bgImgId = param1;
+                this._data.bgImgId = id;
             }
             else
             {
-                if (this.var_2590 == var_905)
+                if (this._mode == MODE_IMAGE_FOREGROUND)
                 {
-                    this._data.frontImgId = param1;
-                };
-            };
-            if (this.var_2590 == var_908)
+                    this._data.frontImgId = id;
+                }
+
+            }
+
+            if (this._mode == MODE_IMAGE_DEFAULT)
             {
                 if (this._selected == null)
                 {
                     return;
-                };
-                this._selected.imgId = param1;
-            };
+                }
+
+                this._selected.imgId = id;
+            }
+
         }
 
-        public function getImgId():int
+        public function getImgId(): int
         {
-            if (this.var_2590 == var_904)
+            if (this._mode == MODE_IMAGE_BACKGROUND)
             {
-                return (this._data.bgImgId);
-            };
-            if (this.var_2590 == var_905)
+                return this._data.bgImgId;
+            }
+
+            if (this._mode == MODE_IMAGE_FOREGROUND)
             {
-                return (this._data.frontImgId);
-            };
-            return ((this._selected == null) ? -1 : this._selected.imgId);
+                return this._data.frontImgId;
+            }
+
+            return this._selected == null ? -1 : this._selected.imgId;
         }
 
-        public function findByPos(param1:int):RoomThumbnailObjectData
+        public function findByPos(position: int): RoomThumbnailObjectData
         {
-            var _loc2_:RoomThumbnailObjectData;
-            for each (_loc2_ in this._data.objects)
+            var thumbnailData: RoomThumbnailObjectData;
+
+            for each (thumbnailData in this._data.objects)
             {
-                if (_loc2_.pos == param1)
+                if (thumbnailData.pos == position)
                 {
-                    return (_loc2_);
-                };
-            };
-            return (null);
+                    return thumbnailData;
+                }
+
+            }
+
+            return null;
         }
 
-        public function getBlockedPositions():Dictionary
+        public function getBlockedPositions(): Dictionary
         {
-            var _loc2_:RoomThumbnailObjectData;
-            var _loc1_:Dictionary = new Dictionary();
-            for each (_loc2_ in this._data.objects)
+            var thumbnailData: RoomThumbnailObjectData;
+            var positions: Dictionary = new Dictionary();
+
+            for each (thumbnailData in this._data.objects)
             {
-                if (_loc2_.imgId > 0)
+                if (thumbnailData.imgId > 0)
                 {
-                    _loc1_[_loc2_.pos] = "taken";
-                };
-            };
-            return (_loc1_);
+                    positions[thumbnailData.pos] = "taken";
+                }
+
+            }
+
+            return positions;
         }
 
-        public function set data(param1:RoomThumbnailData):void
+        public function set data(value: RoomThumbnailData): void
         {
-            this._data = param1;
-            this.var_2590 = var_904;
+            this._data = value;
+            this._mode = MODE_IMAGE_BACKGROUND;
+            
             if (this._data.objects.length > 0)
             {
                 this._selected = this._data.objects[0];
@@ -125,32 +149,33 @@
             else
             {
                 this._selected = null;
-            };
+            }
+
         }
 
-        public function set mode(param1:int):void
+        public function set mode(param1: int): void
         {
-            this.var_2590 = param1;
+            this._mode = param1;
         }
 
-        public function set selected(param1:RoomThumbnailObjectData):void
+        public function set selected(param1: RoomThumbnailObjectData): void
         {
             this._selected = param1;
         }
 
-        public function get mode():int
+        public function get mode(): int
         {
-            return (this.var_2590);
+            return this._mode;
         }
 
-        public function get selected():RoomThumbnailObjectData
+        public function get selected(): RoomThumbnailObjectData
         {
-            return (this._selected);
+            return this._selected;
         }
 
-        public function get data():RoomThumbnailData
+        public function get data(): RoomThumbnailData
         {
-            return (this._data);
+            return this._data;
         }
 
     }

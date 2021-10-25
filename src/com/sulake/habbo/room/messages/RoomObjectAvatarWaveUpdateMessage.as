@@ -1,18 +1,19 @@
 ﻿package com.sulake.habbo.room.messages
 {
-    public class RoomObjectAvatarWaveUpdateMessage extends RoomObjectUpdateStateMessage 
+
+    public class RoomObjectAvatarWaveUpdateMessage extends RoomObjectUpdateStateMessage
     {
 
-        private var var_3291:Boolean = false;
+        private var _isWaving: Boolean = false;
 
-        public function RoomObjectAvatarWaveUpdateMessage(param1:Boolean=false)
+        public function RoomObjectAvatarWaveUpdateMessage(isWaving: Boolean = false)
         {
-            this.var_3291 = param1;
+            this._isWaving = isWaving;
         }
 
-        public function get isWaving():Boolean
+        public function get isWaving(): Boolean
         {
-            return (this.var_3291);
+            return this._isWaving;
         }
 
     }

@@ -1,55 +1,56 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ChargeInfo 
+    public class ChargeInfo
     {
 
-        private var var_2900:int;
-        private var var_2901:int;
-        private var var_2829:int;
-        private var var_2830:int;
-        private var var_2831:int;
-        private var var_2902:int;
+        private var _stuffId: int;
+        private var _charges: int;
+        private var _priceInCredits: int;
+        private var _priceInActivityPoints: int;
+        private var _activityPointType: int;
+        private var _chargePatchSize: int;
 
-        public function ChargeInfo(param1:IMessageDataWrapper)
+        public function ChargeInfo(data: IMessageDataWrapper)
         {
-            this.var_2900 = param1.readInteger();
-            this.var_2901 = param1.readInteger();
-            this.var_2829 = param1.readInteger();
-            this.var_2830 = param1.readInteger();
-            this.var_2831 = param1.readInteger();
-            this.var_2902 = param1.readInteger();
+            this._stuffId = data.readInteger();
+            this._charges = data.readInteger();
+            this._priceInCredits = data.readInteger();
+            this._priceInActivityPoints = data.readInteger();
+            this._activityPointType = data.readInteger();
+            this._chargePatchSize = data.readInteger();
         }
 
-        public function get stuffId():int
+        public function get stuffId(): int
         {
-            return (this.var_2900);
+            return this._stuffId;
         }
 
-        public function get charges():int
+        public function get charges(): int
         {
-            return (this.var_2901);
+            return this._charges;
         }
 
-        public function get priceInCredits():int
+        public function get priceInCredits(): int
         {
-            return (this.var_2829);
+            return this._priceInCredits;
         }
 
-        public function get priceInActivityPoints():int
+        public function get priceInActivityPoints(): int
         {
-            return (this.var_2830);
+            return this._priceInActivityPoints;
         }
 
-        public function get chargePatchSize():int
+        public function get chargePatchSize(): int
         {
-            return (this.var_2902);
+            return this._chargePatchSize;
         }
 
-        public function get activityPointType():int
+        public function get activityPointType(): int
         {
-            return (this.var_2831);
+            return this._activityPointType;
         }
 
     }

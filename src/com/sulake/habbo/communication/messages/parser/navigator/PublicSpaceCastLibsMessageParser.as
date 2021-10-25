@@ -1,41 +1,43 @@
 ﻿package com.sulake.habbo.communication.messages.parser.navigator
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PublicSpaceCastLibsMessageParser implements IMessageParser 
+    public class PublicSpaceCastLibsMessageParser implements IMessageParser
     {
 
-        private var var_2979:int;
-        private var var_3005:String;
-        private var var_3003:int;
+        private var _nodeId: int;
+        private var _castLibs: String;
+        private var _unitPort: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2979 = param1.readInteger();
-            this.var_3005 = param1.readString();
-            this.var_3003 = param1.readInteger();
-            return (true);
+            this._nodeId = data.readInteger();
+            this._castLibs = data.readString();
+            this._unitPort = data.readInteger();
+            
+            return true;
         }
 
-        public function get nodeId():int
+        public function get nodeId(): int
         {
-            return (this.var_2979);
+            return this._nodeId;
         }
 
-        public function get castLibs():String
+        public function get castLibs(): String
         {
-            return (this.var_3005);
+            return this._castLibs;
         }
 
-        public function get unitPort():int
+        public function get unitPort(): int
         {
-            return (this.var_3003);
+            return this._unitPort;
         }
 
     }

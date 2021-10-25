@@ -1,73 +1,95 @@
 ﻿package com.sulake.core.window.components
 {
+
     import com.sulake.core.window.IWindow;
     import com.sulake.core.window.WindowContext;
+
     import flash.geom.Rectangle;
+
     import com.sulake.core.window.events.WindowEvent;
     import com.sulake.core.window.WindowController;
 
-    public class ActivatorController extends ContainerController 
+    public class ActivatorController extends ContainerController
     {
 
-        protected var var_1982:IWindow;
+        protected var _activeChild: IWindow;
 
-        public function ActivatorController(param1:String, param2:uint, param3:uint, param4:uint, param5:WindowContext, param6:Rectangle, param7:IWindow, param8:Function=null, param9:Array=null, param10:Array=null, param11:uint=0)
+        public function ActivatorController(param1: String, param2: uint, param3: uint, param4: uint, param5: WindowContext, param6: Rectangle, param7: IWindow, param8: Function = null, param9: Array = null, param10: Array = null, param11: uint = 0)
         {
             super(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11);
         }
 
-        override public function update(param1:WindowController, param2:WindowEvent):Boolean
+        override public function update(param1: WindowController, param2: WindowEvent): Boolean
         {
             if (param2.type == WindowEvent.var_584)
             {
-                this.setActiveChild((param1 as IWindow));
+                this.setActiveChild(param1 as IWindow);
             }
             else
             {
                 if (param2.type == WindowEvent.var_589)
                 {
-                    return (true);
-                };
-            };
-            return (super.update(param1, param2));
+                    return true;
+                }
+
+            }
+
+            return super.update(param1, param2);
         }
 
-        public function getActiveChild():IWindow
+        public function getActiveChild(): IWindow
         {
-            return (this.var_1982);
+            return this._activeChild;
         }
 
-        public function setActiveChild(param1:IWindow):IWindow
+        public function setActiveChild(window: IWindow): IWindow
         {
-            if (param1.parent != this)
+            if (window.parent != this)
             {
                 while (true)
                 {
-                    param1 = param1.parent;
-                    if (param1 == null)
+                    window = window.parent;
+
+                    if (window == null)
                     {
-                        throw (new Error("Window passed to activator is not a child!"));
-                    };
-                    if (param1.parent == this) break;
-                };
-            };
-            var _loc2_:IWindow = this.var_1982;
-            if (this.var_1982 != param1)
+                        throw new Error("Window passed to activator is not a child!");
+                    }
+
+
+                    if (window.parent == this)
+                    {
+                        break;
+                    }
+                }
+
+            }
+
+
+            var previous: IWindow = this._activeChild;
+
+            if (this._activeChild != window)
             {
-                if (this.var_1982 != null)
+                if (this._activeChild != null)
                 {
-                    if (!this.var_1982.disposed)
+                    if (!this._activeChild.disposed)
                     {
-                        this.var_1982.deactivate();
-                    };
-                };
-                this.var_1982 = param1;
-                if (getChildIndex(param1) != (numChildren - 1))
+                        this._activeChild.deactivate();
+                    }
+
+                }
+
+
+                this._activeChild = window;
+
+                if (getChildIndex(window) != numChildren - 1)
                 {
-                    setChildIndex(param1, (numChildren - 1));
-                };
-            };
-            return (_loc2_);
+                    setChildIndex(window, numChildren - 1);
+                }
+
+            }
+
+
+            return previous;
         }
 
     }

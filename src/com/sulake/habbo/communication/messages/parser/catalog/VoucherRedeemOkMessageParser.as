@@ -1,36 +1,38 @@
 ﻿package com.sulake.habbo.communication.messages.parser.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class VoucherRedeemOkMessageParser implements IMessageParser 
+    public class VoucherRedeemOkMessageParser implements IMessageParser
     {
 
-        private var var_2763:String = "";
-        private var var_2764:String = "";
+        private var _productName: String = "";
+        private var _productDescription: String = "";
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_2764 = "";
-            this.var_2763 = "";
-            return (true);
+            this._productDescription = "";
+            this._productName = "";
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2764 = param1.readString();
-            this.var_2763 = param1.readString();
-            return (true);
+            this._productDescription = data.readString();
+            this._productName = data.readString();
+            
+            return true;
         }
 
-        public function get productName():String
+        public function get productName(): String
         {
-            return (this.var_2763);
+            return this._productName;
         }
 
-        public function get productDescription():String
+        public function get productDescription(): String
         {
-            return (this.var_2764);
+            return this._productDescription;
         }
 
     }

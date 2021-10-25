@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.catalog.club
 {
+
     import com.sulake.habbo.catalog.viewer.widgets.ClubGiftWidget;
     import com.sulake.core.utils.Map;
     import com.sulake.habbo.catalog.HabboCatalog;
@@ -13,160 +14,173 @@
     import com.sulake.habbo.session.product.IProductData;
     import com.sulake.habbo.catalog.purse.IPurse;
 
-    public class ClubGiftController 
+    public class ClubGiftController
     {
 
-        private var _widget:ClubGiftWidget;
-        private var var_2622:int;
-        private var var_2623:int;
-        private var _offers:Array;
-        private var var_2624:Map;
-        private var _catalog:HabboCatalog;
-        private var var_2609:ClubGiftConfirmationDialog;
+        private var _widget: ClubGiftWidget;
+        private var _daysUntilNextGift: int;
+        private var _giftsAvailable: int;
+        private var _offers: Array;
+        private var _giftData: Map;
+        private var _catalog: HabboCatalog;
+        private var _dialog: ClubGiftConfirmationDialog;
 
-        public function ClubGiftController(param1:HabboCatalog)
+        public function ClubGiftController(param1: HabboCatalog)
         {
             this._catalog = param1;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this._catalog = null;
-            if (this.var_2609)
+
+            if (this._dialog)
             {
-                this.var_2609.dispose();
-                this.var_2609 = null;
-            };
+                this._dialog.dispose();
+                this._dialog = null;
+            }
+
         }
 
-        public function set widget(param1:ClubGiftWidget):void
+        public function set widget(widget: ClubGiftWidget): void
         {
-            this._widget = param1;
+            this._widget = widget;
+
             this._catalog.connection.send(new GetClubGiftInfo());
         }
 
-        public function get daysUntilNextGift():int
+        public function get daysUntilNextGift(): int
         {
-            return (this.var_2622);
+            return this._daysUntilNextGift;
         }
 
-        public function get giftsAvailable():int
+        public function get giftsAvailable(): int
         {
-            return (this.var_2623);
+            return this._giftsAvailable;
         }
 
-        public function setInfo(param1:int, param2:int, param3:Array, param4:Map):void
+        public function setInfo(param1: int, param2: int, param3: Array, param4: Map): void
         {
-            this.var_2622 = param1;
-            this.var_2623 = param2;
+            this._daysUntilNextGift = param1;
+            this._giftsAvailable = param2;
             this._offers = param3;
-            this.var_2624 = param4;
+            this._giftData = param4;
             this._widget.update();
         }
 
-        public function selectGift(param1:Offer):void
+        public function selectGift(param1: Offer): void
         {
             this.closeConfirmation();
-            this.var_2609 = new ClubGiftConfirmationDialog(this, param1);
+
+            this._dialog = new ClubGiftConfirmationDialog(this, param1);
         }
 
-        public function confirmSelection(param1:String):void
+        public function confirmSelection(selection: String): void
         {
-            if ((((!(param1)) || (!(this._catalog))) || (!(this._catalog.connection))))
+            if (!selection || !this._catalog || !this._catalog.connection)
             {
                 return;
-            };
-            this._catalog.connection.send(new SelectClubGiftComposer(param1));
-            this.var_2623--;
+            }
+
+            this._catalog.connection.send(new SelectClubGiftComposer(selection));
+            this._giftsAvailable--;
             this._widget.update();
             this.closeConfirmation();
         }
 
-        public function closeConfirmation():void
+        public function closeConfirmation(): void
         {
-            if (this.var_2609)
+            if (this._dialog)
             {
-                this.var_2609.dispose();
-                this.var_2609 = null;
-            };
+                this._dialog.dispose();
+                this._dialog = null;
+            }
+
         }
 
-        public function getOffers():Array
+        public function getOffers(): Array
         {
-            return (this._offers);
+            return this._offers;
         }
 
-        public function getGiftData():Map
+        public function getGiftData(): Map
         {
-            return (this.var_2624);
+            return this._giftData;
         }
 
-        public function get hasClub():Boolean
+        public function get hasClub(): Boolean
         {
-            if (((!(this._catalog)) || (!(this._catalog.getPurse()))))
+            if (!this._catalog || !this._catalog.getPurse())
             {
-                return (false);
-            };
-            return (this._catalog.getPurse().clubDays > 0);
+                return false;
+            }
+
+            return this._catalog.getPurse().clubDays > 0;
         }
 
-        public function get windowManager():IHabboWindowManager
+        public function get windowManager(): IHabboWindowManager
         {
             if (!this._catalog)
             {
-                return (null);
-            };
-            return (this._catalog.windowManager);
+                return null;
+            }
+
+            return this._catalog.windowManager;
         }
 
-        public function get localization():ICoreLocalizationManager
+        public function get localization(): ICoreLocalizationManager
         {
             if (!this._catalog)
             {
-                return (null);
-            };
-            return (this._catalog.localization);
+                return null;
+            }
+
+            return this._catalog.localization;
         }
 
-        public function get assets():IAssetLibrary
+        public function get assets(): IAssetLibrary
         {
             if (!this._catalog)
             {
-                return (null);
-            };
-            return (this._catalog.assets);
+                return null;
+            }
+
+            return this._catalog.assets;
         }
 
-        public function get roomEngine():IRoomEngine
+        public function get roomEngine(): IRoomEngine
         {
             if (!this._catalog)
             {
-                return (null);
-            };
-            return (this._catalog.roomEngine);
+                return null;
+            }
+
+            return this._catalog.roomEngine;
         }
 
-        public function getProductData(param1:String):IProductData
+        public function getProductData(param1: String): IProductData
         {
             if (!this._catalog)
             {
-                return (null);
-            };
-            return (this._catalog.getProductData(param1));
+                return null;
+            }
+
+            return this._catalog.getProductData(param1);
         }
 
-        public function get purse():IPurse
+        public function get purse(): IPurse
         {
             if (!this._catalog)
             {
-                return (null);
-            };
-            return (this._catalog.getPurse());
+                return null;
+            }
+
+            return this._catalog.getPurse();
         }
 
-        public function get catalog():HabboCatalog
+        public function get catalog(): HabboCatalog
         {
-            return (this._catalog);
+            return this._catalog;
         }
 
     }

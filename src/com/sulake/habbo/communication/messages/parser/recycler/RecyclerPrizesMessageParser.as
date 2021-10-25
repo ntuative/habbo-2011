@@ -1,35 +1,39 @@
 ﻿package com.sulake.habbo.communication.messages.parser.recycler
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.recycler.PrizeLevelMessageData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class RecyclerPrizesMessageParser implements IMessageParser 
+    public class RecyclerPrizesMessageParser implements IMessageParser
     {
 
-        private var var_3284:Array;
+        private var _prizeLevels: Array;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc2_:int = param1.readInteger();
-            this.var_3284 = new Array();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._prizeLevels = [];
+            
+            var levelCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < levelCount)
             {
-                this.var_3284.push(new PrizeLevelMessageData(param1));
-                _loc3_++;
-            };
-            return (true);
+                this._prizeLevels.push(new PrizeLevelMessageData(data));
+                i++;
+            }
+
+            return true;
         }
 
-        public function get prizeLevels():Array
+        public function get prizeLevels(): Array
         {
-            return (this.var_3284);
+            return this._prizeLevels;
         }
 
     }

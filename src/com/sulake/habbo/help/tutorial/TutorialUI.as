@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.help.tutorial
 {
+
     import com.sulake.habbo.help.INameChangeUI;
     import com.sulake.habbo.help.HabboHelp;
     import com.sulake.core.window.components.IFrameWindow;
@@ -20,384 +21,458 @@
     import com.sulake.habbo.communication.messages.parser.avatar.CheckUserNameResultMessageParser;
     import com.sulake.habbo.communication.messages.incoming.avatar.CheckUserNameResultMessageEvent;
 
-    public class TutorialUI implements INameChangeUI 
+    public class TutorialUI implements INameChangeUI
     {
 
-        public static const var_1427:String = "TUI_MAIN_VIEW";
-        public static const var_303:String = "TUI_NAME_VIEW";
-        public static const var_1428:String = "TUI_CLOTHES_VIEW";
-        public static const var_1429:String = "TUI_GUIDEBOT_VIEW";
+        public static const TUTORIAL_UI_MAIN_VIEW: String = "TUI_MAIN_VIEW";
+        public static const TUTORIAL_UI_NAME_VIEW: String = "TUI_NAME_VIEW";
+        public static const TUTORIAL_UI_CLOTHES_VIEW: String = "TUI_CLOTHES_VIEW";
+        public static const TUTORIAL_UI_GUIDEBOT_VIEW: String = "TUI_GUIDEBOT_VIEW";
 
-        private var var_3481:int = 0;
-        private var var_3482:int = 0;
-        private var var_3486:HabboHelp;
-        private var _window:IFrameWindow;
-        private var var_3495:ITutorialUIView;
-        private var var_3503:NameChangeView;
-        private var var_3189:Boolean = false;
-        private var var_3190:Boolean = false;
-        private var var_3191:Boolean = false;
-        private var var_3504:Boolean = false;
-        private var var_3505:Boolean;
+        private var _width: int = 0;
+        private var _height: int = 0;
+        private var _help: HabboHelp;
+        private var _window: IFrameWindow;
+        private var _tutorialUI: ITutorialUIView;
+        private var _nameChangeUI: NameChangeView;
+        private var _hasChangedLooks: Boolean = false;
+        private var _hasChangedName: Boolean = false;
+        private var _hasCalledGuideBot: Boolean = false;
+        private var _isEditingAvatar: Boolean = false;
+        private var _visible: Boolean;
 
-        public function TutorialUI(param1:HabboHelp, param2:Boolean=true)
+        public function TutorialUI(help: HabboHelp, visible: Boolean = true)
         {
-            this.var_3486 = param1;
-            this.var_3505 = param2;
-            this.var_3486.events.addEventListener(HabboHelpTutorialEvent.var_1424, this.onTaskDoneEvent);
-            this.var_3486.events.addEventListener(HabboHelpTutorialEvent.var_1430, this.onTaskDoneEvent);
-            this.var_3486.events.addEventListener(HabboHelpTutorialEvent.var_1431, this.onTaskDoneEvent);
-            if (this.var_3486.sessionDataManager != null)
+            this._help = help;
+            this._visible = visible;
+            
+            this._help.events.addEventListener(HabboHelpTutorialEvent.HHTPNUFWE_DONE_GUIDEBOT, this.onTaskDoneEvent);
+            this._help.events.addEventListener(HabboHelpTutorialEvent.HHTE_DONE_AVATAR_EDITOR_OPENING, this.onTaskDoneEvent);
+            this._help.events.addEventListener(HabboHelpTutorialEvent.HHTE_DONE_AVATAR_EDITOR_CLOSING, this.onTaskDoneEvent);
+            
+            if (this._help.sessionDataManager != null)
             {
-                this.var_3486.sessionDataManager.events.addEventListener(HabboSessionFigureUpdatedEvent.var_1432, this.onFigureUpdate);
-            };
+                this._help.sessionDataManager.events.addEventListener(HabboSessionFigureUpdatedEvent.HABBO_SESSION_FIGURE_UPDATE, this.onFigureUpdate);
+            }
+
         }
 
-        public function get help():HabboHelp
+        public function get help(): HabboHelp
         {
-            return (this.var_3486);
+            return this._help;
         }
 
-        public function get assets():IAssetLibrary
+        public function get assets(): IAssetLibrary
         {
-            return (this.var_3486.assets);
+            return this._help.assets;
         }
 
-        public function get localization():IHabboLocalizationManager
+        public function get localization(): IHabboLocalizationManager
         {
-            return (this.var_3486.localization);
+            return this._help.localization;
         }
 
-        public function get myName():String
+        public function get myName(): String
         {
-            return (this.var_3486.ownUserName);
+            return this._help.ownUserName;
         }
 
-        public function get hasTasksDone():Boolean
+        public function get hasTasksDone(): Boolean
         {
-            return (((this.var_3189) && (this.var_3190)) && (this.var_3191));
+            return this._hasChangedLooks && this._hasChangedName && this._hasCalledGuideBot;
         }
 
-        public function get hasChangedLooks():Boolean
+        public function get hasChangedLooks(): Boolean
         {
-            return (this.var_3189);
+            return this._hasChangedLooks;
         }
 
-        public function get hasChangedName():Boolean
+        public function get hasChangedName(): Boolean
         {
-            return (this.var_3190);
+            return this._hasChangedName;
         }
 
-        public function get hasCalledGuideBot():Boolean
+        public function get hasCalledGuideBot(): Boolean
         {
-            return (this.var_3191);
+            return this._hasCalledGuideBot;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this.disposeView();
-            if (this.var_3486)
+            
+            if (this._help)
             {
-                this.var_3486.events.removeEventListener(HabboHelpTutorialEvent.var_1424, this.onTaskDoneEvent);
-                this.var_3486.events.removeEventListener(HabboHelpTutorialEvent.var_1430, this.onTaskDoneEvent);
-                this.var_3486.events.removeEventListener(HabboHelpTutorialEvent.var_1431, this.onTaskDoneEvent);
-                if (this.var_3486.sessionDataManager != null)
+                this._help.events.removeEventListener(HabboHelpTutorialEvent.HHTPNUFWE_DONE_GUIDEBOT, this.onTaskDoneEvent);
+                this._help.events.removeEventListener(HabboHelpTutorialEvent.HHTE_DONE_AVATAR_EDITOR_OPENING, this.onTaskDoneEvent);
+                this._help.events.removeEventListener(HabboHelpTutorialEvent.HHTE_DONE_AVATAR_EDITOR_CLOSING, this.onTaskDoneEvent);
+                
+                if (this._help.sessionDataManager != null)
                 {
-                    this.var_3486.sessionDataManager.events.removeEventListener(HabboSessionFigureUpdatedEvent.var_1432, this.onFigureUpdate);
-                };
-                this.var_3486 = null;
-            };
+                    this._help.sessionDataManager.events.removeEventListener(HabboSessionFigureUpdatedEvent.HABBO_SESSION_FIGURE_UPDATE, this.onFigureUpdate);
+                }
+
+                this._help = null;
+            }
+
         }
 
-        public function update(param1:Boolean, param2:Boolean, param3:Boolean):void
+        public function update(hasChangedLooks: Boolean, hasChangedName: Boolean, hasCalledGuideBot: Boolean): void
         {
-            this.var_3189 = param1;
-            this.var_3190 = param2;
-            this.var_3191 = param3;
-            if (((this.var_3495 == null) || (this.var_3495.id == var_1427)))
+            this._hasChangedLooks = hasChangedLooks;
+            this._hasChangedName = hasChangedName;
+            this._hasCalledGuideBot = hasCalledGuideBot;
+
+            if (this._tutorialUI == null || this._tutorialUI.id == TUTORIAL_UI_MAIN_VIEW)
             {
                 this.prepareForTutorial();
-                this.showView(var_1427);
-            };
+                this.showView(TUTORIAL_UI_MAIN_VIEW);
+            }
+
         }
 
-        public function onTaskDoneEvent(param1:HabboHelpTutorialEvent):void
+        public function onTaskDoneEvent(event: HabboHelpTutorialEvent): void
         {
-            switch (param1.type)
+            switch (event.type)
             {
-                case HabboHelpTutorialEvent.var_1424:
-                    this.var_3191 = true;
-                    if (((!(this.var_3495 == null)) && (this.var_3495.id == var_1429)))
+                case HabboHelpTutorialEvent.HHTPNUFWE_DONE_GUIDEBOT:
+                    this._hasCalledGuideBot = true;
+                    
+                    if (this._tutorialUI != null && this._tutorialUI.id == TUTORIAL_UI_GUIDEBOT_VIEW)
                     {
-                        this.showView(var_1427);
-                    };
+                        this.showView(TUTORIAL_UI_MAIN_VIEW);
+                    }
+
                     return;
-                case HabboHelpTutorialEvent.var_1430:
-                    if (((!(this.var_3495 == null)) && (this.var_3495.id == var_1428)))
+                
+                case HabboHelpTutorialEvent.HHTE_DONE_AVATAR_EDITOR_OPENING:
+                
+                    if (this._tutorialUI != null && this._tutorialUI.id == TUTORIAL_UI_CLOTHES_VIEW)
                     {
-                        this.var_3504 = true;
+                        this._isEditingAvatar = true;
                         this.disposeWindow();
-                    };
+                    }
+
                     return;
-                case HabboHelpTutorialEvent.var_1431:
-                    if (this.var_3504)
+
+                case HabboHelpTutorialEvent.HHTE_DONE_AVATAR_EDITOR_CLOSING:
+                    
+                    if (this._isEditingAvatar)
                     {
-                        this.var_3504 = false;
-                        this.showView(var_1427);
-                    };
+                        this._isEditingAvatar = false;
+                        this.showView(TUTORIAL_UI_MAIN_VIEW);
+                    }
+
                     return;
-            };
+            }
+
         }
 
-        public function showView(param1:String):void
+        public function showView(viewName: String): void
         {
-            var _loc2_:IItemListWindow;
+            var contentList: IItemListWindow;
+            
             if (this.hasTasksDone)
             {
-                if (this.var_3486)
+                if (this._help)
                 {
-                    this.var_3486.removeTutorialUI();
-                };
+                    this._help.removeTutorialUI();
+                }
+
                 return;
-            };
-            var _loc3_:Boolean;
+            }
+
+            var visible: Boolean;
+            
             if (this._window == null)
             {
                 this._window = (this.buildXmlWindow("tutorial_frame") as IFrameWindow);
+                
                 if (this._window == null)
                 {
                     return;
-                };
+                }
+
                 this._window.procedure = this.windowProcedure;
-                _loc2_ = (this._window.findChildByName("content_list") as IItemListWindow);
-                if (_loc2_ == null)
+                contentList = (this._window.findChildByName("content_list") as IItemListWindow);
+                
+                if (contentList == null)
                 {
                     return;
-                };
-                this.var_3481 = (this._window.width - _loc2_.width);
-                this.var_3482 = this._window.height;
-                _loc3_ = true;
-            };
-            _loc2_ = (this._window.findChildByName("content_list") as IItemListWindow);
-            if (_loc2_ == null)
+                }
+
+                this._width = this._window.width - contentList.width;
+                this._height = this._window.height;
+                
+                visible = true;
+            }
+
+            contentList = (this._window.findChildByName("content_list") as IItemListWindow);
+            
+            if (contentList == null)
             {
                 return;
-            };
-            _loc2_.destroyListItems();
-            _loc2_.height = 0;
-            if (this.var_3495 != null)
+            }
+
+            contentList.destroyListItems();
+            contentList.height = 0;
+            
+            if (this._tutorialUI != null)
             {
-                this.var_3495.dispose();
-            };
+                this._tutorialUI.dispose();
+            }
+
             this._window.visible = true;
-            switch (param1)
+            
+            switch (viewName)
             {
-                case var_1427:
-                    if (this.var_3503 != null)
+                case TUTORIAL_UI_MAIN_VIEW:
+                    if (this._nameChangeUI != null)
                     {
-                        this.var_3503.dispose();
-                    };
-                    if (this.var_3505)
+                        this._nameChangeUI.dispose();
+                    }
+
+                    if (this._visible)
                     {
-                        this.var_3495 = new TutorialMainView(_loc2_, this);
+                        this._tutorialUI = new TutorialMainView(contentList, this);
                     }
                     else
                     {
                         this._window.visible = false;
                         return;
-                    };
+                    }
+
                     break;
-                case var_303:
+
+                case TUTORIAL_UI_NAME_VIEW:
                     this._window.visible = false;
-                    if (this.var_3503 == null)
+
+                    if (this._nameChangeUI == null)
                     {
-                        this.var_3503 = new NameChangeView(this);
-                    };
-                    this.var_3503.showMainView();
+                        this._nameChangeUI = new NameChangeView(this);
+                    }
+
+                    this._nameChangeUI.showMainView();
                     this.prepareForTutorial();
+
                     break;
-                case var_1428:
-                    this.var_3495 = new TutorialClothesChangeView(_loc2_, this);
+
+                case TUTORIAL_UI_CLOTHES_VIEW:
+                    this._tutorialUI = new TutorialClothesChangeView(contentList, this);
+                    
                     break;
-                case var_1429:
-                    this.var_3495 = new TutorialCallGuideBotView(_loc2_, this);
+                
+                case TUTORIAL_UI_GUIDEBOT_VIEW:
+                    this._tutorialUI = new TutorialCallGuideBotView(contentList, this);
+                
                     break;
-            };
-            this._window.height = (_loc2_.height + this.var_3482);
-            this._window.width = (_loc2_.width + this.var_3481);
-            if (_loc3_)
+            }
+
+            this._window.height = contentList.height + this._height;
+            this._window.width = contentList.width + this._width;
+            
+            if (visible)
             {
                 if (this._window == null)
                 {
                     return;
-                };
-                this._window.x = ((this._window.context.getDesktopWindow().width / 2) - (this._window.width / 2));
+                }
+
+                this._window.x = this._window.context.getDesktopWindow().width / 2 - this._window.width / 2;
                 this._window.y = 0;
-            };
+            }
+
         }
 
-        public function buildXmlWindow(param1:String, param2:uint=1):IWindow
+        public function buildXmlWindow(assetName: String, param2: uint = 1): IWindow
         {
-            if (((this.var_3486 == null) || (this.var_3486.assets == null)))
+            if (this._help == null || this._help.assets == null)
             {
-                return (null);
-            };
-            var _loc3_:XmlAsset = XmlAsset(this.var_3486.assets.getAssetByName((param1 + "_xml")));
-            if (((_loc3_ == null) || (this.var_3486.windowManager == null)))
+                return null;
+            }
+
+            var layout: XmlAsset = XmlAsset(this._help.assets.getAssetByName(assetName + "_xml"));
+            
+            if (layout == null || this._help.windowManager == null)
             {
-                return (null);
-            };
-            return (this.var_3486.windowManager.buildFromXML(XML(_loc3_.content), param2));
+                return null;
+            }
+
+            return this._help.windowManager.buildFromXML(XML(layout.content), param2);
         }
 
-        private function disposeWindow(param1:WindowEvent=null):void
+        private function disposeWindow(event: WindowEvent = null): void
         {
             if (this._window != null)
             {
                 this._window.dispose();
                 this._window = null;
-            };
+            }
         }
 
-        private function disposeView():void
+        private function disposeView(): void
         {
-            if (this.var_3495 != null)
+            if (this._tutorialUI != null)
             {
-                this.var_3495.dispose();
-                this.var_3495 = null;
-            };
-            if (this.var_3503 != null)
+                this._tutorialUI.dispose();
+                this._tutorialUI = null;
+            }
+
+            if (this._nameChangeUI != null)
             {
-                this.var_3503.dispose();
-                this.var_3503 = null;
-            };
+                this._nameChangeUI.dispose();
+                this._nameChangeUI = null;
+            }
+
             this.disposeWindow();
         }
 
-        public function setRoomSessionStatus(param1:Boolean):void
+        public function setRoomSessionStatus(status: Boolean): void
         {
-            if (param1 == false)
+            if (!status)
             {
                 this.disposeView();
-            };
+            }
+
         }
 
-        public function prepareForTutorial():void
+        public function prepareForTutorial(): void
         {
-            if (((this.var_3486 == null) || (this.var_3486.events == null)))
+            if (this._help == null || this._help.events == null)
             {
                 return;
-            };
-            this.var_3486.hideUI();
-            this.var_3486.events.dispatchEvent(new HabboHelpTutorialEvent(HabboHelpTutorialEvent.var_1306));
+            }
+
+            this._help.hideUI();
+            this._help.events.dispatchEvent(new HabboHelpTutorialEvent(HabboHelpTutorialEvent.var_1306));
         }
 
-        public function windowProcedure(param1:WindowEvent, param2:IWindow):void
+        public function windowProcedure(event: WindowEvent, window: IWindow): void
         {
-            switch (param1.type)
+            switch (event.type)
             {
                 case WindowMouseEvent.WINDOW_EVENT_MOUSE_CLICK:
-                    if (param2.name == "header_button_close")
+                    if (window.name == "header_button_close")
                     {
                         this.disposeView();
-                    };
+                    }
+
                     return;
-            };
+            }
+
         }
 
-        public function changeName(param1:String):void
+        public function changeName(name: String): void
         {
             this.disposeWindow();
-            this.var_3486.sendMessage(new ChangeUserNameMessageComposer(param1));
+            this._help.sendMessage(new ChangeUserNameMessageComposer(name));
         }
 
-        public function checkName(param1:String):void
+        public function checkName(name: String): void
         {
             this.disposeWindow();
-            this.var_3486.sendMessage(new CheckUserNameMessageComposer(param1));
+            this._help.sendMessage(new CheckUserNameMessageComposer(name));
         }
 
-        public function onUserNameChanged(name:String):void
+        public function onUserNameChanged(name: String): void
         {
-            if ((((!(this.var_3486)) || (!(this.var_3486.localization))) || (!(this.var_3486.windowManager))))
+            if (!this._help || !this._help.localization || !this._help.windowManager)
             {
                 return;
-            };
-            this.var_3190 = true;
-            this.var_3486.localization.registerParameter("help.tutorial.name.changed", "name", name);
-            this.var_3486.windowManager.alert("${generic.notice}", "${help.tutorial.name.changed}", 0, function (param1:IAlertDialog, param2:WindowEvent):void
+            }
+
+            this._hasChangedName = true;
+            this._help.localization.registerParameter("help.tutorial.name.changed", "name", name);
+            
+            this._help.windowManager.alert("${generic.notice}", "${help.tutorial.name.changed}", 0, function (dialog: IAlertDialog, event: WindowEvent): void
             {
-                param1.dispose();
+                dialog.dispose();
             });
-            if (((!(this.var_3495 == null)) && ((this.var_3495.id == var_303) || (this.var_3495.id == var_1427))))
+            
+            if (this._tutorialUI != null && (this._tutorialUI.id == TUTORIAL_UI_NAME_VIEW || this._tutorialUI.id == TUTORIAL_UI_MAIN_VIEW))
             {
-                this.showView(var_1427);
-            };
+                this.showView(TUTORIAL_UI_MAIN_VIEW);
+            }
+
         }
 
-        private function onFigureUpdate(param1:HabboSessionFigureUpdatedEvent):void
+        private function onFigureUpdate(session: HabboSessionFigureUpdatedEvent): void
         {
-            var _loc2_:Boolean;
-            if (((this.var_3486 == null) || (param1 == null)))
+            var isSameSession: Boolean;
+            
+            if (this._help == null || session == null)
             {
                 return;
-            };
-            if (!this.var_3189)
+            }
+
+            if (!this._hasChangedLooks)
             {
-                if (this.var_3486.sessionDataManager != null)
+                if (this._help.sessionDataManager != null)
                 {
-                    _loc2_ = (param1.userId == this.var_3486.sessionDataManager.userId);
-                    if (_loc2_)
+                    isSameSession = session.userId == this._help.sessionDataManager.userId;
+                    
+                    if (isSameSession)
                     {
-                        this.var_3486.sessionDataManager.events.removeEventListener(HabboSessionFigureUpdatedEvent.var_1432, this.onFigureUpdate);
+                        this._help.sessionDataManager.events.removeEventListener(HabboSessionFigureUpdatedEvent.HABBO_SESSION_FIGURE_UPDATE, this.onFigureUpdate);
                         this.onUserChanged();
-                    };
-                };
-            };
+                    }
+
+                }
+
+            }
+
         }
 
-        public function onUserChanged():void
+        public function onUserChanged(): void
         {
-            this.var_3189 = true;
-            if (((!(this.var_3495 == null)) && ((this.var_3495.id == var_1428) || (this.var_3495.id == var_1427))))
+            this._hasChangedLooks = true;
+
+            if (this._tutorialUI != null && (this._tutorialUI.id == TUTORIAL_UI_CLOTHES_VIEW || this._tutorialUI.id == TUTORIAL_UI_MAIN_VIEW))
             {
-                this.showView(var_1427);
-            };
+                this.showView(TUTORIAL_UI_MAIN_VIEW);
+            }
+
         }
 
-        public function onChangeUserNameResult(param1:ChangeUserNameResultMessageEvent):void
+        public function onChangeUserNameResult(event: ChangeUserNameResultMessageEvent): void
         {
-            if (param1 == null)
+            if (event == null)
             {
                 return;
-            };
-            var _loc2_:ChangeUserNameResultMessageParser = param1.getParser();
-            if (_loc2_.resultCode == ChangeUserNameResultMessageEvent.var_1425)
+            }
+
+            var parser: ChangeUserNameResultMessageParser = event.getParser();
+            
+            if (parser.resultCode == ChangeUserNameResultMessageEvent.NAME_CHANGE_SUCCESS)
             {
-                this.var_3190 = true;
-                this.showView(TutorialUI.var_1427);
+                this._hasChangedName = true;
+                this.showView(TutorialUI.TUTORIAL_UI_MAIN_VIEW);
             }
             else
             {
-                this.var_3503.setNameNotAvailableView(_loc2_.resultCode, _loc2_.name, _loc2_.nameSuggestions);
-            };
+                this._nameChangeUI.setNameNotAvailableView(parser.resultCode, parser.name, parser.nameSuggestions);
+            }
+
         }
 
-        public function onCheckUserNameResult(param1:CheckUserNameResultMessageEvent):void
+        public function onCheckUserNameResult(event: CheckUserNameResultMessageEvent): void
         {
-            if (!param1)
+            if (!event)
             {
                 return;
-            };
-            var _loc2_:CheckUserNameResultMessageParser = param1.getParser();
-            if (_loc2_.resultCode == ChangeUserNameResultMessageEvent.var_1425)
+            }
+
+            var parser: CheckUserNameResultMessageParser = event.getParser();
+            
+            if (parser.resultCode == ChangeUserNameResultMessageEvent.NAME_CHANGE_SUCCESS)
             {
-                this.var_3503.checkedName = _loc2_.name;
+                this._nameChangeUI.checkedName = parser.name;
             }
             else
             {
-                this.var_3503.setNameNotAvailableView(_loc2_.resultCode, _loc2_.name, _loc2_.nameSuggestions);
-            };
+                this._nameChangeUI.setNameNotAvailableView(parser.resultCode, parser.name, parser.nameSuggestions);
+            }
+
         }
 
     }

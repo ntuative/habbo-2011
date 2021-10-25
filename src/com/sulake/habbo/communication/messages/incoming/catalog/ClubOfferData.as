@@ -1,83 +1,84 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ClubOfferData 
+    public class ClubOfferData
     {
 
-        private var _offerId:int;
-        private var var_2611:String;
-        private var var_2612:int;
-        private var var_2613:Boolean;
-        private var var_2614:Boolean;
-        private var var_2615:int;
-        private var var_2616:int;
-        private var var_2617:int;
-        private var var_2618:int;
-        private var var_2619:int;
+        private var _offerId: int;
+        private var _productCode: String;
+        private var _price: int;
+        private var _upgrade: Boolean;
+        private var _vip: Boolean;
+        private var _periods: int;
+        private var _daysLeftAfterPurchase: int;
+        private var _year: int;
+        private var _month: int;
+        private var _day: int;
 
-        public function ClubOfferData(param1:IMessageDataWrapper)
+        public function ClubOfferData(data: IMessageDataWrapper)
         {
-            this._offerId = param1.readInteger();
-            this.var_2611 = param1.readString();
-            this.var_2612 = param1.readInteger();
-            this.var_2613 = param1.readBoolean();
-            this.var_2614 = param1.readBoolean();
-            this.var_2615 = param1.readInteger();
-            this.var_2616 = param1.readInteger();
-            this.var_2617 = param1.readInteger();
-            this.var_2618 = param1.readInteger();
-            this.var_2619 = param1.readInteger();
+            this._offerId = data.readInteger();
+            this._productCode = data.readString();
+            this._price = data.readInteger();
+            this._upgrade = data.readBoolean();
+            this._vip = data.readBoolean();
+            this._periods = data.readInteger();
+            this._daysLeftAfterPurchase = data.readInteger();
+            this._year = data.readInteger();
+            this._month = data.readInteger();
+            this._day = data.readInteger();
         }
 
-        public function get offerId():int
+        public function get offerId(): int
         {
-            return (this._offerId);
+            return this._offerId;
         }
 
-        public function get productCode():String
+        public function get productCode(): String
         {
-            return (this.var_2611);
+            return this._productCode;
         }
 
-        public function get price():int
+        public function get price(): int
         {
-            return (this.var_2612);
+            return this._price;
         }
 
-        public function get upgrade():Boolean
+        public function get upgrade(): Boolean
         {
-            return (this.var_2613);
+            return this._upgrade;
         }
 
-        public function get vip():Boolean
+        public function get vip(): Boolean
         {
-            return (this.var_2614);
+            return this._vip;
         }
 
-        public function get periods():int
+        public function get periods(): int
         {
-            return (this.var_2615);
+            return this._periods;
         }
 
-        public function get daysLeftAfterPurchase():int
+        public function get daysLeftAfterPurchase(): int
         {
-            return (this.var_2616);
+            return this._daysLeftAfterPurchase;
         }
 
-        public function get year():int
+        public function get year(): int
         {
-            return (this.var_2617);
+            return this._year;
         }
 
-        public function get month():int
+        public function get month(): int
         {
-            return (this.var_2618);
+            return this._month;
         }
 
-        public function get day():int
+        public function get day(): int
         {
-            return (this.var_2619);
+            return this._day;
         }
 
     }

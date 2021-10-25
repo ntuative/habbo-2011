@@ -1,112 +1,113 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.inventory.furni
 {
-    public class FurniData 
+
+    public class FurniData
     {
 
-        private var var_2933:int;
-        private var var_2934:String;
-        private var _objId:int;
-        private var var_2935:int;
-        private var _category:int;
-        private var var_2650:String;
-        private var var_2936:Boolean;
-        private var var_2937:Boolean;
-        private var var_2938:Boolean;
-        private var var_2504:Boolean;
-        private var var_2939:int;
-        private var var_2940:int;
-        private var var_2538:String = "";
-        private var var_2941:int = -1;
+        private var _stripId: int;
+        private var _itemType: String;
+        private var _objId: int;
+        private var _classId: int;
+        private var _category: int;
+        private var _stuffData: String;
+        private var _isGroupable: Boolean;
+        private var _isRecyclable: Boolean;
+        private var _isTradeable: Boolean;
+        private var _isSellable: Boolean;
+        private var _expiryTime: int;
+        private var _extra: int;
+        private var _slotId: String = "";
+        private var _songId: int = -1;
 
-        public function FurniData(param1:int, param2:String, param3:int, param4:int, param5:int, param6:String, param7:Boolean, param8:Boolean, param9:Boolean, param10:Boolean, param11:int)
+        public function FurniData(stripId: int, itemType: String, objId: int, classId: int, category: int, stuffData: String, isGroupable: Boolean, isRecyclable: Boolean, isTradeable: Boolean, isSellable: Boolean, expiryTime: int)
         {
-            this.var_2933 = param1;
-            this.var_2934 = param2;
-            this._objId = param3;
-            this.var_2935 = param4;
-            this._category = param5;
-            this.var_2650 = param6;
-            this.var_2936 = param7;
-            this.var_2937 = param8;
-            this.var_2938 = param9;
-            this.var_2504 = param10;
-            this.var_2939 = param11;
+            this._stripId = stripId;
+            this._itemType = itemType;
+            this._objId = objId;
+            this._classId = classId;
+            this._category = category;
+            this._stuffData = stuffData;
+            this._isGroupable = isGroupable;
+            this._isRecyclable = isRecyclable;
+            this._isTradeable = isTradeable;
+            this._isSellable = isSellable;
+            this._expiryTime = expiryTime;
         }
 
-        public function setExtraData(param1:String, param2:int):void
+        public function setExtraData(slotId: String, extra: int): void
         {
-            this.var_2538 = param1;
-            this.var_2940 = param2;
+            this._slotId = slotId;
+            this._extra = extra;
         }
 
-        public function get stripId():int
+        public function get stripId(): int
         {
-            return (this.var_2933);
+            return this._stripId;
         }
 
-        public function get itemType():String
+        public function get itemType(): String
         {
-            return (this.var_2934);
+            return this._itemType;
         }
 
-        public function get objId():int
+        public function get objId(): int
         {
-            return (this._objId);
+            return this._objId;
         }
 
-        public function get classId():int
+        public function get classId(): int
         {
-            return (this.var_2935);
+            return this._classId;
         }
 
-        public function get category():int
+        public function get category(): int
         {
-            return (this._category);
+            return this._category;
         }
 
-        public function get stuffData():String
+        public function get stuffData(): String
         {
-            return (this.var_2650);
+            return this._stuffData;
         }
 
-        public function get isGroupable():Boolean
+        public function get isGroupable(): Boolean
         {
-            return (this.var_2936);
+            return this._isGroupable;
         }
 
-        public function get isRecyclable():Boolean
+        public function get isRecyclable(): Boolean
         {
-            return (this.var_2937);
+            return this._isRecyclable;
         }
 
-        public function get isTradeable():Boolean
+        public function get isTradeable(): Boolean
         {
-            return (this.var_2938);
+            return this._isTradeable;
         }
 
-        public function get isSellable():Boolean
+        public function get isSellable(): Boolean
         {
-            return (this.var_2504);
+            return this._isSellable;
         }
 
-        public function get expiryTime():int
+        public function get expiryTime(): int
         {
-            return (this.var_2939);
+            return this._expiryTime;
         }
 
-        public function get slotId():String
+        public function get slotId(): String
         {
-            return (this.var_2538);
+            return this._slotId;
         }
 
-        public function get songId():int
+        public function get songId(): int
         {
-            return (this.var_2941);
+            return this._songId;
         }
 
-        public function get extra():int
+        public function get extra(): int
         {
-            return (this.var_2940);
+            return this._extra;
         }
 
     }

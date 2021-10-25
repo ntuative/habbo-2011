@@ -1,55 +1,57 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.furniture
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class WelcomeGiftStatusParser implements IMessageParser 
+    public class WelcomeGiftStatusParser implements IMessageParser
     {
 
-        private var var_3316:String;
-        private var var_3317:Boolean;
-        private var var_3318:Boolean;
-        private var _furniId:int;
-        private var var_3319:Boolean;
+        private var _email: String;
+        private var _isVerified: Boolean;
+        private var _allowChange: Boolean;
+        private var _furniId: int;
+        private var _requestedByUser: Boolean;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3316 = param1.readString();
-            this.var_3317 = param1.readBoolean();
-            this.var_3318 = param1.readBoolean();
-            this._furniId = param1.readInteger();
-            this.var_3319 = param1.readBoolean();
-            return (true);
+            this._email = data.readString();
+            this._isVerified = data.readBoolean();
+            this._allowChange = data.readBoolean();
+            this._furniId = data.readInteger();
+            this._requestedByUser = data.readBoolean();
+
+            return true;
         }
 
-        public function get requestedByUser():Boolean
+        public function get requestedByUser(): Boolean
         {
-            return (this.var_3319);
+            return this._requestedByUser;
         }
 
-        public function get email():String
+        public function get email(): String
         {
-            return (this.var_3316);
+            return this._email;
         }
 
-        public function get isVerified():Boolean
+        public function get isVerified(): Boolean
         {
-            return (this.var_3317);
+            return this._isVerified;
         }
 
-        public function get allowChange():Boolean
+        public function get allowChange(): Boolean
         {
-            return (this.var_3318);
+            return this._allowChange;
         }
 
-        public function get furniId():int
+        public function get furniId(): int
         {
-            return (this._furniId);
+            return this._furniId;
         }
 
     }

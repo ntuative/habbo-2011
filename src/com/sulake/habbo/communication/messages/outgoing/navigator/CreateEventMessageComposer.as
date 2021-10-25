@@ -1,16 +1,17 @@
 ﻿package com.sulake.habbo.communication.messages.outgoing.navigator
 {
+
     import com.sulake.core.communication.messages.IMessageComposer;
     import com.sulake.core.runtime.IDisposable;
 
-    public class CreateEventMessageComposer implements IMessageComposer, IDisposable 
+    public class CreateEventMessageComposer implements IMessageComposer, IDisposable
     {
 
-        private var var_2217:Array = new Array();
+        private var var_2217: Array = [];
 
-        public function CreateEventMessageComposer(param1:int, param2:String, param3:String, param4:Array)
+        public function CreateEventMessageComposer(param1: int, param2: String, param3: String, param4: Array)
         {
-            var _loc5_:String;
+            var _loc5_: String;
             super();
             this.var_2217.push(param1);
             this.var_2217.push(param2);
@@ -19,22 +20,23 @@
             for each (_loc5_ in param4)
             {
                 this.var_2217.push(_loc5_);
-            };
+            }
+
         }
 
-        public function getMessageArray():Array
+        public function getMessageArray(): Array
         {
-            return (this.var_2217);
+            return this.var_2217;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             this.var_2217 = null;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (false);
+            return false;
         }
 
     }

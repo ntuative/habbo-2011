@@ -1,60 +1,61 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.notifications
 {
+
     import com.sulake.core.communication.messages.MessageEvent;
     import com.sulake.core.communication.messages.IMessageEvent;
     import com.sulake.habbo.communication.messages.parser.notifications.HabboAchievementNotificationMessageParser;
 
-    public class HabboAchievementNotificationMessageEvent extends MessageEvent implements IMessageEvent 
+    public class HabboAchievementNotificationMessageEvent extends MessageEvent implements IMessageEvent
     {
 
-        public function HabboAchievementNotificationMessageEvent(param1:Function)
+        public function HabboAchievementNotificationMessageEvent(param1: Function)
         {
             super(param1, HabboAchievementNotificationMessageParser);
         }
 
-        public function get type():int
+        public function get type(): int
         {
-            return ((var_361 as HabboAchievementNotificationMessageParser).type);
+            return (_parser as HabboAchievementNotificationMessageParser).type;
         }
 
-        public function get level():int
+        public function get level(): int
         {
-            return ((var_361 as HabboAchievementNotificationMessageParser).level);
+            return (_parser as HabboAchievementNotificationMessageParser).level;
         }
 
-        public function get points():int
+        public function get points(): int
         {
-            return ((var_361 as HabboAchievementNotificationMessageParser).points);
+            return (_parser as HabboAchievementNotificationMessageParser).points;
         }
 
-        public function get levelRewardPoints():int
+        public function get levelRewardPoints(): int
         {
-            return ((var_361 as HabboAchievementNotificationMessageParser).levelRewardPoints);
+            return (_parser as HabboAchievementNotificationMessageParser).levelRewardPoints;
         }
 
-        public function get levelRewardPointType():int
+        public function get levelRewardPointType(): int
         {
-            return ((var_361 as HabboAchievementNotificationMessageParser).levelRewardPointType);
+            return (_parser as HabboAchievementNotificationMessageParser).levelRewardPointType;
         }
 
-        public function get bonusPoints():int
+        public function get bonusPoints(): int
         {
-            return ((var_361 as HabboAchievementNotificationMessageParser).bonusPoints);
+            return (_parser as HabboAchievementNotificationMessageParser).bonusPoints;
         }
 
-        public function get badgeID():String
+        public function get badgeID(): String
         {
-            return ((var_361 as HabboAchievementNotificationMessageParser).badgeID);
+            return (_parser as HabboAchievementNotificationMessageParser).badgeID;
         }
 
-        public function get achievementID():int
+        public function get achievementID(): int
         {
-            return ((var_361 as HabboAchievementNotificationMessageParser).achievementID);
+            return (_parser as HabboAchievementNotificationMessageParser).achievementID;
         }
 
-        public function get removedBadgeID():String
+        public function get removedBadgeID(): String
         {
-            return ((var_361 as HabboAchievementNotificationMessageParser).removedBadgeID);
+            return (_parser as HabboAchievementNotificationMessageParser).removedBadgeID;
         }
 
     }

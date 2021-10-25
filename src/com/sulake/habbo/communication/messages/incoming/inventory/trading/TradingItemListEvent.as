@@ -1,39 +1,40 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.inventory.trading
 {
+
     import com.sulake.core.communication.messages.MessageEvent;
     import com.sulake.habbo.communication.messages.parser.inventory.trading.TradingItemListParser;
 
-    public class TradingItemListEvent extends MessageEvent 
+    public class TradingItemListEvent extends MessageEvent
     {
 
-        public function TradingItemListEvent(param1:Function, param2:Class)
+        public function TradingItemListEvent(param1: Function, param2: Class)
         {
             super(param1, param2);
         }
 
-        public function get firstUserID():int
+        public function get firstUserID(): int
         {
-            return (this.getParser().firstUserID);
+            return this.getParser().firstUserID;
         }
 
-        public function get secondUserID():int
+        public function get secondUserID(): int
         {
-            return (this.getParser().secondUserID);
+            return this.getParser().secondUserID;
         }
 
-        public function get firstUserItemArray():Array
+        public function get firstUserItemArray(): Array
         {
-            return (this.getParser().firstUserItemArray);
+            return this.getParser().firstUserItemArray;
         }
 
-        public function get secondUserItemArray():Array
+        public function get secondUserItemArray(): Array
         {
-            return (this.getParser().secondUserItemArray);
+            return this.getParser().secondUserItemArray;
         }
 
-        public function getParser():TradingItemListParser
+        public function getParser(): TradingItemListParser
         {
-            return (var_361 as TradingItemListParser);
+            return _parser as TradingItemListParser;
         }
 
     }

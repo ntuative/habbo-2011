@@ -1,18 +1,19 @@
 ﻿package com.sulake.habbo.room.messages
 {
-    public class RoomObjectAvatarDanceUpdateMessage extends RoomObjectUpdateStateMessage 
+
+    public class RoomObjectAvatarDanceUpdateMessage extends RoomObjectUpdateStateMessage
     {
 
-        private var var_3289:int;
+        private var _danceStyle: int;
 
-        public function RoomObjectAvatarDanceUpdateMessage(param1:int=0)
+        public function RoomObjectAvatarDanceUpdateMessage(danceStyle: int = 0)
         {
-            this.var_3289 = param1;
+            this._danceStyle = danceStyle;
         }
 
-        public function get danceStyle():int
+        public function get danceStyle(): int
         {
-            return (this.var_3289);
+            return this._danceStyle;
         }
 
     }

@@ -1,28 +1,29 @@
 ﻿package com.sulake.habbo.communication.messages.parser.moderation
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.moderation.RoomVisitsData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class RoomVisitsMessageParser implements IMessageParser 
+    public class RoomVisitsMessageParser implements IMessageParser
     {
 
-        private var _data:RoomVisitsData;
+        private var _data: RoomVisitsData;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(param1: IMessageDataWrapper): Boolean
         {
             this._data = new RoomVisitsData(param1);
-            return (true);
+            return true;
         }
 
-        public function get data():RoomVisitsData
+        public function get data(): RoomVisitsData
         {
-            return (this._data);
+            return this._data;
         }
 
     }

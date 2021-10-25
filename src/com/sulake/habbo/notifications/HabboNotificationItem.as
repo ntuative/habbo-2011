@@ -1,51 +1,56 @@
 ﻿package com.sulake.habbo.notifications
 {
-    public class HabboNotificationItem 
+
+    public class HabboNotificationItem
     {
 
-        private var var_1025:HabboNotificationItemStyle;
-        private var var_1997:String;
-        private var var_3479:HabboNotifications;
+        private var _style: HabboNotificationItemStyle;
+        private var _content: String;
+        private var _notifications: HabboNotifications;
 
-        public function HabboNotificationItem(param1:String, param2:HabboNotificationItemStyle, param3:HabboNotifications)
+        public function HabboNotificationItem(conetnt: String, style: HabboNotificationItemStyle, notifications: HabboNotifications)
         {
-            this.var_1997 = param1;
-            this.var_1025 = param2;
-            this.var_3479 = param3;
+            this._content = conetnt;
+            this._style = style;
+            this._notifications = notifications;
         }
 
-        public function get style():HabboNotificationItemStyle
+        public function get style(): HabboNotificationItemStyle
         {
-            return (this.var_1025);
+            return this._style;
         }
 
-        public function get content():String
+        public function get content(): String
         {
-            return (this.var_1997);
+            return this._content;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            this.var_1997 = null;
-            if (this.var_1025 != null)
+            this._content = null;
+            if (this._style != null)
             {
-                this.var_1025.dispose();
-                this.var_1025 = null;
-            };
-            this.var_3479 = null;
+                this._style.dispose();
+                this._style = null;
+            }
+
+            this._notifications = null;
         }
 
-        public function ExecuteUiLinks():void
+        public function ExecuteUiLinks(): void
         {
-            var _loc2_:String;
-            var _loc1_:Array = this.var_1025.componentLinks;
-            for each (_loc2_ in _loc1_)
+            var link: String;
+            var links: Array = this._style.componentLinks;
+
+            for each (link in links)
             {
-                if (this.var_3479 != null)
+                if (this._notifications != null)
                 {
-                    this.var_3479.onExecuteLink(_loc2_);
-                };
-            };
+                    this._notifications.onExecuteLink(link);
+                }
+
+            }
+
         }
 
     }

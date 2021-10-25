@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.quest
 {
+
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.habbo.communication.IHabboCommunicationManager;
     import com.sulake.habbo.window.utils.IAlertDialog;
@@ -16,18 +17,19 @@
     import com.sulake.habbo.toolbar.events.HabboToolbarSetIconEvent;
     import com.sulake.habbo.toolbar.HabboToolbarIconEnum;
 
-    public class IncomingMessages implements IDisposable 
+    public class IncomingMessages implements IDisposable
     {
 
-        private var var_3922:HabboQuestEngine;
-        private var _communication:IHabboCommunicationManager;
-        private var var_3923:IAlertDialog;
-        private var var_978:Boolean = false;
+        private var _engine: HabboQuestEngine;
+        private var _communication: IHabboCommunicationManager;
+        private var _dialog: IAlertDialog;
+        private var _disposed: Boolean = false;
 
-        public function IncomingMessages(param1:HabboQuestEngine)
+        public function IncomingMessages(engine: HabboQuestEngine)
         {
-            this.var_3922 = param1;
-            this._communication = this.var_3922.communication;
+            this._engine = engine;
+            this._communication = this._engine.communication;
+
             this._communication.addHabboConnectionMessageEvent(new QuestCompletedMessageEvent(this.onQuestCompleted));
             this._communication.addHabboConnectionMessageEvent(new CloseConnectionMessageEvent(this.onRoomExit));
             this._communication.addHabboConnectionMessageEvent(new RoomEntryInfoMessageEvent(this.onRoomEnter));
@@ -35,66 +37,74 @@
             this._communication.addHabboConnectionMessageEvent(new QuestMessageEvent(this.onQuest));
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this.var_978);
+            return this._disposed;
         }
 
-        private function onQuestCompleted(param1:IMessageEvent):void
+        private function onQuestCompleted(event: IMessageEvent): void
         {
-            var _loc2_:QuestCompletedMessageParser = (param1 as QuestCompletedMessageEvent).getParser();
-            Logger.log(((("Quest Completed: " + _loc2_.questData.campaignCode) + " quest: ") + _loc2_.questData.id));
-            new QuestCompleted(this.var_3922, _loc2_.questData);
+            var parser: QuestCompletedMessageParser = (event as QuestCompletedMessageEvent).getParser();
+           
+            Logger.log("Quest Completed: " + parser.questData.campaignCode + " quest: " + parser.questData.id);
+           
+            new QuestCompleted(this._engine, parser.questData);
         }
 
-        private function onQuests(param1:IMessageEvent):void
+        private function onQuests(event: IMessageEvent): void
         {
-            var _loc2_:QuestsMessageParser = (param1 as QuestsMessageEvent).getParser();
-            Logger.log(((("Got Quests: " + _loc2_.quests) + ", ") + _loc2_.openWindow));
-            this.var_3922.controller.onQuests(_loc2_.quests, _loc2_.openWindow);
+            var parser: QuestsMessageParser = (event as QuestsMessageEvent).getParser();
+            
+            Logger.log("Got Quests: " + parser.quests + ", " + parser.openWindow);
+            
+            this._engine.controller.onQuests(parser.quests, parser.openWindow);
         }
 
-        private function onQuest(param1:IMessageEvent):void
+        private function onQuest(event: IMessageEvent): void
         {
-            var _loc2_:QuestMessageParser = (param1 as QuestMessageEvent).getParser();
-            Logger.log(("Got Quest: " + _loc2_.quest));
-            this.var_3922.controller.onQuest(_loc2_.quest);
+            var parser: QuestMessageParser = (event as QuestMessageEvent).getParser();
+            
+            Logger.log("Got Quest: " + parser.quest);
+            
+            this._engine.controller.onQuest(parser.quest);
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            if (this.var_3923)
+            if (this._dialog)
             {
-                this.var_3923.dispose();
-                this.var_3923 = null;
-            };
-            this.var_978 = true;
+                this._dialog.dispose();
+                this._dialog = null;
+            }
+
+            this._disposed = true;
         }
 
-        private function onCloseAlert(param1:IAlertDialog, param2:WindowEvent):void
+        private function onCloseAlert(param1: IAlertDialog, param2: WindowEvent): void
         {
             param1.dispose();
         }
 
-        private function getCampaignCode():String
+        private function getCampaignCode(): String
         {
-            var _loc1_:String = this.var_3922.configuration.getKey("questing.defaultCampaign", "");
-            var _loc2_:String = this.var_3922.configuration.getKey("questing.defaultCampaign.override", "");
-            var _loc3_:String = this.var_3922.configuration.getKey("questing.excludedCampaignCode", "");
-            var _loc4_:String = (((_loc1_) && (!(_loc1_ == ""))) ? _loc1_ : "");
-            return ((((_loc2_) && (!(_loc2_ == ""))) && (!(_loc2_ == _loc3_))) ? _loc2_ : _loc4_);
+            var defaultCampaign: String = this._engine.configuration.getKey("questing.defaultCampaign", "");
+            var overrideCampaign: String = this._engine.configuration.getKey("questing.defaultCampaign.override", "");
+            var excludedCampaignCode: String = this._engine.configuration.getKey("questing.excludedCampaignCode", "");
+            var normalizedCampaign: String = defaultCampaign && defaultCampaign != "" ? defaultCampaign : "";
+            
+            return overrideCampaign && overrideCampaign != "" && overrideCampaign != excludedCampaignCode ? overrideCampaign : normalizedCampaign;
         }
 
-        private function onRoomEnter(param1:IMessageEvent):void
+        private function onRoomEnter(event: IMessageEvent): void
         {
-            this.var_3922.controller.onRoomEnter();
-            this.var_3922.toolbar.events.dispatchEvent(new HabboToolbarSetIconEvent(HabboToolbarSetIconEvent.var_145, HabboToolbarIconEnum.QUESTS));
+            this._engine.controller.onRoomEnter();
+            this._engine.toolbar.events.dispatchEvent(new HabboToolbarSetIconEvent(HabboToolbarSetIconEvent.var_145, HabboToolbarIconEnum.QUESTS));
         }
 
-        private function onRoomExit(param1:IMessageEvent):void
+        private function onRoomExit(event: IMessageEvent): void
         {
-            this.var_3922.controller.onRoomExit();
-            this.var_3922.toolbar.events.dispatchEvent(new HabboToolbarSetIconEvent(HabboToolbarSetIconEvent.var_306, HabboToolbarIconEnum.QUESTS));
+            this._engine.controller.onRoomExit();
+            this._engine.toolbar.events.dispatchEvent(new HabboToolbarSetIconEvent(HabboToolbarSetIconEvent.var_306, HabboToolbarIconEnum.QUESTS));
         }
 
     }

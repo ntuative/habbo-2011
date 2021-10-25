@@ -1,13 +1,15 @@
 ﻿package com.sulake.habbo.ui
 {
+
     import flash.events.IEventDispatcher;
     import flash.events.Event;
 
-    public interface IRoomDesktop 
+    public interface IRoomDesktop
     {
 
-        function get events():IEventDispatcher;
-        function processEvent(param1:Event):void;
+        function get events(): IEventDispatcher;
+
+        function processEvent(param1: Event): void;
 
     }
 }

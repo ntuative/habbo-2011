@@ -1,49 +1,51 @@
 ﻿package com.sulake.habbo.communication.messages.parser.navigator
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.navigator.GuestRoomData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class GetGuestRoomResultMessageParser implements IMessageParser 
+    public class GetGuestRoomResultMessageParser implements IMessageParser
     {
 
-        private var var_3254:Boolean;
-        private var var_3255:Boolean;
-        private var var_3256:Boolean;
-        private var _data:GuestRoomData;
+        private var _enterRoom: Boolean;
+        private var _roomForward: Boolean;
+        private var _staffPick: Boolean;
+        private var _data: GuestRoomData;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3254 = param1.readBoolean();
-            this._data = new GuestRoomData(param1);
-            this.var_3255 = param1.readBoolean();
-            this.var_3256 = param1.readBoolean();
-            return (true);
+            this._enterRoom = data.readBoolean();
+            this._data = new GuestRoomData(data);
+            this._roomForward = data.readBoolean();
+            this._staffPick = data.readBoolean();
+
+            return true;
         }
 
-        public function get enterRoom():Boolean
+        public function get enterRoom(): Boolean
         {
-            return (this.var_3254);
+            return this._enterRoom;
         }
 
-        public function get data():GuestRoomData
+        public function get data(): GuestRoomData
         {
-            return (this._data);
+            return this._data;
         }
 
-        public function get roomForward():Boolean
+        public function get roomForward(): Boolean
         {
-            return (this.var_3255);
+            return this._roomForward;
         }
 
-        public function get staffPick():Boolean
+        public function get staffPick(): Boolean
         {
-            return (this.var_3256);
+            return this._staffPick;
         }
 
     }

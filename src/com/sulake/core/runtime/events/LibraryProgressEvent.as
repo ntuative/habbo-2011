@@ -1,28 +1,30 @@
 ﻿package com.sulake.core.runtime.events
 {
+
     import flash.events.ProgressEvent;
 
-    public class LibraryProgressEvent extends ProgressEvent 
+    public class LibraryProgressEvent extends ProgressEvent
     {
 
-        private var var_2171:int = 0;
-        private var var_2172:String = "";
+        private var _elapsedTime: int = 0;
+        private var _fileName: String = "";
 
-        public function LibraryProgressEvent(param1:String, param2:uint=0, param3:uint=0, param4:int=0)
+        public function LibraryProgressEvent(fileName: String, bytesLoaded: uint = 0, bytesTotal: uint = 0, elapsedTime: int = 0)
         {
-            this.var_2172 = param1;
-            this.var_2171 = param4;
-            super(ProgressEvent.PROGRESS, false, false, param2, param3);
+            this._fileName = fileName;
+            this._elapsedTime = elapsedTime;
+
+            super(ProgressEvent.PROGRESS, false, false, bytesLoaded, bytesTotal);
         }
 
-        public function get elapsedTime():int
+        public function get elapsedTime(): int
         {
-            return (this.var_2171);
+            return this._elapsedTime;
         }
 
-        public function get fileName():String
+        public function get fileName(): String
         {
-            return (this.var_2172);
+            return this._fileName;
         }
 
     }

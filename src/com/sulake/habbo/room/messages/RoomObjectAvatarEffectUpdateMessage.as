@@ -1,25 +1,26 @@
 ﻿package com.sulake.habbo.room.messages
 {
-    public class RoomObjectAvatarEffectUpdateMessage extends RoomObjectUpdateStateMessage 
+
+    public class RoomObjectAvatarEffectUpdateMessage extends RoomObjectUpdateStateMessage
     {
 
-        private var var_3943:int;
-        private var var_3287:int;
+        private var _effect: int;
+        private var _delayMilliSeconds: int;
 
-        public function RoomObjectAvatarEffectUpdateMessage(param1:int=0, param2:int=0)
+        public function RoomObjectAvatarEffectUpdateMessage(effect: int = 0, delayMilliSeconds: int = 0)
         {
-            this.var_3943 = param1;
-            this.var_3287 = param2;
+            this._effect = effect;
+            this._delayMilliSeconds = delayMilliSeconds;
         }
 
-        public function get effect():int
+        public function get effect(): int
         {
-            return (this.var_3943);
+            return this._effect;
         }
 
-        public function get delayMilliSeconds():int
+        public function get delayMilliSeconds(): int
         {
-            return (this.var_3287);
+            return this._delayMilliSeconds;
         }
 
     }

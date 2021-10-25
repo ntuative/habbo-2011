@@ -1,28 +1,29 @@
 ﻿package com.sulake.habbo.communication.messages.parser.moderation
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.moderation.CfhChatlogData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class CfhChatlogMessageParser implements IMessageParser 
+    public class CfhChatlogMessageParser implements IMessageParser
     {
 
-        private var _data:CfhChatlogData;
+        private var _data: CfhChatlogData;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(param1: IMessageDataWrapper): Boolean
         {
             this._data = new CfhChatlogData(param1);
-            return (true);
+            return true;
         }
 
-        public function get data():CfhChatlogData
+        public function get data(): CfhChatlogData
         {
-            return (this._data);
+            return this._data;
         }
 
     }

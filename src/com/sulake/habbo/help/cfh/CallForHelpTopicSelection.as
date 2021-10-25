@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.help.cfh
 {
+
     import com.sulake.habbo.help.help.HelpViewController;
     import com.sulake.habbo.help.help.IHelpViewController;
     import com.sulake.habbo.help.help.HelpUI;
@@ -11,39 +12,41 @@
     import com.sulake.core.window.events.WindowMouseEvent;
     import com.sulake.habbo.help.enum.HabboHelpViewEnum;
 
-    public class CallForHelpTopicSelection extends HelpViewController implements IHelpViewController 
+    public class CallForHelpTopicSelection extends HelpViewController implements IHelpViewController
     {
 
-        private static const var_3464:int = 0;
-        private static const var_3465:int = 1;
+        private static const var_3464: int = 0;
+        private static const var_3465: int = 1;
 
-        private var var_3466:Array;
+        private var var_3466: Array;
 
-        public function CallForHelpTopicSelection(param1:HelpUI, param2:IHabboWindowManager, param3:IAssetLibrary)
+        public function CallForHelpTopicSelection(param1: HelpUI, param2: IHabboWindowManager, param3: IAssetLibrary)
         {
             super(param1, param2, param3);
         }
 
-        override public function render():void
+        override public function render(): void
         {
-            var _loc3_:String;
-            var _loc5_:String;
-            var _loc6_:int;
-            var _loc7_:int;
-            var _loc8_:int;
-            var _loc9_:String;
-            var _loc10_:String;
-            var _loc11_:IWindowContainer;
+            var _loc3_: String;
+            var _loc5_: String;
+            var _loc6_: int;
+            var _loc7_: int;
+            var _loc8_: int;
+            var _loc9_: String;
+            var _loc10_: String;
+            var _loc11_: IWindowContainer;
             super.render();
             if (container != null)
             {
                 container.dispose();
-            };
-            var _loc1_:int = var_3464;
+            }
+
+            var _loc1_: int = var_3464;
             if (main.component.callForHelpData.userSelected)
             {
                 _loc1_ = var_3465;
-            };
+            }
+
             if (_loc1_ == var_3465)
             {
                 container = (buildXmlWindow("report_user_pick_topic") as IWindowContainer);
@@ -51,16 +54,19 @@
             else
             {
                 container = (buildXmlWindow("help_cfh_pick_topic") as IWindowContainer);
-            };
+            }
+
             if (container == null)
             {
                 return;
-            };
-            var _loc2_:IItemListWindow = (container.findChildByTag("content") as IItemListWindow);
+            }
+
+            var _loc2_: IItemListWindow = container.findChildByTag("content") as IItemListWindow;
             if (_loc2_ == null)
             {
                 return;
-            };
+            }
+
             if (_loc1_ == var_3465)
             {
                 _loc3_ = main.getConfigurationKey("cfh.usercategories.withharasser");
@@ -68,17 +74,20 @@
             else
             {
                 _loc3_ = main.getConfigurationKey("cfh.usercategories.withnoharasser");
-            };
-            var _loc4_:Array = _loc3_.split(",");
-            this.var_3466 = new Array();
+            }
+
+            var _loc4_: Array = _loc3_.split(",");
+            this.var_3466 = [];
             for each (_loc5_ in _loc4_)
             {
                 _loc7_ = int(_loc5_.replace(" ", ""));
                 if (_loc7_ != 0)
                 {
                     this.var_3466.push(_loc7_);
-                };
-            };
+                }
+
+            }
+
             _loc6_ = 0;
             while (_loc6_ < this.var_3466.length)
             {
@@ -87,41 +96,49 @@
                 if (_loc1_ == var_3465)
                 {
                     main.localization.registerParameter(_loc9_, "name", main.component.callForHelpData.reportedUserName);
-                };
+                }
+
                 _loc10_ = getText(main.component.callForHelpData.getTopicKey(_loc8_));
-                _loc11_ = buildHelpCategoryListEntryItem(((_loc10_ != null) ? _loc10_ : _loc9_), "help_cfh_pick_topic_item", this.onListItemClick);
+                _loc11_ = buildHelpCategoryListEntryItem(_loc10_ != null
+                                                                 ? _loc10_
+                                                                 : _loc9_, "help_cfh_pick_topic_item", this.onListItemClick);
                 if (_loc11_ != null)
                 {
                     _loc2_.addListItem(_loc11_);
-                };
+                }
+
                 _loc6_++;
-            };
+            }
+
         }
 
-        private function onListItemClick(param1:WindowMouseEvent):void
+        private function onListItemClick(param1: WindowMouseEvent): void
         {
-            var _loc2_:IWindow = (param1.target as IWindow);
+            var _loc2_: IWindow = param1.target as IWindow;
             this.handleListItemClick(_loc2_);
         }
 
-        private function handleListItemClick(param1:IWindow):void
+        private function handleListItemClick(param1: IWindow): void
         {
-            var _loc2_:IItemListWindow = (container.findChildByTag("content") as IItemListWindow);
-            if ((((_loc2_ == null) || (param1 == null)) || (param1.parent == null)))
+            var _loc2_: IItemListWindow = container.findChildByTag("content") as IItemListWindow;
+            if (_loc2_ == null || param1 == null || param1.parent == null)
             {
                 return;
-            };
-            var _loc3_:int = _loc2_.getListItemIndex(param1.parent);
-            if ((((this.var_3466 == null) || (_loc3_ < 0)) || (_loc3_ >= this.var_3466.length)))
+            }
+
+            var _loc3_: int = _loc2_.getListItemIndex(param1.parent);
+            if (this.var_3466 == null || _loc3_ < 0 || _loc3_ >= this.var_3466.length)
             {
                 return;
-            };
+            }
+
             if (_loc3_ > -1)
             {
                 main.component.callForHelpData.topicIndex = this.var_3466[_loc3_];
-                main.showUI(HabboHelpViewEnum.var_1417);
-                main.tellUI(HabboHelpViewEnum.var_1417, null);
-            };
+                main.showUI(HabboHelpViewEnum.HHVE_CFH_TEXT_INPUT);
+                main.tellUI(HabboHelpViewEnum.HHVE_CFH_TEXT_INPUT, null);
+            }
+
         }
 
     }

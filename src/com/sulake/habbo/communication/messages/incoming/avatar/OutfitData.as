@@ -1,34 +1,35 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.avatar
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class OutfitData 
+    public class OutfitData
     {
 
-        private var var_2538:int;
-        private var var_2474:String;
-        private var var_2071:String;
+        private var _slotId: int;
+        private var _figureString: String;
+        private var _gender: String;
 
-        public function OutfitData(param1:IMessageDataWrapper)
+        public function OutfitData(data: IMessageDataWrapper)
         {
-            this.var_2538 = param1.readInteger();
-            this.var_2474 = param1.readString();
-            this.var_2071 = param1.readString();
+            this._slotId = data.readInteger();
+            this._figureString = data.readString();
+            this._gender = data.readString();
         }
 
-        public function get slotId():int
+        public function get slotId(): int
         {
-            return (this.var_2538);
+            return this._slotId;
         }
 
-        public function get figureString():String
+        public function get figureString(): String
         {
-            return (this.var_2474);
+            return this._figureString;
         }
 
-        public function get gender():String
+        public function get gender(): String
         {
-            return (this.var_2071);
+            return this._gender;
         }
 
     }

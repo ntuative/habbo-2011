@@ -1,56 +1,60 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.furniture
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class OpenPetPackageRequestedMessageParser implements IMessageParser 
+    public class OpenPetPackageRequestedMessageParser implements IMessageParser
     {
 
-        private var var_2358:int = -1;
-        private var var_2603:int = -1;
-        private var var_2517:int = -1;
-        private var _color:String = "";
+        private var _objectId: int = -1;
+        private var _petType: int = -1;
+        private var _breed: int = -1;
+        private var _color: String = "";
 
-        public function get objectId():int
+        public function get objectId(): int
         {
-            return (this.var_2358);
+            return this._objectId;
         }
 
-        public function get petType():int
+        public function get petType(): int
         {
-            return (this.var_2603);
+            return this._petType;
         }
 
-        public function get breed():int
+        public function get breed(): int
         {
-            return (this.var_2517);
+            return this._breed;
         }
 
-        public function get color():String
+        public function get color(): String
         {
-            return (this._color);
+            return this._color;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_2358 = -1;
-            this.var_2603 = -1;
-            this.var_2517 = -1;
+            this._objectId = -1;
+            this._petType = -1;
+            this._breed = -1;
             this._color = "";
-            return (true);
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            if (param1 == null)
+            if (data == null)
             {
-                return (false);
-            };
-            this.var_2358 = param1.readInteger();
-            this.var_2603 = param1.readInteger();
-            this.var_2517 = param1.readInteger();
-            this._color = param1.readString();
-            return (true);
+                return false;
+            }
+
+            this._objectId = data.readInteger();
+            this._petType = data.readInteger();
+            this._breed = data.readInteger();
+            this._color = data.readString();
+            
+            return true;
         }
 
     }

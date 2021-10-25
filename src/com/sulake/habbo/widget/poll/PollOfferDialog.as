@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.widget.poll
 {
+
     import com.sulake.core.window.components.IFrameWindow;
     import com.sulake.core.window.components.ITextWindow;
     import com.sulake.core.window.components.IItemListWindow;
@@ -9,30 +10,30 @@
     import com.sulake.core.window.events.WindowEvent;
     import com.sulake.core.window.IWindow;
 
-    public class PollOfferDialog implements IPollDialog 
+    public class PollOfferDialog implements IPollDialog
     {
 
-        public static const var_1973:String = "POLL_OFFER_STATE_OK";
-        public static const var_1974:String = "POLL_OFFER_STATE_CANCEL";
-        public static const var_592:String = "POLL_OFFER_STATE_UNKNOWN";
+        public static const var_1973: String = "POLL_OFFER_STATE_OK";
+        public static const var_1974: String = "POLL_OFFER_STATE_CANCEL";
+        public static const var_592: String = "POLL_OFFER_STATE_UNKNOWN";
 
-        private var _disposed:Boolean = false;
-        private var _window:IFrameWindow;
-        private var _state:String = "POLL_OFFER_STATE_UNKNOWN";
-        private var _widget:PollWidget;
-        private var _id:int = -1;
+        private var _disposed: Boolean = false;
+        private var _window: IFrameWindow;
+        private var _state: String = "POLL_OFFER_STATE_UNKNOWN";
+        private var _widget: PollWidget;
+        private var _id: int = -1;
 
-        public function PollOfferDialog(param1:int, param2:String, param3:PollWidget)
+        public function PollOfferDialog(param1: int, param2: String, param3: PollWidget)
         {
-            var _loc5_:ITextWindow;
-            var _loc6_:IItemListWindow;
+            var _loc5_: ITextWindow;
+            var _loc6_: IItemListWindow;
             super();
             this._id = param1;
             this._widget = param3;
-            var _loc4_:XmlAsset = (this._widget.assets.getAssetByName("poll_offer") as XmlAsset);
+            var _loc4_: XmlAsset = this._widget.assets.getAssetByName("poll_offer") as XmlAsset;
             if (_loc4_)
             {
-                this._window = (this._widget.windowManager.buildFromXML((_loc4_.content as XML)) as IFrameWindow);
+                this._window = (this._widget.windowManager.buildFromXML(_loc4_.content as XML) as IFrameWindow);
                 if (this._window)
                 {
                     this._window.center();
@@ -44,24 +45,28 @@
                         _loc6_ = (this._window.findChildByName("poll_offer_summary_wrapper") as IItemListWindow);
                         if (_loc6_)
                         {
-                            this._window.height = (this._window.height + (_loc6_.scrollableRegion.height - _loc6_.visibleRegion.height));
-                        };
-                    };
-                };
-            };
+                            this._window.height = this._window.height + (_loc6_.scrollableRegion.height - _loc6_.visibleRegion.height);
+                        }
+
+                    }
+
+                }
+
+            }
+
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get state():String
+        public function get state(): String
         {
-            return (this._state);
+            return this._state;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (!this._disposed)
             {
@@ -69,13 +74,15 @@
                 {
                     this._window.dispose();
                     this._window = null;
-                };
+                }
+
                 this._widget = null;
                 this._disposed = true;
-            };
+            }
+
         }
 
-        private function offerDialogEventProc(param1:WindowEvent, param2:IWindow):void
+        private function offerDialogEventProc(param1: WindowEvent, param2: IWindow): void
         {
             if (this._state == var_592)
             {
@@ -101,9 +108,12 @@
                             this._widget.messageListener.processWidgetMessage(new RoomWidgetPollMessage(RoomWidgetPollMessage.var_1889, this._id));
                             this._widget.pollCancelled(this._id);
                             return;
-                    };
-                };
-            };
+                    }
+
+                }
+
+            }
+
         }
 
     }

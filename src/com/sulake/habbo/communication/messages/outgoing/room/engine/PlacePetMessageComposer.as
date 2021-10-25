@@ -1,17 +1,18 @@
 ﻿package com.sulake.habbo.communication.messages.outgoing.room.engine
 {
+
     import com.sulake.core.communication.messages.IMessageComposer;
 
-    public class PlacePetMessageComposer implements IMessageComposer 
+    public class PlacePetMessageComposer implements IMessageComposer
     {
 
-        private var var_3097:int;
-        private var _x:int;
-        private var var_2497:int;
-        private var _roomId:int;
-        private var _roomCategory:int;
+        private var var_3097: int;
+        private var _x: int;
+        private var var_2497: int;
+        private var _roomId: int;
+        private var _roomCategory: int;
 
-        public function PlacePetMessageComposer(param1:int, param2:int, param3:int, param4:int=0, param5:int=0)
+        public function PlacePetMessageComposer(param1: int, param2: int, param3: int, param4: int = 0, param5: int = 0)
         {
             this.var_3097 = param1;
             this._x = param2;
@@ -20,13 +21,13 @@
             this._roomCategory = param5;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
         }
 
-        public function getMessageArray():Array
+        public function getMessageArray(): Array
         {
-            return ([this.var_3097, this._x, this.var_2497]);
+            return [this.var_3097, this._x, this.var_2497];
         }
 
     }

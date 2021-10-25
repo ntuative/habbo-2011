@@ -1,30 +1,31 @@
 ﻿package com.sulake.habbo.room.object.visualization.room.rasterizer.basic
 {
+
     import com.sulake.core.utils.Map;
     import com.sulake.room.utils.IRoomGeometry;
 
-    public class Plane 
+    public class Plane
     {
 
-        private var var_4211:Map;
-        private var _sizes:Array = [];
-        private var var_4212:PlaneVisualization = null;
-        private var var_4157:int = -1;
+        private var var_4211: Map;
+        private var _sizes: Array = [];
+        private var var_4212: PlaneVisualization = null;
+        private var var_4157: int = -1;
 
         public function Plane()
         {
             this.var_4211 = new Map();
         }
 
-        public function isStatic(param1:int):Boolean
+        public function isStatic(param1: int): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            var _loc1_:PlaneVisualization;
-            var _loc2_:int;
+            var _loc1_: PlaneVisualization;
+            var _loc2_: int;
             if (this.var_4211 != null)
             {
                 _loc1_ = null;
@@ -35,71 +36,81 @@
                     if (_loc1_ != null)
                     {
                         _loc1_.dispose();
-                    };
+                    }
+
                     _loc2_++;
-                };
+                }
+
                 this.var_4211.dispose();
                 this.var_4211 = null;
-            };
+            }
+
             this.var_4212 = null;
             this._sizes = null;
         }
 
-        public function clearCache():void
+        public function clearCache(): void
         {
-            var _loc2_:PlaneVisualization;
-            var _loc1_:int;
+            var _loc2_: PlaneVisualization;
+            var _loc1_: int;
             while (_loc1_ < this.var_4211.length)
             {
                 _loc2_ = (this.var_4211.getWithIndex(_loc1_) as PlaneVisualization);
                 if (_loc2_ != null)
                 {
                     _loc2_.clearCache();
-                };
+                }
+
                 _loc1_++;
-            };
+            }
+
         }
 
-        public function createPlaneVisualization(param1:int, param2:int, param3:IRoomGeometry):PlaneVisualization
+        public function createPlaneVisualization(param1: int, param2: int, param3: IRoomGeometry): PlaneVisualization
         {
             if (this.var_4211.getValue(String(param1)) != null)
             {
-                return (null);
-            };
-            var _loc4_:PlaneVisualization = new PlaneVisualization(param1, param2, param3);
+                return null;
+            }
+
+            var _loc4_: PlaneVisualization = new PlaneVisualization(param1, param2, param3);
             this.var_4211.add(String(param1), _loc4_);
             this._sizes.push(param1);
             this._sizes.sort();
-            return (_loc4_);
+            return _loc4_;
         }
 
-        private function getSizeIndex(param1:int):int
+        private function getSizeIndex(param1: int): int
         {
-            var _loc2_:int;
-            var _loc3_:int = 1;
+            var _loc2_: int;
+            var _loc3_: int = 1;
             while (_loc3_ < this._sizes.length)
             {
                 if (this._sizes[_loc3_] > param1)
                 {
-                    if ((this._sizes[_loc3_] - param1) < (param1 - this._sizes[(_loc3_ - 1)]))
+                    if (this._sizes[_loc3_] - param1 < param1 - this._sizes[(_loc3_ - 1)])
                     {
                         _loc2_ = _loc3_;
-                    };
+                    }
+
                     break;
-                };
+                }
+
                 _loc2_ = _loc3_;
                 _loc3_++;
-            };
-            return (_loc2_);
+            }
+
+            return _loc2_;
         }
 
-        protected function getPlaneVisualization(param1:int):PlaneVisualization
+        protected function getPlaneVisualization(param1: int): PlaneVisualization
         {
             if (param1 == this.var_4157)
             {
-                return (this.var_4212);
-            };
-            var _loc2_:int = this.getSizeIndex(param1);
+                return this.var_4212;
+            }
+
+            var _loc2_: int = this.getSizeIndex(param1);
             if (_loc2_ < this._sizes.length)
             {
                 this.var_4212 = (this.var_4211.getValue(String(this._sizes[_loc2_])) as PlaneVisualization);
@@ -107,9 +118,10 @@
             else
             {
                 this.var_4212 = null;
-            };
+            }
+
             this.var_4157 = param1;
-            return (this.var_4212);
+            return this.var_4212;
         }
 
     }

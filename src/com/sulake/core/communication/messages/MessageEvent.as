@@ -1,52 +1,53 @@
 ﻿package com.sulake.core.communication.messages
 {
+
     import com.sulake.core.communication.connection.IConnection;
 
-    public class MessageEvent implements IMessageEvent 
+    public class MessageEvent implements IMessageEvent
     {
 
-        protected var var_1095:Function;
-        protected var _connection:IConnection;
-        private var _parserClass:Class;
-        protected var var_361:IMessageParser;
+        protected var _callback: Function;
+        protected var _connection: IConnection;
+        private var _parserClass: Class;
+        protected var _parser: IMessageParser;
 
-        public function MessageEvent(param1:Function, param2:Class)
+        public function MessageEvent(callback: Function, parserClass: Class)
         {
-            this.var_1095 = param1;
-            this._parserClass = param2;
+            this._callback = callback;
+            this._parserClass = parserClass;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            this.var_1095 = null;
+            this._callback = null;
             this._parserClass = null;
             this._connection = null;
-            this.var_361 = null;
+            this._parser = null;
         }
 
-        public function get callback():Function
+        public function get callback(): Function
         {
-            return (this.var_1095);
+            return this._callback;
         }
 
-        public function set connection(param1:IConnection):void
+        public function set connection(connection: IConnection): void
         {
-            this._connection = param1;
+            this._connection = connection;
         }
 
-        public function get connection():IConnection
+        public function get connection(): IConnection
         {
-            return (this._connection);
+            return this._connection;
         }
 
-        public function get parserClass():Class
+        public function get parserClass(): Class
         {
-            return (this._parserClass);
+            return this._parserClass;
         }
 
-        public function set parser(param1:IMessageParser):void
+        public function set parser(parser: IMessageParser): void
         {
-            this.var_361 = param1;
+            this._parser = parser;
         }
 
     }

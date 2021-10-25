@@ -1,20 +1,22 @@
 ﻿package com.sulake.habbo.avatar.structure.figure
 {
+
     import com.sulake.core.utils.Map;
+
     import flash.utils.Dictionary;
 
-    public class SetType implements ISetType 
+    public class SetType implements ISetType
     {
 
-        private var _partSets:Map;
-        private var _type:String;
-        private var var_2523:int;
-        private var var_2522:Dictionary;
+        private var _partSets: Map;
+        private var _type: String;
+        private var _paletteId: int;
+        private var var_2522: Dictionary;
 
-        public function SetType(param1:XML)
+        public function SetType(param1: XML)
         {
             this._type = String(param1.@type);
-            this.var_2523 = parseInt(param1.@paletteid);
+            this._paletteId = parseInt(param1.@paletteid);
             this.var_2522 = new Dictionary();
             this.var_2522["F"] = new Dictionary();
             this.var_2522["M"] = new Dictionary();
@@ -26,22 +28,23 @@
             this.append(param1);
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            var _loc1_:FigurePartSet;
+            var _loc1_: FigurePartSet;
             for each (_loc1_ in this._partSets.getValues())
             {
                 _loc1_.dispose();
-            };
+            }
+
             this._partSets.dispose();
             this._partSets = null;
         }
 
-        public function cleanUp(param1:XML):void
+        public function cleanUp(param1: XML): void
         {
-            var _loc2_:XML;
-            var _loc3_:String;
-            var _loc4_:FigurePartSet;
+            var _loc2_: XML;
+            var _loc3_: String;
+            var _loc4_: FigurePartSet;
             for each (_loc2_ in param1["set"])
             {
                 _loc3_ = String(_loc2_.@id);
@@ -50,59 +53,64 @@
                 {
                     _loc4_.dispose();
                     this._partSets.remove(_loc3_);
-                };
-            };
+                }
+
+            }
+
         }
 
-        public function append(param1:XML):void
+        public function append(param1: XML): void
         {
-            var _loc2_:XML;
+            var _loc2_: XML;
             for each (_loc2_ in param1["set"])
             {
                 this._partSets.add(String(_loc2_.@id), new FigurePartSet(_loc2_, this._type));
-            };
+            }
+
         }
 
-        public function getDefaultPartSet(param1:String):IFigurePartSet
+        public function getDefaultPartSet(param1: String): IFigurePartSet
         {
-            var _loc4_:IFigurePartSet;
-            var _loc2_:Array = this._partSets.getKeys();
-            var _loc3_:int = (_loc2_.length - 1);
+            var _loc4_: IFigurePartSet;
+            var _loc2_: Array = this._partSets.getKeys();
+            var _loc3_: int = _loc2_.length - 1;
             while (_loc3_ >= 0)
             {
                 _loc4_ = this._partSets.getValue(_loc2_[_loc3_]);
-                if ((((_loc4_) && (_loc4_.clubLevel == 0)) && ((_loc4_.gender == param1) || (_loc4_.gender == "U"))))
+                if (_loc4_ && _loc4_.clubLevel == 0 && (_loc4_.gender == param1 || _loc4_.gender == "U"))
                 {
-                    return (_loc4_);
-                };
+                    return _loc4_;
+                }
+
                 _loc3_--;
-            };
-            return (null);
+            }
+
+            return null;
         }
 
-        public function getPartSet(param1:int):IFigurePartSet
+        public function getPartSet(param1: int): IFigurePartSet
         {
-            return (this._partSets.getValue(String(param1)));
+            return this._partSets.getValue(String(param1));
         }
 
-        public function get type():String
+        public function get type(): String
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get paletteID():int
+        public function get paletteID(): int
         {
-            return (this.var_2523);
+            return this._paletteId;
         }
 
-        public function isMandatory(param1:String, param2:int):Boolean
+        public function isMandatory(param1: String, param2: int): Boolean
         {
-            return (this.var_2522[param1.toUpperCase()][Math.min(param2, 1)]);
+            return this.var_2522[param1.toUpperCase()][Math.min(param2, 1)];
         }
 
-        public function get partSets():Map
+        public function get partSets(): Map
         {
-            return (this._partSets);
+            return this._partSets;
         }
 
     }

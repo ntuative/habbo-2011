@@ -1,74 +1,78 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.room.engine
 {
+
     import com.sulake.room.utils.Vector3d;
 
-    public class SlideObjectMessageData 
+    public class SlideObjectMessageData
     {
 
-        public static const var_1618:String = "mv";
-        public static const var_1619:String = "sld";
+        public static const MV: String = "mv";
+        public static const SLD: String = "sld";
 
-        private var _id:int = 0;
-        private var var_3041:Vector3d;
-        private var _target:Vector3d;
-        private var var_3042:String;
-        private var var_3037:Boolean = false;
+        private var _id: int = 0;
+        private var _loc: Vector3d;
+        private var _target: Vector3d;
+        private var _moveType: String;
+        private var _readonly: Boolean = false;
 
-        public function SlideObjectMessageData(param1:int, param2:Vector3d, param3:Vector3d, param4:String=null)
+        public function SlideObjectMessageData(id: int, loc: Vector3d, target: Vector3d, moveType: String = null)
         {
-            this._id = param1;
-            this.var_3041 = param2;
-            this._target = param3;
-            this.var_3042 = param4;
+            this._id = id;
+            this._loc = loc;
+            this._target = target;
+            this._moveType = moveType;
         }
 
-        public function setReadOnly():void
+        public function setReadOnly(): void
         {
-            this.var_3037 = true;
+            this._readonly = true;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get loc():Vector3d
+        public function get loc(): Vector3d
         {
-            return (this.var_3041);
+            return this._loc;
         }
 
-        public function set loc(param1:Vector3d):void
+        public function set loc(value: Vector3d): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
-                this.var_3041 = param1;
-            };
+                this._loc = value;
+            }
+
         }
 
-        public function get target():Vector3d
+        public function get target(): Vector3d
         {
-            return (this._target);
+            return this._target;
         }
 
-        public function set target(param1:Vector3d):void
+        public function set target(value: Vector3d): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
-                this._target = param1;
-            };
+                this._target = value;
+            }
+
         }
 
-        public function get moveType():String
+        public function get moveType(): String
         {
-            return (this.var_3042);
+            return this._moveType;
         }
 
-        public function set moveType(param1:String):void
+        public function set moveType(value: String): void
         {
-            if (!this.var_3037)
+            if (!this._readonly)
             {
-                this.var_3042 = param1;
-            };
+                this._moveType = value;
+            }
+
         }
 
     }

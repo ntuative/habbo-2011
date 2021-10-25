@@ -1,31 +1,32 @@
 ﻿package com.sulake.habbo.communication.messages.outgoing.friendlist
 {
+
     import com.sulake.core.communication.messages.IMessageComposer;
     import com.sulake.core.runtime.IDisposable;
 
-    public class RequestBuddyMessageComposer implements IMessageComposer, IDisposable 
+    public class RequestBuddyMessageComposer implements IMessageComposer, IDisposable
     {
 
-        private var var_2217:Array = new Array();
+        private var _messages: Array = [];
 
-        public function RequestBuddyMessageComposer(param1:String)
+        public function RequestBuddyMessageComposer(message: String)
         {
-            this.var_2217.push(param1);
+            this._messages.push(message);
         }
 
-        public function getMessageArray():Array
+        public function getMessageArray(): Array
         {
-            return (this.var_2217);
+            return this._messages;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            this.var_2217 = null;
+            this._messages = null;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (false);
+            return false;
         }
 
     }

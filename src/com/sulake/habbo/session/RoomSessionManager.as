@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.session
 {
+
     import com.sulake.core.runtime.Component;
     import com.sulake.habbo.communication.IHabboCommunicationManager;
     import com.sulake.core.communication.connection.IConnection;
@@ -32,23 +33,23 @@
     import com.sulake.habbo.session.handler.BaseHandler;
     import com.sulake.iid.*;
 
-    public class RoomSessionManager extends Component implements IRoomSessionManager, IRoomHandlerListener 
+    public class RoomSessionManager extends Component implements IRoomSessionManager, IRoomHandlerListener
     {
 
-        private var _communication:IHabboCommunicationManager = null;
-        private var _connection:IConnection = null;
-        private var var_4436:Array = null;
-        private var var_2047:Boolean = false;
-        private var var_4437:Boolean = false;
-        private var var_4438:Map = null;
-        private var var_4439:Boolean = false;
-        private var var_4440:Boolean = false;
-        private var var_4441:int = 0;
-        private var var_4442:String = "";
-        private var var_4443:Boolean = false;
-        private var _habboTracking:IHabboTracking;
+        private var _communication: IHabboCommunicationManager = null;
+        private var _connection: IConnection = null;
+        private var var_4436: Array = null;
+        private var var_2047: Boolean = false;
+        private var var_4437: Boolean = false;
+        private var var_4438: Map = null;
+        private var var_4439: Boolean = false;
+        private var var_4440: Boolean = false;
+        private var var_4441: int = 0;
+        private var var_4442: String = "";
+        private var var_4443: Boolean = false;
+        private var _habboTracking: IHabboTracking;
 
-        public function RoomSessionManager(param1:IContext, param2:uint=0)
+        public function RoomSessionManager(param1: IContext, param2: uint = 0)
         {
             super(param1, param2);
             this.var_4436 = [];
@@ -57,43 +58,43 @@
             queueInterface(new IIDHabboTracking(), this.trackingReady);
         }
 
-        public function set roomEngineReady(param1:Boolean):void
+        public function set roomEngineReady(param1: Boolean): void
         {
             this.var_4437 = param1;
             this.initializeManager();
         }
 
-        public function get initialized():Boolean
+        public function get initialized(): Boolean
         {
-            if (((this.var_2047) && (this.var_4437)))
-            {
-                return (true);
-            };
-            return (false);
+            return this.var_2047 && this.var_4437;
+
+
         }
 
-        public function get sessionStarting():Boolean
+        public function get sessionStarting(): Boolean
         {
-            return (this.var_4443);
+            return this.var_4443;
         }
 
-        override public function dispose():void
+        override public function dispose(): void
         {
-            var _loc1_:String;
-            var _loc2_:RoomSession;
-            var _loc3_:int;
-            var _loc4_:IDisposable;
+            var _loc1_: String;
+            var _loc2_: RoomSession;
+            var _loc3_: int;
+            var _loc4_: IDisposable;
             super.dispose();
             if (this._communication != null)
             {
                 this._communication.release(new IIDHabboCommunicationManager());
                 this._communication = null;
-            };
+            }
+
             if (this._habboTracking != null)
             {
                 this._habboTracking.release(new IIDHabboTracking());
                 this._habboTracking = null;
-            };
+            }
+
             this._connection = null;
             if (this.var_4438)
             {
@@ -104,11 +105,14 @@
                     if (_loc2_ != null)
                     {
                         _loc2_.dispose();
-                    };
-                };
+                    }
+
+                }
+
                 this.var_4438.dispose();
                 this.var_4438 = null;
-            };
+            }
+
             if (this.var_4436)
             {
                 _loc3_ = 0;
@@ -118,19 +122,23 @@
                     if (_loc4_)
                     {
                         _loc4_.dispose();
-                    };
+                    }
+
                     _loc3_++;
-                };
+                }
+
                 this.var_4436 = null;
-            };
+            }
+
         }
 
-        private function communicationReady(param1:IID=null, param2:IUnknown=null):void
+        private function communicationReady(param1: IID = null, param2: IUnknown = null): void
         {
             if (disposed)
             {
                 return;
-            };
+            }
+
             this._communication = (param2 as IHabboCommunicationManager);
             if (this._communication != null)
             {
@@ -138,39 +146,45 @@
                 if (this._connection != null)
                 {
                     this.onConnectionReady(this._connection);
-                };
-            };
+                }
+
+            }
+
         }
 
-        private function trackingReady(param1:IID=null, param2:IUnknown=null):void
+        private function trackingReady(param1: IID = null, param2: IUnknown = null): void
         {
             if (disposed)
             {
                 return;
-            };
+            }
+
             this._habboTracking = (param2 as IHabboTracking);
         }
 
-        private function onConnectionReady(param1:IConnection):void
+        private function onConnectionReady(param1: IConnection): void
         {
             if (disposed)
             {
                 return;
-            };
+            }
+
             if (param1 != null)
             {
                 this._connection = param1;
                 this.createHandlers();
                 this.initializeManager();
-            };
+            }
+
         }
 
-        private function createHandlers():void
+        private function createHandlers(): void
         {
             if (this._connection == null)
             {
                 return;
-            };
+            }
+
             this.var_4436.push(new RoomSessionHandler(this._connection, this));
             this.var_4436.push(new RoomChatHandler(this._connection, this));
             this.var_4436.push(new RoomUsersHandler(this._connection, this));
@@ -190,21 +204,23 @@
             this.var_4436.push(new PetPackageHandler(this._connection, this));
         }
 
-        private function initializeManager():void
+        private function initializeManager(): void
         {
             if (this._communication != null)
             {
                 this.var_2047 = true;
-            };
-            if (((this.initialized) && (this.var_4439)))
+            }
+
+            if (this.initialized && this.var_4439)
             {
                 this.gotoRoom(this.var_4440, this.var_4441, this.var_4442);
                 this.var_4439 = false;
                 this.var_4442 = "";
-            };
+            }
+
         }
 
-        public function gotoRoom(param1:Boolean, param2:int, param3:String="", param4:String=""):Boolean
+        public function gotoRoom(param1: Boolean, param2: int, param3: String = "", param4: String = ""): Boolean
         {
             if (!this.initialized)
             {
@@ -212,50 +228,55 @@
                 this.var_4440 = param1;
                 this.var_4441 = param2;
                 this.var_4442 = param3;
-                return (false);
-            };
-            var _loc5_:int;
+                return false;
+            }
+
+            var _loc5_: int;
             if (param1)
             {
                 _loc5_ = 1;
-            };
-            var _loc6_:String = this.getRoomIdentifier(param2, _loc5_);
+            }
+
+            var _loc6_: String = this.getRoomIdentifier(param2, _loc5_);
             this.var_4443 = true;
             if (this.var_4438.getValue(_loc6_) != null)
             {
                 this.disposeSession(param2, _loc5_);
-            };
-            var _loc7_:RoomSession = new RoomSession(param2, _loc5_, this._habboTracking, param3, param4);
+            }
+
+            var _loc7_: RoomSession = new RoomSession(param2, _loc5_, this._habboTracking, param3, param4);
             _loc7_.connection = this._connection;
             this.var_4438.add(_loc6_, _loc7_);
-            events.dispatchEvent(new RoomSessionEvent(RoomSessionEvent.var_93, _loc7_));
-            return (true);
+            events.dispatchEvent(new RoomSessionEvent(RoomSessionEvent.RSE_CREATED, _loc7_));
+            return true;
         }
 
-        public function startSession(param1:IRoomSession):Boolean
+        public function startSession(param1: IRoomSession): Boolean
         {
-            if (param1.state == RoomSessionEvent.var_94)
+            if (param1.state == RoomSessionEvent.RSE_STARTED)
             {
-                return (false);
-            };
+                return false;
+            }
+
             if (param1.start())
             {
                 this.var_4443 = false;
-                events.dispatchEvent(new RoomSessionEvent(RoomSessionEvent.var_94, param1));
+                events.dispatchEvent(new RoomSessionEvent(RoomSessionEvent.RSE_STARTED, param1));
                 this.updateHandlers(param1);
             }
             else
             {
                 this.disposeSession(param1.roomId, param1.roomCategory);
                 this.var_4443 = false;
-                return (false);
-            };
-            return (true);
+                return false;
+            }
+
+            return true;
         }
 
-        public function sessionUpdate(param1:int, param2:int, param3:String):void
+        public function sessionUpdate(param1: int, param2: int, param3: String): void
         {
-            var _loc4_:IRoomSession = this.getSession(param1, param2);
+            var _loc4_: IRoomSession = this.getSession(param1, param2);
             if (_loc4_ != null)
             {
                 switch (param3)
@@ -267,15 +288,17 @@
                     case RoomSessionHandler.var_97:
                         this.disposeSession(param1, param2);
                         return;
-                };
-            };
+                }
+
+            }
+
         }
 
-        public function sessionReinitialize(param1:int, param2:int, param3:int, param4:int):void
+        public function sessionReinitialize(param1: int, param2: int, param3: int, param4: int): void
         {
-            var _loc7_:RoomSession;
-            var _loc5_:String = this.getRoomIdentifier(param1, param2);
-            var _loc6_:RoomSession = (this.var_4438.remove(_loc5_) as RoomSession);
+            var _loc7_: RoomSession;
+            var _loc5_: String = this.getRoomIdentifier(param1, param2);
+            var _loc6_: RoomSession = this.var_4438.remove(_loc5_) as RoomSession;
             if (_loc6_ != null)
             {
                 param4 = param2;
@@ -284,34 +307,37 @@
                 _loc7_ = this.var_4438.remove(_loc5_);
                 if (_loc7_ != null)
                 {
-                };
+                }
+
                 this.var_4438.add(_loc5_, _loc6_);
                 this.updateHandlers(_loc6_);
-            };
+            }
+
         }
 
-        public function getSession(param1:int, param2:int):IRoomSession
+        public function getSession(param1: int, param2: int): IRoomSession
         {
-            var _loc3_:String = this.getRoomIdentifier(param1, param2);
-            return (this.var_4438.getValue(_loc3_) as IRoomSession);
+            var _loc3_: String = this.getRoomIdentifier(param1, param2);
+            return this.var_4438.getValue(_loc3_) as IRoomSession;
         }
 
-        public function disposeSession(param1:int, param2:int):void
+        public function disposeSession(param1: int, param2: int): void
         {
-            var _loc3_:String = this.getRoomIdentifier(param1, param2);
-            var _loc4_:RoomSession = (this.var_4438.remove(_loc3_) as RoomSession);
+            var _loc3_: String = this.getRoomIdentifier(param1, param2);
+            var _loc4_: RoomSession = this.var_4438.remove(_loc3_) as RoomSession;
             if (_loc4_ != null)
             {
-                events.dispatchEvent(new RoomSessionEvent(RoomSessionEvent.var_98, _loc4_));
+                events.dispatchEvent(new RoomSessionEvent(RoomSessionEvent.RSE_ENDED, _loc4_));
                 _loc4_.dispose();
-            };
+            }
+
         }
 
-        private function updateHandlers(param1:IRoomSession):void
+        private function updateHandlers(param1: IRoomSession): void
         {
-            var _loc2_:int;
-            var _loc3_:BaseHandler;
-            if (((!(param1 == null)) && (!(this.var_4436 == null))))
+            var _loc2_: int;
+            var _loc3_: BaseHandler;
+            if (param1 != null && this.var_4436 != null)
             {
                 _loc2_ = 0;
                 while (_loc2_ < this.var_4436.length)
@@ -321,15 +347,18 @@
                     {
                         _loc3_._xxxRoomId = param1.roomId;
                         _loc3_.var_99 = param1.roomCategory;
-                    };
+                    }
+
                     _loc2_++;
-                };
-            };
+                }
+
+            }
+
         }
 
-        private function getRoomIdentifier(param1:int, param2:int):String
+        private function getRoomIdentifier(param1: int, param2: int): String
         {
-            return ("hard_coded_room_id");
+            return "hard_coded_room_id";
         }
 
     }

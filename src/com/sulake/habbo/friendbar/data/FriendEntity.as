@@ -1,126 +1,127 @@
 ﻿package com.sulake.habbo.friendbar.data
 {
-    public class FriendEntity implements IFriendEntity 
+
+    public class FriendEntity implements IFriendEntity
     {
 
-        private var _id:int;
-        private var _name:String;
-        private var var_2071:int;
-        private var var_2908:Boolean;
-        private var var_3379:Boolean;
-        private var var_2534:String;
-        private var var_2465:int;
-        private var var_2910:String;
-        private var var_2911:String;
-        private var var_2912:String;
+        private var _id: int;
+        private var _name: String;
+        private var _gender: int;
+        private var _online: Boolean;
+        private var _allowFollow: Boolean;
+        private var _figure: String;
+        private var _categoryId: int;
+        private var _motto: String;
+        private var _lastAccess: String;
+        private var _realName: String;
 
-        public function FriendEntity(param1:int, param2:String, param3:String, param4:String, param5:int, param6:Boolean, param7:Boolean, param8:String, param9:int, param10:String)
+        public function FriendEntity(id: int, name: String, realName: String, motto: String, gender: int, online: Boolean, allowFollow: Boolean, figure: String, categoryId: int, lastAccess: String)
         {
-            this._id = param1;
-            this._name = param2;
-            this.var_2912 = param3;
-            this.var_2910 = param4;
-            this.var_2071 = param5;
-            this.var_2908 = param6;
-            this.var_3379 = param7;
-            this.var_2534 = param8;
-            this.var_2465 = param9;
-            this.var_2911 = param10;
+            this._id = id;
+            this._name = name;
+            this._realName = realName;
+            this._motto = motto;
+            this._gender = gender;
+            this._online = online;
+            this._allowFollow = allowFollow;
+            this._figure = figure;
+            this._categoryId = categoryId;
+            this._lastAccess = lastAccess;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get gender():int
+        public function get gender(): int
         {
-            return (this.var_2071);
+            return this._gender;
         }
 
-        public function get online():Boolean
+        public function get online(): Boolean
         {
-            return (this.var_2908);
+            return this._online;
         }
 
-        public function get allowFollow():Boolean
+        public function get allowFollow(): Boolean
         {
-            return (this.var_3379);
+            return this._allowFollow;
         }
 
-        public function get figure():String
+        public function get figure(): String
         {
-            return (this.var_2534);
+            return this._figure;
         }
 
-        public function get categoryId():int
+        public function get categoryId(): int
         {
-            return (this.var_2465);
+            return this._categoryId;
         }
 
-        public function get motto():String
+        public function get motto(): String
         {
-            return (this.var_2910);
+            return this._motto;
         }
 
-        public function get lastAccess():String
+        public function get lastAccess(): String
         {
-            return (this.var_2911);
+            return this._lastAccess;
         }
 
-        public function get realName():String
+        public function get realName(): String
         {
-            return (this.var_2912);
+            return this._realName;
         }
 
-        public function set name(param1:String):void
+        public function set name(value: String): void
         {
-            this._name = param1;
+            this._name = value;
         }
 
-        public function set gender(param1:int):void
+        public function set gender(value: int): void
         {
-            this.var_2071 = param1;
+            this._gender = value;
         }
 
-        public function set online(param1:Boolean):void
+        public function set online(value: Boolean): void
         {
-            this.var_2908 = param1;
+            this._online = value;
         }
 
-        public function set allowFollow(param1:Boolean):void
+        public function set allowFollow(value: Boolean): void
         {
-            this.var_3379 = param1;
+            this._allowFollow = value;
         }
 
-        public function set figure(param1:String):void
+        public function set figure(value: String): void
         {
-            this.var_2534 = param1;
+            this._figure = value;
         }
 
-        public function set categoryId(param1:int):void
+        public function set categoryId(value: int): void
         {
-            this.var_2465 = param1;
+            this._categoryId = value;
         }
 
-        public function set motto(param1:String):void
+        public function set motto(value: String): void
         {
-            this.var_2910 = param1;
+            this._motto = value;
         }
 
-        public function set lastAccess(param1:String):void
+        public function set lastAccess(value: String): void
         {
-            this.var_2911 = param1;
+            this._lastAccess = value;
         }
 
-        public function set realName(param1:String):void
+        public function set realName(value: String): void
         {
-            this.var_2912 = param1;
+            this._realName = value;
         }
 
     }

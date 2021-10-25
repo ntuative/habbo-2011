@@ -1,67 +1,79 @@
 ﻿package com.sulake.habbo.communication.messages.parser.help
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.utils.Map;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class FaqClientFaqsMessageParser implements IMessageParser 
+    public class FaqClientFaqsMessageParser implements IMessageParser
     {
 
-        private var var_3185:Map;
-        private var var_3186:Map;
+        private var _urgentData: Map;
+        private var _normalData: Map;
 
-        public function get urgentData():Map
+        public function get urgentData(): Map
         {
-            return (this.var_3185);
+            return this._urgentData;
         }
 
-        public function get normalData():Map
+        public function get normalData(): Map
         {
-            return (this.var_3186);
+            return this._normalData;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            if (this.var_3185 != null)
+            if (this._urgentData != null)
             {
-                this.var_3185.dispose();
-            };
-            this.var_3185 = null;
-            if (this.var_3186 != null)
+                this._urgentData.dispose();
+            }
+
+            this._urgentData = null;
+
+            if (this._normalData != null)
             {
-                this.var_3186.dispose();
-            };
-            this.var_3186 = null;
-            return (true);
+                this._normalData.dispose();
+            }
+
+            this._normalData = null;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc2_:int;
-            var _loc3_:String;
-            var _loc4_:int;
-            var _loc5_:int;
-            this.var_3185 = new Map();
-            this.var_3186 = new Map();
-            _loc5_ = param1.readInteger();
-            _loc4_ = 0;
-            while (_loc4_ < _loc5_)
+            
+            this._urgentData = new Map();
+            this._normalData = new Map();
+            
+            var itemCount: int = data.readInteger();
+            var i: int = 0;
+
+            var key: int;
+            var value: String;
+
+            while (i < itemCount)
             {
-                _loc2_ = param1.readInteger();
-                _loc3_ = param1.readString();
-                this.var_3185.add(_loc2_, _loc3_);
-                _loc4_++;
-            };
-            _loc5_ = param1.readInteger();
-            _loc4_ = 0;
-            while (_loc4_ < _loc5_)
+                key = data.readInteger();
+                value = data.readString();
+
+                this._urgentData.add(key, value);
+                i++;
+            }
+
+            itemCount = data.readInteger();
+            i = 0;
+
+            while (i < itemCount)
             {
-                _loc2_ = param1.readInteger();
-                _loc3_ = param1.readString();
-                this.var_3186.add(_loc2_, _loc3_);
-                _loc4_++;
-            };
-            return (true);
+                key = data.readInteger();
+                value = data.readString();
+
+                this._normalData.add(key, value);
+                i++;
+            }
+
+            return true;
         }
 
     }

@@ -1,51 +1,56 @@
 ﻿package com.sulake.habbo.communication.messages.parser.avatar
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ChangeUserNameResultMessageParser implements IMessageParser 
+    public class ChangeUserNameResultMessageParser implements IMessageParser
     {
 
-        private var var_3129:int = -1;
-        private var _name:String;
-        private var var_3130:Array;
+        private var _resultCode: int = -1;
+        private var _name: String;
+        private var _nameSuggestions: Array;
 
-        public function get resultCode():int
+        public function get resultCode(): int
         {
-            return (this.var_3129);
+            return this._resultCode;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get nameSuggestions():Array
+        public function get nameSuggestions(): Array
         {
-            return (this.var_3130);
+            return this._nameSuggestions;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3129 = -1;
+            this._resultCode = -1;
             this._name = "";
-            this.var_3130 = null;
-            return (true);
+            this._nameSuggestions = null;
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3129 = param1.readInteger();
-            this._name = param1.readString();
-            var _loc2_:int = param1.readInteger();
-            this.var_3130 = new Array();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._resultCode = data.readInteger();
+            this._name = data.readString();
+            this._nameSuggestions = [];
+            
+            var suggestionCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < suggestionCount)
             {
-                this.var_3130.push(param1.readString());
-                _loc3_++;
-            };
-            return (true);
+                this._nameSuggestions.push(data.readString());
+                i++;
+            }
+
+            return true;
         }
 
     }

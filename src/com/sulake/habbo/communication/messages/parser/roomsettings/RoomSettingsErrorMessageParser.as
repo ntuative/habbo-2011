@@ -1,36 +1,39 @@
 ﻿package com.sulake.habbo.communication.messages.parser.roomsettings
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class RoomSettingsErrorMessageParser implements IMessageParser 
+    public class RoomSettingsErrorMessageParser implements IMessageParser
     {
 
-        private var _roomId:int;
-        private var var_2102:int;
+        private var _roomId: int;
+        private var _errorCode: int;
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this._roomId = param1.readInteger();
-            this.var_2102 = param1.readInteger();
-            return (true);
+            this._roomId = data.readInteger();
+            this._errorCode = data.readInteger();
+
+            return true;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._roomId = 0;
-            this.var_2102 = 0;
-            return (true);
+            this._errorCode = 0;
+
+            return true;
         }
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get errorCode():int
+        public function get errorCode(): int
         {
-            return (this.var_2102);
+            return this._errorCode;
         }
 
     }

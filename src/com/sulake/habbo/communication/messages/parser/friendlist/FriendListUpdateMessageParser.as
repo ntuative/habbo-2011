@@ -1,85 +1,85 @@
 ﻿package com.sulake.habbo.communication.messages.parser.friendlist
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.friendlist.FriendCategoryData;
     import com.sulake.habbo.communication.messages.incoming.friendlist.FriendData;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class FriendListUpdateMessageParser implements IMessageParser 
+    public class FriendListUpdateMessageParser implements IMessageParser
     {
 
-        private var var_3148:Array;
-        private var _removedFriendIds:Array;
-        private var var_3149:Array;
-        private var var_3150:Array;
+        private var _cats: Array;
+        private var _removedFriendIds: Array;
+        private var _addedFriends: Array;
+        private var _updatedFriends: Array;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3148 = new Array();
-            this._removedFriendIds = new Array();
-            this.var_3149 = new Array();
-            this.var_3150 = new Array();
-            return (true);
+            this._cats = [];
+            this._removedFriendIds = [];
+            this._addedFriends = [];
+            this._updatedFriends = [];
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc5_:int;
-            var _loc6_:int;
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            var updateType: int;
+            var id: int;
+            var friendCategoryCount: int = data.readInteger();
+            var i: int;
+            while (i < friendCategoryCount)
             {
-                this.var_3148.push(new FriendCategoryData(param1));
-                _loc3_++;
-            };
-            var _loc4_:int = param1.readInteger();
-            _loc3_ = 0;
-            while (_loc3_ < _loc4_)
+                this._cats.push(new FriendCategoryData(data));
+                i++;
+            }
+
+            var updateCount: int = data.readInteger();
+            i = 0;
+
+            while (i < updateCount)
             {
-                _loc5_ = param1.readInteger();
-                if (_loc5_ == -1)
+                updateType = data.readInteger();
+                if (updateType == -1)
                 {
-                    _loc6_ = param1.readInteger();
-                    this._removedFriendIds.push(_loc6_);
+                    id = data.readInteger();
+                    this._removedFriendIds.push(id);
                 }
-                else
+                else if (updateType == 0)
                 {
-                    if (_loc5_ == 0)
-                    {
-                        this.var_3150.push(new FriendData(param1));
-                    }
-                    else
-                    {
-                        if (_loc5_ == 1)
-                        {
-                            this.var_3149.push(new FriendData(param1));
-                        };
-                    };
-                };
-                _loc3_++;
-            };
-            return (true);
+                    this._updatedFriends.push(new FriendData(data));
+                }
+                else if (updateType == 1)
+                {
+                    this._addedFriends.push(new FriendData(data));
+                }
+
+                i++;
+            }
+
+            return true;
         }
 
-        public function get cats():Array
+        public function get cats(): Array
         {
-            return (this.var_3148);
+            return this._cats;
         }
 
-        public function get removedFriendIds():Array
+        public function get removedFriendIds(): Array
         {
-            return (this._removedFriendIds);
+            return this._removedFriendIds;
         }
 
-        public function get addedFriends():Array
+        public function get addedFriends(): Array
         {
-            return (this.var_3149);
+            return this._addedFriends;
         }
 
-        public function get updatedFriends():Array
+        public function get updatedFriends(): Array
         {
-            return (this.var_3150);
+            return this._updatedFriends;
         }
 
     }

@@ -1,85 +1,91 @@
 ﻿package com.sulake.habbo.communication.messages.parser.marketplace
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class MarketplaceItemStatsParser implements IMessageParser 
+    public class MarketplaceItemStatsParser implements IMessageParser
     {
 
-        private var var_2630:int;
-        private var var_2631:int;
-        private var var_2632:int;
-        private var _dayOffsets:Array;
-        private var var_2633:Array;
-        private var var_2634:Array;
-        private var var_2635:int;
-        private var var_2636:int;
+        private var _averagePrice: int;
+        private var _offerCount: int;
+        private var _historyLength: int;
+        private var _dayOffsets: Array;
+        private var _averagePrices: Array;
+        private var _soldAmounts: Array;
+        private var _furniTypeId: int;
+        private var _furniCategoryId: int;
 
-        public function get averagePrice():int
+        public function get averagePrice(): int
         {
-            return (this.var_2630);
+            return this._averagePrice;
         }
 
-        public function get offerCount():int
+        public function get offerCount(): int
         {
-            return (this.var_2631);
+            return this._offerCount;
         }
 
-        public function get historyLength():int
+        public function get historyLength(): int
         {
-            return (this.var_2632);
+            return this._historyLength;
         }
 
-        public function get dayOffsets():Array
+        public function get dayOffsets(): Array
         {
-            return (this._dayOffsets);
+            return this._dayOffsets;
         }
 
-        public function get averagePrices():Array
+        public function get averagePrices(): Array
         {
-            return (this.var_2633);
+            return this._averagePrices;
         }
 
-        public function get soldAmounts():Array
+        public function get soldAmounts(): Array
         {
-            return (this.var_2634);
+            return this._soldAmounts;
         }
 
-        public function get furniTypeId():int
+        public function get furniTypeId(): int
         {
-            return (this.var_2635);
+            return this._furniTypeId;
         }
 
-        public function get furniCategoryId():int
+        public function get furniCategoryId(): int
         {
-            return (this.var_2636);
+            return this._furniCategoryId;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2630 = param1.readInteger();
-            this.var_2631 = param1.readInteger();
-            this.var_2632 = param1.readInteger();
-            var _loc2_:int = param1.readInteger();
+            this._averagePrice = data.readInteger();
+            this._offerCount = data.readInteger();
+            this._historyLength = data.readInteger();
             this._dayOffsets = [];
-            this.var_2633 = [];
-            this.var_2634 = [];
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._averagePrices = [];
+            this._soldAmounts = [];
+            
+            var itemStats: int = data.readInteger();
+            var i: int;
+            
+            while (i < itemStats)
             {
-                this._dayOffsets.push(param1.readInteger());
-                this.var_2633.push(param1.readInteger());
-                this.var_2634.push(param1.readInteger());
-                _loc3_++;
-            };
-            this.var_2636 = param1.readInteger();
-            this.var_2635 = param1.readInteger();
-            return (true);
+                this._dayOffsets.push(data.readInteger());
+                this._averagePrices.push(data.readInteger());
+                this._soldAmounts.push(data.readInteger());
+                
+                i++;
+            }
+
+            this._furniCategoryId = data.readInteger();
+            this._furniTypeId = data.readInteger();
+
+            return true;
         }
 
     }

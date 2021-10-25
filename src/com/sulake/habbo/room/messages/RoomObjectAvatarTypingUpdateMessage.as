@@ -1,18 +1,19 @@
 ﻿package com.sulake.habbo.room.messages
 {
-    public class RoomObjectAvatarTypingUpdateMessage extends RoomObjectUpdateStateMessage 
+
+    public class RoomObjectAvatarTypingUpdateMessage extends RoomObjectUpdateStateMessage
     {
 
-        private var var_3296:Boolean;
+        private var _typing: Boolean;
 
-        public function RoomObjectAvatarTypingUpdateMessage(param1:Boolean=false)
+        public function RoomObjectAvatarTypingUpdateMessage(typing: Boolean = false)
         {
-            this.var_3296 = param1;
+            this._typing = typing;
         }
 
-        public function get var_1215():Boolean
+        public function get typing(): Boolean
         {
-            return (this.var_3296);
+            return this._typing;
         }
 
     }

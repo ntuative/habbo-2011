@@ -1,48 +1,49 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.moderation
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class RoomVisitData 
+    public class RoomVisitData
     {
 
-        private var var_2969:Boolean;
-        private var _roomId:int;
-        private var var_2970:String;
-        private var var_2976:int;
-        private var var_2977:int;
+        private var _isPublic: Boolean;
+        private var _roomId: int;
+        private var _roomName: String;
+        private var _enterHour: int;
+        private var _enterMinute: int;
 
-        public function RoomVisitData(param1:IMessageDataWrapper)
+        public function RoomVisitData(data: IMessageDataWrapper)
         {
-            this.var_2969 = param1.readBoolean();
-            this._roomId = param1.readInteger();
-            this.var_2970 = param1.readString();
-            this.var_2976 = param1.readInteger();
-            this.var_2977 = param1.readInteger();
+            this._isPublic = data.readBoolean();
+            this._roomId = data.readInteger();
+            this._roomName = data.readString();
+            this._enterHour = data.readInteger();
+            this._enterMinute = data.readInteger();
         }
 
-        public function get isPublic():Boolean
+        public function get isPublic(): Boolean
         {
-            return (this.var_2969);
+            return this._isPublic;
         }
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get roomName():String
+        public function get roomName(): String
         {
-            return (this.var_2970);
+            return this._roomName;
         }
 
-        public function get enterHour():int
+        public function get enterHour(): int
         {
-            return (this.var_2976);
+            return this._enterHour;
         }
 
-        public function get enterMinute():int
+        public function get enterMinute(): int
         {
-            return (this.var_2977);
+            return this._enterMinute;
         }
 
     }

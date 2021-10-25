@@ -1,29 +1,32 @@
 ﻿package com.sulake.habbo.communication.messages.parser.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.catalog.ChargeInfo;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ChargeInfoMessageParser implements IMessageParser 
+    public class ChargeInfoMessageParser implements IMessageParser
     {
 
-        private var var_2670:ChargeInfo;
+        private var _chartInfo: ChargeInfo;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_2670 = null;
-            return (true);
+            this._chartInfo = null;
+            
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2670 = new ChargeInfo(param1);
-            return (true);
+            this._chartInfo = new ChargeInfo(data);
+
+            return true;
         }
 
-        public function get chargeInfo():ChargeInfo
+        public function get chargeInfo(): ChargeInfo
         {
-            return (this.var_2670);
+            return this._chartInfo;
         }
 
     }

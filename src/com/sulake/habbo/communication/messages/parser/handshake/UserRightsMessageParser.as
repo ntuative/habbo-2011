@@ -1,34 +1,36 @@
 ﻿package com.sulake.habbo.communication.messages.parser.handshake
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class UserRightsMessageParser implements IMessageParser 
+    public class UserRightsMessageParser implements IMessageParser
     {
 
-        private var var_2521:int;
-        private var _securityLevel:int;
+        private var _clubLevel: int;
+        private var _securityLevel: int;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2521 = param1.readInteger();
-            this._securityLevel = param1.readInteger();
-            return (true);
+            this._clubLevel = data.readInteger();
+            this._securityLevel = data.readInteger();
+            
+            return true;
         }
 
-        public function get clubLevel():int
+        public function get clubLevel(): int
         {
-            return (this.var_2521);
+            return this._clubLevel;
         }
 
-        public function get securityLevel():int
+        public function get securityLevel(): int
         {
-            return (this._securityLevel);
+            return this._securityLevel;
         }
 
     }

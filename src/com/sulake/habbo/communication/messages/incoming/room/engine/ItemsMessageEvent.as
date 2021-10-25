@@ -1,19 +1,20 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.room.engine
 {
+
     import com.sulake.core.communication.messages.MessageEvent;
     import com.sulake.habbo.communication.messages.parser.room.engine.ItemsMessageParser;
 
-    public class ItemsMessageEvent extends MessageEvent 
+    public class ItemsMessageEvent extends MessageEvent
     {
 
-        public function ItemsMessageEvent(param1:Function)
+        public function ItemsMessageEvent(param1: Function)
         {
             super(param1, ItemsMessageParser);
         }
 
-        public function getParser():ItemsMessageParser
+        public function getParser(): ItemsMessageParser
         {
-            return (var_361 as ItemsMessageParser);
+            return _parser as ItemsMessageParser;
         }
 
     }

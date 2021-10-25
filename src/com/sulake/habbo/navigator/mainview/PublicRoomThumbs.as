@@ -1,12 +1,14 @@
 ﻿package com.sulake.habbo.navigator.mainview
 {
+
     import flash.utils.Dictionary;
+
     import com.sulake.habbo.communication.messages.incoming.navigator.OfficialRoomEntryData;
 
-    public class PublicRoomThumbs 
+    public class PublicRoomThumbs
     {
 
-        private var var_3813:Dictionary = new Dictionary();
+        private var var_3813: Dictionary = new Dictionary();
 
         public function PublicRoomThumbs()
         {
@@ -72,26 +74,28 @@
             this.add("hh_room_tv_studio_general");
         }
 
-        public function resolveRoomImageName(param1:OfficialRoomEntryData):String
+        public function resolveRoomImageName(param1: OfficialRoomEntryData): String
         {
-            var _loc3_:String;
-            var _loc2_:Array = param1.publicRoomData.castLibs.split(",");
+            var _loc3_: String;
+            var _loc2_: Array = param1.publicRoomData.castLibs.split(",");
             for each (_loc3_ in _loc2_)
             {
                 if (this.hasPic(_loc3_))
                 {
-                    return (_loc3_);
-                };
-            };
-            return (_loc2_[0]);
+                    return _loc3_;
+                }
+
+            }
+
+            return _loc2_[0];
         }
 
-        private function hasPic(param1:String):Boolean
+        private function hasPic(param1: String): Boolean
         {
-            return (!(this.var_3813[param1] == null));
+            return this.var_3813[param1] != null;
         }
 
-        private function add(param1:String):void
+        private function add(param1: String): void
         {
             this.var_3813[param1] = param1;
         }

@@ -1,100 +1,115 @@
 ﻿package com.sulake.habbo.inventory.badges
 {
+
     import com.sulake.habbo.inventory.common.IThumbListDrawableItem;
+
     import flash.display.BitmapData;
+
     import com.sulake.core.window.IWindowContainer;
     import com.sulake.core.window.IWindow;
     import com.sulake.core.window.components.IBitmapWrapperWindow;
+
     import flash.geom.Point;
 
-    public class Badge implements IThumbListDrawableItem 
+    public class Badge implements IThumbListDrawableItem
     {
 
-        private const var_2460:int = 0x888888;
-        private const var_2461:int = 0xCCCCCC;
+        private const BADGE_BG_SELECTED: int = 0x888888;
+        private const BADGE_BG_DESELECTED: int = 0xCCCCCC;
 
-        private var _type:String;
-        private var var_3525:Boolean;
-        private var _isSelected:Boolean;
-        private var var_988:BitmapData = new BitmapData(1, 1, false, 0xFF00FF00);
-        private var _window:IWindowContainer;
-        private var var_2453:IWindow;
+        private var _type: String;
+        private var _isInUse: Boolean;
+        private var _isSelected: Boolean;
+        private var _iconImage: BitmapData = new BitmapData(1, 1, false, 0xFF00FF00);
+        private var _window: IWindowContainer;
+        private var _view: IWindow;
 
-        public function Badge(param1:String, param2:IWindowContainer)
+        public function Badge(type: String, window: IWindowContainer)
         {
-            this._type = param1;
-            this._window = param2;
-            this.var_2453 = this._window.findChildByTag("BG_COLOR");
+            this._type = type;
+            this._window = window;
+            this._view = this._window.findChildByTag("BG_COLOR");
         }
 
-        public function get type():String
+        public function get type(): String
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get isInUse():Boolean
+        public function get isInUse(): Boolean
         {
-            return (this.var_3525);
+            return this._isInUse;
         }
 
-        public function get isSelected():Boolean
+        public function get isSelected(): Boolean
         {
-            return (this._isSelected);
+            return this._isSelected;
         }
 
-        public function get iconImage():BitmapData
+        public function get iconImage(): BitmapData
         {
-            return (this.var_988);
+            return this._iconImage;
         }
 
-        public function get window():IWindowContainer
+        public function get window(): IWindowContainer
         {
-            return (this._window);
+            return this._window;
         }
 
-        public function set isInUse(param1:Boolean):void
+        public function set isInUse(value: Boolean): void
         {
-            this.var_3525 = param1;
+            this._isInUse = value;
         }
 
-        public function set isSelected(param1:Boolean):void
+        public function set isSelected(value: Boolean): void
         {
-            this._isSelected = param1;
-            if (this.var_2453 == null)
+            this._isSelected = value;
+
+            if (this._view == null)
             {
                 return;
-            };
-            if (param1)
+            }
+
+            if (value)
             {
-                this.var_2453.color = this.var_2460;
+                this._view.color = this.BADGE_BG_SELECTED;
             }
             else
             {
-                this.var_2453.color = this.var_2461;
-            };
+                this._view.color = this.BADGE_BG_DESELECTED;
+            }
+
         }
 
-        public function set iconImage(param1:BitmapData):void
+        public function set iconImage(bitmap: BitmapData): void
         {
-            this.var_988 = param1;
-            if (this.var_988 == null)
+            this._iconImage = bitmap;
+
+            if (this._iconImage == null)
             {
                 return;
-            };
+            }
+
             if (this._window == null)
             {
                 return;
-            };
-            var _loc2_:IBitmapWrapperWindow = (this._window.findChildByName("bitmap") as IBitmapWrapperWindow);
-            if (_loc2_ == null)
+            }
+
+            var wrapper: IBitmapWrapperWindow = this._window.findChildByName("bitmap") as IBitmapWrapperWindow;
+            
+            if (wrapper == null)
             {
                 return;
-            };
-            param1 = this.var_988;
-            var _loc3_:BitmapData = ((_loc2_.bitmap) ? _loc2_.bitmap : new BitmapData(_loc2_.width, _loc2_.height));
-            _loc3_.fillRect(_loc3_.rect, 0);
-            _loc3_.copyPixels(param1, param1.rect, new Point(((_loc3_.width / 2) - (param1.width / 2)), ((_loc3_.height / 2) - (param1.height / 2))));
-            _loc2_.bitmap = _loc3_;
+            }
+
+            bitmap = this._iconImage;
+
+            var sizedBitmap: BitmapData = wrapper.bitmap ? wrapper.bitmap : new BitmapData(wrapper.width, wrapper.height);
+            
+            sizedBitmap.fillRect(sizedBitmap.rect, 0);
+            sizedBitmap.copyPixels(bitmap, bitmap.rect, new Point(sizedBitmap.width / 2 - bitmap.width / 2, sizedBitmap.height / 2 - bitmap.height / 2));
+            
+            wrapper.bitmap = sizedBitmap;
         }
 
     }

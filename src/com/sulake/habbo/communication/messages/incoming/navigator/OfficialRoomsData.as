@@ -1,51 +1,61 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.navigator
 {
+
     import com.sulake.core.runtime.IDisposable;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class OfficialRoomsData implements IDisposable, MsgWithRequestId 
+    public class OfficialRoomsData implements IDisposable, MsgWithRequestId
     {
 
-        private var var_3000:Array = new Array();
-        private var _disposed:Boolean;
+        private var _entries: Array = [];
+        private var _disposed: Boolean;
 
-        public function OfficialRoomsData(param1:IMessageDataWrapper)
+        public function OfficialRoomsData(param1: IMessageDataWrapper)
         {
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            var roomCount: int = param1.readInteger();
+            var i: int;
+
+            while (i < roomCount)
             {
-                this.var_3000.push(new OfficialRoomEntryData(param1));
-                _loc3_++;
-            };
+                this._entries.push(new OfficialRoomEntryData(param1));
+                i++;
+            }
+
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            var _loc1_:OfficialRoomEntryData;
             if (this._disposed)
             {
                 return;
-            };
+            }
+
+
             this._disposed = true;
-            if (this.var_3000 != null)
+
+            var entry: OfficialRoomEntryData;
+
+            if (this._entries != null)
             {
-                for each (_loc1_ in this.var_3000)
+                for each (entry in this._entries)
                 {
-                    _loc1_.dispose();
-                };
-            };
-            this.var_3000 = null;
+                    entry.dispose();
+                }
+
+            }
+
+
+            this._entries = null;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function get entries():Array
+        public function get entries(): Array
         {
-            return (this.var_3000);
+            return this._entries;
         }
 
     }

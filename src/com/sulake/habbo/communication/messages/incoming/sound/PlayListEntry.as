@@ -1,50 +1,51 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.sound
 {
-    public class PlayListEntry 
+
+    public class PlayListEntry
     {
 
-        protected var var_2941:int;
-        protected var var_3066:int;
-        protected var _songName:String;
-        protected var _songCreator:String;
-        private var var_3067:Number = 0;
+        protected var _id: int;
+        protected var _length: int;
+        protected var _songName: String;
+        protected var _songCreator: String;
+        private var _startPlayHeadPos: Number = 0;
 
-        public function PlayListEntry(param1:int, param2:int, param3:String, param4:String)
+        public function PlayListEntry(id: int, length: int, songName: String, songCreator: String)
         {
-            this.var_2941 = param1;
-            this.var_3066 = param2;
-            this._songName = param3;
-            this._songCreator = param4;
+            this._id = id;
+            this._length = length;
+            this._songName = songName;
+            this._songCreator = songCreator;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this.var_2941);
+            return this._id;
         }
 
-        public function get length():int
+        public function get length(): int
         {
-            return (this.var_3066);
+            return this._length;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._songName);
+            return this._songName;
         }
 
-        public function get creator():String
+        public function get creator(): String
         {
-            return (this._songCreator);
+            return this._songCreator;
         }
 
-        public function get startPlayHeadPos():Number
+        public function get startPlayHeadPos(): Number
         {
-            return (this.var_3067);
+            return this._startPlayHeadPos;
         }
 
-        public function set startPlayHeadPos(param1:Number):void
+        public function set startPlayHeadPos(value: Number): void
         {
-            this.var_3067 = param1;
+            this._startPlayHeadPos = value;
         }
 
     }

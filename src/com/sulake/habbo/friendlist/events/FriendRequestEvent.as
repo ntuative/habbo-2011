@@ -1,24 +1,26 @@
 ﻿package com.sulake.habbo.friendlist.events
 {
+
     import flash.events.Event;
 
-    public class FriendRequestEvent extends Event 
+    public class FriendRequestEvent extends Event
     {
 
-        public static const var_370:String = "FRE_ACCEPTED";
-        public static const var_1533:String = "FRE_DECLINED";
+        public static const FRIEND_REQUEST_ACCEPTED: String = "FRE_ACCEPTED";
+        public static const FRIEND_REQUEST_DECLINED: String = "FRE_DECLINED";
 
-        private var var_2913:int;
+        private var _requestId: int;
 
-        public function FriendRequestEvent(param1:String, param2:int, param3:Boolean=false, param4:Boolean=false)
+        public function FriendRequestEvent(type: String, requestId: int, bubbles: Boolean = false, cancelable: Boolean = false)
         {
-            super(param1, param3, param4);
-            this.var_2913 = param2;
+            super(type, bubbles, cancelable);
+            
+            this._requestId = requestId;
         }
 
-        public function get requestId():int
+        public function get requestId(): int
         {
-            return (this.var_2913);
+            return this._requestId;
         }
 
     }

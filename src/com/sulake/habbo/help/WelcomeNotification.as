@@ -1,32 +1,33 @@
 ﻿package com.sulake.habbo.help
 {
-    public class WelcomeNotification 
+
+    public class WelcomeNotification
     {
 
-        private var var_3517:String;
-        private var var_3518:String;
-        private var var_3519:String;
+        private var _targetIconId: String;
+        private var _titleLocalizationKey: String;
+        private var _descriptionLocalizationKey: String;
 
-        public function WelcomeNotification(param1:String, param2:String, param3:String)
+        public function WelcomeNotification(targetIconId: String, titleLocalizationKey: String, descriptionLocalizationKey: String)
         {
-            this.var_3517 = param1;
-            this.var_3518 = param2;
-            this.var_3519 = param3;
+            this._targetIconId = targetIconId;
+            this._titleLocalizationKey = titleLocalizationKey;
+            this._descriptionLocalizationKey = descriptionLocalizationKey;
         }
 
-        public function get targetIconId():String
+        public function get targetIconId(): String
         {
-            return (this.var_3517);
+            return this._targetIconId;
         }
 
-        public function get titleLocalizationKey():String
+        public function get titleLocalizationKey(): String
         {
-            return (this.var_3518);
+            return this._titleLocalizationKey;
         }
 
-        public function get descriptionLocalizationKey():String
+        public function get descriptionLocalizationKey(): String
         {
-            return (this.var_3519);
+            return this._descriptionLocalizationKey;
         }
 
     }

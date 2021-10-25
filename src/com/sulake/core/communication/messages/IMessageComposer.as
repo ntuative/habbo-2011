@@ -1,10 +1,12 @@
 ﻿package com.sulake.core.communication.messages
 {
-    public interface IMessageComposer 
+
+    public interface IMessageComposer
     {
 
-        function getMessageArray():Array;
-        function dispose():void;
+        function getMessageArray(): Array;
+
+        function dispose(): void;
 
     }
 }

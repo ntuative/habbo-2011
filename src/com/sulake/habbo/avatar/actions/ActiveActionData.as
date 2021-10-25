@@ -1,75 +1,77 @@
 ﻿package com.sulake.habbo.avatar.actions
 {
-    public class ActiveActionData implements IActiveActionData 
+
+    public class ActiveActionData implements IActiveActionData
     {
 
-        private var var_2386:String = "";
-        private var _actionParameter:String = "";
-        private var var_2387:IActionDefinition;
-        private var var_2388:int = 0;
-        private var var_2389:String;
+        private var _actionType: String = "";
+        private var _actionParameter: String = "";
+        private var _definition: IActionDefinition;
+        private var _startFrame: int = 0;
+        private var _overridingAction: String;
 
-        public function ActiveActionData(param1:String, param2:String="", param3:int=0)
+        public function ActiveActionData(param1: String, param2: String = "", param3: int = 0)
         {
-            this.var_2386 = param1;
+            this._actionType = param1;
             this._actionParameter = param2;
-            this.var_2388 = param3;
+            this._startFrame = param3;
         }
 
-        public function get actionType():String
+        public function get actionType(): String
         {
-            return (this.var_2386);
+            return this._actionType;
         }
 
-        public function get actionParameter():String
+        public function get actionParameter(): String
         {
-            return (this._actionParameter);
+            return this._actionParameter;
         }
 
-        public function get definition():IActionDefinition
+        public function get definition(): IActionDefinition
         {
-            return (this.var_2387);
+            return this._definition;
         }
 
-        public function get id():String
+        public function get id(): String
         {
-            if (this.var_2387 == null)
+            if (this._definition == null)
             {
-                return ("");
-            };
-            return ((this.var_2387.id + "_") + this._actionParameter);
+                return "";
+            }
+
+            return this._definition.id + "_" + this._actionParameter;
         }
 
-        public function set actionParameter(param1:String):void
+        public function set actionParameter(param1: String): void
         {
             this._actionParameter = param1;
         }
 
-        public function set definition(param1:IActionDefinition):void
+        public function set definition(param1: IActionDefinition): void
         {
-            this.var_2387 = param1;
+            this._definition = param1;
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
-            this.var_2386 = null;
+            this._actionType = null;
             this._actionParameter = null;
-            this.var_2387 = null;
+            this._definition = null;
         }
 
-        public function get startFrame():int
+        public function get startFrame(): int
         {
-            return (this.var_2388);
+            return this._startFrame;
         }
 
-        public function get overridingAction():String
+        public function get overridingAction(): String
         {
-            return (this.var_2389);
+            return this._overridingAction;
         }
 
-        public function set overridingAction(param1:String):void
+        public function set overridingAction(param1: String): void
         {
-            this.var_2389 = param1;
+            this._overridingAction = param1;
         }
 
     }

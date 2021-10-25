@@ -1,34 +1,36 @@
 ﻿package com.sulake.habbo.communication.messages.parser.users
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class RespectNotificationMessageParser implements IMessageParser 
+    public class RespectNotificationMessageParser implements IMessageParser
     {
 
-        private var _userId:int = 0;
-        private var var_3180:int = 0;
+        private var _userId: int = 0;
+        private var _respectTotal: int = 0;
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            return (true);
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this._userId = param1.readInteger();
-            this.var_3180 = param1.readInteger();
-            return (true);
+            this._userId = data.readInteger();
+            this._respectTotal = data.readInteger();
+            
+            return true;
         }
 
-        public function get userId():int
+        public function get userId(): int
         {
-            return (this._userId);
+            return this._userId;
         }
 
-        public function get respectTotal():int
+        public function get respectTotal(): int
         {
-            return (this.var_3180);
+            return this._respectTotal;
         }
 
     }

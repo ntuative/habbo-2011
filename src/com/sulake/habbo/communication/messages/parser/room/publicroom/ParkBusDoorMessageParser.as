@@ -1,42 +1,45 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.publicroom
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class ParkBusDoorMessageParser implements IMessageParser 
+    public class ParkBusDoorMessageParser implements IMessageParser
     {
 
-        private var var_2101:int;
-        private var _roomId:int = 0;
-        private var _roomCategory:int = 0;
+        private var _status: int;
+        private var _roomId: int = 0;
+        private var _roomCategory: int = 0;
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get roomCategory():int
+        public function get roomCategory(): int
         {
-            return (this._roomCategory);
+            return this._roomCategory;
         }
 
-        public function get status():int
+        public function get status(): int
         {
-            return (this.var_2101);
+            return this._status;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_2101 = 0;
+            this._status = 0;
             this._roomId = 0;
             this._roomCategory = 0;
-            return (true);
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2101 = param1.readInteger();
-            return (true);
+            this._status = data.readInteger();
+            
+            return true;
         }
 
     }

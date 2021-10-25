@@ -1,106 +1,110 @@
 ﻿package com.sulake.habbo.messenger.domain
 {
+
     import com.sulake.core.runtime.IDisposable;
 
-    public class Conversation implements IDisposable 
+    public class Conversation implements IDisposable
     {
 
-        private var _id:int;
-        private var _name:String;
-        private var var_2909:Boolean;
-        private var var_2534:String;
-        private var var_3269:Array = new Array();
-        private var var_3419:Boolean;
-        private var _selected:Boolean;
-        private var _disposed:Boolean;
+        private var _id: int;
+        private var _name: String;
+        private var _followingAllowed: Boolean;
+        private var _figure: String;
+        private var _messages: Array = [];
+        private var _newMessageArrived: Boolean;
+        private var _selected: Boolean;
+        private var _disposed: Boolean;
 
-        public function Conversation(param1:int, param2:String, param3:String, param4:Boolean)
+        public function Conversation(id: int, name: String, figure: String, followingAllowed: Boolean)
         {
-            this._id = param1;
-            this._name = param2;
-            this.var_2534 = param3;
-            this.var_2909 = param4;
+            this._id = id;
+            this._name = name;
+            this._figure = figure;
+            this._followingAllowed = followingAllowed;
         }
 
-        public function addMessage(param1:Message):void
+        public function addMessage(message: Message): void
         {
-            this.var_3269.push(param1);
+            this._messages.push(message);
         }
 
-        public function setSelected(param1:Boolean):void
+        public function setSelected(value: Boolean): void
         {
-            if (param1)
+            if (value)
             {
-                this.var_3419 = false;
-            };
-            this._selected = param1;
+                this._newMessageArrived = false;
+            }
+
+            this._selected = value;
         }
 
-        public function setNewMessageArrived(param1:Boolean):void
+        public function setNewMessageArrived(value: Boolean): void
         {
             if (this._selected)
             {
-                this.var_3419 = false;
+                this._newMessageArrived = false;
             }
             else
             {
-                this.var_3419 = param1;
-            };
+                this._newMessageArrived = value;
+            }
+
         }
 
-        public function dispose():void
+        public function dispose(): void
         {
             if (this._disposed)
             {
                 return;
-            };
+            }
+
             this._disposed = true;
-            this.var_3269 = null;
+            this._messages = null;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get selected():Boolean
+        public function get selected(): Boolean
         {
-            return (this._selected);
+            return this._selected;
         }
 
-        public function get messages():Array
+        public function get messages(): Array
         {
-            return (this.var_3269);
+            return this._messages;
         }
 
-        public function get newMessageArrived():Boolean
+        public function get newMessageArrived(): Boolean
         {
-            return (this.var_3419);
+            return this._newMessageArrived;
         }
 
-        public function get figure():String
+        public function get figure(): String
         {
-            return (this.var_2534);
+            return this._figure;
         }
 
-        public function get followingAllowed():Boolean
+        public function get followingAllowed(): Boolean
         {
-            return (this.var_2909);
+            return this._followingAllowed;
         }
 
-        public function get disposed():Boolean
+        public function get disposed(): Boolean
         {
-            return (this._disposed);
+            return this._disposed;
         }
 
-        public function set followingAllowed(param1:Boolean):void
+        public function set followingAllowed(value: Boolean): void
         {
-            this.var_2909 = param1;
+            this._followingAllowed = value;
         }
 
     }

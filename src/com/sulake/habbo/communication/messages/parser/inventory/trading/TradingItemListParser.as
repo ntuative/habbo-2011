@@ -1,97 +1,105 @@
 ﻿package com.sulake.habbo.communication.messages.parser.inventory.trading
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
     import com.sulake.habbo.communication.messages.incoming.inventory.trading.ItemDataStructure;
 
-    public class TradingItemListParser implements IMessageParser 
+    public class TradingItemListParser implements IMessageParser
     {
 
-        private var var_3207:int;
-        private var _firstUserItemArray:Array;
-        private var var_3208:int;
-        private var var_3209:Array;
+        private var _firstUserId: int;
+        private var _firstUserItemArray: Array;
+        private var _secondaryUserId: int;
+        private var _secondaryUserItemArray: Array;
 
-        public function get firstUserID():int
+        public function get firstUserID(): int
         {
-            return (this.var_3207);
+            return this._firstUserId;
         }
 
-        public function get firstUserItemArray():Array
+        public function get firstUserItemArray(): Array
         {
-            return (this._firstUserItemArray);
+            return this._firstUserItemArray;
         }
 
-        public function get secondUserID():int
+        public function get secondUserID(): int
         {
-            return (this.var_3208);
+            return this._secondaryUserId;
         }
 
-        public function get secondUserItemArray():Array
+        public function get secondUserItemArray(): Array
         {
-            return (this.var_3209);
+            return this._secondaryUserItemArray;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_3207 = -1;
+            this._firstUserId = -1;
             this._firstUserItemArray = null;
-            this.var_3208 = -1;
-            this.var_3209 = null;
-            return (true);
+            this._secondaryUserId = -1;
+            this._secondaryUserItemArray = null;
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_3207 = param1.readInteger();
-            this._firstUserItemArray = new Array();
-            if (!this.parseItemData(param1, this._firstUserItemArray))
+            this._firstUserId = data.readInteger();
+            this._firstUserItemArray = [];
+
+            if (!this.parseItemData(data, this._firstUserItemArray))
             {
-                return (false);
-            };
-            this.var_3208 = param1.readInteger();
-            this.var_3209 = new Array();
-            if (!this.parseItemData(param1, this.var_3209))
-            {
-                return (false);
-            };
-            return (true);
+                return false;
+            }
+
+            this._secondaryUserId = data.readInteger();
+            this._secondaryUserItemArray = [];
+
+            return this.parseItemData(data, this._secondaryUserItemArray);
+
+
         }
 
-        private function parseItemData(param1:IMessageDataWrapper, param2:Array):Boolean
+        private function parseItemData(data: IMessageDataWrapper, userItems: Array): Boolean
         {
-            var _loc3_:int;
-            var _loc4_:int;
-            var _loc5_:String;
-            var _loc6_:int;
-            var _loc7_:int;
-            var _loc8_:int;
-            var _loc9_:String;
-            var _loc10_:int;
-            var _loc11_:int;
-            var _loc12_:int;
-            var _loc13_:int;
-            var _loc14_:Boolean;
-            var _loc15_:int;
-            _loc3_ = param1.readInteger();
-            while (_loc3_ > 0)
+            var itemCount: int;
+            var itemId: int;
+            var itemType: String;
+            var roomItemId: int;
+            var itemTypeId: int;
+            var category: int;
+            var stuffData: String;
+            var timeToExpiration: int;
+            var creationDay: int;
+            var creationMonth: int;
+            var creationYear: int;
+            var groupable: Boolean;
+            var extra: int;
+
+            itemCount = data.readInteger();
+
+            while (itemCount > 0)
             {
-                _loc4_ = param1.readInteger();
-                _loc5_ = param1.readString().toUpperCase();
-                _loc6_ = param1.readInteger();
-                _loc7_ = param1.readInteger();
-                _loc8_ = param1.readInteger();
-                _loc14_ = param1.readBoolean();
-                _loc9_ = param1.readString();
-                _loc10_ = -1;
-                _loc11_ = param1.readInteger();
-                _loc12_ = param1.readInteger();
-                _loc13_ = param1.readInteger();
-                _loc15_ = ((_loc5_ == "S") ? param1.readInteger() : -1);
-                param2.push(new ItemDataStructure(_loc4_, _loc5_, _loc6_, _loc7_, _loc8_, _loc9_, _loc15_, _loc10_, _loc11_, _loc12_, _loc13_, _loc14_));
-                _loc3_--;
-            };
-            return (true);
+                itemId = data.readInteger();
+                itemType = data.readString().toUpperCase();
+                roomItemId = data.readInteger();
+                itemTypeId = data.readInteger();
+                category = data.readInteger();
+                groupable = data.readBoolean();
+                stuffData = data.readString();
+                timeToExpiration = -1;
+                creationDay = data.readInteger();
+                creationMonth = data.readInteger();
+                creationYear = data.readInteger();
+                extra = itemType == "S" ? data.readInteger() : -1;
+
+                userItems.push(new ItemDataStructure(itemId, itemType, roomItemId, itemTypeId, category, stuffData, extra, timeToExpiration, creationDay, creationMonth, creationYear, groupable));
+
+                itemCount--;
+            }
+
+            return true;
         }
 
     }

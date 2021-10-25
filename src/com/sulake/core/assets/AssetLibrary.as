@@ -1,62 +1,73 @@
 ﻿package com.sulake.core.assets
 {
+
     import com.sulake.core.runtime.events.EventDispatcher;
+
     import flash.utils.Dictionary;
+
     import com.sulake.core.utils.LibraryLoader;
     import com.sulake.core.assets.loaders.BinaryFileLoader;
     import com.sulake.core.assets.loaders.BitmapFileLoader;
     import com.sulake.core.assets.loaders.ZipFileLoader;
     import com.sulake.core.assets.loaders.SoundFileLoader;
+
     import flash.utils.getTimer;
     import flash.events.Event;
+
     import com.sulake.core.utils.LibraryLoaderEvent;
     import com.sulake.core.assets.loaders.IAssetLoader;
     import com.sulake.core.assets.loaders.AssetLoaderEvent;
+
     import flash.net.URLRequest;
     import flash.events.ProgressEvent;
     import flash.utils.getQualifiedClassName;
+
     import com.sulake.core.assets.loaders.*;
 
-    public class AssetLibrary extends EventDispatcher implements IAssetLibrary 
+    public class AssetLibrary extends EventDispatcher implements IAssetLibrary
     {
 
-        public static const var_332:String = "AssetLibraryReady";
-        public static const var_333:String = "AssetLibraryLoaded";
-        public static const var_334:String = "AssetLibraryUnloaded";
-        public static const var_335:String = "AssetLibraryLoadError";
-        private static const var_341:String = "name";
-        private static const var_340:String = "asset";
-        private static const var_342:String = "param";
-        private static const TYPE:String = "mimeType";
-        private static const var_339:String = "library";
-        private static var var_336:Dictionary;
-        private static var var_343:LazyAssetProcessor = new LazyAssetProcessor();
-        private static var var_337:uint = 0;
-        private static var var_338:Array = new Array();
+        public static const ASSET_LIBRARY_READY: String = "AssetLibraryReady";
+        public static const ASSET_LIBRARY_LOADED: String = "AssetLibraryLoaded";
+        public static const ASSET_LIBRARY_UNLOADED: String = "AssetLibraryUnloaded";
+        public static const ASSET_LIBRARY_LOAD_ERROR: String = "AssetLibraryLoadError";
 
-        private var _name:String;
-        private var var_2107:String;
-        private var _manifest:XML;
-        private var var_2108:Boolean;
-        private var var_2109:uint;
-        private var var_2103:LibraryLoader;
-        private var var_2111:Class;
-        private var var_2112:Dictionary;
-        private var var_2113:Dictionary;
-        private var var_2114:Boolean = true;
-        private var var_2115:Dictionary;
-        private var var_2110:Array;
-        private var var_2116:Dictionary;
+        private static const NAME: String = "name";
+        private static const ASSET: String = "asset";
+        private static const PARAM: String = "param";
+        private static const TYPE: String = "mimeType";
+        private static const LIBRARY: String = "library";
 
-        public function AssetLibrary(param1:String)
+        private static var AssetTypes: Dictionary;
+        private static var AssetProcessor: LazyAssetProcessor = new LazyAssetProcessor();
+        private static var NumAssetLibraryInstances: uint = 0;
+        private static var AssetLibraryRefArray: Array = [];
+
+        private var _name: String;
+        private var _url: String;
+        private var _manifest: XML;
+        private var _isReady: Boolean;
+        private var _numAssets: uint;
+        private var _loader: LibraryLoader;
+        private var _resource: Class;
+        private var _classes: Dictionary;
+        private var _assets: Dictionary;
+        private var _loaded: Boolean = true;
+        private var _assetLoaders: Dictionary;
+        private var _nameArray: Array;
+        private var _assetTypes: Dictionary;
+
+        public function AssetLibrary(name: String)
         {
-            this._name = param1;
+            this._name = name;
             this._manifest = new XML();
-            this.var_2109 = 0;
-            this.var_2110 = new Array();
-            if (var_336 == null)
+            this._numAssets = 0;
+            this._nameArray = [];
+
+            if (AssetTypes == null)
             {
-                var_336 = new Dictionary(false);
+                AssetTypes = new Dictionary(false);
+
                 this.registerAssetTypeDeclaration(new AssetTypeDeclaration("application/octet-stream", UnknownAsset, BinaryFileLoader));
                 this.registerAssetTypeDeclaration(new AssetTypeDeclaration("application/x-shockwave-flash", DisplayAsset, BitmapFileLoader, "swf"));
                 this.registerAssetTypeDeclaration(new AssetTypeDeclaration("application/x-font-truetype", FontAsset, BinaryFileLoader, "ttf", "otf"));
@@ -69,290 +80,345 @@
                 this.registerAssetTypeDeclaration(new AssetTypeDeclaration("image/png", BitmapDataAsset, BitmapFileLoader, "png"));
                 this.registerAssetTypeDeclaration(new AssetTypeDeclaration("image/tiff", BitmapDataAsset, BitmapFileLoader, "tif", "tiff"));
                 this.registerAssetTypeDeclaration(new AssetTypeDeclaration("sound/mp3", SoundAsset, SoundFileLoader, "mp3"));
-            };
-            var_337++;
-            this.var_2116 = new Dictionary(false);
-            this.var_2115 = new Dictionary(false);
-            this.var_2112 = new Dictionary(false);
-            this.var_2113 = new Dictionary(false);
-            var_338.push(this);
+            }
+
+
+            NumAssetLibraryInstances++;
+
+            this._assetTypes = new Dictionary(false);
+            this._assetLoaders = new Dictionary(false);
+            this._classes = new Dictionary(false);
+            this._assets = new Dictionary(false);
+
+            AssetLibraryRefArray.push(this);
         }
 
-        public static function get numAssetLibraryInstances():uint
+        public static function get numAssetLibraryInstances(): uint
         {
-            return (var_337);
+            return NumAssetLibraryInstances;
         }
 
-        public static function get assetLibraryRefArray():Array
+        public static function get assetLibraryRefArray(): Array
         {
-            return (var_338);
+            return AssetLibraryRefArray;
         }
 
-        private static function fetchLibraryContents(param1:AssetLibrary, param2:XML, param3:Class):Boolean
+        private static function fetchLibraryContents(library: AssetLibrary, param2: XML, resource: Class): Boolean
         {
-            var _loc6_:XML;
-            var _loc7_:String;
-            var _loc8_:String;
-            var _loc9_:AssetTypeDeclaration;
-            var _loc10_:IAsset;
-            var _loc11_:XMLList;
-            var _loc12_:int;
-            var _loc13_:AssetTypeDeclaration;
-            var _loc14_:String;
-            var _loc15_:uint;
-            var _loc4_:int = getTimer();
-            if (param3 == null)
+            var asset: IAsset;
+            var startedAt: int = getTimer();
+
+            if (resource == null)
             {
-                throw (new Error((("Library " + param1.var_2107) + " doesn't contain valid resource class!")));
-            };
-            var _loc5_:XMLList = param2.child(var_339);
-            if (_loc5_ == null)
+                throw new Error("Library " + library._url + " doesn't contain valid resource class!");
+            }
+
+
+            var items: XMLList = param2.child(LIBRARY);
+
+            if (items == null)
             {
-                throw (Error("Provided manifest doesn't contain library node!"));
-            };
-            _loc5_ = _loc5_[0].assets;
-            if (_loc5_ != null)
+                throw Error("Provided manifest doesn't contain library node!");
+            }
+
+
+            items = items[0].assets;
+
+            if (items != null)
             {
-                _loc5_ = _loc5_.child(var_340);
-                _loc12_ = _loc5_.length();
-                _loc14_ = null;
-                _loc15_ = 0;
-                while (_loc15_ < _loc12_)
+                items = items.child(ASSET);
+                var assetCount: int = items.length();
+
+                for (var i: int = 0; i < assetCount; i++)
                 {
-                    _loc6_ = _loc5_[_loc15_];
-                    _loc7_ = _loc6_.attribute(var_341);
-                    _loc8_ = _loc6_.attribute(TYPE);
-                    if (_loc8_ == _loc14_)
+                    var item: XML = items[i];
+                    var name: String = item.attribute(NAME);
+                    var type: String = item.attribute(TYPE);
+                    var assetType: AssetTypeDeclaration = null;
+
+                    if (type != null)
                     {
-                        _loc9_ = _loc13_;
+                        assetType = library.getAssetTypeDeclarationByMimeType(type);
                     }
-                    else
+
+                    if (assetType != null)
                     {
-                        _loc9_ = param1.getAssetTypeDeclarationByMimeType(_loc8_);
-                        _loc14_ = _loc8_;
-                        _loc13_ = _loc9_;
-                    };
-                    if (_loc9_ != null)
-                    {
-                        _loc10_ = (new (_loc9_.assetClass)(_loc9_) as IAsset);
-                        _loc10_.setUnknownContent(param3[_loc7_]);
-                        _loc11_ = _loc6_.child(var_342);
-                        if (_loc11_.length())
+                        asset = new assetType.assetClass(assetType) as IAsset;
+                        asset.setUnknownContent(resource[name]);
+                        var params: XMLList = item.child(PARAM);
+
+                        if (params.length())
                         {
-                            _loc10_.setParamsDesc(_loc11_);
-                        };
-                        param1.setAsset(_loc7_, _loc10_);
+                            asset.setParamsDesc(params);
+                        }
+
+
+                        library.setAsset(name, asset);
                     }
                     else
                     {
-                        Logger.log((((("Failed to extract asset " + _loc7_) + " from Library ") + param1.var_2107) + "!"));
-                    };
-                    _loc15_++;
-                };
-            };
-            _loc4_ = (getTimer() - _loc4_);
-            return (true);
+                        Logger.log("Failed to extract asset " + name + " from Library " + library._url + "!");
+                    }
+
+                }
+
+            }
+
+
+            startedAt = getTimer() - startedAt;
+
+            return true;
         }
 
-        public function get url():String
+        public function get url(): String
         {
-            return (this.var_2107);
+            return this._url;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get isReady():Boolean
+        public function get isReady(): Boolean
         {
-            return (this.var_2108);
+            return this._isReady;
         }
 
-        public function get manifest():XML
+        public function get manifest(): XML
         {
-            return (this._manifest);
+            return this._manifest;
         }
 
-        public function get numAssets():uint
+        public function get numAssets(): uint
         {
-            return (this.var_2109);
+            return this._numAssets;
         }
 
-        public function get nameArray():Array
+        public function get nameArray(): Array
         {
-            return (this.var_2110);
+            return this._nameArray;
         }
 
-        override public function dispose():void
+        override public function dispose(): void
         {
             if (!disposed)
             {
                 this.unload();
                 super.dispose();
-                var_338.splice(var_338.indexOf(this), 1);
-                var_337--;
-                this.var_2115 = null;
-                this.var_2112 = null;
-                this.var_2113 = null;
-                this.var_2110 = null;
+
+                AssetLibraryRefArray.splice(AssetLibraryRefArray.indexOf(this), 1);
+                NumAssetLibraryInstances--;
+                this._assetLoaders = null;
+                this._classes = null;
+                this._assets = null;
+                this._nameArray = null;
                 this._manifest = null;
-                this.var_2109 = 0;
-                this.var_2108 = false;
+                this._numAssets = 0;
+                this._isReady = false;
                 this._name = null;
-            };
+            }
+
         }
 
-        public function loadFromFile(param1:LibraryLoader, param2:Boolean=true):void
+        public function loadFromFile(loader: LibraryLoader, fetchContents: Boolean = true): void
         {
-            if (((this.var_2107 == param1.url) && (this.var_2108)))
+            if (this._url == loader.url && this._isReady)
             {
-                if (((!(this.var_2114)) && (param2)))
+                if (!this._loaded && fetchContents)
                 {
-                    AssetLibrary.fetchLibraryContents(this, this._manifest, this.var_2111);
-                };
-                this.var_2114 = param2;
-                dispatchEvent(new Event(AssetLibrary.var_332));
+                    AssetLibrary.fetchLibraryContents(this, this._manifest, this._resource);
+                }
+
+
+                this._loaded = fetchContents;
+
+                dispatchEvent(new Event(AssetLibrary.ASSET_LIBRARY_READY));
             }
             else
             {
-                if (((this.var_2103 == null) || (this.var_2103.disposed)))
+                if (this._loader == null || this._loader.disposed)
                 {
-                    this.var_2103 = param1;
-                    this.var_2103.addEventListener(LibraryLoaderEvent.LIBRARY_LOADER_EVENT_COMPLETE, this.libraryLoadedHandler);
-                    this.var_2103.addEventListener(LibraryLoaderEvent.LIBRARY_LOADER_EVENT_ERROR, this.loadErrorHandler);
-                };
-                this.var_2114 = param2;
-                this.var_2107 = this.var_2103.url;
-            };
+                    this._loader = loader;
+                    this._loader.addEventListener(LibraryLoaderEvent.LIBRARY_LOADER_EVENT_COMPLETE, this.libraryLoadedHandler);
+                    this._loader.addEventListener(LibraryLoaderEvent.LIBRARY_LOADER_EVENT_ERROR, this.loadErrorHandler);
+                }
+
+
+                this._loaded = fetchContents;
+                this._url = this._loader.url;
+            }
+
         }
 
-        public function loadFromResource(param1:XML, param2:Class):Boolean
+        public function loadFromResource(param1: XML, param2: Class): Boolean
         {
-            return (AssetLibrary.fetchLibraryContents(this, param1, param2));
+            return AssetLibrary.fetchLibraryContents(this, param1, param2);
         }
 
-        public function unload():void
+        public function unload(): void
         {
-            var _loc1_:String;
-            var _loc2_:AssetLoaderStruct;
-            for (_loc1_ in this.var_2115)
+            var item: String;
+            var asset: AssetLoaderStruct;
+
+            for (item in this._assetLoaders)
             {
-                _loc2_ = this.var_2115[_loc1_];
-                _loc2_.assetLoader.dispose();
-                delete this.var_2115[_loc1_];
-            };
-            for (_loc1_ in this.var_2113)
+                asset = this._assetLoaders[item];
+                asset.assetLoader.dispose();
+                this._assetLoaders[item] = null;
+            }
+
+
+            for (item in this._assets)
             {
-                delete this.var_2113[_loc1_];
-            };
-            for (_loc1_ in this.var_2112)
+                this._assets[item] = null;
+            }
+
+
+            for (item in this._classes)
             {
-                delete this.var_2112[_loc1_];
-            };
-            if (this.var_2103 != null)
+                this._classes[item] = null;
+            }
+
+
+            if (this._loader != null)
             {
-                this.var_2103.dispose();
-                this.var_2103 = null;
-            };
-            this.var_2109 = 0;
-            this.var_2108 = false;
-            this.var_2107 = null;
-            dispatchEvent(new Event(AssetLibrary.var_334));
+                this._loader.dispose();
+                this._loader = null;
+            }
+
+
+            this._numAssets = 0;
+            this._isReady = false;
+            this._url = null;
+
+            dispatchEvent(new Event(AssetLibrary.ASSET_LIBRARY_UNLOADED));
         }
 
-        public function getClass(param1:String):Class
+        public function getClass(id: String): Class
         {
-            var _loc2_:Class = this.var_2112[param1];
-            if (_loc2_ != null)
+            var cls: Class = this._classes[id];
+
+            if (cls != null)
             {
-                return (_loc2_);
-            };
-            if (this.var_2103 != null)
+                return cls;
+            }
+
+
+            if (this._loader != null)
             {
-                if (this.var_2103.hasDefinition(param1))
+                if (this._loader.hasDefinition(id))
                 {
-                    _loc2_ = (this.var_2103.getDefinition(param1) as Class);
-                    if (_loc2_ != null)
+                    cls = this._loader.getDefinition(id) as Class;
+
+                    if (cls != null)
                     {
-                        this.var_2112[param1] = _loc2_;
-                        return (_loc2_);
-                    };
-                };
-            };
-            return (null);
+                        this._classes[id] = cls;
+                        return cls;
+                    }
+
+                }
+
+            }
+
+
+            return null;
         }
 
-        public function loadAssetFromFile(param1:String, param2:URLRequest, param3:String=null):AssetLoaderStruct
+        public function loadAssetFromFile(name: String, location: URLRequest, mimeType: String = null): AssetLoaderStruct
         {
-            var _loc5_:AssetTypeDeclaration;
-            if (this.getAssetByName(param1) != null)
+            var assetType: AssetTypeDeclaration;
+
+            if (this.getAssetByName(name) != null)
             {
-                throw (new Error((("Asset with name " + param1) + " already exists!")));
-            };
-            var _loc4_:AssetLoaderStruct = this.var_2115[param2.url];
-            if (_loc4_ != null)
+                throw new Error("Asset with name " + name + " already exists!");
+            }
+
+
+            var asset: AssetLoaderStruct = this._assetLoaders[location.url];
+
+            if (asset != null)
             {
-                if (_loc4_.assetName == param1)
+                if (asset.assetName == name)
                 {
-                    return (_loc4_);
-                };
-            };
-            if (param3 == null)
+                    return asset;
+                }
+
+            }
+
+
+            if (mimeType == null)
             {
-                _loc5_ = this.solveAssetTypeDeclarationFromUrl(param2.url);
-                if (_loc5_ == null)
+                assetType = this.solveAssetTypeDeclarationFromUrl(location.url);
+
+                if (assetType == null)
                 {
-                    throw (new Error((("Couldn't solve asset type for file " + param2.url) + "!")));
-                };
+                    throw new Error("Couldn't solve asset type for file " + location.url + "!");
+                }
+
             }
             else
             {
-                _loc5_ = this.getAssetTypeDeclarationByMimeType(param3, true);
-                if (_loc5_ == null)
+                assetType = this.getAssetTypeDeclarationByMimeType(mimeType, true);
+
+                if (assetType == null)
                 {
-                    throw (new Error((("Asset type declaration for mime type " + param3) + "not found!")));
-                };
-            };
-            var _loc6_:IAssetLoader = new (_loc5_.loaderClass)(_loc5_.mimeType, param2);
-            if (_loc6_ == null)
+                    throw new Error("Asset type declaration for mime type " + mimeType + "not found!");
+                }
+
+            }
+
+
+            var loader: IAssetLoader = new assetType.loaderClass(assetType.mimeType, location);
+
+            if (loader == null)
             {
-                throw (new Error((("Invalid file loader class defined for mime type " + param3) + "!")));
-            };
-            _loc6_.addEventListener(AssetLoaderEvent.var_35, this.assetLoadEventHandler);
-            _loc6_.addEventListener(AssetLoaderEvent.var_36, this.assetLoadEventHandler);
-            _loc6_.addEventListener(AssetLoaderEvent.var_89, this.assetLoadEventHandler);
-            _loc6_.addEventListener(AssetLoaderEvent.var_88, this.assetLoadEventHandler);
-            _loc6_.addEventListener(AssetLoaderEvent.var_90, this.assetLoadEventHandler);
-            _loc6_.addEventListener(AssetLoaderEvent.var_91, this.assetLoadEventHandler);
-            _loc4_ = new AssetLoaderStruct(param1, _loc6_);
-            this.var_2115[param2.url] = _loc4_;
-            return (_loc4_);
+                throw new Error("Invalid file loader class defined for mime type " + mimeType + "!");
+            }
+
+
+            loader.addEventListener(AssetLoaderEvent.ASSET_LOADER_EVENT_COMPLETE, this.assetLoadEventHandler);
+            loader.addEventListener(AssetLoaderEvent.ASSET_LOADER_EVENT_ERROR, this.assetLoadEventHandler);
+            loader.addEventListener(AssetLoaderEvent.ASSET_LOADER_EVENT_UNLOAD, this.assetLoadEventHandler);
+            loader.addEventListener(AssetLoaderEvent.ASSET_LOADER_EVENT_PROGRESS, this.assetLoadEventHandler);
+            loader.addEventListener(AssetLoaderEvent.ASSET_LOADER_EVENT_STATUS, this.assetLoadEventHandler);
+            loader.addEventListener(AssetLoaderEvent.ASSET_LOADER_EVENT_OPEN, this.assetLoadEventHandler);
+
+            asset = new AssetLoaderStruct(name, loader);
+
+            this._assetLoaders[location.url] = asset;
+
+            return asset;
         }
 
-        private function assetLoadEventHandler(e:AssetLoaderEvent):void
+        private function assetLoadEventHandler(e: AssetLoaderEvent): void
         {
-            var loader:IAssetLoader;
-            var type:String;
-            var decl:AssetTypeDeclaration;
-            var asset:IAsset;
-            var remove:Boolean;
+            var loader: IAssetLoader;
+            var type: String;
+            var decl: AssetTypeDeclaration;
+            var asset: IAsset;
+            var remove: Boolean;
             loader = (e.target as IAssetLoader);
             if (loader == null)
             {
-                throw (new Error("Failed to downcast object to asset loader!"));
-            };
-            var struct:AssetLoaderStruct = this.var_2115[loader.url];
+                throw new Error("Failed to downcast object to asset loader!");
+            }
+
+            var struct: AssetLoaderStruct = this._assetLoaders[loader.url];
+
             if (struct == null)
             {
-                throw (new Error(("Asset loader structure was lost! " + ((loader) ? loader.url : ""))));
-            };
+                throw new Error("Asset loader structure was lost! " + (loader ? loader.url : ""));
+            }
+
+
             switch (e.type)
             {
-                case AssetLoaderEvent.var_35:
+                case AssetLoaderEvent.ASSET_LOADER_EVENT_COMPLETE:
                     type = loader.mimeType;
                     decl = this.getAssetTypeDeclarationByMimeType(type);
                     remove = true;
+
                     if (decl != null)
                     {
                         asset = new (decl.assetClass)(decl, loader.url);
@@ -360,411 +426,536 @@
                         {
                             asset.setUnknownContent(loader.content);
                         }
-                        catch(error:Error)
+                        catch (error: Error)
                         {
                             asset.dispose();
-                            Logger.log(((((((('Failed to build asset from loaded file "' + loader.url) + '" type: ') + type) + " error: ") + error.name) + " / ") + error.message));
-                            e = new AssetLoaderEvent(AssetLoaderEvent.var_36, e.status);
+                            Logger.log("Failed to build asset from loaded file \"" + loader.url + "\" type: " + type + " error: " + error.name + " / " + error.message);
+                            e = new AssetLoaderEvent(AssetLoaderEvent.ASSET_LOADER_EVENT_ERROR, e.status);
                             break;
-                        };
-                        if (this.var_2113[struct.assetName] == null)
+                        }
+
+
+                        if (this._assets[struct.assetName] == null)
                         {
-                            this.var_2109++;
-                            this.var_2110.push(struct.assetName);
-                        };
-                        this.var_2113[struct.assetName] = asset;
+                            this._numAssets++;
+                            this._nameArray.push(struct.assetName);
+                        }
+
+
+                        this._assets[struct.assetName] = asset;
                     }
                     else
                     {
-                        Logger.log(((('Failed to resolve asset type declaration: "' + loader.url) + '" type: ') + type));
-                        e = new AssetLoaderEvent(AssetLoaderEvent.var_36, e.status);
-                    };
+                        Logger.log("Failed to resolve asset type declaration: \"" + loader.url + "\" type: " + type);
+                        e = new AssetLoaderEvent(AssetLoaderEvent.ASSET_LOADER_EVENT_ERROR, e.status);
+                    }
+
+
                     break;
-                case AssetLoaderEvent.var_36:
+
+                case AssetLoaderEvent.ASSET_LOADER_EVENT_ERROR:
                     remove = true;
-                    Logger.log(((('Failed to download file "' + loader.url) + '" error: ') + loader.errorCode));
+                    Logger.log("Failed to download file \"" + loader.url + "\" error: " + loader.errorCode);
                     break;
-            };
+            }
+
+
             struct.dispatchEvent(new AssetLoaderEvent(e.type, e.status));
+
             if (remove)
             {
-                if (((!(_disposed)) && (loader)))
+                if (!_disposed && loader != null)
                 {
-                    delete this.var_2115[loader.url];
-                };
+                    this._assetLoaders[loader.url] = null;
+                }
+
+
                 if (struct)
                 {
                     struct.dispose();
-                };
-            };
+                }
+
+            }
+
         }
 
-        public function getAssetByName(param1:String):IAsset
+        public function getAssetByName(name: String): IAsset
         {
-            var _loc2_:IAsset = this.var_2113[param1];
-            if (_loc2_ != null)
+            var asset: IAsset = this._assets[name];
+
+            if (asset != null)
             {
-                return (_loc2_);
-            };
-            if (this.var_2114)
+                return asset;
+            }
+
+
+            if (this._loaded)
             {
-                return (null);
-            };
-            return (this.fetchAssetFromResource(param1));
+                return null;
+            }
+
+
+            return this.fetchAssetFromResource(name);
         }
 
-        public function getAssetByIndex(param1:uint):IAsset
+        public function getAssetByIndex(index: uint): IAsset
         {
-            return ((param1 < this.var_2110.length) ? this.getAssetByName(this.var_2110[param1]) : null);
+            if (index < this._nameArray.length)
+            {
+                return this.getAssetByName(this._nameArray[index]);
+            }
+
+            return null;
         }
 
-        public function getAssetByContent(param1:Object):IAsset
+        public function getAssetByContent(content: Object): IAsset
         {
-            var _loc2_:String;
-            var _loc3_:IAsset;
-            for (_loc2_ in this.var_2113)
+            var key: String;
+            var asset: IAsset;
+
+            for (key in this._assets)
             {
-                _loc3_ = this.var_2113[_loc2_];
-                if (_loc3_.content === param1)
+                asset = this._assets[key];
+
+                if (asset.content === content)
                 {
-                    return (_loc3_);
-                };
-            };
-            return (null);
+                    return asset;
+                }
+
+            }
+
+
+            return null;
         }
 
-        public function getAssetIndex(param1:IAsset):int
+        public function getAssetIndex(asset: IAsset): int
         {
-            var _loc2_:String;
-            for (_loc2_ in this.var_2113)
+            var key: String;
+            for (key in this._assets)
             {
-                if (this.var_2113[_loc2_] == param1)
+                if (this._assets[key] == asset)
                 {
-                    return (this.var_2110.indexOf(_loc2_));
-                };
-            };
-            return (-1);
+                    return this._nameArray.indexOf(key);
+                }
+
+            }
+
+
+            return -1;
         }
 
-        public function hasAsset(param1:String):Boolean
+        public function hasAsset(name: String): Boolean
         {
-            return ((!(this.var_2113[param1] == null)) || ((this.var_2111 != null) ? (!(this.var_2111[param1] == null)) : false));
+            if (this._assets[name] != null)
+            {
+                return true;
+            }
+
+            return this._resource != null && this._resource[name] != null;
+
+
         }
 
-        public function setAsset(param1:String, param2:IAsset, param3:Boolean=true):Boolean
+        public function setAsset(param1: String, param2: IAsset, param3: Boolean = true): Boolean
         {
-            var _loc4_:* = (this.var_2113[param1] == null);
-            if ((((param3) || (_loc4_)) && (param2)))
+            var _loc4_: * = this._assets[param1] == null;
+            if ((param3 || _loc4_) && param2)
             {
                 if (_loc4_)
                 {
-                    this.var_2109++;
-                    this.var_2110.push(param1);
-                };
-                this.var_2113[param1] = param2;
-                if ((param2 is ILazyAsset))
+                    this._numAssets++;
+                    this._nameArray.push(param1);
+                }
+
+                this._assets[param1] = param2;
+                if (param2 is ILazyAsset)
                 {
-                    var_343.push((param2 as ILazyAsset));
-                };
-                return (true);
-            };
-            return (false);
+                    AssetProcessor.push(param2 as ILazyAsset);
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
-        public function createAsset(param1:String, param2:AssetTypeDeclaration):IAsset
+        public function createAsset(param1: String, param2: AssetTypeDeclaration): IAsset
         {
-            if (((this.hasAsset(param1)) || (!(param2))))
+            if (this.hasAsset(param1) || !param2)
             {
-                return (null);
-            };
-            var _loc3_:IAsset = new (param2.assetClass)(param2);
+                return null;
+            }
+
+            var _loc3_: IAsset = new (param2.assetClass)(param2);
             if (!this.setAsset(param1, _loc3_))
             {
                 _loc3_.dispose();
                 _loc3_ = null;
-            };
-            return (_loc3_);
+            }
+
+            return _loc3_;
         }
 
-        public function removeAsset(param1:IAsset):IAsset
+        public function removeAsset(param1: IAsset): IAsset
         {
-            var _loc2_:String;
+            var _loc2_: String;
             if (param1)
             {
-                for (_loc2_ in this.var_2113)
+                for (_loc2_ in this._assets)
                 {
-                    if (this.var_2113[_loc2_] == param1)
+                    if (this._assets[_loc2_] == param1)
                     {
-                        this.var_2110.splice(this.var_2110.indexOf(_loc2_), 1);
-                        delete this.var_2113[_loc2_];
-                        this.var_2109--;
-                        return (param1);
-                    };
-                };
-            };
-            return (null);
+                        this._nameArray.splice(this._nameArray.indexOf(_loc2_), 1);
+                        this._assets[_loc2_] = null;
+                        this._numAssets--;
+                        return param1;
+                    }
+
+                }
+
+            }
+
+            return null;
         }
 
-        public function registerAssetTypeDeclaration(param1:AssetTypeDeclaration, param2:Boolean=true):Boolean
+        public function registerAssetTypeDeclaration(assetType: AssetTypeDeclaration, global: Boolean = true): Boolean
         {
-            if (param2)
+            if (global)
             {
-                if (var_336.hasOwnProperty(param1.mimeType))
+                if (AssetTypes.hasOwnProperty(assetType.mimeType))
                 {
-                    throw (new Error((("Asset type " + param1.mimeType) + " already registered!")));
-                };
-                var_336[param1.mimeType] = param1;
+                    throw new Error("Asset type " + assetType.mimeType + " already registered!");
+                }
+
+
+                AssetTypes[assetType.mimeType] = assetType;
             }
             else
             {
-                if (this.var_2116.hasOwnProperty(param1.mimeType))
+                if (this._assetTypes.hasOwnProperty(assetType.mimeType))
                 {
-                    throw (new Error((("Asset type " + param1.mimeType) + " already registered!")));
-                };
-                this.var_2116[param1.mimeType] = param1;
-            };
-            return (true);
+                    throw new Error("Asset type " + assetType.mimeType + " already registered!");
+                }
+
+
+                this._assetTypes[assetType.mimeType] = assetType;
+            }
+
+
+            return true;
         }
 
-        public function getAssetTypeDeclarationByMimeType(param1:String, param2:Boolean=true):AssetTypeDeclaration
+        public function getAssetTypeDeclarationByMimeType(type: String, global: Boolean = true): AssetTypeDeclaration
         {
-            var _loc3_:AssetTypeDeclaration;
-            if (param2)
+            if (global)
             {
-                _loc3_ = AssetTypeDeclaration(var_336[param1]);
-                if (_loc3_ != null)
+                var assetType: AssetTypeDeclaration = AssetTypeDeclaration(AssetTypes[type]);
+
+                if (assetType != null)
                 {
-                    return (_loc3_);
-                };
-            };
-            return (AssetTypeDeclaration(this.var_2116[param1]));
+                    return assetType;
+                }
+
+            }
+
+
+            return AssetTypeDeclaration(this._assetTypes[type]);
         }
 
-        public function getAssetTypeDeclarationByClass(param1:Class, param2:Boolean=true):AssetTypeDeclaration
+        public function getAssetTypeDeclarationByClass(assetClass: Class, global: Boolean = true): AssetTypeDeclaration
         {
-            var _loc3_:AssetTypeDeclaration;
-            var _loc4_:String;
-            if (param2)
+            var assetType: AssetTypeDeclaration;
+            var type: String;
+            if (global)
             {
-                for (_loc4_ in var_336)
+                for (type in AssetTypes)
                 {
-                    _loc3_ = AssetTypeDeclaration(var_336[_loc4_]);
-                    if (_loc3_ != null)
+                    assetType = AssetTypeDeclaration(AssetTypes[type]);
+                    if (assetType != null)
                     {
-                        if (_loc3_.assetClass == param1)
+                        if (assetType.assetClass == assetClass)
                         {
-                            return (_loc3_);
-                        };
-                    };
-                };
-            };
-            for (_loc4_ in this.var_2116)
+                            return assetType;
+                        }
+
+                    }
+
+                }
+
+            }
+
+
+            for (type in this._assetTypes)
             {
-                _loc3_ = AssetTypeDeclaration(this.var_2116[_loc4_]);
-                if (_loc3_ != null)
+                assetType = AssetTypeDeclaration(this._assetTypes[type]);
+                if (assetType != null)
                 {
-                    if (_loc3_.assetClass == param1)
+                    if (assetType.assetClass == assetClass)
                     {
-                        return (_loc3_);
-                    };
-                };
-            };
-            return (null);
+                        return assetType;
+                    }
+
+                }
+
+            }
+
+
+            return null;
         }
 
-        public function getAssetTypeDeclarationByFileName(param1:String, param2:Boolean=true):AssetTypeDeclaration
+        public function getAssetTypeDeclarationByFileName(url: String, global: Boolean = true): AssetTypeDeclaration
         {
-            var _loc4_:AssetTypeDeclaration;
-            var _loc5_:String;
-            var _loc3_:String = param1.substr((param1.lastIndexOf(".") + 1), param1.length);
-            if (_loc3_.indexOf("?"))
+            var assetType: AssetTypeDeclaration;
+            var type: String;
+
+            var filename: String = url.substr(url.lastIndexOf(".") + 1, url.length);
+
+            if (filename.indexOf("?"))
             {
-                _loc3_ = _loc3_.substr(0, (_loc3_.indexOf("?") - 1));
-            };
-            if (param2)
+                filename = filename.substr(0, filename.indexOf("?") - 1);
+            }
+
+
+            if (global)
             {
-                for (_loc5_ in var_336)
+                for (type in AssetTypes)
                 {
-                    _loc4_ = AssetTypeDeclaration(var_336[_loc5_]);
-                    if (_loc4_ != null)
+                    assetType = AssetTypeDeclaration(AssetTypes[type]);
+                    if (assetType != null)
                     {
-                        if (_loc4_.fileTypes.indexOf(_loc3_))
+                        if (assetType.fileTypes.indexOf(filename))
                         {
-                            return (_loc4_);
-                        };
-                    };
-                };
-            };
-            for (_loc5_ in this.var_2116)
+                            return assetType;
+                        }
+
+                    }
+
+                }
+
+            }
+
+
+            for (type in this._assetTypes)
             {
-                _loc4_ = AssetTypeDeclaration(this.var_2116[_loc5_]);
-                if (_loc4_ != null)
+                assetType = AssetTypeDeclaration(this._assetTypes[type]);
+                if (assetType != null)
                 {
-                    if (_loc4_.fileTypes.indexOf(_loc3_))
+                    if (assetType.fileTypes.indexOf(filename))
                     {
-                        return (_loc4_);
-                    };
-                };
-            };
-            return (null);
+                        return assetType;
+                    }
+
+                }
+
+            }
+
+
+            return null;
         }
 
-        private function libraryLoadedHandler(param1:LibraryLoaderEvent):void
+        private function libraryLoadedHandler(loaderEvent: LibraryLoaderEvent): void
         {
-            var _loc2_:LibraryLoader = (param1.target as LibraryLoader);
-            if (_loc2_.manifest == null)
+            var loader: LibraryLoader = loaderEvent.target as LibraryLoader;
+
+            if (loader.manifest == null)
             {
-                throw (new Error("loader.manifest was null, which would have caused error 1009 anyway. See HL-22347."));
-            };
-            this._manifest = _loc2_.manifest.copy();
-            this.var_2111 = _loc2_.resource;
-            this.var_2107 = _loc2_.url;
-            if (this.var_2114)
+                throw new Error("loader.manifest was null, which would have caused error 1009 anyway. See HL-22347.");
+            }
+
+
+            this._manifest = loader.manifest.copy();
+            this._resource = loader.resource;
+            this._url = loader.url;
+
+            if (this._loaded)
             {
-                AssetLibrary.fetchLibraryContents(this, this._manifest, this.var_2111);
-            };
-            this.var_2108 = true;
-            dispatchEvent(new Event(AssetLibrary.var_333));
-            dispatchEvent(new Event(AssetLibrary.var_332));
-            if (this.var_2114)
+                AssetLibrary.fetchLibraryContents(this, this._manifest, this._resource);
+            }
+
+
+            this._isReady = true;
+            dispatchEvent(new Event(AssetLibrary.ASSET_LIBRARY_LOADED));
+            dispatchEvent(new Event(AssetLibrary.ASSET_LIBRARY_READY));
+
+            if (this._loaded)
             {
-                this.var_2103.removeEventListener(LibraryLoaderEvent.LIBRARY_LOADER_EVENT_COMPLETE, this.libraryLoadedHandler);
-                this.var_2103.removeEventListener(LibraryLoaderEvent.LIBRARY_LOADER_EVENT_ERROR, this.loadErrorHandler);
-                this.var_2103.addEventListener(LibraryLoader.LIBRARY_LOADER_FINALIZE, this.finalizeLoaderEventHandler);
-                this.var_2103 = null;
-                this.var_2111 = null;
-            };
+                this._loader.removeEventListener(LibraryLoaderEvent.LIBRARY_LOADER_EVENT_COMPLETE, this.libraryLoadedHandler);
+                this._loader.removeEventListener(LibraryLoaderEvent.LIBRARY_LOADER_EVENT_ERROR, this.loadErrorHandler);
+                this._loader.addEventListener(LibraryLoader.LIBRARY_LOADER_FINALIZE, this.finalizeLoaderEventHandler);
+                this._loader = null;
+                this._resource = null;
+            }
+
         }
 
-        private function finalizeLoaderEventHandler(param1:Event):void
+        private function finalizeLoaderEventHandler(event: Event): void
         {
-            var _loc2_:LibraryLoader = (param1.target as LibraryLoader);
-            if (((_loc2_) && (!(_loc2_.disposed))))
+            var loader: LibraryLoader = event.target as LibraryLoader;
+
+            if (loader && !loader.disposed)
             {
-                if (!_loc2_.hasEventListener(LibraryLoaderEvent.LIBRARY_LOADER_EVENT_COMPLETE))
+                if (!loader.hasEventListener(LibraryLoaderEvent.LIBRARY_LOADER_EVENT_COMPLETE))
                 {
-                    _loc2_.removeEventListener(LibraryLoader.LIBRARY_LOADER_FINALIZE, this.finalizeLoaderEventHandler);
-                    _loc2_.dispose();
-                };
-            };
+                    loader.removeEventListener(LibraryLoader.LIBRARY_LOADER_FINALIZE, this.finalizeLoaderEventHandler);
+                    loader.dispose();
+                }
+
+            }
+
         }
 
-        private function onLoadProgress(param1:ProgressEvent):void
+        private function onLoadProgress(progressEvent: ProgressEvent): void
         {
-            dispatchEvent(param1.clone());
+            dispatchEvent(progressEvent.clone());
         }
 
-        private function loadErrorHandler(param1:LibraryLoaderEvent):void
+        private function loadErrorHandler(loaderEvent: LibraryLoaderEvent): void
         {
-            this.var_2108 = false;
-            var _loc2_:LibraryLoader = (param1.target as LibraryLoader);
-            var _loc3_:String = ((_loc2_) ? _loc2_.name : "unknown");
-            Logger.log(((("Cannot load the specified file: " + _loc3_) + " ") + param1.status));
-            dispatchEvent(new Event(AssetLibrary.var_335));
-            this.var_2103 = null;
+            this._isReady = false;
+
+            var loader: LibraryLoader = loaderEvent.target as LibraryLoader;
+            var name: String = loader ? loader.name : "unknown";
+
+            Logger.log("Cannot load the specified file: " + name + " " + loaderEvent.status);
+            dispatchEvent(new Event(AssetLibrary.ASSET_LIBRARY_LOAD_ERROR));
+
+            this._loader = null;
         }
 
-        private function solveAssetTypeDeclarationFromUrl(param1:String):AssetTypeDeclaration
+        private function solveAssetTypeDeclarationFromUrl(url: String): AssetTypeDeclaration
         {
-            var _loc2_:int;
-            var _loc3_:AssetTypeDeclaration;
-            var _loc4_:Array;
-            var _loc5_:String;
-            _loc2_ = param1.indexOf("?", 0);
-            if (_loc2_ > 0)
+            var index: int;
+            var item: AssetTypeDeclaration;
+            var fileTypes: Array;
+            var key: String;
+
+            // Remove queryParams
+            index = url.indexOf("?", 0);
+            if (index > 0)
             {
-                param1 = param1.slice(0, _loc2_);
-            };
-            _loc2_ = param1.lastIndexOf(".");
-            if (_loc2_ == -1)
+                url = url.slice(0, index);
+            }
+
+
+            // Retrieve file type seperator index
+            index = url.lastIndexOf(".");
+            if (index == -1)
             {
-                return (null);
-            };
-            param1 = param1.slice((_loc2_ + 1), param1.length);
-            for (_loc5_ in this.var_2116)
+                return null;
+            }
+
+
+            // Slice the url to just the file extension
+            url = url.slice(index + 1, url.length);
+
+            for (key in this._assetTypes)
             {
-                _loc3_ = this.var_2116[_loc5_];
-                _loc4_ = _loc3_.fileTypes;
-                if (_loc4_ != null)
+                item = this._assetTypes[key];
+                fileTypes = item.fileTypes;
+
+                if (fileTypes != null)
                 {
-                    if (_loc4_.indexOf(param1, 0) > -1)
+                    if (fileTypes.indexOf(url, 0) > -1)
                     {
-                        return (_loc3_);
-                    };
-                };
-            };
-            for (_loc5_ in var_336)
+                        return item;
+                    }
+
+                }
+
+            }
+
+
+            for (key in AssetTypes)
             {
-                _loc3_ = var_336[_loc5_];
-                _loc4_ = _loc3_.fileTypes;
-                if (_loc4_ != null)
+                item = AssetTypes[key];
+                fileTypes = item.fileTypes;
+
+                if (fileTypes != null)
                 {
-                    if (_loc4_.indexOf(param1, 0) > -1)
+                    if (fileTypes.indexOf(url, 0) > -1)
                     {
-                        return (_loc3_);
-                    };
-                };
-            };
-            return (null);
+                        return item;
+                    }
+
+                }
+
+            }
+
+
+            return null;
         }
 
-        private function fetchAssetFromResource(param1:String):IAsset
+        private function fetchAssetFromResource(assetName: String): IAsset
         {
-            var _loc3_:XML;
-            var _loc4_:AssetTypeDeclaration;
-            var _loc5_:IAsset;
-            var _loc6_:XMLList;
-            var _loc7_:int;
-            var _loc8_:uint;
-            if (!this.var_2111)
+            var item: XML;
+
+            if (!this._resource)
             {
-                return (null);
-            };
-            var _loc2_:XMLList = this._manifest.child(var_339);
-            if (_loc2_ == null)
+                return null;
+            }
+
+
+            var items: XMLList = this._manifest.child(LIBRARY);
+
+            if (items == null)
             {
-                throw (new Error("Provided manifest doesn't contain library node!"));
-            };
-            if (_loc2_.length() == 0)
+                throw new Error("Provided manifest doesn't contain library node!");
+            }
+
+
+            if (items.length() == 0)
             {
-                return (null);
-            };
-            _loc2_ = _loc2_[0].assets;
-            if (_loc2_ != null)
+                return null;
+            }
+
+
+            items = items[0].assets;
+
+            if (items != null)
             {
-                _loc2_ = _loc2_.child(var_340);
-                _loc5_ = null;
-                _loc7_ = _loc2_.length();
-                _loc8_ = 0;
-                while (_loc8_ < _loc7_)
+                items = items.child(ASSET);
+
+                for (var i: int = 0; i < items.length(); i++)
                 {
-                    _loc3_ = _loc2_[_loc8_];
-                    if (_loc3_.attribute(var_341).toString() == param1)
+                    item = items[i];
+
+                    if (item.attribute(NAME).toString() == assetName)
                     {
-                        _loc4_ = this.getAssetTypeDeclarationByMimeType(_loc3_.attribute(TYPE));
-                        if (_loc4_ == null)
+                        var assetType: AssetTypeDeclaration = this.getAssetTypeDeclarationByMimeType(item.attribute(TYPE));
+
+                        if (assetType == null)
                         {
-                            throw (new Error((((("Failed to extract asset " + param1) + " from Library ") + this.var_2107) + "!")));
-                        };
-                        _loc5_ = (new (_loc4_.assetClass)(_loc4_) as IAsset);
-                        _loc5_.setUnknownContent(this.var_2111[param1]);
-                        _loc6_ = _loc3_.child(var_342);
-                        if (_loc6_.length())
+                            throw new Error("Failed to extract asset " + assetName + " from Library " + this._url + "!");
+                        }
+
+
+                        var asset: IAsset = new assetType.assetClass(assetType) as IAsset;
+                        asset.setUnknownContent(this._resource[assetName]);
+
+                        var params: XMLList = item.child(PARAM);
+
+                        if (params.length())
                         {
-                            _loc5_.setParamsDesc(_loc6_);
-                        };
-                        this.setAsset(param1, _loc5_);
-                        return (_loc5_);
-                    };
-                    _loc8_++;
-                };
-            };
-            return (null);
+                            asset.setParamsDesc(params);
+                        }
+
+
+                        this.setAsset(assetName, asset);
+
+                        return asset;
+                    }
+
+                }
+
+            }
+
+
+            return null;
         }
 
-        public function toString():String
+        public function toString(): String
         {
-            return ((getQualifiedClassName(this) + ": ") + this._name);
+            return getQualifiedClassName(this) + ": " + this._name;
         }
 
     }

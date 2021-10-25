@@ -1,28 +1,31 @@
 ﻿package com.sulake.habbo.room.messages
 {
-    public class RoomObjectAvatarFlatControlUpdateMessage extends RoomObjectUpdateStateMessage 
+
+    public class RoomObjectAvatarFlatControlUpdateMessage extends RoomObjectUpdateStateMessage
     {
 
-        private var var_3945:Boolean = false;
-        private var var_3946:String;
+        private var _isAdmin: Boolean = false;
+        private var _rawData: String;
 
-        public function RoomObjectAvatarFlatControlUpdateMessage(param1:String)
+        public function RoomObjectAvatarFlatControlUpdateMessage(rawData: String)
         {
-            this.var_3946 = param1;
-            if (((!(param1 == null)) && (!(param1.indexOf("useradmin") == -1))))
+            this._rawData = rawData;
+            
+            if (rawData != null && rawData.indexOf("useradmin") != -1)
             {
-                this.var_3945 = true;
-            };
+                this._isAdmin = true;
+            }
+
         }
 
-        public function get isAdmin():Boolean
+        public function get isAdmin(): Boolean
         {
-            return (this.var_3945);
+            return this._isAdmin;
         }
 
-        public function get rawData():String
+        public function get rawData(): String
         {
-            return (this.var_3946);
+            return this._rawData;
         }
 
     }

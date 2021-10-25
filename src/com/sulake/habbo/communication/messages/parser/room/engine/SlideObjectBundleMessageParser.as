@@ -1,112 +1,130 @@
 ﻿package com.sulake.habbo.communication.messages.parser.room.engine
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.room.engine.SlideObjectMessageData;
     import com.sulake.room.utils.Vector3d;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class SlideObjectBundleMessageParser implements IMessageParser 
+    public class SlideObjectBundleMessageParser implements IMessageParser
     {
 
-        private var _roomId:int = 0;
-        private var _roomCategory:int = 0;
-        private var _id:int;
-        private var var_3307:Number;
-        private var var_3308:String;
-        private var var_3309:Array;
-        private var var_2427:SlideObjectMessageData = null;
+        private var _roomId: int = 0;
+        private var _roomCategory: int = 0;
+        private var _id: int;
+        private var var_3307: Number;
+        private var var_3308: String;
+        private var _objectList: Array;
+        private var _avatar: SlideObjectMessageData = null;
 
-        public function get roomId():int
+        public function get roomId(): int
         {
-            return (this._roomId);
+            return this._roomId;
         }
 
-        public function get roomCategory():int
+        public function get roomCategory(): int
         {
-            return (this._roomCategory);
+            return this._roomCategory;
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get avatar():SlideObjectMessageData
+        public function get avatar(): SlideObjectMessageData
         {
-            return (this.var_2427);
+            return this._avatar;
         }
 
-        public function get objectList():Array
+        public function get objectList(): Array
         {
-            return (this.var_3309);
+            return this._objectList;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
             this._roomId = 0;
             this._roomCategory = 0;
             this._id = -1;
-            this.var_2427 = null;
-            this.var_3309 = new Array();
-            return (true);
+            this._avatar = null;
+            this._objectList = [];
+
+            return true;
         }
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            var _loc7_:int;
-            var _loc8_:SlideObjectMessageData;
-            var _loc9_:Vector3d;
-            var _loc10_:Vector3d;
-            var _loc11_:Number;
-            var _loc12_:Number;
-            if (param1 == null)
+            var id: int;
+            var slideObject: SlideObjectMessageData;
+            var start: Vector3d;
+            var target: Vector3d;
+            var startZ: Number;
+            var targetZ: Number;
+
+            if (data == null)
             {
-                return (false);
-            };
-            var _loc2_:Number = param1.readInteger();
-            var _loc3_:Number = param1.readInteger();
-            var _loc4_:Number = param1.readInteger();
-            var _loc5_:Number = param1.readInteger();
-            var _loc6_:int = param1.readInteger();
-            this.var_3309 = new Array();
-            var _loc13_:int;
-            while (_loc13_ < _loc6_)
+                return false;
+            }
+
+            var startX: Number = data.readInteger();
+            var startY: Number = data.readInteger();
+            var targetX: Number = data.readInteger();
+            var targetY: Number = data.readInteger();
+            
+            this._objectList = [];
+            
+            var objectCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < objectCount)
             {
-                _loc7_ = param1.readInteger();
-                _loc11_ = Number(param1.readString());
-                _loc12_ = Number(param1.readString());
-                _loc9_ = new Vector3d(_loc2_, _loc3_, _loc11_);
-                _loc10_ = new Vector3d(_loc4_, _loc5_, _loc12_);
-                _loc8_ = new SlideObjectMessageData(_loc7_, _loc9_, _loc10_);
-                this.var_3309.push(_loc8_);
-                _loc13_++;
-            };
-            this._id = param1.readInteger();
-            var _loc14_:int = param1.readInteger();
-            switch (_loc14_)
+                id = data.readInteger();
+                startZ = Number(data.readString());
+                targetZ = Number(data.readString());
+                start = new Vector3d(startX, startY, startZ);
+                target = new Vector3d(targetX, targetY, targetZ);
+
+                slideObject = new SlideObjectMessageData(id, start, target);
+                
+                this._objectList.push(slideObject);
+                i++;
+            }
+
+            this._id = data.readInteger();
+            
+            var moveType: int = data.readInteger();
+            
+            switch (moveType)
             {
                 case 0:
                     break;
+                    
                 case 1:
-                    _loc7_ = param1.readInteger();
-                    _loc11_ = Number(param1.readString());
-                    _loc12_ = Number(param1.readString());
-                    _loc9_ = new Vector3d(_loc2_, _loc3_, _loc11_);
-                    _loc10_ = new Vector3d(_loc4_, _loc5_, _loc12_);
-                    this.var_2427 = new SlideObjectMessageData(_loc7_, _loc9_, _loc10_, SlideObjectMessageData.var_1618);
+                    id = data.readInteger();
+                    startZ = Number(data.readString());
+                    targetZ = Number(data.readString());
+                    start = new Vector3d(startX, startY, startZ);
+                    target = new Vector3d(targetX, targetY, targetZ);
+                    
+                    this._avatar = new SlideObjectMessageData(id, start, target, SlideObjectMessageData.MV);
                     break;
+
                 case 2:
-                    _loc7_ = param1.readInteger();
-                    _loc11_ = Number(param1.readString());
-                    _loc12_ = Number(param1.readString());
-                    _loc9_ = new Vector3d(_loc2_, _loc3_, _loc11_);
-                    _loc10_ = new Vector3d(_loc4_, _loc5_, _loc12_);
-                    this.var_2427 = new SlideObjectMessageData(_loc7_, _loc9_, _loc10_, SlideObjectMessageData.var_1619);
+                    id = data.readInteger();
+                    startZ = Number(data.readString());
+                    targetZ = Number(data.readString());
+                    start = new Vector3d(startX, startY, startZ);
+                    target = new Vector3d(targetX, targetY, targetZ);
+                    
+                    this._avatar = new SlideObjectMessageData(id, start, target, SlideObjectMessageData.SLD);
                     break;
+                
                 default:
                     Logger.log("** Incompatible character movetype!");
-            };
-            return (true);
+            }
+
+            return true;
         }
 
     }

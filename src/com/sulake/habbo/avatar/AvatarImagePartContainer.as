@@ -1,110 +1,114 @@
 ﻿package com.sulake.habbo.avatar
 {
+
     import com.sulake.habbo.avatar.structure.figure.IPartColor;
     import com.sulake.habbo.avatar.actions.IActionDefinition;
+
     import flash.geom.ColorTransform;
 
-    public class AvatarImagePartContainer 
+    public class AvatarImagePartContainer
     {
 
-        private var var_2431:String;
-        private var var_2436:String;
-        private var var_2584:String;
-        private var var_2437:String;
-        private var _color:IPartColor;
-        private var _frames:Array;
-        private var _action:IActionDefinition;
-        private var var_2503:Boolean;
-        private var _isBlendable:Boolean;
-        private var var_2585:ColorTransform;
-        private var var_2519:int;
+        private var _bodyPartId: String;
+        private var _partType: String;
+        private var _flippedPartType: String;
+        private var _partId: String;
+        private var _color: IPartColor;
+        private var _frames: Array;
+        private var _action: IActionDefinition;
+        private var _isColorable: Boolean;
+        private var _isBlendable: Boolean;
+        private var _blendTransform: ColorTransform;
+        private var _paletteMapId: int;
 
-        public function AvatarImagePartContainer(param1:String, param2:String, param3:String, param4:IPartColor, param5:Array, param6:IActionDefinition, param7:Boolean, param8:int, param9:String="", param10:Boolean=false, param11:Number=1)
+        public function AvatarImagePartContainer(param1: String, param2: String, param3: String, param4: IPartColor, param5: Array, param6: IActionDefinition, param7: Boolean, param8: int, param9: String = "", param10: Boolean = false, param11: Number = 1)
         {
-            this.var_2431 = param1;
-            this.var_2436 = param2;
-            this.var_2437 = param3;
+            this._bodyPartId = param1;
+            this._partType = param2;
+            this._partId = param3;
             this._color = param4;
             this._frames = param5;
             this._action = param6;
-            this.var_2503 = param7;
-            this.var_2519 = param8;
-            this.var_2584 = param9;
+            this._isColorable = param7;
+            this._paletteMapId = param8;
+            this._flippedPartType = param9;
             this._isBlendable = param10;
-            this.var_2585 = new ColorTransform(1, 1, 1, param11);
+            this._blendTransform = new ColorTransform(1, 1, 1, param11);
             if (this._frames == null)
             {
                 Logger.log("Null frame list");
-            };
-            if (this.var_2436 == "ey")
+            }
+
+            if (this._partType == "ey")
             {
-                this.var_2503 = false;
-            };
+                this._isColorable = false;
+            }
+
         }
 
-        public function getFrameIndex(param1:int):int
+        public function getFrameIndex(param1: int): int
         {
-            return (this._frames[(param1 % this._frames.length)]);
+            return this._frames[(param1 % this._frames.length)];
         }
 
-        public function get frames():Array
+        public function get frames(): Array
         {
-            return (this._frames);
+            return this._frames;
         }
 
-        public function get bodyPartId():String
+        public function get bodyPartId(): String
         {
-            return (this.var_2431);
+            return this._bodyPartId;
         }
 
-        public function get partType():String
+        public function get partType(): String
         {
-            return (this.var_2436);
+            return this._partType;
         }
 
-        public function get partId():String
+        public function get partId(): String
         {
-            return (this.var_2437);
+            return this._partId;
         }
 
-        public function get color():IPartColor
+        public function get color(): IPartColor
         {
-            return (this._color);
+            return this._color;
         }
 
-        public function get action():IActionDefinition
+        public function get action(): IActionDefinition
         {
-            return (this._action);
+            return this._action;
         }
 
-        public function set isColorable(param1:Boolean):void
+        public function set isColorable(param1: Boolean): void
         {
-            this.var_2503 = param1;
+            this._isColorable = param1;
         }
 
-        public function get isColorable():Boolean
+        public function get isColorable(): Boolean
         {
-            return (this.var_2503);
+            return this._isColorable;
         }
 
-        public function get paletteMapId():int
+        public function get paletteMapId(): int
         {
-            return (this.var_2519);
+            return this._paletteMapId;
         }
 
-        public function get flippedPartType():String
+        public function get flippedPartType(): String
         {
-            return (this.var_2584);
+            return this._flippedPartType;
         }
 
-        public function get isBlendable():Boolean
+        public function get isBlendable(): Boolean
         {
-            return (this._isBlendable);
+            return this._isBlendable;
         }
 
-        public function get blendTransform():ColorTransform
+        public function get blendTransform(): ColorTransform
         {
-            return (this.var_2585);
+            return this._blendTransform;
         }
 
     }

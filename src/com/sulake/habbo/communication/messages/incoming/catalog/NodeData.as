@@ -1,62 +1,66 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.catalog
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class NodeData 
+    public class NodeData
     {
 
-        private var var_2906:Boolean;
-        private var _color:int;
-        private var _icon:int;
-        private var var_2608:int;
-        private var _localization:String;
-        private var var_2905:Array;
+        private var _navigateable: Boolean;
+        private var _color: int;
+        private var _icon: int;
+        private var _pageId: int;
+        private var _localization: String;
+        private var _nodes: Array;
 
-        public function NodeData(param1:IMessageDataWrapper)
+        public function NodeData(data: IMessageDataWrapper)
         {
-            this.var_2906 = Boolean(param1.readInteger());
-            this._color = param1.readInteger();
-            this._icon = param1.readInteger();
-            this.var_2608 = param1.readInteger();
-            this._localization = param1.readString();
-            this.var_2905 = new Array();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._navigateable = Boolean(data.readInteger());
+            this._color = data.readInteger();
+            this._icon = data.readInteger();
+            this._pageId = data.readInteger();
+            this._localization = data.readString();
+            this._nodes = [];
+
+            var nodeCount: int = data.readInteger();
+            var i: int;
+
+            while (i < nodeCount)
             {
-                this.var_2905.push(new NodeData(param1));
-                _loc3_++;
-            };
+                this._nodes.push(new NodeData(data));
+                i++;
+            }
+
         }
 
-        public function get navigateable():Boolean
+        public function get navigateable(): Boolean
         {
-            return (this.var_2906);
+            return this._navigateable;
         }
 
-        public function get color():int
+        public function get color(): int
         {
-            return (this._color);
+            return this._color;
         }
 
-        public function get icon():int
+        public function get icon(): int
         {
-            return (this._icon);
+            return this._icon;
         }
 
-        public function get pageId():int
+        public function get pageId(): int
         {
-            return (this.var_2608);
+            return this._pageId;
         }
 
-        public function get localization():String
+        public function get localization(): String
         {
-            return (this._localization);
+            return this._localization;
         }
 
-        public function get nodes():Array
+        public function get nodes(): Array
         {
-            return (this.var_2905);
+            return this._nodes;
         }
 
     }

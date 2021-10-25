@@ -1,36 +1,41 @@
 ﻿package com.sulake.habbo.communication.messages.parser.navigator
 {
+
     import com.sulake.core.communication.messages.IMessageParser;
     import com.sulake.habbo.communication.messages.incoming.navigator.FlatCategory;
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class UserFlatCatsMessageParser implements IMessageParser 
+    public class UserFlatCatsMessageParser implements IMessageParser
     {
 
-        private var var_2905:Array;
+        private var _nodes: Array;
 
-        public function parse(param1:IMessageDataWrapper):Boolean
+        public function parse(data: IMessageDataWrapper): Boolean
         {
-            this.var_2905 = new Array();
-            var _loc2_:int = param1.readInteger();
-            var _loc3_:int;
-            while (_loc3_ < _loc2_)
+            this._nodes = [];
+            
+            var categoryCount: int = data.readInteger();
+            var i: int;
+            
+            while (i < categoryCount)
             {
-                this.var_2905.push(new FlatCategory(param1));
-                _loc3_++;
-            };
-            return (true);
+                this._nodes.push(new FlatCategory(data));
+                i++;
+            }
+
+            return true;
         }
 
-        public function flush():Boolean
+        public function flush(): Boolean
         {
-            this.var_2905 = null;
-            return (true);
+            this._nodes = null;
+
+            return true;
         }
 
-        public function get nodes():Array
+        public function get nodes(): Array
         {
-            return (this.var_2905);
+            return this._nodes;
         }
 
     }

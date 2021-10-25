@@ -1,25 +1,26 @@
 ﻿package com.sulake.habbo.room.messages
 {
-    public class RoomObjectAvatarPostureUpdateMessage extends RoomObjectUpdateStateMessage 
+
+    public class RoomObjectAvatarPostureUpdateMessage extends RoomObjectUpdateStateMessage
     {
 
-        private var var_3947:String;
-        private var var_2724:String;
+        private var _postureType: String;
+        private var _parameter: String;
 
-        public function RoomObjectAvatarPostureUpdateMessage(param1:String, param2:String="")
+        public function RoomObjectAvatarPostureUpdateMessage(postureType: String, parameter: String = "")
         {
-            this.var_3947 = param1;
-            this.var_2724 = param2;
+            this._postureType = postureType;
+            this._parameter = parameter;
         }
 
-        public function get postureType():String
+        public function get postureType(): String
         {
-            return (this.var_3947);
+            return this._postureType;
         }
 
-        public function get parameter():String
+        public function get parameter(): String
         {
-            return (this.var_2724);
+            return this._parameter;
         }
 
     }

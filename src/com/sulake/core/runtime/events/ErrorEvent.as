@@ -1,26 +1,27 @@
 ﻿package com.sulake.core.runtime.events
 {
-    public class ErrorEvent extends WarningEvent 
+
+    public class ErrorEvent extends WarningEvent
     {
 
-        protected var var_2168:Boolean;
-        protected var var_2169:String;
+        protected var _critical: Boolean;
+        protected var _stackTrace: String;
 
-        public function ErrorEvent(param1:String, param2:String, param3:Boolean, param4:String=null)
+        public function ErrorEvent(param1: String, param2: String, critical: Boolean, stackTrace: String = null)
         {
-            this.var_2168 = param3;
-            this.var_2169 = param4;
+            this._critical = critical;
+            this._stackTrace = stackTrace;
             super(param1, param2);
         }
 
-        public function get critical():Boolean
+        public function get critical(): Boolean
         {
-            return (this.var_2168);
+            return this._critical;
         }
 
-        public function get stackTrace():String
+        public function get stackTrace(): String
         {
-            return (this.var_2169);
+            return this._stackTrace;
         }
 
     }

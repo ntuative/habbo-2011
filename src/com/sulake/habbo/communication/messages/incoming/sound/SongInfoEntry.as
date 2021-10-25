@@ -1,19 +1,21 @@
 ﻿package com.sulake.habbo.communication.messages.incoming.sound
 {
-    public class SongInfoEntry extends PlayListEntry 
+
+    public class SongInfoEntry extends PlayListEntry
     {
 
-        private var var_3068:String = "";
+        private var _data: String = "";
 
-        public function SongInfoEntry(param1:int, param2:int, param3:String, param4:String, param5:String)
+        public function SongInfoEntry(id: int, length: int, songName: String, songCreator: String, data: String)
         {
-            super(param1, param2, param3, param4);
-            this.var_3068 = param5;
+            super(id, length, songName, songCreator);
+            
+            this._data = data;
         }
 
-        public function get data():String
+        public function get data(): String
         {
-            return (this.var_3068);
+            return this._data;
         }
 
     }

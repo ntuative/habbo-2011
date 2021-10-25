@@ -1,53 +1,56 @@
 ﻿package com.sulake.core.localization
 {
-    public class LocalizationDefinition implements ILocalizationDefinition 
+
+    public class LocalizationDefinition implements ILocalizationDefinition
     {
 
-        private var var_2165:String;
-        private var var_2166:String;
-        private var var_2167:String;
-        private var _name:String;
-        private var var_2104:String;
+        private var _languageCode: String;
+        private var _countryCode: String;
+        private var _encoding: String;
+        private var _name: String;
+        private var _url: String;
 
-        public function LocalizationDefinition(param1:String, param2:String, param3:String)
+        public function LocalizationDefinition(id: String, name: String, url: String)
         {
-            var _loc4_:Array = param1.split("_");
-            this.var_2165 = _loc4_[0];
-            var _loc5_:Array = String(_loc4_[1]).split(".");
-            this.var_2166 = _loc5_[0];
-            this.var_2167 = _loc5_[1];
-            this._name = param2;
-            this.var_2104 = param3;
+            var split: Array = id.split("_");
+            var splat: Array = String(split[1]).split(".");
+
+            this._languageCode = split[0];
+            this._countryCode = splat[0];
+            this._encoding = splat[1];
+
+            this._name = name;
+            this._url = url;
         }
 
-        public function get id():String
+        public function get id(): String
         {
-            return ((((this.var_2165 + "_") + this.var_2166) + ".") + this.var_2167);
+            return this._languageCode + "_" + this._countryCode + "." + this._encoding;
         }
 
-        public function get languageCode():String
+        public function get languageCode(): String
         {
-            return (this.var_2165);
+            return this._languageCode;
         }
 
-        public function get countryCode():String
+        public function get countryCode(): String
         {
-            return (this.var_2166);
+            return this._countryCode;
         }
 
-        public function get encoding():String
+        public function get encoding(): String
         {
-            return (this.var_2167);
+            return this._encoding;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get url():String
+        public function get url(): String
         {
-            return (this.var_2104);
+            return this._url;
         }
 
     }

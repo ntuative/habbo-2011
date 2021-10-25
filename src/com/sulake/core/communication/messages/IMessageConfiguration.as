@@ -1,12 +1,14 @@
 ﻿package com.sulake.core.communication.messages
 {
+
     import com.sulake.core.utils.Map;
 
-    public interface IMessageConfiguration 
+    public interface IMessageConfiguration
     {
 
-        function get events():Map;
-        function get composers():Map;
+        function get events(): Map;
+
+        function get composers(): Map;
 
     }
 }

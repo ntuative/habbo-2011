@@ -1,53 +1,54 @@
 ﻿package com.sulake.habbo.communication.messages.parser.inventory.pets
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class PetData 
+    public class PetData
     {
 
-        private var _id:int;
-        private var _name:String;
-        private var _type:int;
-        private var var_2517:int;
-        private var _color:String;
+        private var _id: int;
+        private var _name: String;
+        private var _type: int;
+        private var _breed: int;
+        private var _color: String;
 
-        public function PetData(param1:IMessageDataWrapper)
+        public function PetData(data: IMessageDataWrapper)
         {
-            this._id = param1.readInteger();
-            this._name = param1.readString();
-            this._type = param1.readInteger();
-            this.var_2517 = param1.readInteger();
-            this._color = param1.readString();
+            this._id = data.readInteger();
+            this._name = data.readString();
+            this._type = data.readInteger();
+            this._breed = data.readInteger();
+            this._color = data.readString();
         }
 
-        public function get id():int
+        public function get id(): int
         {
-            return (this._id);
+            return this._id;
         }
 
-        public function get name():String
+        public function get name(): String
         {
-            return (this._name);
+            return this._name;
         }
 
-        public function get type():int
+        public function get type(): int
         {
-            return (this._type);
+            return this._type;
         }
 
-        public function get breed():int
+        public function get breed(): int
         {
-            return (this.var_2517);
+            return this._breed;
         }
 
-        public function get color():String
+        public function get color(): String
         {
-            return (this._color);
+            return this._color;
         }
 
-        public function get figureString():String
+        public function get figureString(): String
         {
-            return ((((this._type + " ") + this.breed) + " ") + this.color);
+            return this._type + " " + this.breed + " " + this.color;
         }
 
     }

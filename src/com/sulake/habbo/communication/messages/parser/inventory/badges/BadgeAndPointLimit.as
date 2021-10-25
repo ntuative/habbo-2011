@@ -1,27 +1,28 @@
 ﻿package com.sulake.habbo.communication.messages.parser.inventory.badges
 {
+
     import com.sulake.core.communication.messages.IMessageDataWrapper;
 
-    public class BadgeAndPointLimit 
+    public class BadgeAndPointLimit
     {
 
-        private var var_2925:String;
-        private var var_3193:int;
+        private var _badgeId: String;
+        private var _limit: int;
 
-        public function BadgeAndPointLimit(param1:String, param2:IMessageDataWrapper)
+        public function BadgeAndPointLimit(id: String, data: IMessageDataWrapper)
         {
-            this.var_2925 = (("ACH_" + param1) + param2.readInteger());
-            this.var_3193 = param2.readInteger();
+            this._badgeId = "ACH_" + id + data.readInteger();
+            this._limit = data.readInteger();
         }
 
-        public function get badgeId():String
+        public function get badgeId(): String
         {
-            return (this.var_2925);
+            return this._badgeId;
         }
 
-        public function get limit():int
+        public function get limit(): int
         {
-            return (this.var_3193);
+            return this._limit;
         }
 
     }

@@ -1,9 +1,10 @@
 ﻿package com.sulake.core.runtime.exceptions
 {
-    public class ComponentDisposedException extends Exception 
+
+    public class ComponentDisposedException extends Exception
     {
 
-        public function ComponentDisposedException(param1:String)
+        public function ComponentDisposedException(param1: String)
         {
             super(param1);
         }

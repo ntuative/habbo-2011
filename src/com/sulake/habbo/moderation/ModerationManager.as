@@ -1,5 +1,6 @@
 ﻿package com.sulake.habbo.moderation
 {
+
     import com.sulake.core.runtime.Component;
     import com.sulake.habbo.window.IHabboWindowManager;
     import com.sulake.habbo.communication.IHabboCommunicationManager;
@@ -9,7 +10,9 @@
     import com.sulake.habbo.navigator.IHabboNavigator;
     import com.sulake.habbo.sound.IHabboSoundManager;
     import com.sulake.habbo.communication.messages.parser.moderation.ModeratorInitData;
+
     import iid.IIDHabboWindowManager;
+
     import com.sulake.iid.IIDHabboCommunicationManager;
     import com.sulake.iid.IIDSessionDataManager;
     import com.sulake.iid.IIDHabboConfigurationManager;
@@ -26,249 +29,274 @@
     import com.sulake.core.window.components.IButtonWindow;
     import com.sulake.core.window.IWindowContainer;
 
-    public class ModerationManager extends Component implements IHabboModeration 
+    public class ModerationManager extends Component implements IHabboModeration
     {
 
-        private var _windowManager:IHabboWindowManager;
-        private var _communication:IHabboCommunicationManager;
-        private var _connection:IConnection;
-        private var var_2847:ISessionDataManager;
-        private var var_2063:IHabboConfigurationManager;
-        private var _navigator:IHabboNavigator;
-        private var _soundManager:IHabboSoundManager;
-        private var var_3691:ModerationMessageHandler;
-        private var _issueManager:IssueManager;
-        private var var_3692:StartPanelCtrl;
-        private var var_3693:WindowTracker;
-        private var var_3694:ModeratorInitData;
-        private var var_3695:int;
+        private var _windowManager: IHabboWindowManager;
+        private var _communication: IHabboCommunicationManager;
+        private var _connection: IConnection;
+        private var _sessionDataManager: ISessionDataManager;
+        private var _configuration: IHabboConfigurationManager;
+        private var _navigator: IHabboNavigator;
+        private var _soundManager: IHabboSoundManager;
+        private var _messageHandler: ModerationMessageHandler;
+        private var _issueManager: IssueManager;
+        private var _startPanel: StartPanelCtrl;
+        private var _windowTracker: WindowTracker;
+        private var _initMsg: ModeratorInitData;
+        private var _currentFlatId: int;
 
-        public function ModerationManager(param1:IContext, param2:uint=0, param3:IAssetLibrary=null)
+        public function ModerationManager(ctx: IContext, flags: uint = 0, assets: IAssetLibrary = null)
         {
-            super(param1, param2, param3);
+            super(ctx, flags, assets);
+
             queueInterface(new IIDHabboWindowManager(), this.onWindowManagerReady);
             queueInterface(new IIDHabboCommunicationManager(), this.onCommunicationReady);
             queueInterface(new IIDSessionDataManager(), this.onSessionDataReady);
             queueInterface(new IIDHabboConfigurationManager(), this.onConfigurationReady);
             queueInterface(new IIDHabboNavigator(), this.onNavigatorReady);
             queueInterface(new IIDHabboSoundManager(), this.onSoundManagerReady);
-            this.var_3692 = new StartPanelCtrl(this);
-            this.var_3693 = new WindowTracker();
+            
+            this._startPanel = new StartPanelCtrl(this);
+            this._windowTracker = new WindowTracker();
         }
 
-        override public function dispose():void
+        override public function dispose(): void
         {
-            if (this.var_3692)
+            if (this._startPanel)
             {
-                this.var_3692.dispose();
-                this.var_3692 = null;
-            };
+                this._startPanel.dispose();
+                this._startPanel = null;
+            }
+
             if (this._windowManager)
             {
                 this._windowManager.release(new IIDHabboWindowManager());
                 this._windowManager = null;
-            };
+            }
+
             if (this._communication)
             {
                 this._communication.release(new IIDHabboCommunicationManager());
                 this._communication = null;
-            };
-            if (this.var_2847)
+            }
+
+            if (this._sessionDataManager)
             {
-                this.var_2847.release(new IIDSessionDataManager());
-                this.var_2847 = null;
-            };
-            if (this.var_2063)
+                this._sessionDataManager.release(new IIDSessionDataManager());
+                this._sessionDataManager = null;
+            }
+
+            if (this._configuration)
             {
-                this.var_2063.release(new IIDHabboConfigurationManager());
-                this.var_2063 = null;
-            };
+                this._configuration.release(new IIDHabboConfigurationManager());
+                this._configuration = null;
+            }
+
             if (this._navigator)
             {
                 this._navigator.release(new IIDHabboNavigator());
                 this._navigator = null;
-            };
+            }
+
             if (this._soundManager)
             {
                 this._soundManager.release(new IIDHabboSoundManager());
                 this._soundManager = null;
-            };
+            }
+
             this._connection = null;
             super.dispose();
         }
 
-        public function userSelected(param1:int, param2:String):void
+        public function userSelected(id: int, userName: String): void
         {
-            Logger.log(((("USER SELECTED: " + param1) + ", ") + param2));
-            this.var_3692.userSelected(param1, param2);
+            Logger.log("USER SELECTED: " + id + ", " + userName);
+            this._startPanel.userSelected(id, userName);
         }
 
-        public function get windowManager():IHabboWindowManager
+        public function get windowManager(): IHabboWindowManager
         {
-            return (this._windowManager);
+            return this._windowManager;
         }
 
-        public function get sessionDataManager():ISessionDataManager
+        public function get sessionDataManager(): ISessionDataManager
         {
-            return (this.var_2847);
+            return this._sessionDataManager;
         }
 
-        public function get issueManager():IssueManager
+        public function get issueManager(): IssueManager
         {
-            return (this._issueManager);
+            return this._issueManager;
         }
 
-        public function get connection():IConnection
+        public function get connection(): IConnection
         {
-            return (this._connection);
+            return this._connection;
         }
 
-        public function get startPanel():StartPanelCtrl
+        public function get startPanel(): StartPanelCtrl
         {
-            return (this.var_3692);
+            return this._startPanel;
         }
 
-        public function get initMsg():ModeratorInitData
+        public function get initMsg(): ModeratorInitData
         {
-            return (this.var_3694);
+            return this._initMsg;
         }
 
-        public function get messageHandler():ModerationMessageHandler
+        public function get messageHandler(): ModerationMessageHandler
         {
-            return (this.var_3691);
+            return this._messageHandler;
         }
 
-        public function get configuration():IHabboConfigurationManager
+        public function get configuration(): IHabboConfigurationManager
         {
-            return (this.var_2063);
+            return this._configuration;
         }
 
-        public function get windowTracker():WindowTracker
+        public function get windowTracker(): WindowTracker
         {
-            return (this.var_3693);
+            return this._windowTracker;
         }
 
-        public function get currentFlatId():int
+        public function get currentFlatId(): int
         {
-            return (this.var_3695);
+            return this._currentFlatId;
         }
 
-        public function get soundManager():IHabboSoundManager
+        public function get soundManager(): IHabboSoundManager
         {
-            return (this._soundManager);
+            return this._soundManager;
         }
 
-        public function set initMsg(param1:ModeratorInitData):void
+        public function set initMsg(value: ModeratorInitData): void
         {
-            this.var_3694 = param1;
+            this._initMsg = value;
         }
 
-        public function set currentFlatId(param1:int):void
+        public function set currentFlatId(value: int): void
         {
-            this.var_3695 = param1;
+            this._currentFlatId = value;
         }
 
-        private function onWindowManagerReady(param1:IID=null, param2:IUnknown=null):void
+        private function onWindowManagerReady(iid: IID = null, windowManager: IUnknown = null): void
         {
             if (disposed)
             {
                 return;
-            };
-            this._windowManager = (param2 as IHabboWindowManager);
+            }
+
+            this._windowManager = (windowManager as IHabboWindowManager);
             this._issueManager = new IssueManager(this);
         }
 
-        private function onCommunicationReady(param1:IID=null, param2:IUnknown=null):void
+        private function onCommunicationReady(iid: IID = null, communication: IUnknown = null): void
         {
             if (disposed)
             {
                 return;
-            };
-            this._communication = (param2 as IHabboCommunicationManager);
+            }
+
+            this._communication = (communication as IHabboCommunicationManager);
+            
             if (this._communication != null)
             {
                 this._connection = this._communication.getHabboMainConnection(this.onConnectionReady);
+                
                 if (this._connection != null)
                 {
                     this.onConnectionReady(this._connection);
-                };
-            };
+                }
+
+            }
+
         }
 
-        private function onConnectionReady(param1:IConnection):void
+        private function onConnectionReady(connection: IConnection): void
         {
             if (disposed)
             {
                 return;
-            };
-            if (param1 != null)
+            }
+
+            if (connection != null)
             {
-                this._connection = param1;
-                this.var_3691 = new ModerationMessageHandler(this);
-            };
+                this._connection = connection;
+                this._messageHandler = new ModerationMessageHandler(this);
+            }
+
         }
 
-        private function onSessionDataReady(param1:IID=null, param2:IUnknown=null):void
+        private function onSessionDataReady(iid: IID = null, sessionDataManager: IUnknown = null): void
         {
             if (disposed)
             {
                 return;
-            };
-            this.var_2847 = (param2 as ISessionDataManager);
+            }
+
+            this._sessionDataManager = (sessionDataManager as ISessionDataManager);
         }
 
-        private function onConfigurationReady(param1:IID=null, param2:IUnknown=null):void
+        private function onConfigurationReady(iid: IID = null, configuration: IUnknown = null): void
         {
             if (disposed)
             {
                 return;
-            };
-            this.var_2063 = (param2 as IHabboConfigurationManager);
+            }
+
+            this._configuration = (configuration as IHabboConfigurationManager);
         }
 
-        private function onNavigatorReady(param1:IID=null, param2:IUnknown=null):void
+        private function onNavigatorReady(iid: IID = null, navigator: IUnknown = null): void
         {
             if (disposed)
             {
                 return;
-            };
-            this._navigator = IHabboNavigator(param2);
+            }
+
+            this._navigator = IHabboNavigator(navigator);
         }
 
-        private function onSoundManagerReady(param1:IID=null, param2:IUnknown=null):void
+        private function onSoundManagerReady(iid: IID = null, param2: IUnknown = null): void
         {
             this._soundManager = (param2 as IHabboSoundManager);
         }
 
-        public function getXmlWindow(param1:String):IWindow
+        public function getXmlWindow(param1: String): IWindow
         {
-            var _loc2_:IAsset = assets.getAssetByName((param1 + "_xml"));
-            var _loc3_:XmlAsset = XmlAsset(_loc2_);
-            return (this._windowManager.buildFromXML(XML(_loc3_.content)));
+            var asset: IAsset = assets.getAssetByName(param1 + "_xml");
+            var assetXml: XmlAsset = XmlAsset(asset);
+
+            return this._windowManager.buildFromXML(XML(assetXml.content));
         }
 
-        public function openHkPage(param1:String, param2:String):void
+        public function openHkPage(key: String, path: String): void
         {
-            var _loc3_:String = this.configuration.getKey(param1);
-            var _loc4_:String = (_loc3_ + param2);
-            var _loc5_:String = "housekeeping";
-            HabboWebTools.navigateToURL(_loc4_, _loc5_);
+            var base: String = this.configuration.getKey(key);
+            var url: String = base + path;
+            var title: String = "housekeeping";
+
+            HabboWebTools.navigateToURL(url, title);
         }
 
-        public function disableButton(param1:Boolean, param2:IWindowContainer, param3:String):void
+        public function disableButton(authorized: Boolean, container: IWindowContainer, name: String): void
         {
-            var _loc4_:IButtonWindow = IButtonWindow(param2.findChildByName(param3));
-            if (!param1)
+            var button: IButtonWindow = IButtonWindow(container.findChildByName(name));
+            
+            if (!authorized)
             {
-                _loc4_.disable();
-                _loc4_.toolTipCaption = "No permission";
-            };
+                button.disable();
+                button.toolTipCaption = "No permission";
+            }
+
         }
 
-        public function goToRoom(param1:int):void
+        public function goToRoom(id: int): void
         {
-            Logger.log(("MOD: GO TO ROOM: " + param1));
-            this._navigator.goToRoom(param1, false);
+            Logger.log("MOD: GO TO ROOM: " + id);
+
+            this._navigator.goToRoom(id, false);
         }
 
     }
